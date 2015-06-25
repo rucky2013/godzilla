@@ -1,4 +1,4 @@
-package cn.creditease.godzilla.model;
+package cn.godzilla.service;
 
 import junit.framework.Test;
 import junit.framework.TestCase;

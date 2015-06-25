@@ -1,4 +1,4 @@
-package cn.creditease.godzilla.dao;
+package cn.godzilla.dao;
 
 import java.util.Date;
 

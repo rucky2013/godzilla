@@ -43,11 +43,11 @@
 	
 	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean"
 		p:dataSource-ref="dataSource"
-		p:mapperLocations="cn\\creditease\\godzilla\\dao\\*Mapper.xml"
+		p:mapperLocations="cn\\godzilla\\dao\\*Mapper.xml"
 	/>
 	         
 	<bean id="mapperScanerConfig" class="org.mybatis.spring.mapper.MapperScannerConfigurer">
-		<property name="basePackage" value="cn.creditease.godzilla.dao" />
+		<property name="basePackage" value="cn.godzilla.dao" />
 		<property name="sqlSessionFactoryBeanName" value="sqlSessionFactory" />
 	</bean>
 	

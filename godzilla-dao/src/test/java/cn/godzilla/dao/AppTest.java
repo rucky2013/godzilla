@@ -1,4 +1,4 @@
-package cn.creditease.godzilla.mvn;
+package cn.godzilla.dao;
 
 import junit.framework.Test;
 import junit.framework.TestCase;
