@@ -11,9 +11,9 @@
 	<context:property-placeholder location="classpath:redis.properties" ignore-unresolvable="true" />
     
     <bean id="connectionFactory" class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory">
-    	<property name="hostName" value="${master.redis.host}" />
-    	<property name="port" value="${master.redis.port}" />
-    	<property name="password" value="${master.redis.pass}" />
+    	<property name="hostName" value="${redis.master.host}" />
+    	<property name="port" value="${redis.master.port}" />
+    	<property name="password" value="${redis.master.pass}" />
     </bean>
       
     <bean id="redisTemplate" class="org.springframework.data.redis.core.StringRedisTemplate">  
