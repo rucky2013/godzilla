@@ -18,4 +18,6 @@ public interface UserMapper {
      * @mbggenerated Wed Jun 10 19:29:50 CST 2015
      */
     int insertSelective(User record);
+
+	User queryUserByUsername(String username);
 }

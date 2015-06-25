@@ -13,6 +13,15 @@
 		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
 	</listener>
 	<servlet>
+		<servlet-name>security</servlet-name>
+		<servlet-class></servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>security</servlet-name>
+		<url-pattern>/</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
 		<servlet-name>springmvc</servlet-name>
 		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
 		<init-param>
