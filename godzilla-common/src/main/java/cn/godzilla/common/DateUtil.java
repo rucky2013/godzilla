@@ -103,13 +103,12 @@ public class DateUtil {
 	}
 	/**
 	 * 计算下一个月的划扣日期---del
-	 * 计算下一个定投日---add by leiwang10@creditease.cn
+	 * 计算下一个定投日
 	 * @return
 	 */
 	public static String nowdateAddOneMonthAddDay(String day)
 	{
 		Calendar cal = Calendar.getInstance();//使用默认时区和语言环境获得一个日历。 
-		//add by leiwanglei10@creditease.cn----------如果没有到达当月定投日，则显示当月定投日
 		if(cal.get(cal.DAY_OF_MONTH) >= Integer.parseInt(day)){
 			cal.add(Calendar.MONTH, 1);//加上一个月
 		}
