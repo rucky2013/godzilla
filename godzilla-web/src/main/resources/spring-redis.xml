@@ -20,5 +20,4 @@
         <property name="connectionFactory"   ref="connectionFactory" />  
     </bean>
     
-   	<!-- <bean id="testMasterDao" class="cn.creditease.fso.cupid.cache.dao.write.TestMaterDao" /> -->
 </beans>

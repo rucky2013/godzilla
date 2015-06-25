@@ -1,4 +1,4 @@
-package cn.creditease.godzilla.svn;
+package cn.godzilla.svn;
 
 import junit.framework.Test;
 import junit.framework.TestCase;

@@ -33,7 +33,7 @@
 	
 		
   	<!-- 日志输出模块划分 -->
-  	<logger name="cn.creditease.godzilla" level="${LOG_LEVEL}">  
+  	<logger name="cn.godzilla" level="${LOG_LEVEL}">  
   		<appender-ref ref="godzillalog" />  
  	</logger>
  	
