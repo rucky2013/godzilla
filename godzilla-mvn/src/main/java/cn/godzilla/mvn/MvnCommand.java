@@ -1,4 +1,4 @@
-package cn.creditease.godzilla.mvn;
+package cn.godzilla.mvn;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

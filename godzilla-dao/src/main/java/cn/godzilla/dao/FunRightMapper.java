@@ -1,6 +1,6 @@
-package cn.creditease.godzilla.dao;
+package cn.godzilla.dao;
 
-import cn.creditease.godzilla.model.FunRight;
+import cn.godzilla.model.FunRight;
 
 public interface FunRightMapper {
     /**

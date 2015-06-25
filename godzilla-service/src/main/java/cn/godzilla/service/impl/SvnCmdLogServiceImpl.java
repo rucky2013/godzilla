@@ -1,11 +1,11 @@
-package cn.creditease.godzilla.service.impl;
+package cn.godzilla.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import cn.creditease.godzilla.dao.SvnCmdLogMapper;
-import cn.creditease.godzilla.model.SvnCmdLog;
-import cn.creditease.godzilla.service.SvnCmdLogService;
+import cn.godzilla.dao.SvnCmdLogMapper;
+import cn.godzilla.model.SvnCmdLog;
+import cn.godzilla.service.SvnCmdLogService;
 
 @Service
 public class SvnCmdLogServiceImpl implements SvnCmdLogService{

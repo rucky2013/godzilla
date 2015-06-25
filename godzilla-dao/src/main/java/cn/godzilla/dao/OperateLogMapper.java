@@ -1,6 +1,6 @@
-package cn.creditease.godzilla.dao;
+package cn.godzilla.dao;
 
-import cn.creditease.godzilla.model.OperateLog;
+import cn.godzilla.model.OperateLog;
 
 public interface OperateLogMapper {
     /**

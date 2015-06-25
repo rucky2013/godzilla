@@ -1,4 +1,4 @@
-package cn.creditease.godzilla.common;
+package cn.godzilla.common;
 
 import java.text.DateFormat;
 import java.text.ParseException;

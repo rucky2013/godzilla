@@ -1,4 +1,4 @@
-package cn.creditease.godzilla.mvn;
+package cn.godzilla.mvn;
 
 /**
  * Hello world!

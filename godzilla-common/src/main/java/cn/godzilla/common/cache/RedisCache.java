@@ -1,10 +1,10 @@
-package cn.creditease.godzilla.common.cache;
+package cn.godzilla.common.cache;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import cn.creditease.godzilla.common.RedisUtil;
-import cn.creditease.godzilla.common.StringUtil;
+import cn.godzilla.common.RedisUtil;
+import cn.godzilla.common.StringUtil;
 
 @Component
 public class RedisCache implements Cache {

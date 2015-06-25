@@ -1,6 +1,6 @@
-package cn.creditease.godzilla.dao;
+package cn.godzilla.dao;
 
-import cn.creditease.godzilla.model.MvnCmdLogWithBLOBs;
+import cn.godzilla.model.MvnCmdLogWithBLOBs;
 
 public interface MvnCmdLogMapper {
     /**

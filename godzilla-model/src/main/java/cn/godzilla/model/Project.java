@@ -1,4 +1,4 @@
-package cn.creditease.godzilla.model;
+package cn.godzilla.model;
 
 public class Project {
     private Long id;

@@ -1,4 +1,4 @@
-package cn.creditease.godzilla.mvn;
+package cn.godzilla.mvn;
 
 import java.io.BufferedReader;
 import java.io.IOException;

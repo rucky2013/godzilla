@@ -1,4 +1,4 @@
-package cn.creditease.godzilla.service.impl;
+package cn.godzilla.service.impl;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -6,10 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-import cn.creditease.godzilla.common.cache.RedisCache;
-import cn.creditease.godzilla.dao.UserMapper;
-import cn.creditease.godzilla.model.User;
-import cn.creditease.godzilla.service.UserService;
+import cn.godzilla.common.cache.RedisCache;
+import cn.godzilla.dao.UserMapper;
+import cn.godzilla.model.User;
+import cn.godzilla.service.UserService;
 
 @Service
 public class UserServiceImpl implements UserService{

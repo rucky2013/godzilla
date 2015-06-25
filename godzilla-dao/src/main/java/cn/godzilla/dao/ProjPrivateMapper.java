@@ -1,6 +1,6 @@
-package cn.creditease.godzilla.dao;
+package cn.godzilla.dao;
 
-import cn.creditease.godzilla.model.ProjPrivate;
+import cn.godzilla.model.ProjPrivate;
 
 public interface ProjPrivateMapper {
     /**

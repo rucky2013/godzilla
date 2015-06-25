@@ -1,4 +1,4 @@
-package cn.creditease.godzilla.web;
+package cn.godzilla.web;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -7,8 +7,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
-import cn.creditease.godzilla.model.SvnCmdLog;
-import cn.creditease.godzilla.service.SvnCmdLogService;
+import cn.godzilla.model.SvnCmdLog;
+import cn.godzilla.service.SvnCmdLogService;
 
 @Controller
 @RequestMapping("/svncmdlog")

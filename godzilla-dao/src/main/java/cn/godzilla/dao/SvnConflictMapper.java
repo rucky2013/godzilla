@@ -1,6 +1,6 @@
-package cn.creditease.godzilla.dao;
+package cn.godzilla.dao;
 
-import cn.creditease.godzilla.model.SvnConflict;
+import cn.godzilla.model.SvnConflict;
 
 public interface SvnConflictMapper {
     /**

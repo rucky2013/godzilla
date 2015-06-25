@@ -1,4 +1,4 @@
-package cn.creditease.godzilla.web;
+package cn.godzilla.web;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -9,8 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import cn.creditease.godzilla.common.StringUtil;
-import cn.creditease.godzilla.service.UserService;
+import cn.godzilla.common.StringUtil;
+import cn.godzilla.service.UserService;
 
 @Controller
 @RequestMapping("/user")

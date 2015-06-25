@@ -1,4 +1,4 @@
-package cn.creditease.godzilla.security.filter;
+package cn.godzilla.security.filter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,8 +6,8 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import cn.creditease.godzilla.security.Authentication;
-import cn.creditease.godzilla.security.Authorization;
+import cn.godzilla.security.Authentication;
+import cn.godzilla.security.Authorization;
 
 public class FilterChain implements Filter{
 	

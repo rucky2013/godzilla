@@ -1,4 +1,4 @@
-package cn.creditease.godzilla.common.cache;
+package cn.godzilla.common.cache;
 
 public interface Cache {
 	

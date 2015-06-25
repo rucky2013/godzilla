@@ -1,6 +1,6 @@
-package cn.creditease.godzilla.service;
+package cn.godzilla.service;
 
-import cn.creditease.godzilla.model.SvnCmdLog;
+import cn.godzilla.model.SvnCmdLog;
 
 public interface SvnCmdLogService{
 	

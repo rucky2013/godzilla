@@ -1,6 +1,6 @@
-package cn.creditease.godzilla.dao;
+package cn.godzilla.dao;
 
-import cn.creditease.godzilla.model.PropConfig;
+import cn.godzilla.model.PropConfig;
 
 public interface PropConfigMapper {
     /**

@@ -1,4 +1,4 @@
-package cn.creditease.godzilla.svn;
+package cn.godzilla.svn;
 
 
 import org.apache.logging.log4j.LogManager;

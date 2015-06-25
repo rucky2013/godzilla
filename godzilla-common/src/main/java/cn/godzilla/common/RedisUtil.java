@@ -1,4 +1,4 @@
-package cn.creditease.godzilla.common;
+package cn.godzilla.common;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;

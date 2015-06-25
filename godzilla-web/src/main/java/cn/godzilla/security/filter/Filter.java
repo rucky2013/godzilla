@@ -1,4 +1,4 @@
-package cn.creditease.godzilla.security.filter;
+package cn.godzilla.security.filter;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

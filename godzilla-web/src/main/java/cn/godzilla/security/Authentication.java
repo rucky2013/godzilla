@@ -1,4 +1,4 @@
-package cn.creditease.godzilla.security;
+package cn.godzilla.security;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -6,8 +6,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import cn.creditease.godzilla.security.filter.Filter;
-import cn.creditease.godzilla.security.filter.FilterChain;
+import cn.godzilla.security.filter.Filter;
+import cn.godzilla.security.filter.FilterChain;
 
 //权限校验
 public class Authentication implements Filter {

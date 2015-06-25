@@ -1,6 +1,6 @@
-package cn.creditease.godzilla.dao;
+package cn.godzilla.dao;
 
-import cn.creditease.godzilla.model.ProjStatus;
+import cn.godzilla.model.ProjStatus;
 
 public interface ProjStatusMapper {
     /**

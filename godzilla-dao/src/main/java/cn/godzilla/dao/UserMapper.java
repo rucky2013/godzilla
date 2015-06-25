@@ -1,6 +1,6 @@
-package cn.creditease.godzilla.dao;
+package cn.godzilla.dao;
 
-import cn.creditease.godzilla.model.User;
+import cn.godzilla.model.User;
 
 public interface UserMapper {
     /**

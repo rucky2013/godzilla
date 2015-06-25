@@ -1,4 +1,4 @@
-package cn.creditease.godzilla.service;
+package cn.godzilla.service;
 
 
 public interface UserService{

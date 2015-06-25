@@ -1,4 +1,4 @@
-package cn.creditease.godzilla.svn;
+package cn.godzilla.svn;
 
 import java.io.BufferedReader;
 import java.io.IOException;

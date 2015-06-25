@@ -1,6 +1,6 @@
-package cn.creditease.godzilla.dao;
+package cn.godzilla.dao;
 
-import cn.creditease.godzilla.model.SvnCmdLog;
+import cn.godzilla.model.SvnCmdLog;
 
 public interface SvnCmdLogMapper {
 

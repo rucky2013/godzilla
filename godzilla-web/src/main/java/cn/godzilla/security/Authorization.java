@@ -1,4 +1,4 @@
-package cn.creditease.godzilla.security;
+package cn.godzilla.security;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -9,8 +9,8 @@ import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 
-import cn.creditease.godzilla.security.filter.Filter;
-import cn.creditease.godzilla.security.filter.FilterChain;
+import cn.godzilla.security.filter.Filter;
+import cn.godzilla.security.filter.FilterChain;
 
 //认证授权
 public class Authorization implements Filter,ApplicationContextAware{
