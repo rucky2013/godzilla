@@ -25,7 +25,8 @@ public class UserServiceImpl implements UserService{
 	
 	@Autowired
 	private UserMapper userMapper;
-	
+	@Autowired
+	private ProjectMapper projectMapper;
 	@Autowired
 	private RedisCache redisCache;
 
@@ -63,7 +64,7 @@ public class UserServiceImpl implements UserService{
 		return ReturnCodeEnum.getByReturnCode(OK_LOGIN);
 	}
 
-	private ProjectMapper projectMapper;
+	
 	
 	private void onLogin(String username, String password) {
 		String sid = StringUtil.getUUID();
