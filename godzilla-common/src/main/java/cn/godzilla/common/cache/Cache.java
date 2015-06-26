@@ -1,37 +1,21 @@
 package cn.godzilla.common.cache;
 
-public interface Cache {
+import cn.godzilla.common.cache.Cache.Entry;
+
+public interface Cache<K, V, T> {
 	
-	public void save(KV kv) ;
+	public void save(Entry<K, V> entry);
+	public void delete(K key);
+	public V get(K key);
 	
-	public KV get(KV k);
+	public Entry<K, V> createEntry(T type);
 	
-	public void delete(KV k);
-	
-	class KV {
-		protected String key;
-		protected String value;
+	interface Entry<K, V> {
 		
-		protected KV() {}
-		protected KV(String key, String value) {
-			this.key = key;
-			this.value = value;
-		}
-
-		public String getKey() {
-			return key;
-		}
-
-		public void setKey(String key) {
-			this.key = key;
-		}
-
-		public String getValue() {
-			return value;
-		}
-
-		public void setValue(String value) {
-			this.value = value;
-		}
+		public K getKey() ;
+		public void setKey(K key) ;
+		public V getValue() ;
+		public void setValue(V value) ;
 	}
+
 }

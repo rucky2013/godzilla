@@ -16,7 +16,7 @@
     	<property name="password" value="${redis.master.pass}" />
     </bean>
       
-    <bean id="redisTemplate" class="org.springframework.data.redis.core.StringRedisTemplate">  
+    <bean id="redisTemplate" class="cn.godzilla.common.redis.MyStringRedisTemplate">  
         <property name="connectionFactory"   ref="connectionFactory" />  
     </bean>
     

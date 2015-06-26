@@ -4,123 +4,73 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import cn.godzilla.common.RedisUtil;
-import cn.godzilla.common.StringUtil;
 
+
+enum CACHE_ENUM {
+	USERID, USER, PROJECTS
+}
 @Component
-public class RedisCache implements Cache {
+public class RedisCache extends AbstractCache<String, String, CACHE_ENUM> {
 
 	@Autowired
-	private RedisUtil redisUtil;
+	private RedisUtil redisDB;
 	
 	public final static String USERID_PREFIX = "userid:";
 	public final static String USER_PREFIX = "user:";
-	public final static String PROJECTS_PREFIX = "projects:"; 
-	
-	public String getUSERIDByKey(String key) {
-		UserId userId = getUSERID();
-		userId.setKey(key);
-		UserId findUserId = (UserId)get(userId);
-		return findUserId.getValue();
-	}
-	
-	public String getUSERIDByUuid(String uuid) {
-		return getUSERIDByKey(USERID_PREFIX + uuid);
-	}
+	public final static String PROJECTS_PREFIX = "projects:";
 	
 	@Override
-	public void save(KV kv) {
-		redisUtil.set(kv.getKey(), kv.getValue());
+	public void save(cn.godzilla.common.cache.Cache.Entry<String, String> entry) {
+		
+		
 	}
-	
+
 	@Override
-	public KV get(KV k) {
-		String value = redisUtil.get(k.getKey());
-		KV kvnew = null;
-		if(k instanceof UserId) {
-			kvnew = getUSERID();
-		} else if(k instanceof User) {
-			kvnew = getUSER();
-		} else if(k instanceof Projects) {
-			kvnew = getPROJECTS();
-		} else {
-			kvnew = new KV();
-		}
-		kvnew.setKey(k.getKey());
-		kvnew.setValue(value);
-		return kvnew;
+	public void delete(String key) {
+		
+		
 	}
-	
+
 	@Override
-	public void delete(KV k) {
-		redisUtil.delete(k.getKey());
+	public String get(String key) {
+		
+		return null;
 	}
-	
-	private enum REDISENUM {
-		USERID, USER, PROJECTS
-	}
-	
-	public UserId createUSERID() {
-		String uuid = StringUtil.getUUID();
-		KV kv = createKV(REDISENUM.USERID, uuid);
-		return (UserId)kv;
-	}
-	public UserId getUSERID() {
-		KV kv = createKV(REDISENUM.USERID, "");
-		return (UserId)kv;
-	}
-	public User createUSER(String userid) {
-		KV kv = createKV(REDISENUM.USER, userid);
-		return (User)kv;
-	}
-	public User getUSER() {
-		KV kv = createKV(REDISENUM.USER, "");
-		return (User)kv;
-	}
-	public Projects createPROJECTS(String userid) {
-		KV kv = createKV(REDISENUM.PROJECTS, "");
-		return (Projects)kv;
-	}
-	public Projects getPROJECTS() {
-		KV kv = createKV(REDISENUM.PROJECTS, "");
-		return (Projects)kv;
-	}
-	
-	public KV createKV(REDISENUM category, String uuORuserID) {
-		switch(category) {
-		case USERID: 
-			return new UserId(uuORuserID);
-		case USER:
-			return new User(uuORuserID);
-		case PROJECTS:
-			return new Projects(uuORuserID);
-		}
+
+	@Override
+	public cn.godzilla.common.cache.Cache.Entry<String, String> createEntry(CACHE_ENUM type) {
+		
 		return null;
 	}
 	
-	class UserId extends KV{
-		private UserId(String uuid) {
-			super(USERID_PREFIX + uuid, "");
-		}
-		private UserId() {
-			super("", "");
-		}
-	}
 	
-	class User extends KV{
-		private User(String userid) {
-			super(USER_PREFIX + userid, "");
+	class Entry implements Cache.Entry<String, String> {
+
+		@Override
+		public String getKey() {
+			
+			return null;
 		}
-		private User() {
-			super("", "");
+
+		@Override
+		public void setKey(String key) {
+			
+			
 		}
+
+		@Override
+		public String getValue() {
+			
+			return null;
+		}
+
+		@Override
+		public void setValue(String value) {
+			
+			
+		}
+
+		
 	}
-	
-	class Projects extends KV{
-		private Projects(String userid) {
-			super(PROJECTS_PREFIX + userid, "");
-		}
-		private Projects() {
-			super("", "");
-		}
-	}
+
 }

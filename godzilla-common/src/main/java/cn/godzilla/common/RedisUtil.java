@@ -1,21 +1,17 @@
 package cn.godzilla.common;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
 
+import cn.godzilla.common.redis.MyStringRedisTemplate;
 
-/**
- * @ClassName: UserCacheRedis.java
- * @Description: 用户缓存的信息
- * @date 2014年7月7日 下午5:23:18
- * @version V1.0
- */
 @Component
 public class RedisUtil {
 
 	@Autowired
-	private StringRedisTemplate template;
+	private MyStringRedisTemplate template;
 
 	public RedisUtil() {
 		// template.getConnectionFactory().getConnection().select(0);

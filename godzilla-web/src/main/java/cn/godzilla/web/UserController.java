@@ -7,8 +7,11 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
+import cn.godzilla.common.ReturnCodeEnum;
 import cn.godzilla.common.StringUtil;
 import cn.godzilla.service.UserService;
 
@@ -22,7 +25,7 @@ public class UserController {
 	UserService userService;
 
 	// 登录页
-	@RequestMapping("/welcome")
+	@RequestMapping(value="/welcome", method=RequestMethod.GET)
 	public Object welcome(HttpServletRequest request, HttpServletResponse response) {
 
 		logger.debug("*****UserController.welcome*****");
@@ -30,35 +33,40 @@ public class UserController {
 	}
 
 	//登录
-	@RequestMapping("/login")
-	public Object login(HttpServletRequest request, HttpServletResponse response) {
-
+	@RequestMapping(value="/login/{username}/{password}", method=RequestMethod.GET)
+	public Object login(@PathVariable String username, @PathVariable String password, HttpServletRequest request, HttpServletResponse response) {
 		logger.debug("*****UserController.login*****");
-		String username = StringUtil.getReqPrameter(request, "username");
-		String password = StringUtil.getReqPrameter(request, "password");
-		//登录验证状态
-		int loginState = userService.checkUser(username, password);
-		switch(loginState) {
-		case -1: 
-			request.setAttribute("errorcode", "10001");
-			request.setAttribute("errormsg", "用户名或密码为空！");
+		
+		ReturnCodeEnum loginReturn = userService.login(username, password);  //do login 
+		
+		switch(loginReturn) {
+		case NULL_NAMEPASSWORD: 
+			request.setAttribute("errorcode", ReturnCodeEnum.NULL_NAMEPASSWORD.getReturnCode());
+			request.setAttribute("errormsg", ReturnCodeEnum.NULL_NAMEPASSWORD.getReturnMsg());
 			return "/login";
-		case -2:
-			request.setAttribute("errorcode", "10002");
-			request.setAttribute("errormsg", "用户名不存在！");
+		case NOTEXIST_USER:
+			request.setAttribute("errorcode", ReturnCodeEnum.NOTEXIST_USER.getReturnCode());
+			request.setAttribute("errormsg", ReturnCodeEnum.NOTEXIST_USER.getReturnMsg());
 			return "/login";
-		case -3:
-			request.setAttribute("errorcode", "10003");
-			request.setAttribute("errormsg", "密码错误！");
+		case WRONG_PASSWORD:
+			request.setAttribute("errorcode", ReturnCodeEnum.WRONG_PASSWORD.getReturnCode());
+			request.setAttribute("errormsg", ReturnCodeEnum.WRONG_PASSWORD.getReturnMsg());
 			return "/login";
-		default:
-			request.setAttribute("errorcode", "10004");
-			request.setAttribute("errormsg", "未知错误！");
-			return "/login";
-		case 0:
+		case OK_LOGIN:
 			return "/loginsuccess";
+		default:
+			request.setAttribute("errorcode", ReturnCodeEnum.OK_LOGIN.getReturnCode());
+			request.setAttribute("errormsg", ReturnCodeEnum.OK_LOGIN.getReturnMsg());
+			return "/login";
 		}
-
+	}
+	
+	@RequestMapping(value="/logout/{sid}", method=RequestMethod.GET)
+	public Object logout(@PathVariable String sid, HttpServletRequest request, HttpServletResponse response) {
+		logger.debug("*****UserController.logout*****");
+		
+		//del redis sid-username 
+		return "/logout";
 	}
 
 }

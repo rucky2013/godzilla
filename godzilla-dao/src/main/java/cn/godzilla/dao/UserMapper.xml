@@ -114,14 +114,6 @@
   </insert>
 
 
-	<select id="selectUsers" parameterType="int" resultType="hashmap">
-		select
-		<include refid="userColumns" />
-		from some_table where id = #{id}
-	</select>
-
-  
-  
   <select id="queryUserByUsername" parameterType="string" resultType="user">
   	select id, user_name, password, 
       real_name, create_time, create_by, 

@@ -1,8 +1,11 @@
 package cn.godzilla.service;
 
+import cn.godzilla.common.ConstantValue;
+import cn.godzilla.common.ReturnCodeEnum;
 
-public interface UserService{
+
+public interface UserService extends ConstantValue{
 	
-	public int checkUser(String username, String password);
+	public ReturnCodeEnum login(String username, String password);
 
 }
