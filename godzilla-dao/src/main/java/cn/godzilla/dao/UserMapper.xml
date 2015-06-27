@@ -113,6 +113,11 @@
     </trim>
   </insert>
 
+	<sql id="userColumns">id as id,user_name as userName , password, 
+      real_name as realName, create_time as createTime, create_by as createBy, 
+      status, login_time as loginTime, last_login_time as lastLoginTime, 
+      depart_name as departName, is_admin as isAdmin
+     </sql>
 
 	<select id="selectUsers" parameterType="int" resultType="hashmap">
 		select
@@ -122,7 +127,7 @@
 
   
   
-  <select id="queryUserByUsername" parameterType="string" resultType="user">
+  <select id="queryUserByUsername" parameterType="string" resultType="cn.godzilla.model.User">
   	select id, user_name, password, 
       real_name, create_time, create_by, 
       status, login_time, last_login_time, 
