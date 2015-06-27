@@ -1,183 +1,186 @@
 ﻿/*==============================================================*/
 /* Table: t_g_project_status                                    */
 /*==============================================================*/
-create table t_g_project_status 
-(
-   id                   numeric,
-   project_code         varchar(30),
-   current_status       int,
-   process_rate         int,
-   operate_staff        varchar(30),
-   create_time          datetime,
-   update_time          datetime,
-   finish_time          datetime,
-   result_info          text
-);
+CREATE TABLE t_g_project_status (
+  id bigint(20) NOT NULL AUTO_INCREMENT,
+  project_code varchar(30) DEFAULT NULL,
+  current_status int(11) DEFAULT NULL,
+  process_rate int(11) DEFAULT NULL,
+  operate_staff varchar(30) DEFAULT NULL,
+  create_time datetime DEFAULT NULL,
+  update_time datetime DEFAULT NULL,
+  finish_time datetime DEFAULT NULL,
+  result_info text,
+  PRIMARY KEY (id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ;
 
 /*==============================================================*/
 /* Table: t_g_project_status_history                            */
 /*==============================================================*/
 create table t_g_project_status_history 
 (
-   id                   char(10),
-   project_code         varchar(30),
-   current_status       int,
-   "process_rate(%)"    int,
-   operate_staff        varchar(30),
-   create_time          datetime,
-   update_time          datetime,
-   finish_time          datetime,
-   result_info          text
-);
+  id bigint(20) DEFAULT NULL,
+  project_code varchar(30) DEFAULT NULL,
+  current_status int(11) DEFAULT NULL,
+  process_rate int(11) DEFAULT NULL,
+  operate_staff varchar(30) DEFAULT NULL,
+  create_time datetime DEFAULT NULL,
+  update_time datetime DEFAULT NULL,
+  finish_time datetime DEFAULT NULL,
+  result_info text,
+  PRIMARY KEY (id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ;
 
 /*==============================================================*/
 /* Table: t_g_user                                              */
 /*==============================================================*/
-create table t_g_user 
-(
-   id                   numeric,
-   user_name            varchar(30),
-   password             varchar(50),
-   real_name            varchar(50),
-   create_time          datetime,
-   create_by            varchar(30),
-   status               int,
-   login_time           datetime,
-   last_login_time      datetime,
-   depart_name          varchar(100),
-   is_admin             int
-);
+CREATE TABLE t_g_user (
+  id bigint(20) NOT NULL AUTO_INCREMENT,
+  user_name varchar(30) DEFAULT NULL,
+  password varchar(50) DEFAULT NULL,
+  real_name varchar(50) DEFAULT NULL,
+  create_time datetime DEFAULT NULL,
+  create_by varchar(30) DEFAULT NULL,
+  status int(11) DEFAULT NULL,
+  login_time datetime DEFAULT NULL,
+  last_login_time datetime DEFAULT NULL,
+  depart_name varchar(100) DEFAULT NULL,
+  is_admin int(11) DEFAULT NULL,
+  PRIMARY KEY (id),
+  UNIQUE KEY user_name_UNIQUE (user_name)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ;
 
 /*==============================================================*/
 /* Table: t_g_project                                           */
 /*==============================================================*/
-create table t_g_project 
-(
-   id                   numeric,
-   project_code         varchar(30),
-   project_name         varchar(30),
-   repository_url       varchar(200),
-   create_by            varchar(30),
-   manager              varchar(30),
-   status               int
-);
+CREATE TABLE t_g_project (
+  id bigint(20) NOT NULL AUTO_INCREMENT,
+  project_code varchar(30) DEFAULT NULL,
+  project_name varchar(30) DEFAULT NULL,
+  repository_url varchar(200) DEFAULT NULL,
+  create_by varchar(30) DEFAULT NULL,
+  manager varchar(30) DEFAULT NULL,
+  status int(11) DEFAULT 0,
+  PRIMARY KEY (id),
+  UNIQUE KEY project_code_UNIQUE (project_code)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ;
 
 /*==============================================================*/
 /* Table: t_g_function_right                                    */
 /*==============================================================*/
-create table t_g_function_right 
-(
-   id                   numeric,
-   user_name            varchar(30),
-   project_code         varchar(30),
-   status               int,
-   create_time          datetime,
-   update_time          datetime,
-   create_by            varchar(30),
-   real_name            varchar(50),
-   project_name         varchar(30)
-);
+CREATE TABLE t_g_function_right (
+  id bigint(20) NOT NULL AUTO_INCREMENT,
+  user_name varchar(30) DEFAULT NULL,
+  project_code varchar(30) DEFAULT NULL,
+  status int(11) DEFAULT NULL,
+  create_time datetime DEFAULT NULL,
+  update_time datetime DEFAULT NULL,
+  create_by varchar(30) DEFAULT NULL,
+  real_name varchar(50) DEFAULT NULL,
+  project_name varchar(30) DEFAULT NULL,
+  PRIMARY KEY (id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ;
 
 
 /*==============================================================*/
 /* Table: t_g_properties_config                                 */
 /*==============================================================*/
-create table t_g_properties_config 
-(
-   id                   numeric,
-   project_code         varchar(30),
-   profile              varchar(30),
-   pro_key              varchar(30),
-   pro_value            varchar(500),
-   remark               varchar(50),
-   create_by            varchar(30),
-   create_time          datetime,
-   update_time          datetime,
-   last_value           varchar(500),
-   status               int,
-   auditor              varchar(30),
-   auditor_text         varchar(100)
-);
+CREATE TABLE t_g_properties_config (
+  id bigint(20) NOT NULL AUTO_INCREMENT,
+  project_code varchar(30) DEFAULT NULL,
+  profile varchar(30) DEFAULT NULL,
+  pro_key varchar(30) DEFAULT NULL,
+  pro_value varchar(500) DEFAULT NULL,
+  remark varchar(50) DEFAULT NULL,
+  create_by varchar(30) DEFAULT NULL,
+  create_time datetime DEFAULT NULL,
+  update_time datetime DEFAULT NULL,
+  last_value varchar(500) DEFAULT NULL,
+  status int(11) DEFAULT NULL,
+  auditor varchar(30) DEFAULT NULL,
+  auditor_text varchar(100) DEFAULT NULL,
+  PRIMARY KEY (id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ;
 
 /*==============================================================*/
 /* Table: t_g_project_private                                   */
 /*==============================================================*/
-create table t_g_project_private 
-(
-   id                   char(10),
-   user_name            varchar(30),
-   project_code         varchar(30),
-   virtual_truck_url    varchar(200)
-);
+CREATE TABLE t_g_project_private (
+  id bigint(20) NOT NULL AUTO_INCREMENT,
+  user_name varchar(30) DEFAULT NULL,
+  project_code varchar(30) DEFAULT NULL,
+  virtual_truck_url varchar(200) DEFAULT NULL,
+  PRIMARY KEY (id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ;
 
 /*==============================================================*/
 /* Table: t_g_operate_logs                                      */
 /*==============================================================*/
-create table t_g_operate_logs 
-(
-   id                   numeric,
-   user_name            varchar(30),
-   project_code         varchar(30),
-   profile              varchar(30),
-   operate_code         int,
-   execute_time         datetime,
-   execute_result       int,
-   result_info          text
-);
+CREATE TABLE t_g_operate_logs (
+  id bigint(20) NOT NULL AUTO_INCREMENT,
+  user_name varchar(30) DEFAULT NULL,
+  project_code varchar(30) DEFAULT NULL,
+  profile varchar(30) DEFAULT NULL,
+  operate_code int(11) DEFAULT NULL,
+  execute_time datetime DEFAULT NULL,
+  execute_result int(11) DEFAULT NULL,
+  result_info text,
+  PRIMARY KEY (id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ;
 
 /*==============================================================*/
 /* Table: t_g_svn_command_logs                                  */
 /*==============================================================*/
-create table t_g_svn_command_logs 
-(
-   id                   numeric,
-   user_name            varchar(30),
-   repository_url       varchar(200),
-   commands             varchar(300),
-   create_time          datetime,
-   real_name            varchar(30)
-);
+CREATE TABLE t_g_maven_command_logs (
+  id bigint(20) NOT NULL AUTO_INCREMENT,
+  user_name varchar(30) DEFAULT NULL,
+  project_code varchar(30) DEFAULT NULL,
+  commands text,
+  create_time datetime DEFAULT NULL,
+  result_info text,
+  PRIMARY KEY (id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ;
 
 /*==============================================================*/
 /* Table: t_g_svn_conflict                                      */
 /*==============================================================*/
-create table t_g_svn_conflict 
-(
-   id                   numeric,
-   user_name            varchar(30),
-   project_code         varchar(30),
-   branch_url           varchar(200),
-   trunk_url            varchar(200),
-   file_name            varchar(200),
-   status               int,
-   result_info          text
-);
+CREATE TABLE t_g_svn_conflict (
+  id bigint(20) NOT NULL AUTO_INCREMENT,
+  user_name varchar(30) DEFAULT NULL,
+  project_code varchar(30) DEFAULT NULL,
+  branch_url varchar(200) DEFAULT NULL,
+  trunk_url varchar(200) DEFAULT NULL,
+  file_name varchar(200) DEFAULT NULL,
+  status int(11) DEFAULT NULL,
+  result_info text,
+  PRIMARY KEY (id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ;
 
 /*==============================================================*/
 /* Table: t_g_svn_change_logs                                   */
 /*==============================================================*/
-create table t_g_svn_change_logs 
-(
-   id                   numeric,
-   user_name            varchar(30),
-   type                 int,
-   repository_url       varchar(200),
-   file_name            varchar(300),
-   create_time          datetime,
-   result_status        int,
-   result_info          text
-);
+CREATE TABLE t_g_svn_change_logs (
+  id bigint(20) NOT NULL AUTO_INCREMENT,
+  user_name varchar(30) DEFAULT NULL,
+  type int(11) DEFAULT NULL,
+  repository_url varchar(200) DEFAULT NULL,
+  file_name varchar(300) DEFAULT NULL,
+  create_time datetime DEFAULT NULL,
+  result_status int(11) DEFAULT NULL,
+  result_info text,
+  PRIMARY KEY (id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ;
 
 /*==============================================================*/
 /* Table: t_g_maven_command_logs                                */
 /*==============================================================*/
-create table t_g_maven_command_logs 
-(
-   id                   numeric,
-   user_name            varchar(30),
-   project_code         varchar(30),
-   commands             text,
-   create_time          datetime,
-   result_info          text
-);
+CREATE TABLE t_g_svn_command_logs (
+  id bigint(20) NOT NULL AUTO_INCREMENT,
+  user_name varchar(30) DEFAULT NULL,
+  repository_url varchar(200) DEFAULT NULL,
+  commands varchar(300) DEFAULT NULL,
+  create_time datetime DEFAULT NULL,
+  real_name varchar(30) DEFAULT NULL,
+  PRIMARY KEY (id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ;
 

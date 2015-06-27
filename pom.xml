@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>cn.godzilla</groupId>
   <artifactId>godzilla-parent</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
+  <version>${parent.version}</version>
   <packaging>pom</packaging>
   <name>${project.artifactId}</name>
   <description>The parent project of godzilla</description>
@@ -18,6 +18,8 @@
   </modules>
   
   <properties>
+  	
+  	<parent.version>0.0.1-SNAPSHOT</parent.version>
   	
   	<JDK.version>1.7</JDK.version>
   	<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
