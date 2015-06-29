@@ -11,6 +11,7 @@ CREATE TABLE t_g_project_status (
   update_time datetime DEFAULT NULL,
   finish_time datetime DEFAULT NULL,
   result_info text,
+  profile varchar(30) DEFAULT NULL,
   PRIMARY KEY (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ;
 
@@ -28,6 +29,7 @@ create table t_g_project_status_history
   update_time datetime DEFAULT NULL,
   finish_time datetime DEFAULT NULL,
   result_info text,
+  profile varchar(30) DEFAULT NULL,
   PRIMARY KEY (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ;
 
@@ -110,6 +112,7 @@ CREATE TABLE t_g_project_private (
   user_name varchar(30) DEFAULT NULL,
   project_code varchar(30) DEFAULT NULL,
   virtual_truck_url varchar(200) DEFAULT NULL,
+  if_virtual int(11) DEFAULT 0,
   PRIMARY KEY (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ;
 
@@ -135,9 +138,10 @@ CREATE TABLE t_g_maven_command_logs (
   id bigint(20) NOT NULL AUTO_INCREMENT,
   user_name varchar(30) DEFAULT NULL,
   project_code varchar(30) DEFAULT NULL,
-  commands text,
+  commands varchar(500) DEFAULT NULL,
   create_time datetime DEFAULT NULL,
-  result_info text,
+  result_info varchar(200) DEFAULT NULL,
+  profile varchar(30) DEFAULT NULL,
   PRIMARY KEY (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ;
 

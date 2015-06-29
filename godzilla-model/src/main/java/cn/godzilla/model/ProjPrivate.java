@@ -1,23 +1,26 @@
 package cn.godzilla.model;
 
 public class ProjPrivate {
-    private String id;
+    private Long id;
 
     private String userName;
 
     private String projectCode;
 
     private String virtualTruckUrl;
+    
+    private Integer ifVirtual;
 
-    public String getId() {
-        return id;
-    }
+    
+    public Long getId() {
+		return id;
+	}
 
-    public void setId(String id) {
-        this.id = id;
-    }
+	public void setId(Long id) {
+		this.id = id;
+	}
 
-    public String getUserName() {
+	public String getUserName() {
         return userName;
     }
 
@@ -40,4 +43,13 @@ public class ProjPrivate {
     public void setVirtualTruckUrl(String virtualTruckUrl) {
         this.virtualTruckUrl = virtualTruckUrl;
     }
+
+	public Integer getIfVirtual() {
+		return ifVirtual;
+	}
+
+	public void setIfVirtual(Integer ifVirtual) {
+		this.ifVirtual = ifVirtual;
+	}
+    
 }
