@@ -88,10 +88,10 @@
       execute_result execiteResult, result_info resultInfo
       </sql>
       
-      <select id="queryList" resultType="cn.godzilla.model.OperateLog">
+      <select id="queryList" resultType="cn.godzilla.model.OperateLog" parameterType="java.util.Map">
       	select 
       		<include refid="queryColumns" /> 
-      		from t_g_operate_logs order by id limit 100
+      		from t_g_operate_logs where project_code = #{projectCode} and profile = #{profile} order by id limit 100
       </select>
   
 </mapper>

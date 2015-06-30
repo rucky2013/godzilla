@@ -3,11 +3,13 @@ package cn.godzilla.service.impl;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import cn.godzilla.dao.SvnChangeLogMapper;
 import cn.godzilla.model.SvnChangeLog;
 import cn.godzilla.service.SvnChangeLogService;
 
+@Service
 public class SvnChangeLogServiceImpl implements SvnChangeLogService{
 
 	@Autowired

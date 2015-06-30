@@ -4,11 +4,13 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import cn.godzilla.dao.PropConfigMapper;
 import cn.godzilla.model.PropConfig;
 import cn.godzilla.service.PropConfigService;
 
+@Service
 public class PropConfigServiceImpl implements PropConfigService {
 
 	@Autowired

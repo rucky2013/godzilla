@@ -1,13 +1,16 @@
 package cn.godzilla.service.impl;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import cn.godzilla.dao.ProjPrivateMapper;
 import cn.godzilla.model.ProjPrivate;
 import cn.godzilla.service.ProjPrivateService;
 
+@Service
 public class ProjPrivateServiceImpl implements ProjPrivateService {
 	
 	@Autowired
@@ -32,7 +35,12 @@ public class ProjPrivateServiceImpl implements ProjPrivateService {
 	}
 
 	@Override
-	public ProjPrivate queryDetail(Map<String, String> map) {
+	public ProjPrivate queryDetail(String projectCode,String userName) {
+		
+		Map<String, String> map = new HashMap<String, String>();
+		
+		map.put("projectCode", projectCode);
+		map.put("userName", userName);
 		
 		return dao.queryDetail(map);
 	}

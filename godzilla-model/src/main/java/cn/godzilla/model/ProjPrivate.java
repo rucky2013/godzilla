@@ -1,7 +1,14 @@
 package cn.godzilla.model;
 
-public class ProjPrivate {
-    private Long id;
+import java.io.Serializable;
+
+public class ProjPrivate implements Serializable{
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	private Long id;
 
     private String userName;
 

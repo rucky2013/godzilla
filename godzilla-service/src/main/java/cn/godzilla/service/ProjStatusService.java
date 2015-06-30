@@ -1,6 +1,5 @@
 package cn.godzilla.service;
 
-import java.util.Map;
 
 import cn.godzilla.model.ProjStatus;
 
@@ -10,7 +9,7 @@ public interface ProjStatusService{
 
     public int insertSelective(ProjStatus record);
     
-    public ProjStatus queryDetail(Map<String, String> map);
+    public ProjStatus queryDetail(String projectCode,String profile ,String operateStaff);
     
     public boolean update(ProjStatus record);
 

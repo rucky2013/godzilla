@@ -1,6 +1,7 @@
 package cn.godzilla.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import cn.godzilla.model.OperateLog;
 
@@ -10,5 +11,5 @@ public interface OperateLogMapper {
 
     int insertSelective(OperateLog record);
     
-    List<OperateLog> queryList();
+    List<OperateLog> queryList(Map<String, String> map);
 }

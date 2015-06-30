@@ -1,6 +1,5 @@
 package cn.godzilla.service;
 
-import java.util.Map;
 
 import cn.godzilla.model.ProjPrivate;
 
@@ -12,6 +11,6 @@ public interface ProjPrivateService{
     
     public int update(ProjPrivate record);
     
-    public ProjPrivate queryDetail(Map<String, String> map);
+    public ProjPrivate queryDetail(String projectCode,String userName);
 
 }

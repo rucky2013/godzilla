@@ -1,6 +1,8 @@
 package cn.godzilla.dao;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -42,7 +44,10 @@ public class OperateLogMapperTest {
 	@Test
 	public void queryList(){
 		
-		List<OperateLog> list = dao.queryList();
+		Map<String, String> map = new HashMap<String, String>();
+		map.put("projectCode", "cupid");
+		map.put("profile", "dev");
+		List<OperateLog> list = dao.queryList(map);
 		
 		for(OperateLog log:list){
 			System.out.println( log.getProfile());

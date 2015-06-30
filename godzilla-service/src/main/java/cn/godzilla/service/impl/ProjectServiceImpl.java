@@ -3,11 +3,13 @@ package cn.godzilla.service.impl;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import cn.godzilla.dao.ProjectMapper;
 import cn.godzilla.model.Project;
 import cn.godzilla.service.ProjectService;
 
+@Service
 public class ProjectServiceImpl implements ProjectService {
 
 	@Autowired

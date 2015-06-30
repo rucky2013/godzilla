@@ -1,7 +1,14 @@
 package cn.godzilla.model;
 
-public class Project {
-    private Long id;
+import java.io.Serializable;
+
+public class Project implements Serializable{
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	private Long id;
 
     private String projectCode;
     private String projectName;

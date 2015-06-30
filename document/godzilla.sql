@@ -1,3 +1,29 @@
+/*==============================================================*/
+/* Table: t_g_svn_branch_config                                 */
+/*==============================================================*/
+CREATE TABLE t_g_svn_branch_config (
+  id bigint(20) NOT NULL AUTO_INCREMENT,
+  project_code varchar(50) DEFAULT NULL,
+  branch_url varchar(300) DEFAULT NULL,
+  branch_name varchar(50) DEFAULT NULL,
+  create_by varchar(30) DEFAULT NULL,
+  create_time datetime DEFAULT NULL,
+  create_version varchar(30) DEFAULT NULL,
+  current_version varchar(30) DEFAULT NULL,
+  status smallint(6) DEFAULT NULL,
+  PRIMARY KEY (id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ;
+/*==============================================================*/
+/* Table: t_g_client_config                                     */
+/*==============================================================*/
+CREATE TABLE t_g_client_config (
+  id bigint(20) NOT NULL AUTO_INCREMENT,
+  project_code varchar(30) DEFAULT NULL,
+  profile varchar(30) DEFAULT NULL,
+  remote_ip varchar(30) DEFAULT NULL,
+  status int(11) DEFAULT NULL,
+  PRIMARY KEY (id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ;
 ﻿/*==============================================================*/
 /* Table: t_g_project_status                                    */
 /*==============================================================*/
