@@ -45,4 +45,19 @@ public class ProjectServiceImpl implements ProjectService {
 		return dao.queryAll();
 	}
 
+	@Override
+	public Project save(Project project) {
+		
+		Project result = dao.qureyByProCode(project.getProjectCode());
+		
+		if(result != null && result.getId() > 0){
+			
+			dao.updateByProCode(project);
+			
+		}else{
+			dao.insertSelective(project);
+		}
+		return dao.qureyByProCode(project.getProjectCode());
+	}
+
 }

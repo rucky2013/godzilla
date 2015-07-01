@@ -17,10 +17,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import cn.godzilla.model.ClientConfig;
 import cn.godzilla.model.OperateLog;
-import cn.godzilla.model.ProjPrivate;
 import cn.godzilla.model.ProjStatus;
 import cn.godzilla.model.Project;
-import cn.godzilla.model.SvnBranchConfig;
 import cn.godzilla.model.SvnConflict;
 import cn.godzilla.service.ClientConfigService;
 import cn.godzilla.service.OperateLogService;
@@ -32,7 +30,7 @@ import cn.godzilla.service.SvnConflictService;
 
 
 @Controller
-@RequestMapping("proj")
+@RequestMapping("project")
 public class ProjectController {
 	
 	@Autowired
@@ -72,20 +70,7 @@ public class ProjectController {
 		return projectService.queryAll();
 	}
 	
-	/**
-	 * 根据项目编号projectCode，查询分支列表
-	 * @param projectCode 项目编号
-	 * @param request
-	 * @param response
-	 * @return
-	 */
-	@RequestMapping(value ="branchs/{projectCode}" ,method = RequestMethod.GET)
-	@ResponseBody
-	public List<SvnBranchConfig> getBranchs(@PathVariable("projectCode") String projectCode ,HttpServletRequest request,HttpServletResponse response){
-		
-		logger.info("***********查询分支列表********projectCode:"+projectCode);
-		return svnBranchConfigService.queryListByProjectCode(projectCode) ;
-	}
+	
 	
 	/**
 	 * 根据项目编号、环境类型查询远程客户端IP等信息
@@ -168,22 +153,91 @@ public class ProjectController {
 	}
 
 	/**
-	 * 查看私有配置 是否启用虚拟主干等
-	 * @param projectCode 项目编号
-	 * @param userName 用户名
+	 * 项目新增
+	 * @param projectCode
+	 * @param projectName
+	 * @param repositoryUrl
 	 * @param request
 	 * @param response
 	 * @return
 	 */
-	@RequestMapping(value = "private/{projectCode}/{userName}" ,method = RequestMethod.GET)
+	@RequestMapping(value = "add", method = RequestMethod.POST)
 	@ResponseBody
-	public ProjPrivate getProjPrivate(
-			@PathVariable("projectCode") String projectCode,
-			@PathVariable("userName") String userName,
+	public Project addProject(@RequestParam("projectCode") String projectCode,
+			@RequestParam("projectName") String projectName,
+			@RequestParam("repositoryUrl") String repositoryUrl,
 			HttpServletRequest request, HttpServletResponse response) {
 		
-		logger.info("**************查看私有配置***********projectCode:"+projectCode+",userName:"+userName);
+		Project project = new Project();
 		
-		return projPrivateService.queryDetail(projectCode,userName);
+		project.setProjectCode(projectCode);
+		
+		project.setProjectName(projectName);
+		
+		project.setRepositoryUrl(repositoryUrl);
+		
+		projectService.insert(project);
+
+		return projectService.qureyByProCode(projectCode);
 	}
+	
+	/**
+	 * 项目 insert or update
+	 * @param projectCode
+	 * @param projectName
+	 * @param repositoryUrl
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping(value = "save", method = RequestMethod.PUT)
+	@ResponseBody
+	public Project saveProject(@RequestParam("projectCode") String projectCode,
+			@RequestParam("projectName") String projectName,
+			@RequestParam("repositoryUrl") String repositoryUrl,
+			HttpServletRequest request, HttpServletResponse response) {
+		
+		Project project = new Project();
+		
+		project.setProjectCode(projectCode);
+		
+		project.setProjectName(projectName);
+		
+		project.setRepositoryUrl(repositoryUrl);
+		
+		return projectService.save(project);
+		 
+	}
+	/**
+	 * 项目修改
+	 * @param projectCode
+	 * @param projectName
+	 * @param repositoryUrl
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping(value = "modify", method = RequestMethod.PUT)
+	@ResponseBody
+	public Project updateProject(@RequestParam("projectCode") String projectCode,
+			@RequestParam("projectName") String projectName,
+			@RequestParam("repositoryUrl") String repositoryUrl,
+			HttpServletRequest request, HttpServletResponse response){
+		
+		Project project = new Project();
+		
+		project.setProjectCode(projectCode);
+		
+		project.setProjectName(projectName);
+		
+		project.setRepositoryUrl(repositoryUrl);
+		
+		int result = projectService.insertSelective(project);
+		
+		if(result > 0){
+			return projectService.qureyByProCode(projectCode);
+		}
+		return null;
+	}
+	
 }

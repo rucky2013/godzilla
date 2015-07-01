@@ -16,7 +16,7 @@
       commands, create_time, real_name
       )
     values (#{id,jdbcType=DECIMAL}, #{userName,jdbcType=VARCHAR}, #{repositoryUrl,jdbcType=VARCHAR}, 
-      #{commands,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{realName,jdbcType=VARCHAR}
+      #{commands,jdbcType=VARCHAR}, now(), #{realName,jdbcType=VARCHAR}
       )
   </insert>
   <insert id="insertSelective" parameterType="cn.godzilla.model.SvnCmdLog" >
@@ -35,9 +35,7 @@
       <if test="commands != null" >
         commands,
       </if>
-      <if test="createTime != null" >
         create_time,
-      </if>
       <if test="realName != null" >
         real_name,
       </if>
@@ -55,9 +53,7 @@
       <if test="commands != null" >
         #{commands,jdbcType=VARCHAR},
       </if>
-      <if test="createTime != null" >
-        #{createTime,jdbcType=TIMESTAMP},
-      </if>
+        now() ,
       <if test="realName != null" >
         #{realName,jdbcType=VARCHAR},
       </if>

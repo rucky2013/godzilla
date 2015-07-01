@@ -18,6 +18,7 @@ public class ProjPrivate implements Serializable{
     
     private Integer ifVirtual;
 
+    private String currentBranchUrl;
     
     public Long getId() {
 		return id;
@@ -58,5 +59,15 @@ public class ProjPrivate implements Serializable{
 	public void setIfVirtual(Integer ifVirtual) {
 		this.ifVirtual = ifVirtual;
 	}
+
+	public String getCurrentBranchUrl() {
+		return currentBranchUrl;
+	}
+
+	public void setCurrentBranchUrl(String currentBranchUrl) {
+		this.currentBranchUrl = currentBranchUrl;
+	}
+	
+	
     
 }

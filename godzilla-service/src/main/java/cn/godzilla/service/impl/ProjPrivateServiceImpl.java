@@ -45,4 +45,21 @@ public class ProjPrivateServiceImpl implements ProjPrivateService {
 		return dao.queryDetail(map);
 	}
 
+	@Override
+	public ProjPrivate save(ProjPrivate projPrivate) {
+		
+		ProjPrivate result = this.queryDetail(projPrivate.getProjectCode(), projPrivate.getUserName());
+		
+		Long id = result.getId();
+		if(id > 0){ //存在即更新
+			projPrivate.setId(id);
+			this.update(projPrivate);
+		}else{ //不存在就新增
+			
+			this.insertSelective(projPrivate);
+			
+		}
+		return queryDetail(projPrivate.getProjectCode(), projPrivate.getUserName());
+	}
+
 }

@@ -8,13 +8,14 @@
     <result column="project_code" property="projectCode" jdbcType="VARCHAR" />
     <result column="virtual_truck_url" property="virtualTruckUrl" jdbcType="VARCHAR" />
     <result column="if_virtual" property="ifVirtual" jdbcType="INTEGER" />
+    <result column="current_branch_url" property="currentBranchUrl" jdbcType="VARCHAR" />
     
   </resultMap>
   <insert id="insert" parameterType="cn.godzilla.model.ProjPrivate" >
     insert into t_g_project_private (id, user_name, project_code, 
-      virtual_truck_url,if_virtual)
+      virtual_truck_url,if_virtual,current_branch_url)
     values (#{id,jdbcType=CHAR}, #{userName,jdbcType=VARCHAR}, #{projectCode,jdbcType=VARCHAR}, 
-      #{virtualTruckUrl,jdbcType=VARCHAR},#{ifVirtual,jdbcType=INTEGER})
+      #{virtualTruckUrl,jdbcType=VARCHAR},#{ifVirtual,jdbcType=INTEGER},#{currentBranchUrl,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="cn.godzilla.model.ProjPrivate" >
     insert into t_g_project_private
@@ -34,6 +35,9 @@
       <if test="ifVirtual != null" >
         if_virtual,
       </if>
+      <if test="currentBranchUrl != null" >
+        current_branch_url,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -51,11 +55,14 @@
       <if test="ifVirtual != null" >
         #{ifVirtual,jdbcType=INTEGER},
       </if>
+      <if test="currentBranchUrl != null" >
+        #{currentBranchUrl,jdbcType=VARCHAR},
+      </if>
     </trim>
   </insert>
   
   <sql id="queryColumns">id, user_name as userName, project_code as projectCode, 
-      virtual_truck_url as virtualTruckUrl ,if_virtual as ifVirtual </sql>
+      virtual_truck_url as virtualTruckUrl ,if_virtual as ifVirtual ,current_branch_url as currentBranchUrl</sql>
   <select id="queryDetail" resultType="cn.godzilla.model.ProjPrivate" parameterType="java.util.Map">
   	select <include refid="queryColumns" /> from t_g_project_private where user_name = #{userName} and project_code = #{projectCode}
   </select>    
@@ -68,6 +75,9 @@
 		</if>
 		<if test="ifVirtual != null">
 			if_virtual = #{ifVirtual,jdbcType=INTEGER},
+		</if>
+		<if test="currentBranchUrl != null">
+			current_branch_url = #{currentBranchUrl,jdbcType=VARCHAR},
 		</if>
 	</trim>
   	where id = #{id}

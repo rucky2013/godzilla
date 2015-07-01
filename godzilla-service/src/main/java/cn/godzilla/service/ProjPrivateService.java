@@ -1,6 +1,7 @@
 package cn.godzilla.service;
 
 
+
 import cn.godzilla.model.ProjPrivate;
 
 public interface ProjPrivateService{
@@ -12,5 +13,7 @@ public interface ProjPrivateService{
     public int update(ProjPrivate record);
     
     public ProjPrivate queryDetail(String projectCode,String userName);
+    
+    public ProjPrivate save(ProjPrivate record);
 
 }

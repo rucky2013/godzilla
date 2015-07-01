@@ -15,5 +15,7 @@ public interface ProjectService{
     public Project qureyByProCode(String projectCode);
     
     public List<Project> queryAll();
+    
+    public Project save(Project project);
 
 }
