@@ -24,7 +24,7 @@
       profile, operate_code, execute_time, 
       execute_result, result_info)
     values (#{id,jdbcType=DECIMAL}, #{userName,jdbcType=VARCHAR}, #{projectCode,jdbcType=VARCHAR}, 
-      #{profile,jdbcType=VARCHAR}, #{operateCode,jdbcType=INTEGER}, #{executeTime,jdbcType=TIMESTAMP}, 
+      #{profile,jdbcType=VARCHAR}, #{operateCode,jdbcType=INTEGER}, now(), 
       #{executeResult,jdbcType=INTEGER}, #{resultInfo,jdbcType=LONGVARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="cn.godzilla.model.OperateLog" >
@@ -45,9 +45,7 @@
       <if test="operateCode != null" >
         operate_code,
       </if>
-      <if test="executeTime != null" >
         execute_time,
-      </if>
       <if test="executeResult != null" >
         execute_result,
       </if>
@@ -71,9 +69,7 @@
       <if test="operateCode != null" >
         #{operateCode,jdbcType=INTEGER},
       </if>
-      <if test="executeTime != null" >
-        #{executeTime,jdbcType=TIMESTAMP},
-      </if>
+        now(),
       <if test="executeResult != null" >
         #{executeResult,jdbcType=INTEGER},
       </if>

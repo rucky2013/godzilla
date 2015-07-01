@@ -21,7 +21,7 @@
       update_time, finish_time, result_info,profile
       )
     values (#{id,jdbcType=BIGINT}, #{projectCode,jdbcType=VARCHAR}, #{currentStatus,jdbcType=INTEGER}, 
-      #{processRate,jdbcType=INTEGER}, #{operateStaff,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{processRate,jdbcType=INTEGER}, #{operateStaff,jdbcType=VARCHAR}, now(), 
       #{updateTime,jdbcType=TIMESTAMP}, #{finishTime,jdbcType=TIMESTAMP}, #{resultInfo,jdbcType=LONGVARCHAR},#{profile,jdbcType=VARCHAR}
       )
   </insert>
@@ -44,9 +44,7 @@
       <if test="operateStaff != null" >
         operate_staff,
       </if>
-      <if test="createTime != null" >
         create_time,
-      </if>
       <if test="updateTime != null" >
         update_time,
       </if>
@@ -76,9 +74,7 @@
       <if test="operateStaff != null" >
         #{operateStaff,jdbcType=VARCHAR},
       </if>
-      <if test="createTime != null" >
-        #{createTime,jdbcType=TIMESTAMP},
-      </if>
+        now(),
       <if test="updateTime != null" >
         #{updateTime,jdbcType=TIMESTAMP},
       </if>
@@ -112,9 +108,7 @@
       <if test="processRate != null" >
         process_rate = #{processRate},
       </if>
-      <if test="updateTime != null" >
-        update_time = #{updateTime},
-      </if>
+        update_time = now(),
       <if test="finishTime != null" >
         finish_time = #{finishTime},
       </if>

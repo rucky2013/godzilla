@@ -21,7 +21,7 @@
       create_time, commands, result_info, profile
       )
     values (#{id,jdbcType=DECIMAL}, #{userName,jdbcType=VARCHAR}, #{projectCode,jdbcType=VARCHAR}, 
-      #{createTime,jdbcType=TIMESTAMP}, #{commands,jdbcType=VARCHAR}, #{resultInfo,jdbcType=VARCHAR}, #{profile,jdbcType=VARCHAR}
+      now() , #{commands,jdbcType=VARCHAR}, #{resultInfo,jdbcType=VARCHAR}, #{profile,jdbcType=VARCHAR}
       )
   </insert>
   <insert id="insertSelective" parameterType="cn.godzilla.model.MvnCmdLog" >
@@ -37,9 +37,7 @@
       <if test="projectCode != null" >
         project_code,
       </if>
-      <if test="createTime != null" >
         create_time,
-      </if>
       <if test="commands != null" >
         commands,
       </if>
@@ -60,9 +58,7 @@
       <if test="projectCode != null" >
         #{projectCode,jdbcType=VARCHAR},
       </if>
-      <if test="createTime != null" >
-        #{createTime,jdbcType=TIMESTAMP},
-      </if>
+      now() ,
       <if test="commands != null" >
         #{commands,jdbcType=VARCHAR},
       </if>

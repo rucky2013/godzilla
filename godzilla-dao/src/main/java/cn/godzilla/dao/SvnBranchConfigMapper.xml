@@ -21,9 +21,7 @@
       <if test="createBy != null" >
         create_by,
       </if>
-      <if test="createTime != null" >
         create_time,
-      </if>
       <if test="createVersion != null" >
         create_version,
       </if>
@@ -50,9 +48,7 @@
       <if test="createBy != null" >
         #{createBy,jdbcType=VARCHAR},
       </if>
-      <if test="createTime != null" >
-        #{createTime,jdbcType=TIMESTAMP},
-      </if>
+        now(),
       <if test="createVersion != null" >
         #{createVersion,jdbcType=VARCHAR},
       </if>
@@ -79,9 +75,6 @@
       </if>
       <if test="createBy != null" >
         create_by = #{createBy},
-      </if>
-      <if test="createTime != null" >
-        create_time = #{createTime},
       </if>
       <if test="createVersion != null" >
         create_version = #{createVersion},

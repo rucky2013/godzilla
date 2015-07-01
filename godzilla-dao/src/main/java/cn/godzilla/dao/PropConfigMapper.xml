@@ -26,7 +26,7 @@
       auditor_text)
     values (#{id,jdbcType=DECIMAL}, #{projectCode,jdbcType=VARCHAR}, #{profile,jdbcType=VARCHAR}, 
       #{proKey,jdbcType=VARCHAR}, #{proValue,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, 
-      #{createBy,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{createBy,jdbcType=VARCHAR}, now(), #{updateTime,jdbcType=TIMESTAMP}, 
       #{lastValue,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER}, #{auditor,jdbcType=VARCHAR}, 
       #{auditorText,jdbcType=VARCHAR})
   </insert>
@@ -55,9 +55,7 @@
       <if test="createBy != null" >
         create_by,
       </if>
-      <if test="createTime != null" >
         create_time,
-      </if>
       <if test="updateTime != null" >
         update_time,
       </if>
@@ -96,9 +94,7 @@
       <if test="createBy != null" >
         #{createBy,jdbcType=VARCHAR},
       </if>
-      <if test="createTime != null" >
-        #{createTime,jdbcType=TIMESTAMP},
-      </if>
+       now(),
       <if test="updateTime != null" >
         #{updateTime,jdbcType=TIMESTAMP},
       </if>
@@ -148,9 +144,7 @@
       <if test="remark != null" >
         remark = #{remark,jdbcType=VARCHAR},
       </if>
-      <if test="updateTime != null" >
-        update_time = #{updateTime,jdbcType=TIMESTAMP},
-      </if>
+        update_time = now(),
       <if test="lastValue != null" >
         last_value = #{lastValue,jdbcType=VARCHAR},
       </if>

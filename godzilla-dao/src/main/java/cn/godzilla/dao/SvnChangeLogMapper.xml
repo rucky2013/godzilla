@@ -22,7 +22,7 @@
       repository_url, file_name, create_time, 
       result_status, result_info)
     values (#{id,jdbcType=DECIMAL}, #{userName,jdbcType=VARCHAR}, #{type,jdbcType=INTEGER}, 
-      #{repositoryUrl,jdbcType=VARCHAR}, #{fileName,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{repositoryUrl,jdbcType=VARCHAR}, #{fileName,jdbcType=VARCHAR}, now(), 
       #{resultStatus,jdbcType=INTEGER}, #{resultInfo,jdbcType=LONGVARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="cn.godzilla.model.SvnChangeLog" >
@@ -43,9 +43,7 @@
       <if test="fileName != null" >
         file_name,
       </if>
-      <if test="createTime != null" >
         create_time,
-      </if>
       <if test="resultStatus != null" >
         result_status,
       </if>
@@ -69,9 +67,7 @@
       <if test="fileName != null" >
         #{fileName,jdbcType=VARCHAR},
       </if>
-      <if test="createTime != null" >
-        #{createTime,jdbcType=TIMESTAMP},
-      </if>
+        now(),
       <if test="resultStatus != null" >
         #{resultStatus,jdbcType=INTEGER},
       </if>
