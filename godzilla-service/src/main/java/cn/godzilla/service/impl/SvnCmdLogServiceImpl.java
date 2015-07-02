@@ -1,5 +1,7 @@
 package cn.godzilla.service.impl;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,14 +14,26 @@ public class SvnCmdLogServiceImpl implements SvnCmdLogService{
 	
 	@Autowired
 	private SvnCmdLogMapper dao ;
-	
 
 	@Override
-	public void insert(SvnCmdLog svnCmdLog) {
-		
-		dao.insert(svnCmdLog);
-		
-		
+	public int insert(SvnCmdLog record) {
+
+		return dao.insert(record);
 	}
+
+	@Override
+	public int insertSelective(SvnCmdLog record) {
+
+		return dao.insertSelective(record);
+	}
+
+	@Override
+	public List<SvnCmdLog> queryList() {
+
+		return dao.queryList();
+	}
+	
+
+	
 
 }

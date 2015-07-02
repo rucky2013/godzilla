@@ -1,9 +1,15 @@
 package cn.godzilla.model;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class ProjStatus {
-    private String id;
+public class ProjStatus implements Serializable{
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	private Long id;
 
     private String projectCode;
 
@@ -20,16 +26,19 @@ public class ProjStatus {
     private Date finishTime;
 
     private String resultInfo;
+    
+    private String profile;
 
-    public String getId() {
-        return id;
-    }
 
-    public void setId(String id) {
-        this.id = id;
-    }
+    public Long getId() {
+		return id;
+	}
 
-    public String getProjectCode() {
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public String getProjectCode() {
         return projectCode;
     }
 
@@ -92,4 +101,13 @@ public class ProjStatus {
     public void setResultInfo(String resultInfo) {
         this.resultInfo = resultInfo;
     }
+
+	public String getProfile() {
+		return profile;
+	}
+
+	public void setProfile(String profile) {
+		this.profile = profile;
+	}
+    
 }

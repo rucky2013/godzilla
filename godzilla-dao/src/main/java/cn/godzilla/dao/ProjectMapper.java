@@ -11,4 +11,10 @@ public interface ProjectMapper {
     int insertSelective(Project record);
 
 	List<Project> queryProjectsByUsername(String username);
+    
+    boolean updateByProCode(Project project);
+    
+    Project qureyByProCode(String projectCode);
+    
+    List<Project> queryAll();
 }

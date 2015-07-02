@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.godzilla.dao.SvnBranchConfigMapper" >
+  
+  
+  <insert id="insert" parameterType="cn.godzilla.model.SvnBranchConfig" >
+    insert into t_g_svn_branch_config
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="projectCode != null" >
+        project_code,
+      </if>
+      <if test="branchUrl != null" >
+        branch_url,
+      </if>
+      <if test="branchName != null" >
+        branch_name,
+      </if>
+      <if test="createBy != null" >
+        create_by,
+      </if>
+        create_time,
+      <if test="createVersion != null" >
+        create_version,
+      </if>
+      <if test="currentVersion != null" >
+        current_version,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="projectCode != null" >
+        #{projectCode,jdbcType=VARCHAR},
+      </if>
+      <if test="branchUrl != null" >
+        #{branchUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="branchName != null" >
+        #{branchName,jdbcType=VARCHAR},
+      </if>
+      <if test="createBy != null" >
+        #{createBy,jdbcType=VARCHAR},
+      </if>
+        now(),
+      <if test="createVersion != null" >
+        #{createVersion,jdbcType=VARCHAR},
+      </if>
+      <if test="currentVersion != null" >
+        #{currentVersion,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  
+  <update id="update">
+  	update t_g_svn_branch_config set
+  	<trim suffixOverrides="," >
+      <if test="projectCode != null" >
+        project_code = #{projectCode},
+      </if>
+      <if test="branchUrl != null" >
+        branch_url = #{branchUrl},
+      </if>
+      <if test="branchName != null" >
+        branch_name = #{branchName},
+      </if>
+      <if test="createBy != null" >
+        create_by = #{createBy},
+      </if>
+      <if test="createVersion != null" >
+        create_version = #{createVersion},
+      </if>
+      <if test="currentVersion != null" >
+        current_version = #{currentVersion},
+      </if>
+      <if test="status != null" >
+        status = #{status},
+      </if>
+    </trim>
+  	where id = #{id}
+  </update>
+  <sql id="queryColumns">id, project_code as projectCode, branch_url as branchUrl, 
+      branch_name as branchName, create_by as createBy, create_time as createTime, 
+      create_version as createVersion, current_version as currentVersion ,status </sql>
+  <select id="queryListByProjectCode" resultType="cn.godzilla.model.SvnBranchConfig" parameterType="java.lang.String">
+  	select <include refid="queryColumns" /> from t_g_svn_branch_config where project_code = #{projectCode}
+  	
+  </select>
+  
+</mapper>

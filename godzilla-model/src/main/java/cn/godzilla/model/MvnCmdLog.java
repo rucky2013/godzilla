@@ -1,15 +1,27 @@
 package cn.godzilla.model;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class MvnCmdLog {
-    private Long id;
+public class MvnCmdLog implements Serializable{
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	private Long id;
     
     private String userName;
 
     private String projectCode;
+    
+    private String  commands ;
 
     private Date createTime;
+    
+    private String resultInfo ;
+    
+    private String profile;
 
     public Long getId() {
         return id;
@@ -42,4 +54,30 @@ public class MvnCmdLog {
     public void setCreateTime(Date createTime) {
         this.createTime = createTime;
     }
+
+	public String getCommands() {
+		return commands;
+	}
+
+	public void setCommands(String commands) {
+		this.commands = commands;
+	}
+
+	public String getResultInfo() {
+		return resultInfo;
+	}
+
+	public void setResultInfo(String resultInfo) {
+		this.resultInfo = resultInfo;
+	}
+
+	public String getProfile() {
+		return profile;
+	}
+
+	public void setProfile(String profile) {
+		this.profile = profile;
+	}
+    
+    
 }
