@@ -99,17 +99,41 @@ public class ProjectController {
 	 * @param response
 	 * @return
 	 */
-	@RequestMapping(value = "st/{projectCode}/{profile}/{operateStaff}", method = RequestMethod.GET)
+	@RequestMapping(value = "st/{projectCode}/{operateStaff}", method = RequestMethod.GET)
 	@ResponseBody
 	public ProjStatus getStatus(
 			@PathVariable("projectCode") String projectCode,
-			@PathVariable("profile") String profile,
 			@PathVariable("operateStaff") String operateStaff,
 			HttpServletRequest request, HttpServletResponse response) {
 		logger.info("**********查询项目状态********projectCode:" + projectCode
-				+ ",profile:" + profile + ",operateStaff:" + operateStaff);
+				+  ",operateStaff:" + operateStaff);
 		return projStatusService
-				.queryDetail(projectCode, profile, operateStaff);
+				.queryDetail(projectCode, operateStaff);
+	}
+	
+	/**
+	 * 更新项目状态
+	 * @param projectCode
+	 * @param operateStaff
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping(value = "st/save/{projectCode}/{operateStaff}/{status}", method = RequestMethod.POST)
+	@ResponseBody
+	public ProjStatus putStatus(@PathVariable("projectCode") String projectCode,
+			@PathVariable("operateStaff") String operateStaff,
+			@PathVariable("status") Integer status,
+			HttpServletRequest request, HttpServletResponse response){
+		
+		ProjStatus record = new ProjStatus();
+		record.setProjectCode(projectCode);
+		record.setOperateStaff(operateStaff);
+		record.setCurrentStatus(status);
+		
+		logger.info("**********更新项目状态********projectCode:" + projectCode + ",operateStaff:" + operateStaff);
+		
+		return projStatusService.save(record);
 	}
 	
 	/**

@@ -59,7 +59,7 @@ public class LogsController {
 		svnCmdLogService.insertSelective(log);
 		
 	}
-	@RequestMapping(value ="svnconflict/{user}")
+	@RequestMapping(value ="svnconflict/{user}",method=RequestMethod.GET)
 	@ResponseBody
 	public void addSvnConflictLog(@PathVariable("user") String user,
 			@RequestParam("pcode") String pcode,
