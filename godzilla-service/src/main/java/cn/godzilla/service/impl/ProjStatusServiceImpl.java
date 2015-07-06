@@ -29,12 +29,11 @@ public class ProjStatusServiceImpl implements ProjStatusService {
 	}
 
 	@Override
-	public ProjStatus queryDetail(String projectCode,String profile,String operateStaff) {
+	public ProjStatus queryDetail(String projectCode,String operateStaff) {
 		
 		Map<String, String> map = new HashMap<String, String>();
 		
 		map.put("projectCode", projectCode);
-		map.put("profile", profile);
 		map.put("operateStaff", operateStaff);
 		
 		return dao.queryDetail(map);
@@ -44,6 +43,28 @@ public class ProjStatusServiceImpl implements ProjStatusService {
 	public boolean update(ProjStatus record) {
 		
 		return dao.update(record);
+	}
+	@Override
+	public ProjStatus save(ProjStatus record){
+		
+		
+		Map<String, String> map = new HashMap<String, String>();
+		map.put("projectCode", record.getProjectCode());
+		map.put("operateStaff", record.getOperateStaff());
+		
+		
+		ProjStatus info = dao.queryDetail(map) ;
+		
+		if(info == null || info.getId() < 0){
+			
+			dao.insertSelective(record);
+		}else{
+			
+			dao.update(record);
+		}
+		
+		return dao.queryDetail(map) ;
+		
 	}
 
 }
