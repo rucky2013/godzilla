@@ -1,0 +1,49 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>cn.godzilla</groupId>
+		<artifactId>godzilla-parent</artifactId>
+		<version>${parent.version}</version>
+	</parent>
+
+	<artifactId>godzilla-rpc</artifactId>
+	<name>${project.artifactId}</name>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.esotericsoftware.kryo</groupId>
+			<artifactId>kryo</artifactId>
+			<version>2.20</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.ow2.asm</groupId>
+					<artifactId>asm</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>cglib</groupId>
+			<artifactId>cglib</artifactId>
+			<version>2.2.2</version>
+		</dependency>
+		<dependency>
+			<groupId>io.netty</groupId>
+			<artifactId>netty</artifactId>
+			<version>3.6.0.Final</version>
+		</dependency>
+		<dependency>
+			<groupId>org.iq80.snappy</groupId>
+			<artifactId>snappy</artifactId>
+			<version>0.2</version>
+		</dependency>
+	</dependencies>
+</project>

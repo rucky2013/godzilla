@@ -26,7 +26,7 @@ public class WebsocketController {
 	public Object welcome(HttpServletRequest request, HttpServletResponse response) {
 
 		logger.debug("*****UserController.welcome*****");
-		return "/websocket";
+		return "/echo/websocket_test";
 	}
 
 }
