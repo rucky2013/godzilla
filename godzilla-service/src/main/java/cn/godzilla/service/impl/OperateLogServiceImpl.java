@@ -39,4 +39,19 @@ public class OperateLogServiceImpl implements OperateLogService {
 		return dao.queryList(map);
 	}
 
+	@Override
+	public List<OperateLog> queryAll(Long id) {
+		
+		if(id <= 0 ){
+			
+			id = Long.MAX_VALUE ;
+		}
+		
+		Map<String, Long> map = new HashMap<String, Long>();
+		
+		map.put("id", id) ;
+		
+		return dao.queryAll(map) ;
+	}
+
 }

@@ -81,13 +81,23 @@
   
   <sql id="queryColumns">id, user_name as userName, project_code as projectCode, 
       profile, operate_code as operateCode, execute_time executeTime, 
-      execute_result execiteResult, result_info resultInfo
+      execute_result executeResult, result_info resultInfo
       </sql>
       
       <select id="queryList" resultType="cn.godzilla.model.OperateLog" parameterType="java.util.Map">
       	select 
       		<include refid="queryColumns" /> 
       		from t_g_operate_logs where project_code = #{projectCode} and profile = #{profile} order by id limit 100
+      </select>
+      
+      <select id="queryAll" resultType="cn.godzilla.model.OperateLog" parameterType="java.util.Map">
+      	select 
+      		<include refid="queryColumns" /> 
+      		from t_g_operate_logs
+      			<if test="id != null">
+      				where id &lt; #{id}
+      			</if>
+      		  order by id limit 10
       </select>
   
 </mapper>

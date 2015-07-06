@@ -12,4 +12,6 @@ public interface OperateLogMapper {
     int insertSelective(OperateLog record);
     
     List<OperateLog> queryList(Map<String, String> map);
+    
+    List<OperateLog> queryAll(Map<String, Long> map);
 }
