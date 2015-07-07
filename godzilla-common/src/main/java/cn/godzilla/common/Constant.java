@@ -1,6 +1,6 @@
 package cn.godzilla.common;
 
-public class Constant {
+public interface Constant {
 	
 	public static int TRUE = 1;
 	

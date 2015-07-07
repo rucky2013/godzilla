@@ -11,13 +11,14 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import cn.godzilla.common.ReturnCodeEnum;
-import cn.godzilla.common.StringUtil;
+import cn.godzilla.common.Constant;
 import cn.godzilla.service.UserService;
 
 @Controller
 @RequestMapping("/user")
-public class UserController {
+public class UserController implements Constant{
+
+	private static final String ReturnCodeEnum = null;
 
 	private final Logger logger = LogManager.getLogger(UserController.class);
 
@@ -36,7 +37,7 @@ public class UserController {
 	@RequestMapping(value="/login/{username}/{password}", method=RequestMethod.GET)
 	public Object login(@PathVariable String username, @PathVariable String password, HttpServletRequest request, HttpServletResponse response) {
 		logger.debug("*****UserController.login*****");
-		
+		String sid = 
 		ReturnCodeEnum loginReturn = userService.login(username, password);  //do login 
 		
 		switch(loginReturn) {

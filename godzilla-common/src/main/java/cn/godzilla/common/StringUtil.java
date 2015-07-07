@@ -9,9 +9,28 @@ import org.springframework.util.StringUtils;
 
 public class StringUtil {
 	
+	public static void main(String[] args) {
+		System.out.println(StringUtil.change(12356789.9845));
+		System.out.println(getRandom(6));
+	}
+	
 	public static boolean isEmpty(String str){
 		
 		return ("".equals(str)||str == null) ;
+	}
+	
+	public static String getRandom(int num) {
+		String random = "";
+		if(num<=0) 
+			return random;
+		for(int i=0;i<num;i++) {
+			random += getRandom();
+		}
+		return random;
+	}
+	
+	public static String getRandom(){
+		return (int)(Math.random()*10)+"";
 	}
 
 	public static String getReqPrameter(HttpServletRequest request, String key) {
@@ -108,7 +127,5 @@ public class StringUtil {
 		return rs;
 	}
 
-	public static void main(String[] args) {
-		System.out.println(StringUtil.change(12356789.9845));
-	}
+	
 }
