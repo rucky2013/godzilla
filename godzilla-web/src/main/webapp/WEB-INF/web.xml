@@ -12,15 +12,26 @@
 	<listener>
 		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
 	</listener>
-	<!-- <servlet>
-		<servlet-name>security</servlet-name>
-		<servlet-class></servlet-class>
-	</servlet>
-	<servlet-mapping>
-		<servlet-name>security</servlet-name>
-		<url-pattern>/</url-pattern>
-	</servlet-mapping> -->
-	
+	<!-- filter start -->
+	<!-- 登录认证 -->
+	<filter>
+		<filter-name>authentication</filter-name>
+		<filter-class>cn.godzilla.security.Authentication</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>authentication</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+	<!-- 授权 -->
+	<filter>
+		<filter-name>authorization</filter-name>
+		<filter-class>cn.godzilla.security.Authorization</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>authorization</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+	<!-- filter end -->
 	<servlet>
 		<servlet-name>springmvc</servlet-name>
 		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
