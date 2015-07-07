@@ -36,7 +36,7 @@
             	<table width="200" border="0" class="table1">
                   <tr>
                     <#list projects as item>
-                    	<td><a href="# ${item.projectCode}" title="${item.projectCode}"><span></span>${item.projectName}</a></td>
+                    	<td><a href="project/check.html?projectCode=${item.projectCode}&profile=test" title="${item.projectCode}"><span></span>${item.projectName}</a></td>
                     </#list>
                     
                   </tr>
