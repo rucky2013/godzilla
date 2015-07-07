@@ -8,14 +8,14 @@ public interface Cache<K, V, T> {
 	public void delete(K key);
 	public V get(K key);
 	
-	public Entry<K, V> createEntry(T type);
+	public Entry<K, V> createEntry(T type) ;
 	
 	interface Entry<K, V> {
 		
 		public K getKey() ;
-		public void setKey(K key) ;
+		public Entry setKey(K key) ;
 		public V getValue() ;
-		public void setValue(V value) ;
+		public Entry setValue(V value) ;
 	}
 
 }
