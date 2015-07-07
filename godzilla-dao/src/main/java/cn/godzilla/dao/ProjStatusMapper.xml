@@ -96,7 +96,7 @@
   <select id="queryDetail" parameterType="java.util.Map" resultType="cn.godzilla.model.ProjStatus">
   	select 
   		<include refid="queryColumns" />
-  		from t_g_project_status where project_code = #{projectCode} and operate_staff = #{operateStaff}
+  		from t_g_project_status where project_code = #{projectCode} and operate_staff = #{operateStaff} and profile = #{profile}
   </select>
   
   <update id="update" parameterType="cn.godzilla.model.ProjStatus">

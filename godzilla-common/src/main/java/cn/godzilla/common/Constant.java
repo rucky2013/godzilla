@@ -2,9 +2,15 @@ package cn.godzilla.common;
 
 public interface Constant {
 	
-	public static int TRUE = 1;
+	final static int TRUE = 1;
 	
-	public static int FALSE = 0 ;
+	final static int FALSE = 0 ;
+	
+	final static String PROFILE_TEST = "test";
+	
+	final static String PROFILE_PRO_DEPLOY = "pro_deploy";
+	
+	final static String PROFILE_ONLINE = "online" ;
 
 	final static String NULL_NAMEPASSWORD = "100001";
 	final static String NOTEXIST_USER = "100002";

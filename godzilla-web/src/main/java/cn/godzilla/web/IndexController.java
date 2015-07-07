@@ -36,7 +36,7 @@ public class IndexController {
 		
 		List<Project> projects = projectService.queryAll();
 		
-		List<OperateLog> logs = operateLogService.queryAll(10L);
+		List<OperateLog> logs = operateLogService.queryAll(Long.MAX_VALUE);
 		
 		ModelAndView view = new ModelAndView();
 		

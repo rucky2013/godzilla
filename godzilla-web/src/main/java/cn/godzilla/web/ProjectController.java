@@ -14,11 +14,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 
+import cn.godzilla.common.Constant;
+import cn.godzilla.common.StringUtil;
 import cn.godzilla.model.ClientConfig;
 import cn.godzilla.model.OperateLog;
 import cn.godzilla.model.ProjStatus;
 import cn.godzilla.model.Project;
+import cn.godzilla.model.SvnBranchConfig;
 import cn.godzilla.model.SvnConflict;
 import cn.godzilla.service.ClientConfigService;
 import cn.godzilla.service.OperateLogService;
@@ -93,22 +97,23 @@ public class ProjectController {
 	/**
 	 * 根据项目编码，环境类型，操作人，查询项目状态
 	 * @param projectCode 项目编码
-	 * @param profile 环境类型
 	 * @param operateStaff 操作人
+	 * @param profile 环境类型
 	 * @param request
 	 * @param response
 	 * @return
 	 */
-	@RequestMapping(value = "st/{projectCode}/{operateStaff}", method = RequestMethod.GET)
+	@RequestMapping(value = "st/{projectCode}/{operateStaff}/{profile}", method = RequestMethod.GET)
 	@ResponseBody
 	public ProjStatus getStatus(
 			@PathVariable("projectCode") String projectCode,
 			@PathVariable("operateStaff") String operateStaff,
+			@PathVariable("profile") String profile,
 			HttpServletRequest request, HttpServletResponse response) {
 		logger.info("**********查询项目状态********projectCode:" + projectCode
 				+  ",operateStaff:" + operateStaff);
 		return projStatusService
-				.queryDetail(projectCode, operateStaff);
+				.queryDetail(projectCode, operateStaff,profile);
 	}
 	
 	/**
@@ -262,6 +267,57 @@ public class ProjectController {
 			return projectService.qureyByProCode(projectCode);
 		}
 		return null;
+	}
+	@RequestMapping(value = "check", method = RequestMethod.GET)
+	public ModelAndView checkPorject(@RequestParam("projectCode") String projectCode,
+			@RequestParam("profile") String profile,
+			HttpServletRequest request, HttpServletResponse response){
+		
+		
+		
+		ModelAndView view = new ModelAndView();
+		
+		view.setViewName("project");
+		
+		if(StringUtil.isEmpty(projectCode)){
+			view.setViewName("index");
+			return view;
+		}
+		if(StringUtil.isEmpty(profile)){
+			
+			profile = Constant.PROFILE_TEST ;  //TEST
+		}
+		
+		ClientConfig client = clientConfigService.queryDetail(projectCode, profile) ;
+		
+		String remoteIp = client.getRemoteIp() ;
+		
+		Project project = projectService.qureyByProCode(projectCode);
+		
+		String repositoryUrl = project.getRepositoryUrl();
+		
+		List<SvnBranchConfig> svnBranchConfigs = svnBranchConfigService.queryListByProjectCode(projectCode);
+		
+		List<OperateLog> operateLogs = operateLogService.queryList(projectCode, profile);
+		
+		ProjStatus projStatus =  projStatusService.queryDetail(projectCode, "lizw",profile);
+		
+		if(projStatus == null){
+			
+			projStatus = new ProjStatus();
+			projStatus.setCurrentStatus(0);
+			projStatus.setProcessRate(0);
+		}
+		
+		request.setAttribute("remoteIp", remoteIp);
+		request.setAttribute("repositoryUrl", repositoryUrl);
+		request.setAttribute("projectCode", projectCode);
+		request.setAttribute("svnBranchConfigs", svnBranchConfigs);
+		request.setAttribute("operateLogs", operateLogs);
+		request.setAttribute("projStatus", projStatus);
+		request.setAttribute("profile", profile);
+		
+		return view ;
 	}
 	
 }
