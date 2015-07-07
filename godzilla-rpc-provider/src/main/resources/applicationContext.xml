@@ -54,5 +54,4 @@
 	</bean>
 
 	<import resource="classpath:spring-redis.xml"/>
-
 </beans>
