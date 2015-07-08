@@ -20,14 +20,14 @@ import org.xml.sax.SAXException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-public class XmlUtils {
-	private static final Logger logger = LogManager.getLogger(XmlUtils.class);
+public class XmlUtil {
+	private static final Logger logger = LogManager.getLogger(XmlUtil.class);
 
 	public static final String GET_XMLFILE_PATH = "F:/yixin_fso_app/godzilla/godzilla-web/pom.xml";
 
 	public static final String SAVE_XMLFILE_PATH = "F:/yixin_fso_app/godzilla/godzilla-web/pom1.xml";
 
-	public XmlUtils() {
+	public XmlUtil() {
 
 	}
 
