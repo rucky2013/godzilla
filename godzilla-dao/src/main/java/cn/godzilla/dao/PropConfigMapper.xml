@@ -135,6 +135,13 @@
   	
   </select>
   
+  <select id="queryListByProjectcodeAndProfile" parameterType="map" resultType="cn.godzilla.model.PropConfig">
+  	select <include refid="queryColumns" /> from t_g_properties_config 
+  	where project_code = #{projectCode} and profile = #{profile}
+  	and status = 1
+  	
+  </select>
+  
   <update id="update">
   	update t_g_properties_config set 
   	<trim suffixOverrides="," >
@@ -160,5 +167,6 @@
   	</trim>
   	where id =  #{id,jdbcType=BIGINT}
   </update>
+  
   
 </mapper>

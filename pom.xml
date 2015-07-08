@@ -91,6 +91,7 @@
 	<dependencyManagement>
 
 		<dependencies>
+		
 			<!-- servlet -->
 			<dependency>
 				<groupId>org.apache.tomcat</groupId>
@@ -224,6 +225,12 @@
 				<artifactId>dom4j</artifactId>
 				<version>${dom4j.version}</version>
 			</dependency>
+			<!-- fastjson -->
+			<dependency>
+			<groupId>com.alibaba</groupId>
+			<artifactId>fastjson</artifactId>
+			<version>${fastjson.version}</version>
+		</dependency>
 		</dependencies>
 	</dependencyManagement>
 </project>

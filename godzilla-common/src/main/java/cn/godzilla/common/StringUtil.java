@@ -1,5 +1,6 @@
 package cn.godzilla.common;
 
+import java.io.IOException;
 import java.util.Map;
 import java.util.UUID;
 
@@ -7,7 +8,35 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.util.StringUtils;
 
+import cn.godzilla.common.config.Config;
+
 public class StringUtil {
+	
+	/**
+	 * 获取某类型文件的    路径信息
+	 * @param sort 何种类型
+	 * @param args 附加参数
+	 * @return
+	 * @throws IOException
+	 */
+	public static String getPath(String sort, String args[]) throws IOException {
+		String path = "";
+		switch(sort) {
+		case "parentPom":
+			path = Config.getPomBasepath("") + "/" + args[0] + "/pom.xml";
+			break;
+		case "parentPom1"://TEST
+			path = Config.getPomBasepath("") + "/" + args[0] + "/pom1.xml";
+			break;
+		case "webPom":
+			path = Config.getPomBasepath("") + "/" + args[0] + "/" + args[0] + "-web" + "/pom.xml";
+			break;
+		case "webPom1"://TEST
+			path = Config.getPomBasepath("") + "/" + args[0] + "/" + args[0] + "-web" + "/pom1.xml";
+			break;
+		}
+		return path;
+	}
 	
 	public static void main(String[] args) {
 		System.out.println(StringUtil.change(12356789.9845));

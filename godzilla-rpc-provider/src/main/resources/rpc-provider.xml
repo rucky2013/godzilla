@@ -6,5 +6,5 @@
 	http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
 	
 	<bean id="helloService" class="cn.godzilla.rpc.benchmark.service.HelloServiceImpl" />
-	
+	<bean id="propConfigService" class="cn.godzilla.service.impl.PropConfigServiceImpl"></bean>
 </beans>

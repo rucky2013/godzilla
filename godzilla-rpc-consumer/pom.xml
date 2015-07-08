@@ -30,5 +30,10 @@
 			<artifactId>godzilla-rpc</artifactId>
 			<version>${project.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>cn.godzilla</groupId>
+			<artifactId>godzilla-service</artifactId>
+			<version>${project.version}</version>
+		</dependency>
 	</dependencies>
 </project>

@@ -53,5 +53,5 @@
 		<property name="dataSource" ref="dataSource" />
 	</bean>
 
-	<import resource="classpath:spring-redis.xml"/>
+	<import resource="classpath:rpc-provider.xml"/>
 </beans>

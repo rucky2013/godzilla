@@ -6,6 +6,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.util.Iterator;
+import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -20,25 +21,64 @@ import org.xml.sax.SAXException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import cn.godzilla.model.PropConfig;
+
 public class XmlUtil {
 	private static final Logger logger = LogManager.getLogger(XmlUtil.class);
 
-	public static final String GET_XMLFILE_PATH = "F:/yixin_fso_app/godzilla/godzilla-web/pom.xml";
+	public static final String PARENT_POMPATH = "F:/yixin_fso_app/godzilla/pom.xml";
+	public static final String SAVE_PARENT_POMPATH = "F:/yixin_fso_app/godzilla/pom1.xml";
 
-	public static final String SAVE_XMLFILE_PATH = "F:/yixin_fso_app/godzilla/godzilla-web/pom1.xml";
-
-	public XmlUtil() {
-
-	}
+	public static final String WEB_POMPATH = "F:/yixin_fso_app/godzilla/godzilla-web/pom.xml";
+	public static final String SAVE_WEB_POMPATH = "F:/yixin_fso_app/godzilla/godzilla-web/pom1.xml";
 
 	public static void main(String args[]) throws DocumentException, IOException {
-		Document doc = parse(GET_XMLFILE_PATH);
+		/*Document doc = parse(GET_XMLFILE_PATH);
 		logger.info(doc);
 
 		// pom1.xml
 		Document doc1 = parse(SAVE_XMLFILE_PATH);
-		printDocument(doc1);
+		printDocument(doc1);*/
+		coverParentPom("SDFLJ", PARENT_POMPATH, SAVE_PARENT_POMPATH);
 	}
+	
+	/**
+	 * 修改pom.xml parent.version
+	 * @param parentVersion
+	 * @param parentPomPath
+	 * @param savePomPath
+	 * @throws DocumentException 
+	 * @throws IOException 
+	 */
+	public static void coverParentPom(String parentVersion, String parentPomPath, String savePomPath) throws DocumentException, IOException {
+		Document doc = parse(parentPomPath);
+		Element root = doc.getRootElement();
+		Element parent_version = root.element("properties").element("parent.version");
+
+		parent_version.setText(parentVersion);
+		logger.info("++|++|++>ParentPom.properties:"+parent_version.getText().toString());
+		saveDocument(doc, savePomPath);
+	}
+	/**
+	 * 将配置项  写入pom.xml
+	 * @param propconfigs
+	 * @param savePomPath 
+	 * @throws DocumentException 
+	 * @throws IOException 
+	 */
+	public static void coverWebPom(List<PropConfig> propconfigs, String webPomPath, String savePomPath) throws DocumentException, IOException {
+		Document doc = parse(webPomPath);
+		Element root = doc.getRootElement();
+		Element properties = root.element("profiles").element("profile").element("properties");
+		properties.clearContent();
+		
+		for(PropConfig propconfig : propconfigs) {
+			properties.addElement(propconfig.getProKey()).setText(propconfig.getProValue());
+		}
+		logger.info("++|++|++>coverWebPom.properties:"+properties.getText().toString());
+		saveDocument(doc, savePomPath);
+	}
+
 
 	/**
 	 * 从根节点遍历，来修改XML文件,并保存。
@@ -63,7 +103,7 @@ public class XmlUtil {
 
 		System.out.println(properties.getText().toString());
 		
-		saveDocument(doc);
+		saveDocument(doc, SAVE_WEB_POMPATH);
 	}
 
 	/**
@@ -97,13 +137,14 @@ public class XmlUtil {
 	 * 保存XML文档
 	 * 
 	 * @param doc
+	 * @param filePath
 	 * @throws IOException
 	 */
-	public static void saveDocument(Document doc) throws IOException {
+	public static void saveDocument(Document doc, String filePath) throws IOException {
 		OutputFormat format = OutputFormat.createPrettyPrint();
-		XMLWriter writer = new XMLWriter(new FileOutputStream(SAVE_XMLFILE_PATH), format);
+		XMLWriter writer = new XMLWriter(new FileOutputStream(filePath), format);
 		writer.write(doc);
 		writer.close();
 	}
-
+	
 }

@@ -32,8 +32,81 @@
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
+			<groupId>cn.godzilla</groupId>
+			<artifactId>godzilla-service</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 		</dependency>
 	</dependencies>
+	
+	<build>
+		<finalName>godzilla-rpc-provider</finalName>
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>true</filtering>
+				<includes>
+					<include>**/*.properties</include>
+				</includes>
+			</resource>
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>false</filtering>
+				<includes>
+					<include>**/*.xml</include>
+				</includes>
+			</resource>
+		</resources>
+	</build>
+	
+	
+	<profiles>
+
+		<!-- 以下是开发联调环境 执行mvn命令时请加参数 -Pdev 不加-P 也默认此配置 -->
+		<profile>
+			<id>dev</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.tomcat.maven</groupId>
+						<artifactId>tomcat7-maven-plugin</artifactId>
+						<version>2.2</version>
+						<configuration>
+							<url>http://10.100.142.65:8080/manager/text</url>
+							<server>godzilla-admin</server>
+						</configuration>
+						<executions>
+							<execution>
+								<phase>pre-integration-test</phase>
+								<configuration>
+									<warFile>target/${project.build.finalName}.war</warFile>
+									<path>/${project.build.finalName}</path>
+								</configuration>
+								<goals>
+									<goal>redeploy</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+			<properties>
+				<jdbc.driver>com.mysql.jdbc.Driver</jdbc.driver>
+				<jdbc.url>jdbc:mysql://10.100.142.11:3306/godzilla_db?characterEncoding=utf8</jdbc.url>
+				<jdbc.username>root</jdbc.username>
+				<jdbc.password>root</jdbc.password>
+				
+				<redis.master.host>10.100.142.9</redis.master.host>
+				<redis.master.port>6379</redis.master.port>
+				<redis.master.pass>SH89qwIO</redis.master.pass>
+			</properties>
+		</profile>
+
+	</profiles>
 </project>
