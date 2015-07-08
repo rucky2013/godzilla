@@ -21,4 +21,18 @@ public interface Constant {
 	public String MQ_CONSUMER_NAME_KEY = "rocketmq.consumer.name";
 	public String MQ_NAMESRV_ADDR_KEY = "rocketmq.nameserver.address";
 	public String MQ_TOPIC_KEY = "rocketmq.topic";
+	
+	final static String PROFILE_TEST = "test";
+	
+	final static String PROFILE_PRO_DEPLOY = "pro_deploy";
+	
+	final static String PROFILE_ONLINE = "online" ;
+
+	final static String NULL_NAMEPASSWORD = "100001";
+	final static String NOTEXIST_USER = "100002";
+	final static String WRONG_PASSWORD = "100003";
+	final static String UNKNOW_ERROR = "100004";
+	
+	final static String OK_CHECKUSER = "200001";
+	final static String OK_LOGIN = "200002";
 }

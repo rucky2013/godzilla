@@ -8,10 +8,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-import cn.godzilla.common.ConstantValue;
+import com.alibaba.fastjson.JSON;
+
+import cn.godzilla.common.RedisUtil;
 import cn.godzilla.common.ReturnCodeEnum;
 import cn.godzilla.common.StringUtil;
+import cn.godzilla.common.cache.CACHE_ENUM;
 import cn.godzilla.common.cache.RedisCache;
+import cn.godzilla.common.cache.RedisCache.Entry;
 import cn.godzilla.dao.ProjectMapper;
 import cn.godzilla.dao.UserMapper;
 import cn.godzilla.model.Project;
@@ -28,8 +32,10 @@ public class UserServiceImpl implements UserService{
 	@Autowired
 	private ProjectMapper projectMapper;
 	@Autowired
-	private RedisCache redisCache;
+	private RedisCache cache;
 
+	@Autowired
+	private RedisUtil rdbc;
 	
 	private String checkUser(String username, String password){
 		
@@ -53,26 +59,35 @@ public class UserServiceImpl implements UserService{
 	}
 
 	@Override
-	public ReturnCodeEnum login(String username, String password) {
+	public ReturnCodeEnum login(String username, String password, String newsid) {
 		String checkState = checkUser(username, password);
 		if(OK_CHECKUSER != checkState) 
 			return ReturnCodeEnum.getByReturnCode(checkState); // fail check name and password 
 		
 		//check ok main login success
-		onLogin(username, password);
+		onLogin(username, password, newsid);
 		
 		return ReturnCodeEnum.getByReturnCode(OK_LOGIN);
 	}
-
 	
-	
-	private void onLogin(String username, String password) {
-		String sid = StringUtil.getUUID();
+	private void onLogin(String username, String password, String newsid) {
 		
 		User user = userMapper.queryUserByUsername(username);
 		List<Project> projects = projectMapper.queryProjectsByUsername(username);
 		
 		//store in redis for security
+		rdbc.set("test", "test");
+		cache.createEntry(CACHE_ENUM.USERNAME, newsid)
+			.setValue(user.getUserName()==null?"":user.getUserName()).save();
+		cache.createEntry(CACHE_ENUM.USER, user.getUserName())
+			.setValue(JSON.toJSONString(user==null?"":user)).save();
+		cache.createEntry(CACHE_ENUM.PROJECTS, user.getUserName())
+			.setValue(JSON.toJSONString(projects==null?"":projects)).save();
+	}
+
+	@Override
+	public void logout(String sid) {
+		cache.createEntry(CACHE_ENUM.USERNAME, sid).delete();
 	}
 	
 }

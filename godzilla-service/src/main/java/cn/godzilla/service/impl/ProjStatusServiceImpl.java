@@ -29,12 +29,13 @@ public class ProjStatusServiceImpl implements ProjStatusService {
 	}
 
 	@Override
-	public ProjStatus queryDetail(String projectCode,String operateStaff) {
+	public ProjStatus queryDetail(String projectCode,String operateStaff,String profile) {
 		
 		Map<String, String> map = new HashMap<String, String>();
 		
 		map.put("projectCode", projectCode);
 		map.put("operateStaff", operateStaff);
+		map.put("profile", profile);
 		
 		return dao.queryDetail(map);
 	}

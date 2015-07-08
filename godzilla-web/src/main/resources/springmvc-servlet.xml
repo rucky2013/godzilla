@@ -58,8 +58,10 @@
 		<property name="exposeSpringMacroHelpers" value="true" />
 	</bean>
 
-	<mvc:resources mapping="/statics/**" location="statics/"/>
+	<mvc:resources mapping="/css/**" location="css/"/>
+	<mvc:resources mapping="/img/**" location="img/"/>
+	<mvc:resources mapping="/js/**" location="js/"/>
 	
-	<mvc:view-controller path="/" view-name="redirect:/statics/index.html"/>
+	<mvc:view-controller path="/" view-name="redirect:/index.html"/>
 
 </beans>  

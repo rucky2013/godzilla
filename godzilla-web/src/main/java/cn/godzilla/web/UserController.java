@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import cn.godzilla.common.Constant;
 import cn.godzilla.common.ReturnCodeEnum;
 import cn.godzilla.common.StringUtil;
 import cn.godzilla.service.UserService;
@@ -24,20 +25,37 @@ public class UserController {
 	@Autowired
 	UserService userService;
 
-	// 登录页
+	/**
+	 * 登录页
+	 * 
+	 * @param request
+	 * @param response
+	 * @return
+	 */
 	@RequestMapping(value="/welcome", method=RequestMethod.GET)
 	public Object welcome(HttpServletRequest request, HttpServletResponse response) {
 
 		logger.debug("*****UserController.welcome*****");
-		return "/welcome";
+		return "/login";
 	}
 
-	//登录
+	/**
+	 * 登录
+	 * 
+	 * @param username
+	 * @param password
+	 * @param request
+	 * @param response
+	 * @return sid
+	 */
 	@RequestMapping(value="/login/{username}/{password}", method=RequestMethod.GET)
 	public Object login(@PathVariable String username, @PathVariable String password, HttpServletRequest request, HttpServletResponse response) {
 		logger.debug("*****UserController.login*****");
+		String newsid = StringUtil.getRandom(6);
+		logger.info("++|++|++>sid:" + newsid);
+		request.setAttribute("sid", newsid);
 		
-		ReturnCodeEnum loginReturn = userService.login(username, password);  //do login 
+		ReturnCodeEnum loginReturn = userService.login(username, password, newsid);  //do login 
 		
 		switch(loginReturn) {
 		case NULL_NAMEPASSWORD: 
@@ -60,13 +78,18 @@ public class UserController {
 			return "/login";
 		}
 	}
-	
-	@RequestMapping(value="/logout/{sid}", method=RequestMethod.GET)
+	/**
+	 * 退出
+	 * 
+	 * @param sid
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping(value="/{sid}/logout", method=RequestMethod.GET)
 	public Object logout(@PathVariable String sid, HttpServletRequest request, HttpServletResponse response) {
 		logger.debug("*****UserController.logout*****");
-		
-		//del redis sid-username 
+		userService.logout(sid);//del redis sid-username 
 		return "/logout";
 	}
-
 }

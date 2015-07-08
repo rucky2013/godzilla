@@ -48,9 +48,10 @@
 		<spring.data.redis.version>1.4.1.RELEASE</spring.data.redis.version>
 		<jedis.version>2.6.1</jedis.version>
 		<cache.api.version>0.4</cache.api.version>
+		<fastjson.version>1.2.3</fastjson.version>
+
 		<netty.version>3.6.0.Final</netty.version>
 		<dom4j.version>1.6.1</dom4j.version>
-		
 	</properties>
 
 	<build>
@@ -85,6 +86,7 @@
 			</plugin>
 		</plugins>
 	</build>
+
 
 	<dependencyManagement>
 
@@ -218,10 +220,10 @@
 			</dependency>
 			<!-- dom4j -->
 			<dependency>
-			<groupId>dom4j</groupId>
-			<artifactId>dom4j</artifactId>
-			<version>${dom4j.version}</version>
-		</dependency>
+				<groupId>dom4j</groupId>
+				<artifactId>dom4j</artifactId>
+				<version>${dom4j.version}</version>
+			</dependency>
 		</dependencies>
 	</dependencyManagement>
 </project>

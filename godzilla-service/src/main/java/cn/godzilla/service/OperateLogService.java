@@ -11,5 +11,7 @@ public interface OperateLogService {
 	public int insertSelective(OperateLog record);
 
 	public List<OperateLog> queryList(String projectCode,String profile);
+	
+	public List<OperateLog> queryAll(Long id);
 
 }
