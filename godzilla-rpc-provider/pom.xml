@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>cn.godzilla</groupId>
 		<artifactId>godzilla-parent</artifactId>
-		<version>${parent.version}</version>
+		<version>0.0.1-SNAPSHOT</version>
 	</parent>
 
 	<artifactId>godzilla-rpc-provider</artifactId>
@@ -27,6 +27,10 @@
 			<artifactId>spring-context-support</artifactId>
 		</dependency>
 		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context</artifactId>
+		</dependency>
+		<dependency>
 			<groupId>cn.godzilla</groupId>
 			<artifactId>godzilla-rpc</artifactId>
 			<version>${project.version}</version>
@@ -41,7 +45,7 @@
 			<artifactId>junit</artifactId>
 		</dependency>
 	</dependencies>
-	
+
 	<build>
 		<finalName>godzilla-rpc-provider</finalName>
 		<resources>
@@ -54,15 +58,14 @@
 			</resource>
 			<resource>
 				<directory>src/main/resources</directory>
-				<filtering>false</filtering>
+				<filtering>true</filtering>
 				<includes>
 					<include>**/*.xml</include>
 				</includes>
 			</resource>
 		</resources>
 	</build>
-	
-	
+
 	<profiles>
 
 		<!-- 以下是开发联调环境 执行mvn命令时请加参数 -Pdev 不加-P 也默认此配置 -->
@@ -94,6 +97,81 @@
 							</execution>
 						</executions>
 					</plugin>
+
+					<!-- <plugin> <groupId>org.apache.maven.plugins</groupId> <artifactId>maven-assembly-plugin</artifactId> 
+						<version>2.3</version> <configuration> <appendAssemblyId>false</appendAssemblyId> 
+						<descriptorRefs> <descriptorRef>jar-with-dependencies</descriptorRef> </descriptorRefs> 
+						<archive> <manifest> <mainClass>cn.godzilla.rpc.provider.ProviderMain</mainClass> 
+						</manifest> </archive> </configuration> <executions> <execution> <id>make-assembly</id> 
+						<phase>package</phase> <goals> <goal>assembly</goal> </goals> </execution> 
+						</executions> </plugin> -->
+					<!-- <plugin> <groupId>org.apache.maven.plugins</groupId> <artifactId>maven-shade-plugin</artifactId> 
+						<version>2.3</version> <executions> <execution> <phase>package</phase> <goals> 
+						<goal>shade</goal> </goals> <configuration> <transformers> <transformer implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer"> 
+						<resource>META-INF/spring.handlers</resource> </transformer> <transformer 
+						implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer"> 
+						<resource>META-INF/spring.schemas</resource> </transformer> </transformers> 
+						</configuration> </execution> </executions> </plugin> -->
+
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-shade-plugin</artifactId>
+						<version>2.3</version>
+						<executions>
+							<execution>
+								<phase>package</phase>
+								<goals>
+									<goal>shade</goal>
+								</goals>
+								<configuration>
+									<filters>
+										<filter>
+											<artifact>*:*</artifact>
+											<excludes>
+												<exclude>META-INF/*.SF</exclude>
+												<exclude>META-INF/*.DSA</exclude>
+												<exclude>META-INF/*.RSA</exclude>
+											</excludes>
+										</filter>
+									</filters>
+									<transformers>
+										<transformer
+											implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+											<manifestEntries>
+												<Main-Class>cn.godzilla.rpc.provider.ProviderMain</Main-Class>
+											</manifestEntries>
+										</transformer>
+										<transformer
+											implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
+											<resource>META-INF/spring.handlers</resource>
+										</transformer>
+										<transformer
+											implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
+											<resource>META-INF/spring.schemas</resource>
+										</transformer>
+									</transformers>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+
+					<!-- <plugin> <groupId>org.apache.maven.plugins</groupId> <artifactId>maven-jar-plugin</artifactId> 
+						<version>2.4</version> <configuration> <archive> <manifest> <addClasspath>true</addClasspath> 
+						<classpathPrefix>dependency/</classpathPrefix> <mainClass>cn.godzilla.rpc.provider.ProviderMain</mainClass> 
+						</manifest> </archive> </configuration> </plugin> -->
+					<!-- <plugin> <groupId>org.apache.maven.plugins</groupId> <artifactId>maven-jar-plugin</artifactId> 
+						<configuration> <archive> <manifest> <addClasspath>true</addClasspath> <mainClass>cn.godzilla.rpc.provider.ProviderMain</mainClass> 
+						<classpathPrefix> dependency </classpathPrefix> </manifest> </archive> </configuration> 
+						</plugin> <plugin> <groupId>org.apache.maven.plugins</groupId> <artifactId>maven-dependency-plugin</artifactId> 
+						<executions> <execution> <id>copy-dependencies</id> <phase>install</phase> 
+						<goals> <goal>copy-dependencies</goal> </goals> </execution> </executions> 
+						</plugin> -->
+					<!-- <plugin> <artifactId>maven-assembly-plugin</artifactId> <version>2.2</version> 
+						<configuration> <archive> <manifest> <mainClass>cn.godzilla.rpc.provider.ProviderMain</mainClass> 
+						</manifest> </archive> <descriptorRefs> <descriptorRef> jar-with-dependencies 
+						</descriptorRef> </descriptorRefs> </configuration> <executions> <execution> 
+						<id>make-assembly</id> <phase>package</phase> <goals> <goal>single</goal> 
+						</goals> </execution> </executions> </plugin> -->
 				</plugins>
 			</build>
 			<properties>
@@ -101,7 +179,7 @@
 				<jdbc.url>jdbc:mysql://10.100.142.11:3306/godzilla_db?characterEncoding=utf8</jdbc.url>
 				<jdbc.username>root</jdbc.username>
 				<jdbc.password>root</jdbc.password>
-				
+
 				<redis.master.host>10.100.142.9</redis.master.host>
 				<redis.master.port>6379</redis.master.port>
 				<redis.master.pass>SH89qwIO</redis.master.pass>
@@ -109,4 +187,5 @@
 		</profile>
 
 	</profiles>
+
 </project>

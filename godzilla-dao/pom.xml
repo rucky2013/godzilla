@@ -5,7 +5,7 @@
   <parent>
     <groupId>cn.godzilla</groupId>
     <artifactId>godzilla-parent</artifactId>
-    <version>${parent.version}</version>
+    <version>0.0.1-SNAPSHOT</version>
   </parent>
   <artifactId>godzilla-dao</artifactId>
   <name>${project.artifactId}</name>
@@ -66,4 +66,30 @@
 	</dependency>
 	
   </dependencies>
+  <build>
+		<finalName>godzilla-dao</finalName>
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>true</filtering>
+				<includes>
+					<include>**/*.properties</include>
+				</includes>
+			</resource>
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>true</filtering>
+				<includes>
+					<include>**/*.xml</include>
+				</includes>
+			</resource>
+			<resource>
+                <directory>src/main/java</directory>
+                <includes>
+                    <include>**/*.xml</include>
+                </includes>
+                <filtering>true</filtering>
+            </resource>
+		</resources>
+	</build>
 </project>

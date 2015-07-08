@@ -35,7 +35,6 @@ public class ConsumerMain {
 			e.printStackTrace();
 		}
 		System.out.println("++|++|++>rpcresult:" + result.getRpcMsg());
-		
 	}
 
 	public static Person genPerson() {

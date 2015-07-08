@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>cn.godzilla</groupId>
 	<artifactId>godzilla-parent</artifactId>
-	<version>${parent.version}</version>
+	<version>0.0.1-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>${project.artifactId}</name>
 	<description>The parent project of godzilla</description>
@@ -17,9 +17,9 @@
 		<module>godzilla-model</module>
 		<module>godzilla-echo</module>
 		<module>godzilla-rpc</module>
-		<module>godzilla-rpc-client</module>
+		<module>godzilla-rpc-consumer</module>
 		<module>godzilla-rpc-provider</module>
-		<module>godzilla-web</module>
+		<!-- <module>godzilla-web</module> -->
 	</modules>
 
 	<properties>

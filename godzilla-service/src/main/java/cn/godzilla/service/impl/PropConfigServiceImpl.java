@@ -68,17 +68,21 @@ public class PropConfigServiceImpl implements PropConfigService {
 		args[0] = branchname;
 		String parentPomPath = StringUtil.getPath("parentPom",args);
 		String webPomPath = StringUtil.getPath("webPom",args);
-		/**
-		 * 2.get propconfigs from DB
-		 */
-		String parentVersion = getParentversionByProjectcodeAndProfile(project_code, profile);
-		List<PropConfig> propconfigs = getPropConfigsByProjectcodeAndProfile(project_code, profile);
-		/**
-		 * 3.save propconfigs cover pom.xml
-		 */
-		XmlUtil.coverParentPom(parentVersion, parentPomPath, StringUtil.getPath("parentPom1",args));
-		XmlUtil.coverWebPom(propconfigs, webPomPath, StringUtil.getPath("webPom1",args));
 		
+		try {
+			/**
+			 * 2.get propconfigs from DB
+			 */
+			String parentVersion = getParentversionByProjectcodeAndProfile(project_code, profile);
+			List<PropConfig> propconfigs = getPropConfigsByProjectcodeAndProfile(project_code, profile);
+			/**
+			 * 3.save propconfigs cover pom.xml
+			 */
+			XmlUtil.coverParentPom(parentVersion, parentPomPath, StringUtil.getPath("parentPom1",args));
+			XmlUtil.coverWebPom(propconfigs, webPomPath, StringUtil.getPath("webPom1",args));
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
 		return RpcResult.create(SUCCESS);
 	}
 	/**
