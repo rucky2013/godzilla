@@ -19,7 +19,7 @@
 		<module>godzilla-rpc</module>
 		<module>godzilla-rpc-consumer</module>
 		<module>godzilla-rpc-provider</module>
-		<!-- <module>godzilla-web</module> -->
+		<module>godzilla-web</module>
 	</modules>
 
 	<properties>
