@@ -5,6 +5,7 @@ import java.io.IOException;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
@@ -12,8 +13,13 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.FileSystemXmlApplicationContext;
+import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import cn.godzilla.common.BusinessException;
+import cn.godzilla.service.UserService;
 import cn.godzilla.web.SuperController;
 
 /**
@@ -26,6 +32,7 @@ public class Authentication extends SuperController implements Filter {
 
 	private final Logger logger = LogManager.getLogger(Authentication.class);
 	
+	private UserService userService;
 	@Override
 	public void init(FilterConfig filterConfig) throws ServletException {
 		logger.info("Authentication init");
@@ -34,6 +41,18 @@ public class Authentication extends SuperController implements Filter {
 		escapeUrls.add("");
 		escapeUrls.add("");
 		escapeUrls.add("");
+		
+		ServletContext context = filterConfig.getServletContext();  
+        ApplicationContext ctx = WebApplicationContextUtils.getWebApplicationContext(context); 
+        
+        
+        
+       // userService = (UserService)ctx.getBean("userService");
+        
+        
+        
+        ApplicationContext ac = new FileSystemXmlApplicationContext("classpath:applicationContext.xml");
+        userService = (UserService)ac.getBean("userService"); 
 	}
 	
 	@Override
@@ -41,7 +60,7 @@ public class Authentication extends SuperController implements Filter {
 		logger.info("authentication");
 		if(!escapeUrl(request)) {
 			String sid = getSidFromUrl(request);
-			initContext(sid); //将sid保存到 threadlocal
+			initContext(userService, sid); //将sid保存到 threadlocal
 		}
 		chain.doFilter(request, response);
 		distroyContext(); //清空 threadlocal

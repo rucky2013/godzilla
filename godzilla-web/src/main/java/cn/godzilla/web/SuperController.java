@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.context.ApplicationContext;
 
+import cn.godzilla.service.UserService;
 import cn.godzilla.web.context.GodzillaContext;
 
 public abstract class SuperController {
@@ -32,7 +33,12 @@ public abstract class SuperController {
 		sidThreadLocal.set(sid);
 	}
 	
-	public void initContext(String sid) {
+	/**
+	 * 初始化 当前jvm缓存  
+	 * @param userService
+	 * @param sid
+	 */
+	public void initContext(UserService userService, String sid) {
 		sidThreadLocal.set(sid);
 	}
 	

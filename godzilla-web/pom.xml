@@ -20,8 +20,7 @@
 			<artifactId>tomcat-servlet-api</artifactId>
 			<scope>provided</scope>
 		</dependency>
-		
-		
+
 		<dependency>
 			<groupId>cn.godzilla</groupId>
 			<artifactId>godzilla-service</artifactId>
@@ -141,7 +140,7 @@
 				<jdbc.url>jdbc:mysql://10.100.142.11:3306/godzilla_db?characterEncoding=utf8</jdbc.url>
 				<jdbc.username>root</jdbc.username>
 				<jdbc.password>root</jdbc.password>
-				
+
 				<redis.master.host>10.100.142.9</redis.master.host>
 				<redis.master.port>6379</redis.master.port>
 				<redis.master.pass>SH89qwIO</redis.master.pass>

@@ -1,31 +1,27 @@
 package cn.godzilla.web;
 
-import java.io.IOException;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.dom4j.DocumentException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import cn.godzilla.common.Constant;
 import cn.godzilla.common.ReturnCodeEnum;
 import cn.godzilla.common.StringUtil;
 import cn.godzilla.service.PropConfigService;
 import cn.godzilla.service.UserService;
+
 
 @Controller
 @RequestMapping("/user")
 public class UserController {
 
 	private final Logger logger = LogManager.getLogger(UserController.class);
-
 	@Autowired
 	UserService userService;
 	@Autowired
@@ -44,6 +40,7 @@ public class UserController {
 		
 		return "/login";
 	}
+	
 
 	/**
 	 * 登录
