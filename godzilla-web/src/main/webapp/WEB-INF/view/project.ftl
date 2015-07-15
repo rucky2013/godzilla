@@ -34,6 +34,14 @@
         	<div class="mainConR r">
             	<h2 id="tab1" class="current"><a href="../index.html" class="a1" title="工作空间">工作空间</a><a href="jvascript:void(0)" class="a2" title="管理权限">管理权限</a></h2>
             	<h3 class="location">当前应用：${projectCode}</h3>
+            	<h3>操作分支：${projPrivate.currentBranchUrl}</h3></br>
+            	
+            	<#if projPrivate.ifVirtual==0>
+            		<h4><a  href="#" class="btn2" title="开启虚拟主干">开启虚拟主干</a></h4>
+            	<#elseif projPrivate.ifVirtual==1>	
+            		<h3>虚拟主干：${projPrivate.virtualTruckUrl}</h3>
+            		<h4><a  href="#" class="btn2" title="关闭虚拟主干">关闭虚拟主干</a></h4>
+            	</#if>
                 <ul id="tab2" class="clearfix">
                 	<li <#if profile == "test">class="current"</#if> style="border-left:0"><a href="../project/check.html?projectCode=cupid&profile=test" class="current" title="测试环境">测试环境</a></li>
                     <li <#if profile == "pro_deploy">class="current"</#if> ><a href="../project/check.html?projectCode=cupid&profile=pro_deploy" title="预发标准环境">预发标准环境</a></li>
@@ -51,7 +59,7 @@
                             <tbody>
                               <tr>
                                 <td width="80" class="paddingR0">部署操作：</td>
-                                <td class="bg1"><span class="spanArrange"><a href="javacript:;" title="部署">部署</a></span><span class="spanUseAgain"><a href="javacript:;" title="重新启用">重新启用</a></span></td>
+                                <td class="bg1"><span class="spanArrange"><a href="javacript:;" title="部署">部署</a></span><span class="spanUseAgain"><a href="#" id="restart" title="重新启用">重新启用</a></span></td>
                               </tr>
                               <tr>
                                 <td class="paddingR0">SVN操作：</td>
@@ -101,11 +109,11 @@
                  <tbody>
                  <#list svnBranchConfigs as branch>
                   <tr>
-                    <td width="310"><small>${branch.branchUrl}</small></td>
+                    <td width="220"><small>${branch.branchUrl}</small></td>
                     <td>${branch.createBy}</td>
                     <td>${branch.projectCode}</td>
                     <td>${branch.createTime?string("yyyy-MM-dd HH:mm:ss")}</td>
-                    <td><a href="javascript:viod(0);" title="编辑">编辑</td>
+                    <td><a href="javascript:viod(0);" title="编辑">编辑</a>&nbsp;&nbsp;<a href="javascript:viod(0);" title="编辑">选定</a>&nbsp;&nbsp;<a href="javascript:viod(0);" title="编辑">设为虚拟主干</a></td>
                   </tr>
                   </#list>
                   </tbody>
@@ -143,7 +151,90 @@
             </div>
         </div>
 	</div>
-<script src="/js/jquery-1.8.2.min.js"></script>
-<script src="/js/common.js"></script>
+	
+			<div>
+             <div style="z-index: 99999;" id="shadow"></div>
+             <div style="z-index: 99999;width:50%;" id="shadow_box">
+                  <h5>Console<span id="close">关闭</span></h5>
+                  <form action="" class="clearfix">
+                  	<div class="shadow_con">
+                    		
+                         <div class="clearfix">
+                         		  <div>2015-07-09 17:19:15.392 167026968 [http-nio-8080-exec-25] INFO  c.c.f.c.c.n.filter.ParameterFilter - COST 调用方法为method:com.cupid.fso.app.message.detail; 调用终端为 useragent:cupid-an-sdk-java; 服务器逻辑花费时间cost time:0 millionsecond; 0 seconds;</div>
+                         		  <div>2015-07-09 17:19:15.392 167026968 [http-nio-8080-exec-25] INFO  c.c.f.c.c.n.filter.ParameterFilter - COST 调用方法为method:com.cupid.fso.app.message.detail; 调用终端为 useragent:cupid-an-sdk-java; 服务器逻辑花费时间cost time:0 millionsecond; 0 seconds;</div>
+                         <div>2015-07-09 17:19:15.392 167026968 [http-nio-8080-exec-25] INFO  c.c.f.c.c.n.filter.ParameterFilter - COST 调用方法为method:com.cupid.fso.app.message.detail; 调用终端为 useragent:cupid-an-sdk-java; 服务器逻辑花费时间cost time:0 millionsecond; 0 seconds;</div>
+                         </div>
+                        
+                        <input type="submit" class="shadow_btn mar150_l" value="确定" />
+                      </div>
+                  </form>
+             </div>
+	   	    </div>
+	
+<input type="hidden" name="projectCode" id="projectCode" value="${projectCode}" />
+<input type="hidden" name="currentBranchUrl" id="currentBranchUrl" value="${projPrivate.currentBranchUrl}" />
+<input type="hidden" name="virtualTruckUrl" id="virtualTruckUrl" value="${projPrivate.virtualTruckUrl}" />
+<input type="hidden" name="ifVirtual" id="ifVirtual" value="${projPrivate.ifVirtual}" />
+<input type="hidden" name="profile" id="profile" value="${profile}" />
+<input type="hidden" name="remoteIp" id="remoteIp" value="${remoteIp}" />
+
+<script src="../js/jquery-1.8.2.min.js"></script>
+<script src="../js/common.js"></script>
+
+<script>
+
+function restart(){
+
+	var ip = $("#remoteIp").val();
+	alert(ip);
+}
+
+</script>
+
+<script>
+
+$(function(){
+
+    $('#restart').click(function(){
+    	alert("1111");
+
+         $.ajax({
+
+             type: "GET",
+
+             url: "../tomcat/restart.html",
+
+             data: {ip:$("#remoteIp").val()},
+
+             dataType: "json",
+
+             success: function(data){
+
+                      
+
+                      }
+
+         });
+
+    });
+
+});
+  
+</script>
+<script>
+window.onload=function(){
+	//关闭弹出层
+	function shadowClose(){
+		var oClose=document.getElementById('close');
+		var oShadow=document.getElementById('shadow');
+		var oShadowBox=document.getElementById('shadow_box');
+		oClose.onclick=function(){
+			oShadow.style.display='none';	
+			oShadowBox.style.display='none';	
+		}
+	}
+	shadowClose();
+}
+</script>
 </body>
 </html>

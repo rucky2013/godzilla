@@ -5,90 +5,136 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
-import cn.godzilla.svn.SvnCommand;
+import cn.godzilla.common.ResultInfo;
+import cn.godzilla.svn.BaseShellCommand;
 
+/**
+ * 合并代码
+ * @author ZhongweiLee
+ *
+ */
 @Controller
-@RequestMapping(value="/svnmerge")
+@RequestMapping(value="/svnmerge",method=RequestMethod.POST)
 public class SvnMergeController {
 
 	private final Logger logger = LogManager.getLogger(SvnMergeController.class);
 	
-	@Autowired
-	private SvnCommand command;
-	
-	@RequestMapping(value="/docheckout")
-	public ModelAndView doCheckout(){
+	/**
+	 * 代码合并
+	 * @param branchPath
+	 * 项目分支svn地址
+	 * @param svnpwd
+	 * svn密码
+	 * @param trunkPath
+	 * 项目主干svn地址
+	 * @param projectName
+	 * 项目code
+	 * @param clientIp
+	 * 客户端IP
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping(value="/merge")
+	@ResponseBody
+	public ResultInfo doMerge(@RequestParam("branchPath") String branchPath,
+			@RequestParam("svnpwd") String svnpwd,
+			@RequestParam("trunkPath") String trunkPath,
+			@RequestParam("projectName") String projectName,
+			@RequestParam("clientIp") String clientIp,
+			HttpServletRequest request, HttpServletResponse response) {
 		
-		logger.debug("**********SvnMergeController.doCheckout*******");
+		ResultInfo info = new ResultInfo();
 		
-		ModelAndView view = new ModelAndView();
+		logger.info("************代码合并Begin***********");
+		
+		String svnuser="lizw" ;//用户名暂时写死
+		
+		String localPath="/home/godzilla/svndata/test";  //先写死
 		
 		boolean flag = false;
 		
-		flag = command.checkout("http://10.100.142.37:9090/svn/fso/cupid/branch/cupid-normandy", "/home/godzilla/lizw", "lizhongwei", "1");
+		try {
+			
+			BaseShellCommand command = new BaseShellCommand();
+			String str = "sh /home/godzilla/svn_server.sh merge "+branchPath+" "+localPath+" "+svnuser+" "+ svnpwd +" "+trunkPath+" "+projectName+" "+clientIp ;
+			flag = command.execute(str);
+			
+		} catch (Exception e) {
+			
+			logger.error(e);
+			e.printStackTrace();
+			
+		}
 		
 		if(flag){
-			
-			view.setViewName("index");
+			info.setMessage("Success");
+			logger.info("************代码合并End**************");
 		}else{
-		
-			view.setViewName("false");
+			info.setMessage("Error");
+			logger.error("************代码合并Error**************");
 		}
-		return view ;
+		
+		return info;
 	}
-	
-	@RequestMapping(value="/merge2branch")
-	public ModelAndView doMerge(HttpServletRequest request,HttpServletResponse response){
+	/**
+	 * 提交主干
+	 * @param branchPath
+	 * 项目分支svn地址
+	 * @param svnpwd
+	 * svn密码
+	 * @param trunkPath
+	 * 项目主干svn地址
+	 * @param projectName
+	 * 项目code
+	 * @param clientIp
+	 * 客户端IP
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping(value="/commit")
+	@ResponseBody
+	public ResultInfo doCommit(@RequestParam("branchPath") String branchPath,
+			@RequestParam("svnpwd") String svnpwd,
+			@RequestParam("trunkPath") String trunkPath,
+			@RequestParam("projectName") String projectName,
+			@RequestParam("clientIp") String clientIp,
+			HttpServletRequest request, HttpServletResponse response) {
 		
-		ModelAndView view = new ModelAndView();
+		ResultInfo info = new ResultInfo();
 		
-//		String svnPath = request.getParameter("svnpath");
-//		String localPath = request.getParameter("localpath");
-//		String username = request.getParameter("username");
-//		String password = request.getParameter("password");
-//		String trunkUrl = request.getParameter("trunkUrl");
-//		String projectName = request.getParameter("projectName");
+		logger.info("************提交主干Begin***********");
 		
-		String svnPath = "svn://182.92.104.118/svntestbarnch";
-		String localPath = "/home/godzilla/lzwdata/svntestbarnch";
-		String username = "lizw";
-		String password = "lizw@123";
-		String trunkUrl = "svn://182.92.104.118/svntest";
-		String projectName = "myselftest";
+		String svnuser="lizw" ;//用户名暂时写死
+		String localPath="";
 		
 		boolean flag = false;
-		flag = command.rmLocalPath(localPath);
 		
-		if(flag){
+		try {
+			String str = "sh /home/godzilla/svn_server.sh commit "+branchPath+" "+localPath+" "+svnuser+" "+ svnpwd +" "+trunkPath+" "+projectName+" "+clientIp ;
+			BaseShellCommand command = new BaseShellCommand();
+			flag = command.execute(str);
 			
-			flag = command.checkout(svnPath, localPath, username, password);
-		}
-		if(flag){
-			flag = command.mergeToBranch(trunkUrl, localPath, username, password, projectName);
-		}
-		if(flag){
-			flag = command.resolve(localPath,username,password);
-		}
-		if(flag){
-			flag = command.svnadd(localPath, username, password);
-		}
-		if(flag){
-			flag = command.svnrm(localPath, username, password);
-		}
-		if(flag){
-			flag = command.svnci(localPath, username, password);
+		} catch (Exception e) {
+			logger.error(e);
+			return info;
 		}
 		
+		
 		if(flag){
-			view.setViewName("index");
+			info.setMessage("Success");
+			logger.info("************提交主干End**************");
 		}else{
-			view.setViewName("false");
+			info.setMessage("Error");
+			logger.error("************提交主干Error**************");
 		}
-		return view;
+		return info;
 	}
 }

@@ -20,6 +20,7 @@ import cn.godzilla.common.Constant;
 import cn.godzilla.common.StringUtil;
 import cn.godzilla.model.ClientConfig;
 import cn.godzilla.model.OperateLog;
+import cn.godzilla.model.ProjPrivate;
 import cn.godzilla.model.ProjStatus;
 import cn.godzilla.model.Project;
 import cn.godzilla.model.SvnBranchConfig;
@@ -309,6 +310,13 @@ public class ProjectController {
 			projStatus.setProcessRate(0);
 		}
 		
+		ProjPrivate projPrivate = projPrivateService.queryDetail(projectCode, "lizw");
+		
+		if(projPrivate == null){
+			projPrivate = new ProjPrivate();
+			projPrivate.setIfVirtual(Constant.FALSE);  //默认未启用
+		}
+		
 		request.setAttribute("remoteIp", remoteIp);
 		request.setAttribute("repositoryUrl", repositoryUrl);
 		request.setAttribute("projectCode", projectCode);
@@ -316,6 +324,7 @@ public class ProjectController {
 		request.setAttribute("operateLogs", operateLogs);
 		request.setAttribute("projStatus", projStatus);
 		request.setAttribute("profile", profile);
+		request.setAttribute("projPrivate", projPrivate);
 		
 		return view ;
 	}
