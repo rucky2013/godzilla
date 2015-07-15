@@ -20,7 +20,9 @@
 	<!--注解说明 -->
 	<context:annotation-config />
 	<!-- 把标记了@Controller注解的类转换为bean -->
-	<context:component-scan base-package="cn.godzilla" />
+	<context:component-scan base-package="cn.godzilla" >
+		<context:include-filter type="regex" expression="cn.godzilla.web.*"/>
+	</context:component-scan>
 	
 	<!-- 启动Spring MVC的注解功能，完成请求和注解POJO的映射 请求映射 -->
 	<bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping"/>
