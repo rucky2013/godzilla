@@ -12,6 +12,7 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import cn.godzilla.model.OperateLog;
@@ -20,7 +21,6 @@ import cn.godzilla.service.OperateLogService;
 import cn.godzilla.service.ProjectService;
 
 @Controller
-@RequestMapping(value="/")
 public class IndexController {
 	
 	private final Logger logger = LogManager.getLogger(IndexController.class);
@@ -31,7 +31,22 @@ public class IndexController {
 	@Autowired
 	private OperateLogService operateLogService ;
 	
-	@RequestMapping(value="index")
+	/**
+	 * 跳到登录页
+	 * 
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping(value="index", method=RequestMethod.GET)
+	public Object welcome(HttpServletRequest request, HttpServletResponse response) {
+
+		logger.debug("*****IndexController*****");
+		
+		return "/login";
+	}
+	
+	
 	public ModelAndView index(HttpServletRequest request,HttpServletResponse response){
 		
 		List<Project> projects = projectService.queryAll();

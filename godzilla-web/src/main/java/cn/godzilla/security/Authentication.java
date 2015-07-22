@@ -49,10 +49,10 @@ public class Authentication extends SuperController implements Filter {
         
        // userService = (UserService)ctx.getBean("userService");
         
+        //两种获取方式都报错  
         
-        
-        ApplicationContext ac = new FileSystemXmlApplicationContext("classpath:applicationContext.xml");
-        userService = (UserService)ac.getBean("userService"); 
+       /* ApplicationContext ac = new FileSystemXmlApplicationContext("classpath:applicationContext.xml");
+        userService = (UserService)ac.getBean("userService"); */
 	}
 	
 	@Override

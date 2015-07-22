@@ -25,7 +25,7 @@
                          		  <input type="password" name="password" placeholder="输入密码" />        
                          </div>
                         
-                        <input type="submit" class="shadow_btn mar150_l" value="登陆" />
+                        <input id="submit_btn" type="submit" class="shadow_btn mar150_l" value="登陆" />
                       </div>
                   </form>
                   
