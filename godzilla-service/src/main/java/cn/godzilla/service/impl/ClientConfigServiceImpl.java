@@ -10,7 +10,7 @@ import cn.godzilla.dao.ClientConfigMapper;
 import cn.godzilla.model.ClientConfig;
 import cn.godzilla.service.ClientConfigService;
 
-@Service
+@Service("clientConfigService")
 public class ClientConfigServiceImpl implements ClientConfigService {
 
 	@Autowired

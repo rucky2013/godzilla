@@ -24,7 +24,7 @@
 		<filter-name>authentication</filter-name>
 		<url-pattern>/*</url-pattern>
 	</filter-mapping>
-	<!-- 授权 -->
+	<!-- 授权
 	<filter>
 		<filter-name>authorization</filter-name>
 		<filter-class>cn.godzilla.security.Authorization</filter-class>
@@ -32,7 +32,7 @@
 	<filter-mapping>
 		<filter-name>authorization</filter-name>
 		<url-pattern>/*</url-pattern>
-	</filter-mapping>
+	</filter-mapping> -->
 	<!-- filter end -->
 	<servlet>
 		<servlet-name>springmvc</servlet-name>

@@ -11,7 +11,7 @@ import cn.godzilla.dao.SvnConflictMapper;
 import cn.godzilla.model.SvnConflict;
 import cn.godzilla.service.SvnConflictService;
 
-@Service
+@Service("svnConflictService")
 public class SvnConflictServiceImpl implements SvnConflictService {
 
 	@Autowired

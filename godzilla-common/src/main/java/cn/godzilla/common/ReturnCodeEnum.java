@@ -12,9 +12,7 @@ public enum ReturnCodeEnum {
 	NOTEXIST_USER("100002","用户名不存在！"),
 	WRONG_PASSWORD("100003","密码错误！"),
 	UNKNOW_ERROR("100004","未知错误！"),
-	
-	
-	
+	NO_LOGIN("100005", "还未登录或sid失效"),
 	
 	OK_CHECKUSER("200001","验证用户成功"),
 	OK_LOGIN("200002","用户登录成功");

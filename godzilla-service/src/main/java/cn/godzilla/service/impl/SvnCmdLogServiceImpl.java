@@ -9,7 +9,7 @@ import cn.godzilla.dao.SvnCmdLogMapper;
 import cn.godzilla.model.SvnCmdLog;
 import cn.godzilla.service.SvnCmdLogService;
 
-@Service
+@Service("svnCmdLogService")
 public class SvnCmdLogServiceImpl implements SvnCmdLogService{
 	
 	@Autowired

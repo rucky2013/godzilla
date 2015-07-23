@@ -9,7 +9,7 @@ import cn.godzilla.dao.SvnChangeLogMapper;
 import cn.godzilla.model.SvnChangeLog;
 import cn.godzilla.service.SvnChangeLogService;
 
-@Service
+@Service("svnChangeLogService")
 public class SvnChangeLogServiceImpl implements SvnChangeLogService{
 
 	@Autowired

@@ -10,7 +10,7 @@ import cn.godzilla.dao.ProjPrivateMapper;
 import cn.godzilla.model.ProjPrivate;
 import cn.godzilla.service.ProjPrivateService;
 
-@Service
+@Service("projPrivateService")
 public class ProjPrivateServiceImpl implements ProjPrivateService {
 	
 	@Autowired

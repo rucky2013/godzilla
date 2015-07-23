@@ -22,7 +22,7 @@ import cn.godzilla.model.Project;
 import cn.godzilla.model.User;
 import cn.godzilla.service.UserService;
 
-@Service
+@Service("userService")
 public class UserServiceImpl implements UserService{
 	
 	private final Logger logger = LogManager.getLogger(UserServiceImpl.class);
@@ -84,10 +84,30 @@ public class UserServiceImpl implements UserService{
 		cache.createEntry(CACHE_ENUM.PROJECTS, user.getUserName())
 			.setValue(JSON.toJSONString(projects==null?"":projects)).save();
 	}
+	
+	public ReturnCodeEnum checkUserStatusBySid(String sid) {
+		String userName = cache.createEntry(CACHE_ENUM.USERNAME, sid)
+			.getValue();
+		if(StringUtil.isEmpty(userName)) {
+			return ReturnCodeEnum.getByReturnCode(NO_LOGIN);
+		} 
+		return ReturnCodeEnum.getByReturnCode(OK_CHECKUSER);
+	}
 
 	@Override
 	public void logout(String sid) {
-		cache.createEntry(CACHE_ENUM.USERNAME, sid).delete();
+		cache.createEntry(CACHE_ENUM.USERNAME, sid)
+			.delete();
+	}
+
+	@Override
+	public User getUserBySid(String sid) {
+		String userName = cache.createEntry(CACHE_ENUM.USERNAME, sid)
+				.getValue();
+		User user = JSON.parseObject(
+				cache.createEntry(CACHE_ENUM.USER, userName).getValue()
+				, User.class);
+		return user;
 	}
 	
 }

@@ -9,7 +9,7 @@ import cn.godzilla.dao.SvnBranchConfigMapper;
 import cn.godzilla.model.SvnBranchConfig;
 import cn.godzilla.service.SvnBranchConfigService;
 
-@Service
+@Service("svnBranchConfigService")
 public class SvnBranchConfigServiceImpl implements SvnBranchConfigService {
 
 	@Autowired

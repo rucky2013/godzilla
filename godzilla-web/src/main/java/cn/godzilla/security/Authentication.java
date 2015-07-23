@@ -10,15 +10,14 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.FileSystemXmlApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import cn.godzilla.common.BusinessException;
+import cn.godzilla.common.ReturnCodeEnum;
 import cn.godzilla.service.UserService;
 import cn.godzilla.web.SuperController;
 
@@ -32,7 +31,8 @@ public class Authentication extends SuperController implements Filter {
 
 	private final Logger logger = LogManager.getLogger(Authentication.class);
 	
-	private UserService userService;
+	private ServletContext context;
+	
 	@Override
 	public void init(FilterConfig filterConfig) throws ServletException {
 		logger.info("Authentication init");
@@ -42,12 +42,9 @@ public class Authentication extends SuperController implements Filter {
 		escapeUrls.add("");
 		escapeUrls.add("");
 		
-		ServletContext context = filterConfig.getServletContext();  
-        ApplicationContext ctx = WebApplicationContextUtils.getWebApplicationContext(context); 
-        
-        
-        
-       // userService = (UserService)ctx.getBean("userService");
+		context = filterConfig.getServletContext();  
+		applicationContext = WebApplicationContextUtils.getWebApplicationContext(context); 
+		userService = (UserService)applicationContext.getBean("userService");
         
         //两种获取方式都报错  
         
@@ -58,9 +55,17 @@ public class Authentication extends SuperController implements Filter {
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException, BusinessException {
 		logger.info("authentication");
-		if(!escapeUrl(request)) {
-			String sid = getSidFromUrl(request);
-			initContext(userService, sid); //将sid保存到 threadlocal
+		HttpServletResponse resp = (HttpServletResponse) response;
+		if(!this.escapeUrl(request)) {
+			String sid = this.getSidFromUrl(request);
+			ReturnCodeEnum userStatus = this.checkUser(userService, sid);
+			switch(userStatus) {
+			case NO_LOGIN:
+				resp.sendRedirect("/user/welcome.do");
+				return ;
+			case OK_CHECKUSER:
+				this.initContext(userService, sid); //将sid保存到 threadlocal
+			}
 		}
 		chain.doFilter(request, response);
 		distroyContext(); //清空 threadlocal

@@ -34,4 +34,13 @@ public interface PropConfigService extends Constant{
 	     * @throws Exception 
 	     */
 	    public RpcResult propToPom(String project_code, String branchname, String profile) throws DocumentException, IOException, Exception;
+
+	    /**
+	     * 查询  某项目   各个环境下配置   并返回 json格式 数据
+	     * @param projectCode
+	     * @param propTest
+	     * @param propQuasiProduct
+	     * @param propProduct
+	     */
+		public void findPropByUsername(String projectCode, StringBuilder propTest, StringBuilder propQuasiProduct, StringBuilder propProduct);
 }

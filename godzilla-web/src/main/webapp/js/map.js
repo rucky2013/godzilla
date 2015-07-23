@@ -30,6 +30,18 @@ Map.prototype.get = function(key) {
 	return this.container[key];
 }
 
+Map.prototype.contains = function(k) {
+	for(var key in this.container) {
+		//跳过object的extend函数
+		if(key=='extend') {
+			continue;
+		}
+		if(key==k) {
+			return true;
+		}
+	}
+	return false;
+}
 Map.prototype.keySet = function() {
 	var keyset = new Array();
 	var count = 0;

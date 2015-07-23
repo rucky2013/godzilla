@@ -11,7 +11,7 @@ import cn.godzilla.dao.OperateLogMapper;
 import cn.godzilla.model.OperateLog;
 import cn.godzilla.service.OperateLogService;
 
-@Service
+@Service("operateLogService")
 public class OperateLogServiceImpl implements OperateLogService {
 
 	@Autowired

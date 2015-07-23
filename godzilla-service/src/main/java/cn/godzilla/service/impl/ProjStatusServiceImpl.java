@@ -10,7 +10,7 @@ import cn.godzilla.dao.ProjStatusMapper;
 import cn.godzilla.model.ProjStatus;
 import cn.godzilla.service.ProjStatusService;
 
-@Service
+@Service("projStatusService")
 public class ProjStatusServiceImpl implements ProjStatusService {
 
 	@Autowired

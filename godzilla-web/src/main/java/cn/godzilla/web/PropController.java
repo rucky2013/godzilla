@@ -24,7 +24,7 @@ import com.alibaba.fastjson.JSON;
 
 @Controller
 @RequestMapping("/prop")
-public class PropController {
+public class PropController extends SuperController{
  
 	private final Logger logger = LogManager.getLogger(PropController.class);
 	@Autowired
@@ -39,27 +39,23 @@ public class PropController {
 	 * @param response
 	 * @return
 	 */
-	@RequestMapping(value="/{sid}/{projectCode1}", method=RequestMethod.GET)
-	public Object welcome(@PathVariable String sid, @PathVariable String projectCode1,HttpServletRequest request, HttpServletResponse response) {
+	@RequestMapping(value="/{sid}/{projectCode}", method=RequestMethod.GET)
+	public Object welcome(@PathVariable String sid, @PathVariable String projectCode,HttpServletRequest request, HttpServletResponse response) {
 
 		logger.debug("*****UserController.welcome*****");
 		
-		User user = new User();
-		user.setUserName("aa");
-		user.setLastLoginTime(new Date());
-		user.setDepartName("dept");
+		StringBuilder propTest = new StringBuilder("");
+		StringBuilder propQuasiProduct = new StringBuilder("");
+		StringBuilder propProduct = new StringBuilder("");
 		
-		projectCode1 = "apollo";
-		Map<String, Object> propTestMap = new HashMap<String, Object>();
-		propTestMap.put("com.xuanyuan.crm.ip", "10.100.139.234");
-		propTestMap.put("com.xuanyuan.timeout", "3000");
-		propTestMap.put("com.xuanyuan.callphp.url", "www.baidu.com");
-		String propTest = JSON.toJSONString(propTestMap);
+		propConfigService.findPropByUsername(projectCode, propTest, propQuasiProduct, propProduct);
 		
-		request.setAttribute("user", user);
-		request.setAttribute("projectCode", "11");
-		request.setAttribute("propTest", propTest);
-		request.setAttribute("basePath", "godzilla-web");
+		request.setAttribute("user", this.getUser());
+		request.setAttribute("projectCode_", projectCode);
+		request.setAttribute("propTest", propTest.toString());
+		request.setAttribute("propQuasiProduct", propQuasiProduct.toString());
+		request.setAttribute("propProduct", propProduct.toString());
+		request.setAttribute("basePath", BASE_PATH);
 		return "/query";
 	}
 

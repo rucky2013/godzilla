@@ -9,6 +9,8 @@ import org.dom4j.DocumentException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.alibaba.fastjson.JSON;
+
 import cn.godzilla.common.StringUtil;
 import cn.godzilla.common.xml.XmlUtil;
 import cn.godzilla.dao.PropConfigMapper;
@@ -16,7 +18,7 @@ import cn.godzilla.model.PropConfig;
 import cn.godzilla.model.RpcResult;
 import cn.godzilla.service.PropConfigService;
 
-@Service
+@Service("propConfigService")
 public class PropConfigServiceImpl implements PropConfigService {
 
 	@Autowired
@@ -99,7 +101,7 @@ public class PropConfigServiceImpl implements PropConfigService {
 	 * 获取项目的  所有审核配置项 
 	 * @param project_code
 	 * @param profile
-	 * @return
+	 * @return list
 	 */
 	private List<PropConfig> getPropConfigsByProjectcodeAndProfile(String project_code, String profile) {
 		
@@ -107,6 +109,39 @@ public class PropConfigServiceImpl implements PropConfigService {
 		parameters.put("projectCode", project_code);
 		parameters.put("profile", profile);
 		return dao.queryListByProjectcodeAndProfile(parameters);
+	}
+	
+	/**
+	 * 获取项目的  所有审核配置项 
+	 * @param project_code
+	 * @param profile
+	 * @return map
+	 */
+	private Map<String, Object> getPropMapByProjectcodeAndProfile(String projectCode, String profile) {
+		
+		List<PropConfig> propConfigList = getPropConfigsByProjectcodeAndProfile(projectCode, profile);
+		Map<String, Object> propMap = new HashMap<String, Object>();
+		
+		for(PropConfig tempProp : propConfigList) {
+			propMap.put(tempProp.getProKey(), tempProp.getProValue());
+		}
+		return propMap;
+	}
+	
+	@Override
+	public void findPropByUsername(String projectCode, StringBuilder propTest, StringBuilder propQuasiProduct, StringBuilder propProduct) {
+		
+		Map<String, Object> propTestMap = new HashMap<String, Object>();
+		Map<String, Object> propQuasiProductMap = new HashMap<String, Object>();
+		Map<String, Object> propProductMap = new HashMap<String, Object>();
+		
+		propTestMap = getPropMapByProjectcodeAndProfile(projectCode, TEST_PROFILE);
+		propQuasiProductMap = getPropMapByProjectcodeAndProfile(projectCode, QUASIPRODUCT_PROFILE);
+		propProductMap = getPropMapByProjectcodeAndProfile(projectCode, PRODUCT_PROFILE);
+		
+		propTest.append(JSON.toJSONString(propTestMap));
+		propQuasiProduct.append(JSON.toJSONString(propQuasiProductMap));
+		propProduct.append(JSON.toJSONString(propProductMap));
 	}
 
 }
