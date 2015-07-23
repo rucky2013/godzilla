@@ -38,9 +38,6 @@ public class Authentication extends SuperController implements Filter {
 		logger.info("Authentication init");
 		escapeUrls.add("/user/welcome");
 		escapeUrls.add("/user/login/");
-		escapeUrls.add("");
-		escapeUrls.add("");
-		escapeUrls.add("");
 		
 		context = filterConfig.getServletContext();  
 		applicationContext = WebApplicationContextUtils.getWebApplicationContext(context); 

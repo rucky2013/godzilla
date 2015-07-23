@@ -104,6 +104,9 @@ public class UserServiceImpl implements UserService{
 	public User getUserBySid(String sid) {
 		String userName = cache.createEntry(CACHE_ENUM.USERNAME, sid)
 				.getValue();
+		if(StringUtil.isEmpty(userName)){
+			return null;
+		}
 		User user = JSON.parseObject(
 				cache.createEntry(CACHE_ENUM.USER, userName).getValue()
 				, User.class);
