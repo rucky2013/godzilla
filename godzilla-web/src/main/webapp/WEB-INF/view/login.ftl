@@ -1,7 +1,7 @@
 ﻿<!DOCTYPE html><html><head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>操作界面-哥斯拉</title>
-<link type="text/css" href="css/meta.css" rel="stylesheet"/>
+<link type="text/css" href="/${basePath}/css/meta.css" rel="stylesheet"/>
 </head>
 <body id="operation" class="operation">
 	<div class="main">	
@@ -14,28 +14,35 @@
             <div id="shadow"></div>
             <div id="shadow_box">
                   <h5>用户登陆<span id="close">关闭</span></h5>
-                  <form action="" class="clearfix">
                   	<div class="shadow_con">
                     		<div class="user_con clearfix">
                          		  <label>用户名：</label>
-                         		  <input type="text" name="username" placeholder="邮箱前缀" />        
+                         		  <input id="username" type="text" name="username" placeholder="邮箱前缀" />        
                          </div>
                          <div class="user_con clearfix">
                          		  <label>密&nbsp;&nbsp;码：</label>
-                         		  <input type="password" name="password" placeholder="输入密码" />        
+                         		  <input id="password" type="password" name="password" placeholder="输入密码" />        
                          </div>
                         
-                        <input id="submit_btn" type="submit" class="shadow_btn mar150_l" value="登陆" />
+                        <input id="login" type="button" class="shadow_btn mar150_l" value="登陆" />
                       </div>
-                  </form>
-                  
-                	
             </div>
         </div>
 	</div>
-<script src="js/jquery-1.8.2.min.js"></script>
-<script src="js/common.js"></script>
+<script src="/${basePath}/js/jquery-1.8.2.min.js"></script>
+<script src="/${basePath}/js/common.js"></script>
 <script>
+$(function(){
+
+	$("#login").on("click", function() {
+		var username = $("#username").val();
+		var password = $("#password").val();
+		
+		window.location.href = 'login/' + username + '/' + password + '.do';
+	});
+
+})
+
 window.onload=function(){
 	//关闭弹出层
 	function shadowClose(){

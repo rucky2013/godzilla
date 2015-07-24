@@ -40,9 +40,9 @@ public class PropController extends SuperController{
 	 * @return
 	 */
 	@RequestMapping(value="/{sid}/{projectCode}", method=RequestMethod.GET)
-	public Object welcome(@PathVariable String sid, @PathVariable String projectCode,HttpServletRequest request, HttpServletResponse response) {
+	public Object updatePropPage(@PathVariable String sid, @PathVariable String projectCode,HttpServletRequest request, HttpServletResponse response) {
 
-		logger.debug("*****UserController.welcome*****");
+		logger.debug("*****PropController.updatePropPage*****");
 		
 		StringBuilder propTest = new StringBuilder("");
 		StringBuilder propQuasiProduct = new StringBuilder("");

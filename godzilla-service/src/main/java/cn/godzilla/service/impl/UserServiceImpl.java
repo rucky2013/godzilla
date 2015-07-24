@@ -87,7 +87,7 @@ public class UserServiceImpl implements UserService{
 	
 	public ReturnCodeEnum checkUserStatusBySid(String sid) {
 		String userName = cache.createEntry(CACHE_ENUM.USERNAME, sid)
-			.getValue();
+			.get();
 		if(StringUtil.isEmpty(userName)) {
 			return ReturnCodeEnum.getByReturnCode(NO_LOGIN);
 		} 
@@ -103,12 +103,12 @@ public class UserServiceImpl implements UserService{
 	@Override
 	public User getUserBySid(String sid) {
 		String userName = cache.createEntry(CACHE_ENUM.USERNAME, sid)
-				.getValue();
+				.get();
 		if(StringUtil.isEmpty(userName)){
 			return null;
 		}
 		User user = JSON.parseObject(
-				cache.createEntry(CACHE_ENUM.USER, userName).getValue()
+				cache.createEntry(CACHE_ENUM.USER, userName).get()
 				, User.class);
 		return user;
 	}

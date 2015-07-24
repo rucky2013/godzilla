@@ -109,6 +109,9 @@ public class RedisCache extends AbstractCache<String, String, CACHE_ENUM> {
 		public void delete() {
 			RedisCache.this.delete(this.getKey());
 		}
+		public String get() {
+			return RedisCache.this.get(this.getKey());
+		}
 	}
 
 }

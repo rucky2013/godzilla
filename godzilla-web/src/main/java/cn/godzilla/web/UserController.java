@@ -19,7 +19,7 @@ import cn.godzilla.service.UserService;
 
 @Controller
 @RequestMapping("/user")
-public class UserController {
+public class UserController extends SuperController{
 
 	private final Logger logger = LogManager.getLogger(UserController.class);
 	@Autowired
@@ -38,6 +38,7 @@ public class UserController {
 
 		logger.debug("*****UserController.welcome*****");
 		
+		request.setAttribute("basePath", BASE_PATH);
 		return "/login";
 	}
 	

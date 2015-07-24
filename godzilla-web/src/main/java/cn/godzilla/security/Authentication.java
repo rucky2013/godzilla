@@ -37,7 +37,7 @@ public class Authentication extends SuperController implements Filter {
 	public void init(FilterConfig filterConfig) throws ServletException {
 		logger.info("Authentication init");
 		escapeUrls.add("/user/welcome");
-		escapeUrls.add("/user/login/");
+		escapeUrls.add("/user/login");
 		
 		context = filterConfig.getServletContext();  
 		applicationContext = WebApplicationContextUtils.getWebApplicationContext(context); 
@@ -53,12 +53,15 @@ public class Authentication extends SuperController implements Filter {
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException, BusinessException {
 		logger.info("authentication");
 		HttpServletResponse resp = (HttpServletResponse) response;
+		HttpServletRequest req = (HttpServletRequest)request;
+		
 		if(!this.escapeUrl(request)) {
 			String sid = this.getSidFromUrl(request);
 			ReturnCodeEnum userStatus = this.checkUser(userService, sid);
 			switch(userStatus) {
 			case NO_LOGIN:
-				resp.sendRedirect("/user/welcome.do");
+				String prefix = req.getContextPath();
+				resp.sendRedirect(prefix+"/user/welcome.do");
 				return ;
 			case OK_CHECKUSER:
 				this.initContext(userService, sid); //将sid保存到 threadlocal
@@ -69,7 +72,8 @@ public class Authentication extends SuperController implements Filter {
 	}
 	
 	private boolean escapeUrl(ServletRequest request) {
-		String pathInfo = ((HttpServletRequest)request).getRequestURI();
+		String pathInfo = ((HttpServletRequest)request).getContextPath()  + ((HttpServletRequest)request).getRequestURI() + (((HttpServletRequest)request).getPathInfo()==null ? "":((HttpServletRequest)request).getPathInfo());
+		logger.info(">>>|>>request url : " + pathInfo);
 		for(String escapeUrl:escapeUrls) {
 			if(pathInfo.contains(escapeUrl)) {
 				return true;
@@ -80,7 +84,7 @@ public class Authentication extends SuperController implements Filter {
 	}
 
 	/**
-	 * url 的 第二个字符为 sid   例如 请求为   /usr/122334/getUser.do?XX
+	 * url 的 第二个字符为 sid   例如 请求为   /godzilla-web/usr/122334/getUser.do?XX
 	 * @param request
 	 * @return sid
 	 * @throws Exception 
@@ -88,14 +92,14 @@ public class Authentication extends SuperController implements Filter {
 	private String getSidFromUrl(ServletRequest request) throws BusinessException {
 		String pathInfo = ((HttpServletRequest)request).getRequestURI();
 		
-		int offset = pathInfo.indexOf("/", 1);
-		if(offset <0) 
-			throw new BusinessException("url is wrong");
-		int end = pathInfo.indexOf("/", offset);
+		int end = pathInfo.lastIndexOf("/");
 		if(end <0) 
 			throw new BusinessException("url is wrong");
-		
-		String sid = pathInfo.substring(offset, end);
+		int offset = pathInfo.lastIndexOf("/", end-1);
+		if(offset <0) 
+			throw new BusinessException("url is wrong");
+		String sid = pathInfo.substring(offset+1, end);
+		logger.info(">>>|>>request sid : " + sid);
 		return sid;
 	}
 
