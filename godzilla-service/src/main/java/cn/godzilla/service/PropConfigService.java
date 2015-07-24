@@ -7,6 +7,7 @@ import java.util.Map;
 import org.dom4j.DocumentException;
 
 import cn.godzilla.common.Constant;
+import cn.godzilla.common.ReturnCodeEnum;
 import cn.godzilla.model.PropConfig;
 import cn.godzilla.model.RpcResult;
 
@@ -43,4 +44,13 @@ public interface PropConfigService extends Constant{
 	     * @param propProduct
 	     */
 		public void findPropByUsername(String projectCode, StringBuilder propTest, StringBuilder propQuasiProduct, StringBuilder propProduct);
+		/**
+		 * 添加或者更改 某项目 各个环境下配置 
+		 * @param projectCode
+		 * @param propTest
+		 * @param propQuasiProduct
+		 * @param propProduct
+		 * @return 
+		 */
+		public ReturnCodeEnum addOrUpdateProp(String projectCode, String propTest, String propQuasiProduct, String propProduct);
 }

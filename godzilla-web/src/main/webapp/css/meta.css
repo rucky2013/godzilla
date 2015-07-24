@@ -120,7 +120,8 @@ h4.title{ background:#edeef0;height:42px; line-height:42px!important; color:#7c7
 .query_del{ background:url(../img/query_del_bg.png) no-repeat; width:40px; height:24px; overflow:hidden; text-indent:-9999px; display:block; cursor:pointer; border:none; outline:none;}
 .data_odd{ position:absolute; top:42px; left:20px; font-size:12px; color:#ea0202;}
 /*---界面操作 operation---*/
-.pos,.abs{ position:absolute;}
+.pos{ position:relative;}
+.abs{ position:absolute;}
 #operation .table2 .sp,#operation .table2 .sp02{ padding:0;}
 #operation .table2 .sp a,#operation .table2 .sp02 a{display:block; width:38px; height:22px; text-decoration:none}
 #operation .table2 .sp a{ background:url(../img/operation_btn.png) no-repeat}

@@ -30,13 +30,10 @@
       #{lastValue,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER}, #{auditor,jdbcType=VARCHAR}, 
       #{auditorText,jdbcType=VARCHAR})
   </insert>
-  <insert id="insertSelective" parameterType="cn.godzilla.model.PropConfig" >
+  <insert id="insertSelective" useGeneratedKeys="true" keyProperty="id" parameterType="cn.godzilla.model.PropConfig" >
    
     insert into t_g_properties_config
     <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        id,
-      </if>
       <if test="projectCode != null" >
         project_code,
       </if>
@@ -135,7 +132,7 @@
   	
   </select>
   
-  <select id="queryListByProjectcodeAndProfile" parameterType="map" resultType="cn.godzilla.model.PropConfig">
+  <select id="queryListByProjectcodeAndProfile" parameterType="java.util.Map" resultType="cn.godzilla.model.PropConfig">
   	select <include refid="queryColumns" /> from t_g_properties_config 
   	where project_code = #{projectCode} and profile = #{profile}
   	and status = 1
@@ -168,5 +165,15 @@
   	where id =  #{id,jdbcType=BIGINT}
   </update>
   
+  <update id="updatePropByProkey"  parameterType="java.util.Map" >
+  	update t_g_properties_config set 
+  	
+  	pro_value = #{pro_value},
+  	last_value = #{pro_value_old}
+  	
+  	where pro_key =  #{pro_key} 
+  	and project_code = #{project_code}
+  	and profile = #{profile}
+  </update>
   
 </mapper>

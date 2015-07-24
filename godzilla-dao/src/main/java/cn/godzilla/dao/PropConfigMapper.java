@@ -20,4 +20,6 @@ public interface PropConfigMapper {
     List<PropConfig> queryList(Map<String, String> map);
 
 	List<PropConfig> queryListByProjectcodeAndProfile(Map<String, String> parameters);
+
+	int updatePropByProkey(Map<String, Object> parameterMap);
 }

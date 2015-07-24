@@ -15,15 +15,15 @@ public abstract class SuperController implements Constant{
 	
 	protected ApplicationContext applicationContext;
 	protected List<String> escapeUrls = new ArrayList<String>();
-	protected UserService userService;
+	protected static UserService userService;
 	
-	private ThreadLocal<GodzillaContext> gozillaThreadLocal = new ThreadLocal<GodzillaContext>() {
+	private static ThreadLocal<GodzillaContext> gozillaThreadLocal = new ThreadLocal<GodzillaContext>() {
 		protected GodzillaContext initialValue() {
 			return new GodzillaContext();
 		};
 	};
 	
-	private ThreadLocal<String> sidThreadLocal = new ThreadLocal<String> () {
+	private static ThreadLocal<String> sidThreadLocal = new ThreadLocal<String> () {
 		protected String initialValue() {
 			return "";
 		};
@@ -55,12 +55,12 @@ public abstract class SuperController implements Constant{
 		sidThreadLocal.set(sid);
 	}
 	
-	public User getUser() {
+	public static User getUser() {
 		String sid = getSid();
 		return userService.getUserBySid(sid) ;
 	}
 	
-	public String getSid() {
+	public static String getSid() {
 		return sidThreadLocal.get();
 	}
 	

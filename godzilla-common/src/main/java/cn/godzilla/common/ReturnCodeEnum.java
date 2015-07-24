@@ -13,9 +13,11 @@ public enum ReturnCodeEnum {
 	WRONG_PASSWORD("100003","密码错误！"),
 	UNKNOW_ERROR("100004","未知错误！"),
 	NO_LOGIN("100005", "还未登录或sid失效"),
+	NO_ADDUPDATEPROP("100011","添加更新配置失败"),
 	
 	OK_CHECKUSER("200001","验证用户成功"),
-	OK_LOGIN("200002","用户登录成功");
+	OK_LOGIN("200002","用户登录成功"),
+	OK_ADDUPDATEPROP("200011","添加更新配置成功");
 	
 	public String returnCode;
 	public String returnMsg;

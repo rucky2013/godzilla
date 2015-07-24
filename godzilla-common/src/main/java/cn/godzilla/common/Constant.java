@@ -54,7 +54,9 @@ public interface Constant {
 	public final static String WRONG_PASSWORD = "100003";
 	public final static String UNKNOW_ERROR = "100004";
 	public final static String NO_LOGIN = "100005";
+	public final static String NO_ADDUPDATEPROP = "100011";
 	
 	public final static String OK_CHECKUSER = "200001";
 	public final static String OK_LOGIN = "200002";
+	public final static String OK_ADDUPDATEPROP = "200011";
 }
