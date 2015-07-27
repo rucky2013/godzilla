@@ -1,6 +1,7 @@
 package cn.godzilla.service.impl;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -210,6 +211,47 @@ public class PropConfigServiceImpl implements PropConfigService {
 			}
 		}
 		return true;
+	}
+
+	@Override
+	public Map<String, String> queryAllProfile() {
+		Map<String, String> profileMap = new HashMap<String, String>();
+		profileMap.put("ALL","");
+		profileMap.put("TEST","TEST");
+		profileMap.put("PRODUCT","PRODUCT");
+		profileMap.put("QUASIPRODUCT","QUASIPRODUCT");
+		return profileMap;
+	}
+
+	@Override
+	public List<PropConfig> queryByProjectcodeAndCreatebyAndProfile(String projectCode, String createBy, String profile, String verifyStatus) {
+		Map<String, String> parameterMap = new HashMap<String, String>();
+		parameterMap.put("project_code", projectCode);
+		parameterMap.put("profile", profile);
+		parameterMap.put("create_by", createBy);
+		parameterMap.put("status", verifyStatus);
+		
+		List<PropConfig> propList = dao.queryByProjectcodeAndCreatebyAndProfile(parameterMap);
+		
+		return propList;
+	}
+	
+	@Override
+	public ReturnCodeEnum verifyPropById(String propId, String projectCode) {
+		boolean hasAuthority = SuperController.checkFunright(projectCode);
+		if(!hasAuthority) {
+			return ReturnCodeEnum.getByReturnCode(NO_AUTHORITY);
+		} 
+		Map<String, String> parameterMap = new HashMap<String, String>();
+		parameterMap.put("id", propId);
+		parameterMap.put("project_code", projectCode);
+		parameterMap.put("auditor", SuperController.getUser().getUserName());
+		parameterMap.put("auditor_text", AUDITOR_TEXT);
+		parameterMap.put("status", "1");
+		int dbReturn = dao.changeStatusByIdAndProjectcode(parameterMap);
+		return dbReturn>0
+				?ReturnCodeEnum.getByReturnCode(NO_VERIFYPROP)
+						:ReturnCodeEnum.getByReturnCode(OK_VERIFYPROP);
 	}
 
 }

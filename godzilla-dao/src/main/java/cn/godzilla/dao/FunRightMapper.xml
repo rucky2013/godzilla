@@ -32,6 +32,10 @@
       #{createBy,jdbcType=VARCHAR}, #{realName,jdbcType=VARCHAR}, #{projectName,jdbcType=VARCHAR}
       )
   </insert>
+  <sql id="queryColumns">id, user_name as userName, project_code as projectCode, 
+      status, create_time as createTime, update_time as updateTime, 
+      create_by as createBy, real_name as realName, project_name as projectName</sql>
+      
   <insert id="insertSelective" parameterType="cn.godzilla.model.FunRight" >
     <!--
       WARNING - @mbggenerated
@@ -98,4 +102,12 @@
       </if>
     </trim>
   </insert>
+  
+  <select id="queryRightsByUsername" parameterType="java.lang.String" resultType="cn.godzilla.model.FunRight">
+  	select <include refid="queryColumns" /> from t_g_function_right 
+  	where status = 1 
+  	  <if test="username != ''" >
+        and username = #{username} 
+      </if>
+  </select>
 </mapper>

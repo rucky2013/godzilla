@@ -1,11 +1,9 @@
 package cn.godzilla.web;
 
-import java.util.Date;
-import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -18,11 +16,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import cn.godzilla.common.Constant;
 import cn.godzilla.common.ReturnCodeEnum;
-import cn.godzilla.model.User;
+import cn.godzilla.common.StringUtil;
+import cn.godzilla.model.Project;
+import cn.godzilla.model.PropConfig;
+import cn.godzilla.service.ProjectService;
 import cn.godzilla.service.PropConfigService;
 import cn.godzilla.service.UserService;
-
-import com.alibaba.fastjson.JSON;
 
 
 @Controller
@@ -34,7 +33,8 @@ public class PropController extends SuperController implements Constant{
 	UserService userService;
 	@Autowired
 	PropConfigService propConfigService;
-	
+	@Autowired
+	ProjectService projectService;
 	/**
 	 * 进入配置修改页
 	 * 
@@ -82,5 +82,67 @@ public class PropController extends SuperController implements Constant{
 		}
 		return FAILURE;
 	}
-
+	
+	@RequestMapping(value="/{sid}/{projectCode}/queryProp")
+	public Object queryProp(@PathVariable String sid, @PathVariable String projectCode, HttpServletRequest request) {
+		
+		String selectedProjectCode = StringUtil.getReqPrameter(request, "selectedProjectCode", "godzilla");
+		String createBy = StringUtil.getReqPrameter(request, "createBy", this.getUser().getUserName());
+		String selectedProfile = StringUtil.getReqPrameter(request, "selectedProfile", "");
+		
+		List<Project> projectList = projectService.queryAll();
+		Map<String, String> profileList = propConfigService.queryAllProfile();
+		List<PropConfig> propList = propConfigService.queryByProjectcodeAndCreatebyAndProfile(selectedProjectCode, createBy, selectedProfile, OK_VERIFY_STATUS);
+				
+		request.setAttribute("createBy", createBy);//提交人
+		request.setAttribute("selectedProjectCode", selectedProjectCode);
+		request.setAttribute("projectList", projectList);
+		request.setAttribute("selectedProfile", selectedProfile);
+		request.setAttribute("profileList", profileList);
+		request.setAttribute("propList", propList);
+		request.setAttribute("user", this.getUser());
+		request.setAttribute("basePath", BASE_PATH);
+		//request.setAttribute("sid", this.getSid());
+		return "query02";
+	}
+	
+	@RequestMapping(value="/{sid}/{projectCode}/verifyProp" , method=RequestMethod.GET) 
+	public Object verifyPropPage(@PathVariable String sid, @PathVariable String projectCode, HttpServletRequest request) {
+		
+		String selectedProjectCode = StringUtil.getReqPrameter(request, "selectedProjectCode", "godzilla");
+		String createBy = StringUtil.getReqPrameter(request, "createBy", this.getUser().getUserName());
+		String selectedProfile = StringUtil.getReqPrameter(request, "selectedProfile", "");
+		
+		List<Project> projectList = projectService.queryAll();
+		Map<String, String> profileList = propConfigService.queryAllProfile();
+		List<PropConfig> propList = propConfigService.queryByProjectcodeAndCreatebyAndProfile(selectedProjectCode, createBy, selectedProfile, NOTYET_VERIFY_STATUS);
+		
+		request.setAttribute("createBy", createBy);//提交人
+		request.setAttribute("selectedProjectCode", selectedProjectCode);
+		request.setAttribute("projectList", projectList);
+		request.setAttribute("selectedProfile", selectedProfile);
+		request.setAttribute("profileList", profileList);
+		request.setAttribute("propList", propList);
+		request.setAttribute("user", this.getUser());
+		request.setAttribute("basePath", BASE_PATH);
+		
+		return "config";
+	}
+	
+	@RequestMapping(value="/{sid}/{propId}/{projectCode}/verifyProp" , method=RequestMethod.POST) 
+	@ResponseBody
+	public Object verifyPropPage(@PathVariable String sid, @PathVariable String projectCode, @PathVariable String propId, HttpServletRequest request) {
+		
+		ReturnCodeEnum updateReturn = propConfigService.verifyPropById(propId, projectCode); 
+		switch(updateReturn) {
+		case OK_VERIFYPROP:
+			return SUCCESS;
+		case NO_VERIFYPROP:
+			return FAILURE;
+		default:
+			return FAILURE;	
+		}
+	}
+		
+		
 }

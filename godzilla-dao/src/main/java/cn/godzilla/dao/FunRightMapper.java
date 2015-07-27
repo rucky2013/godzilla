@@ -1,5 +1,7 @@
 package cn.godzilla.dao;
 
+import java.util.List;
+
 import cn.godzilla.model.FunRight;
 
 public interface FunRightMapper {
@@ -18,4 +20,6 @@ public interface FunRightMapper {
      * @mbggenerated Wed Jun 10 19:29:50 CST 2015
      */
     int insertSelective(FunRight record);
+
+	List<FunRight> queryRightsByUsername(String username);
 }

@@ -7,7 +7,9 @@ import org.springframework.context.ApplicationContext;
 
 import cn.godzilla.common.Constant;
 import cn.godzilla.common.ReturnCodeEnum;
+import cn.godzilla.model.FunRight;
 import cn.godzilla.model.User;
+import cn.godzilla.service.FunRightService;
 import cn.godzilla.service.UserService;
 import cn.godzilla.web.context.GodzillaContext;
 
@@ -16,6 +18,7 @@ public abstract class SuperController implements Constant{
 	protected ApplicationContext applicationContext;
 	protected List<String> escapeUrls = new ArrayList<String>();
 	protected static UserService userService;
+	protected static FunRightService funRightService;
 	
 	private static ThreadLocal<GodzillaContext> gozillaThreadLocal = new ThreadLocal<GodzillaContext>() {
 		protected GodzillaContext initialValue() {
@@ -66,6 +69,24 @@ public abstract class SuperController implements Constant{
 	
 	public void distroyContext() {
 		sidThreadLocal.set(null);
+	}
+	
+	public static List<FunRight> getFunRights() {
+		String username = getUser().getUserName();
+		List<FunRight> funRightList = funRightService.findFunRightsByUsername(username);
+		return funRightList;
+	}
+	
+	public static boolean checkFunright(String projectCode) {
+		List<FunRight> funRightList = getFunRights();
+		
+		for(FunRight fr:funRightList) {
+			if(fr.getProjectCode().equals(projectCode)) {
+				return true;
+			}
+		}
+		
+		return false;
 	}
 	
 }

@@ -15,6 +15,11 @@ public class FunRight implements Serializable{
 
     private String projectCode;
     
+    /**
+     * 权限状态
+     * 0:删除
+     * 1:有效
+     */
     private Integer status;
 
     private Date createTime;

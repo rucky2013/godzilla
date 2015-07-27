@@ -84,7 +84,7 @@ public class Authentication extends SuperController implements Filter {
 	}
 
 	/**
-	 * url 的 第二个字符为 sid   例如 请求为   /godzilla-web/usr/122334/getUser.do?XX
+	 * url 的 第二个字符为 sid   例如 请求为   /godzilla-web/usr/${sid}/${projectcode}/getUser.do?XX
 	 * @param request
 	 * @return sid
 	 * @throws Exception 
@@ -92,13 +92,16 @@ public class Authentication extends SuperController implements Filter {
 	private String getSidFromUrl(ServletRequest request) throws BusinessException {
 		String pathInfo = ((HttpServletRequest)request).getRequestURI();
 		
-		int end = pathInfo.lastIndexOf("/");
-		if(end <0) 
+		int start = pathInfo.indexOf("/", 1);
+		if(start <0) 
 			throw new BusinessException("url is wrong");
-		int offset = pathInfo.lastIndexOf("/", end-1);
-		if(offset <0) 
+		int second = pathInfo.indexOf("/", start+1);
+		if(second <0) 
 			throw new BusinessException("url is wrong");
-		String sid = pathInfo.substring(offset+1, end);
+		int third = pathInfo.indexOf("/", second+1);
+		if(third <0) 
+			throw new BusinessException("url is wrong");
+		String sid = pathInfo.substring(second+1, third);
 		logger.info(">>>|>>request sid : " + sid);
 		return sid;
 	}

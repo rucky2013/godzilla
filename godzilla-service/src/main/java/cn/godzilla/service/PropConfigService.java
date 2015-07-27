@@ -53,4 +53,23 @@ public interface PropConfigService extends Constant{
 		 * @return 
 		 */
 		public ReturnCodeEnum addOrUpdateProp(String projectCode, String propTest, String propQuasiProduct, String propProduct);
+		
+		/**
+		 * 查询 所有环境 并加上all选项
+		 * @return
+		 */
+		public Map<String, String> queryAllProfile();
+
+		public List<PropConfig> queryByProjectcodeAndCreatebyAndProfile(String projectCode, String createBy, String profile, String verifyStatus);
+		
+		/**
+		 * 
+		 * 审核通过 某配置
+		 * 1.验证当前用户 是否有修改项目的权限
+		 * 2.更改
+		 * @param propId
+		 * @param projectCode 
+		 * @return
+		 */
+		public ReturnCodeEnum verifyPropById(String propId, String projectCode);
 }

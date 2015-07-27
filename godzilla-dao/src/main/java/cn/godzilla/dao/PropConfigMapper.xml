@@ -169,11 +169,41 @@
   	update t_g_properties_config set 
   	
   	pro_value = #{pro_value},
-  	last_value = #{pro_value_old}
+  	last_value = #{pro_value_old},
+  	update_time = now(),
+  	status = 0
   	
   	where pro_key =  #{pro_key} 
   	and project_code = #{project_code}
   	and profile = #{profile}
   </update>
+  
+  <update id="changeStatusByIdAndProjectcode"  parameterType="java.util.Map" >
+  	update t_g_properties_config set 
+  	
+  	auditor = #{auditor},
+  	auditor_text = #{pro_value_old},
+  	update_time = now(),
+  	status = #{auditor},
+  	
+  	where id =  #{id} 
+  	and project_code = #{project_code}
+  </update>
+  
+  <select id="queryByProjectcodeAndCreatebyAndProfile" parameterType="java.util.Map" resultType="cn.godzilla.model.PropConfig">
+  	select <include refid="queryColumns" /> from t_g_properties_config 
+  	where status = #{status} 
+  	<if test="project_code != ''" >
+        and project_code = #{project_code} 
+      </if>
+      <if test="profile != ''" >
+        and profile = #{profile} 
+      </if>
+      <if test="project_code != ''" >
+        and create_by = #{create_by} 
+      </if>
+      
+      group by project_code
+  </select>
   
 </mapper>

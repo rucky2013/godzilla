@@ -30,8 +30,8 @@ public class PropConfig implements Serializable{
     private String lastValue;
 
     /**
-     * 审批状态
-     * 0:未审批
+     * 审核状态
+     * 0:未审核
      * 1:通过
      * 2:未通过
      */
