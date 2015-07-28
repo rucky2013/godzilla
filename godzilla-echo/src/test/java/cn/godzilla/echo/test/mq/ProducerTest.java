@@ -39,10 +39,7 @@ public class ProducerTest {
         producer.start();
         
         for (int i = 0; i < STOP_RUN; i++) {
-        	EchoMessage echoMessage = new EchoMessage();
-        	echoMessage.setSid(1234+"");
-        	echoMessage.setArea("svn");
-        	echoMessage.setInfo(""+i);
+        	EchoMessage echoMessage = EchoMessage.getInstance("wanglin", "mvn", ""+i);
             try {
                 Message msg = new Message(Config.getMqTopic(),// topic
                     "echo",// tag

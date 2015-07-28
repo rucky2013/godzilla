@@ -46,7 +46,7 @@ public class Config implements Constant {
 
 	public static String getWebsocketPort() throws IOException {
 		initEchoProperties();
-		String websocket_port = StringUtils.isEmpty(
+		String websocket_port = !StringUtils.isEmpty(
 				echo_properties.getProperty(WEBSOCKET_PORT_KEY)) ? 
 						echo_properties.getProperty(WEBSOCKET_PORT_KEY) :
 							DEFAULT_WEBSOCKET_PORT;
@@ -55,7 +55,7 @@ public class Config implements Constant {
 	
 	public static String getMqProducerName() throws IOException {
 		initEchoProperties();
-		String mq_producer_name = StringUtils.isEmpty(
+		String mq_producer_name = !StringUtils.isEmpty(
 				echo_properties.getProperty(MQ_PRODUCER_NAME_KEY)) ? 
 						echo_properties.getProperty(MQ_PRODUCER_NAME_KEY) : 
 							DEFAULT_MQ_PRODUCER_NAME;
@@ -64,7 +64,7 @@ public class Config implements Constant {
 
 	public static String getMqConsumerName() throws IOException {
 		initEchoProperties();
-		String mq_consumer_name = StringUtils.isEmpty(
+		String mq_consumer_name = !StringUtils.isEmpty(
 				echo_properties.getProperty(MQ_CONSUMER_NAME_KEY)) ? 
 						echo_properties.getProperty(MQ_CONSUMER_NAME_KEY) : 
 							DEFAULT_MQ_CONSUMER_NAME;
@@ -73,16 +73,16 @@ public class Config implements Constant {
 
 	public static String getMqNamesrvAddr() throws IOException {
 		initEchoProperties();
-		String mq_namesrv_addr = StringUtils.isEmpty(
+		String mq_namesrv_addr = !StringUtils.isEmpty(
 				echo_properties.getProperty(MQ_NAMESRV_ADDR_KEY)) ? 
 						echo_properties.getProperty(MQ_NAMESRV_ADDR_KEY) : 
-							DEFAULT_MQ_CONSUMER_NAME;
+							DEFAULT_MQ_NAMESRV_ADDR;
 		return mq_namesrv_addr;
 	}
 
 	public static String getMqTopic() throws IOException {
 		initEchoProperties();
-		String mq_topic = StringUtils.isEmpty(
+		String mq_topic = !StringUtils.isEmpty(
 				echo_properties.getProperty(MQ_TOPIC_KEY)) ? 
 						echo_properties.getProperty(MQ_TOPIC_KEY) : 
 							DEFAULT_MQ_TOPIC;
@@ -91,7 +91,7 @@ public class Config implements Constant {
 	
 	public static String getPomBasepath(String ex) throws IOException {
 		initRpcProperties();
-		String pom_basepath = StringUtils.isEmpty(
+		String pom_basepath = !StringUtils.isEmpty(
 				rpc_properties.getProperty(POM_BASEPATH_KEY)) ?
 						rpc_properties.getProperty(POM_BASEPATH_KEY) :
 							DEFAULT_POM_BASEPATH;

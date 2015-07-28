@@ -16,6 +16,11 @@
 
 	<dependencies>
 		<dependency>
+			<groupId>cn.godzilla</groupId>
+			<artifactId>godzilla-common</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 		</dependency>

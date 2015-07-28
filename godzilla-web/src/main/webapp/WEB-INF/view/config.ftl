@@ -116,9 +116,9 @@ window.onload=function(){
 	                    <td class="operation">
 	                    	<#if prop.status == 0>
 		                    	<a class="verify_btn" href="javascript:;" 
-		                    	value1="/${basePath}/prop/${sid}/${projectCode}/verifyProp.do">审核</a>
-							<#elseif prop.status == '1'>
-							<#elseif prop.status == '2'>
+		                    	value1="/${basePath}/prop/${sid}/${prop.createBy}/${prop.projectCode}/${prop.profile}/verifyProp.do">审核</a>
+							<#elseif prop.status == 1>
+							<#elseif prop.status == 2>
 							</#if>  
 	                    </td>
 	                  </tr>
@@ -144,10 +144,12 @@ window.onload=function(){
 $(document).ready(function() {
 	
 	$(".verify_btn").on("click", function() {
-		var varifyUrl = $(this).attr("value1");
+		var varifyDetailPageUrl = $(this).attr("value1");
 		
-		//审核
-		$.ajax({ 
+		//进入审核页面
+		window.location.href = varifyDetailPageUrl;
+		
+		<!-- $.ajax({ 
 		 	type: 'POST', 
 			url: varifyUrl,
 			data: {
@@ -159,7 +161,7 @@ $(document).ready(function() {
 				} else {
 					alert("审核失败");
 				}
-      	}});
+      	}}); -->
 	}
 	
 })

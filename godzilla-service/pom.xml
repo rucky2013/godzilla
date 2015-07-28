@@ -17,6 +17,16 @@
 
 		<dependency>
 			<groupId>cn.godzilla</groupId>
+			<artifactId>godzilla-mvn</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>cn.godzilla</groupId>
+			<artifactId>godzilla-rpc</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>cn.godzilla</groupId>
 			<artifactId>godzilla-dao</artifactId>
 			<version>${project.version}</version>
 		</dependency>

@@ -26,16 +26,13 @@ public interface PropConfigService extends Constant{
 	    public List<PropConfig> queryList(Map<String, String> map);
 	    
 	    /**
-	     * 将项目pom.xml配置项  替换为所选配置
-	     * @param project_code
-	     * @param profile
-	     * @return
-	     * @throws IOException 
-	     * @throws DocumentException 
-	     * @throws Exception 
-	     */
-	    public RpcResult propToPom(String project_code, String branchname, String profile) throws DocumentException, IOException, Exception;
-
+		 * 获取项目的  所有审核配置项 
+		 * @param project_code
+		 * @param profile
+		 * @return list
+		 */
+		public List<PropConfig> getPropConfigsByProjectcodeAndProfile(String project_code, String profile) ;
+		
 	    /**
 	     * 查询  某项目   各个环境下配置   并返回 json格式 数据
 	     * @param projectCode
@@ -63,13 +60,14 @@ public interface PropConfigService extends Constant{
 		public List<PropConfig> queryByProjectcodeAndCreatebyAndProfile(String projectCode, String createBy, String profile, String verifyStatus);
 		
 		/**
-		 * 
 		 * 审核通过 某配置
 		 * 1.验证当前用户 是否有修改项目的权限
-		 * 2.更改
-		 * @param propId
+		 * 2.审核 某编写人 某项目 某环境下的  所有配置
+		 * @param createBy
 		 * @param projectCode 
+		 * @param profile 
+		 * @param status 
 		 * @return
 		 */
-		public ReturnCodeEnum verifyPropById(String propId, String projectCode);
+		public ReturnCodeEnum verifyPropById(String createBy, String projectCode, String profile, String status, String auditor_text);
 }

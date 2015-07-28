@@ -11,6 +11,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
@@ -21,7 +22,7 @@ import cn.godzilla.service.OperateLogService;
 import cn.godzilla.service.ProjectService;
 
 @Controller
-public class IndexController {
+public class IndexController extends SuperController{
 	
 	private final Logger logger = LogManager.getLogger(IndexController.class);
 	
@@ -38,16 +39,40 @@ public class IndexController {
 	 * @param response
 	 * @return
 	 */
-	@RequestMapping(value="index", method=RequestMethod.GET)
-	public Object welcome(HttpServletRequest request, HttpServletResponse response) {
+	@RequestMapping(value="/", method=RequestMethod.GET)
+	public Object loginPage1(HttpServletRequest request, HttpServletResponse response) {
 
-		logger.debug("*****IndexController*****");
+		logger.debug("*****UserController.welcome*****");
 		
+		request.setAttribute("basePath", BASE_PATH);
 		return "/login";
 	}
 	
+	/**
+	 * 跳到登录页
+	 * 
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping(value="/index", method=RequestMethod.GET)
+	public Object loginPage2(HttpServletRequest request, HttpServletResponse response) {
+
+		logger.debug("*****UserController.welcome*****");
+		
+		request.setAttribute("basePath", BASE_PATH);
+		return "/login";
+	}
 	
-	public ModelAndView index(HttpServletRequest request,HttpServletResponse response){
+	/**
+	 * 首页
+	 * 
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping(value="{sid}/index", method=RequestMethod.GET)
+	public ModelAndView index(@PathVariable String sid,HttpServletRequest request,HttpServletResponse response){
 		
 		List<Project> projects = projectService.queryAll();
 		

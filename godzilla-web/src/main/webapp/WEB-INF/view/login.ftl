@@ -38,7 +38,7 @@ $(function(){
 		var username = $("#username").val();
 		var password = $("#password").val();
 		
-		window.location.href = 'login/' + username + '/' + password + '.do';
+		window.location.href = '/${basePath}/user/login/' + username + '/' + password + '.do';
 	});
 
 })

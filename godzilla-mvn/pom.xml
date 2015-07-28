@@ -19,6 +19,11 @@
 		<artifactId>godzilla-dao</artifactId>
 		<version>${project.version}</version>
 	</dependency>
+	<dependency>
+		<groupId>cn.godzilla</groupId>
+		<artifactId>godzilla-echo</artifactId>
+		<version>${project.version}</version>
+	</dependency>
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>

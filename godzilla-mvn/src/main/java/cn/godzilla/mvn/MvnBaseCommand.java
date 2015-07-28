@@ -9,11 +9,15 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.util.StringUtils;
 
+import cn.godzilla.echo.rocketmq.Producer;
+import cn.godzilla.echo.vo.EchoMessage;
+
 public class MvnBaseCommand {
 	
 	private final Logger logger = LogManager.getLogger(MvnBaseCommand.class);
-	
-	public boolean execute(String command,String projectName,String env,String username) {
+	public static final String AREA = "mvn";
+	public static final String ENCODING = "UTF-8";
+	public boolean execute(String command,String projectName,String env,final String username) {
 		
 		if(StringUtils.isEmpty(command) || StringUtils.isEmpty(projectName) || StringUtils.isEmpty(env) ||StringUtils.isEmpty(username)){
 			
@@ -38,11 +42,13 @@ public class MvnBaseCommand {
 
 					try {
 						BufferedReader br1 = new BufferedReader(
-								new InputStreamReader(is1, "UTF-8"));
+								new InputStreamReader(is1, ENCODING));
 						String line1 = null;
 						while ((line1 = br1.readLine()) != null) {
 							if (line1 != null) {
 								logger.debug("******MvnBaseCommand.execute-->InputStream******"+line1);
+								EchoMessage echoMessage = EchoMessage.getInstance(username, AREA, line1);
+								Producer.sendMessageToWeb(echoMessage);
 							}
 						}
 					} catch (Exception e) {
@@ -62,11 +68,13 @@ public class MvnBaseCommand {
 
 					try {
 						BufferedReader br2 = new BufferedReader(
-								new InputStreamReader(is2, "UTF-8"));
+								new InputStreamReader(is2, ENCODING));
 						String line2 = null;
 						while ((line2 = br2.readLine()) != null) {
 							if (line2 != null) {
 								logger.debug("******MvnBaseCommand.execute-->ErrorStream******"+line2);
+								EchoMessage echoMessage = EchoMessage.getInstance(username, AREA, line2);
+								Producer.sendMessageToWeb(echoMessage);
 							}
 						}
 					} catch (IOException e) {

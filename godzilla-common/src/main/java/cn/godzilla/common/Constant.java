@@ -5,6 +5,9 @@ public interface Constant {
 	public final int TRUE = 1;
 	public final int FALSE = 0 ;
 	
+	public final String VERSION_PARENTPOM = "0.0.1-SNAPSHOT12";
+	
+	public int RPC_DEFAULT_PORT = 8855;
 	public final String SUCCESS = "SUCCESS";
 	public final String FAILURE = "FAILURE";
 	public final String AUDITOR_TEXT = "审核通过";
@@ -12,7 +15,8 @@ public interface Constant {
 	public final String NOTYET_VERIFY_STATUS = "0";//未审核
 	public final String OK_VERIFY_STATUS = "1";//审核通过
 	public final String STOP_VERIFY_STATUS = "2";//驳回
-	
+	public final String PROJECT_ENV = "dev";
+	public final String SHELL_PATH = "F:/yixin_fso_app/godzilla/document/shell/server";
 	/**
 	 * freemarker ftl url base path
 	 */
@@ -25,7 +29,7 @@ public interface Constant {
 	/**
 	 * echo default value
 	 */
-	public final String DEFAULT_WEBSOCKET_PORT = "8099";
+	public final String DEFAULT_WEBSOCKET_PORT = "9999";
 	public final String DEFAULT_MQ_PRODUCER_NAME = "godzilla-producer";
 	public final String DEFAULT_MQ_CONSUMER_NAME = "godzilla-consumer";
 	public final String DEFAULT_MQ_NAMESRV_ADDR = "10.100.142.65:9876";
@@ -62,9 +66,13 @@ public interface Constant {
 	public final static String NO_ADDUPDATEPROP = "100011";
 	public final static String NO_VERIFYPROP = "100012";
 	public final static String NO_AUTHORITY = "100013";
+	public final static String NO_MVNDEPLOY = "100014";
+	public final static String NO_CHANGEPOM = "100015";
+	public final static String NO_RPCFACTORY = "100016";
 	
 	public final static String OK_CHECKUSER = "200001";
 	public final static String OK_LOGIN = "200002";
 	public final static String OK_ADDUPDATEPROP = "200011";
 	public final static String OK_VERIFYPROP = "200012";
+	public final static String OK_MVNDEPLOY = "200014";
 }

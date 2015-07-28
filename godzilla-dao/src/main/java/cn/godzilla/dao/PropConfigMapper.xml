@@ -114,6 +114,11 @@
       create_by as createBy, create_time as createTime, update_time as updateTime, 
       last_value as lastValue, status, auditor, 
       auditor_text as auditorText</sql>
+  <sql id="queryMaxColumns">max(id) as id, max(project_code) as projectCode, max(profile) as profile, 
+      max(pro_key) as proKey, max(pro_value) as proValue, max(remark) as remark, 
+      max(create_by) as createBy, max(create_time) as createTime, max(update_time) as updateTime, 
+      max(last_value) as lastValue, max(status) as status, max(auditor) as auditor, 
+      auditor_text as auditorText</sql>
   <select id="queryDetailById" parameterType="long" resultType="cn.godzilla.model.PropConfig">
   	select <include refid="queryColumns" /> from t_g_properties_config where id = #{id}
   </select>
@@ -182,16 +187,18 @@
   	update t_g_properties_config set 
   	
   	auditor = #{auditor},
-  	auditor_text = #{pro_value_old},
-  	update_time = now(),
-  	status = #{auditor},
+  	auditor_text = #{auditor_text},
+  	status = #{status},
+  	update_time = now()
   	
   	where id =  #{id} 
+  	and createBy = #{createBy}
   	and project_code = #{project_code}
+  	and profile = #{profile}
   </update>
   
   <select id="queryByProjectcodeAndCreatebyAndProfile" parameterType="java.util.Map" resultType="cn.godzilla.model.PropConfig">
-  	select <include refid="queryColumns" /> from t_g_properties_config 
+  	select <include refid="queryMaxColumns" /> from t_g_properties_config 
   	where status = #{status} 
   	<if test="project_code != ''" >
         and project_code = #{project_code} 
@@ -199,11 +206,11 @@
       <if test="profile != ''" >
         and profile = #{profile} 
       </if>
-      <if test="project_code != ''" >
+      <if test="create_by != ''" >
         and create_by = #{create_by} 
       </if>
       
-      group by project_code
+      group by project_code, profile
   </select>
   
 </mapper>

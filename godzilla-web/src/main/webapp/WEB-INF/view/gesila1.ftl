@@ -1,7 +1,7 @@
 <!DOCTYPE html><html><head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>Xuanyuan-哥斯拉</title>
-<link type="text/css" href="http://localhost:8080/godzilla-web/css/meta.css" rel="stylesheet"/>
+<link type="text/css" href="/${basePath}/css/meta.css" rel="stylesheet"/>
 </head>
 <body id="gesila1">
 	<div class="main">	
@@ -34,14 +34,7 @@
         	<div class="mainConR r">
             	<h2 id="tab1" class="current"><a href="../index.html" class="a1" title="工作空间">工作空间</a><a href="jvascript:void(0)" class="a2" title="管理权限">管理权限</a></h2>
             	<h3 class="location">当前应用：${projectCode}</h3>
-            	<h3>操作分支：${projPrivate.currentBranchUrl}</h3></br>
             	
-            	<#if projPrivate.ifVirtual==0>
-            		<h4><a  href="#" class="btn2" title="开启虚拟主干">开启虚拟主干</a></h4>
-            	<#elseif projPrivate.ifVirtual==1>	
-            		<h3>虚拟主干：${projPrivate.virtualTruckUrl}</h3>
-            		<h4><a  href="#" class="btn2" title="关闭虚拟主干">关闭虚拟主干</a></h4>
-            	</#if>
                 <ul id="tab2" class="clearfix">
                 	<li <#if profile == "test">class="current"</#if> style="border-left:0"><a href="../project/check.html?projectCode=cupid&profile=test" class="current" title="测试环境">测试环境</a></li>
                     <li <#if profile == "pro_deploy">class="current"</#if> ><a href="../project/check.html?projectCode=cupid&profile=pro_deploy" title="预发标准环境">预发标准环境</a></li>
@@ -59,7 +52,7 @@
                             <tbody>
                               <tr>
                                 <td width="80" class="paddingR0">部署操作：</td>
-                                <td class="bg1"><span class="spanArrange"><a href="javacript:;" title="部署">部署</a></span><span class="spanUseAgain"><a href="#" id="restart" title="重新启用">重新启用</a></span></td>
+                                <td class="bg1"><span class="spanArrange"><a id="deploy" href="javacript:;" value1="" title="部署">部署</a></span><span class="spanUseAgain"><a href="#" id="restart" title="重新启用">重新启用</a></span></td>
                               </tr>
                               <tr>
                                 <td class="paddingR0">SVN操作：</td>
@@ -71,7 +64,7 @@
                               </tr>
                               <tr>
                                 <td class="paddingR0">配置管理：</td>
-                                <td class="bg1"><span class="spanAdd"><a href="javacript:;" title="配置添加">配置添加</a></span><span class="spanQuery"><a href="javacript:;" title="配置查询">配置查询</a></span><span class="spanExamine"><a href="javacript:;" title="配置审核">配置审核</a></span></td>
+                                <td class="bg1"><span class="spanAdd"><a class="prop_btn" value1="add" href="/${basePath}/prop/${sid}/${projectCode}.do" title="配置添加">配置添加</a></span><span class="spanQuery"><a class="prop_btn" value1="query" href="/${basePath}/prop/${sid}/${projectCode}/queryProp.do" title="配置查询">配置查询</a></span><span class="spanExamine"><a class="prop_btn" value1="verify" href="/${basePath}/prop/${sid}/${projectCode}/verifyProp.do" title="配置审核">配置审核</a></span></td>
                               </tr>
                               </tbody>
                             </table>
@@ -151,36 +144,29 @@
             </div>
         </div>
 	</div>
-	
-			<div>
-             <div style="z-index: 99999;" id="shadow"></div>
-             <div style="z-index: 99999;width:50%;" id="shadow_box">
-                  <h5>Console<span id="close">关闭</span></h5>
-                  <form action="" class="clearfix">
+
+	   	   <div class="mainCon clearfix">
+        	
+            <div id="shadow"></div>
+            <div id="shadow_box">
+                  <h5>console<span id="close">关闭</span></h5>
                   	<div class="shadow_con">
-                    		
-                         <div class="clearfix">
-                         		  <div>2015-07-09 17:19:15.392 167026968 [http-nio-8080-exec-25] INFO  c.c.f.c.c.n.filter.ParameterFilter - COST 调用方法为method:com.cupid.fso.app.message.detail; 调用终端为 useragent:cupid-an-sdk-java; 服务器逻辑花费时间cost time:0 millionsecond; 0 seconds;</div>
-                         		  <div>2015-07-09 17:19:15.392 167026968 [http-nio-8080-exec-25] INFO  c.c.f.c.c.n.filter.ParameterFilter - COST 调用方法为method:com.cupid.fso.app.message.detail; 调用终端为 useragent:cupid-an-sdk-java; 服务器逻辑花费时间cost time:0 millionsecond; 0 seconds;</div>
-                         <div>2015-07-09 17:19:15.392 167026968 [http-nio-8080-exec-25] INFO  c.c.f.c.c.n.filter.ParameterFilter - COST 调用方法为method:com.cupid.fso.app.message.detail; 调用终端为 useragent:cupid-an-sdk-java; 服务器逻辑花费时间cost time:0 millionsecond; 0 seconds;</div>
+                    		<div id="messagebox" class="user_con clearfix">
                          </div>
-                        
-                        <input type="submit" class="shadow_btn mar150_l" value="确定" />
-                      </div>
-                  </form>
-             </div>
-	   	    </div>
+                    </div>
+            </div>
+          </div>
 	
 <input type="hidden" name="projectCode" id="projectCode" value="${projectCode}" />
-<input type="hidden" name="currentBranchUrl" id="currentBranchUrl" value="${projPrivate.currentBranchUrl}" />
-<input type="hidden" name="virtualTruckUrl" id="virtualTruckUrl" value="${projPrivate.virtualTruckUrl}" />
-<input type="hidden" name="ifVirtual" id="ifVirtual" value="${projPrivate.ifVirtual}" />
+<input type="hidden" name="currentBranchUrl" id="currentBranchUrl" value="$/{projPrivate.currentBranchUrl}" />
+<input type="hidden" name="virtualTruckUrl" id="virtualTruckUrl" value="$/{projPrivate.virtualTruckUrl}" />
+<input type="hidden" name="ifVirtual" id="ifVirtual" value="$/{projPrivate.ifVirtual}" />
 <input type="hidden" name="profile" id="profile" value="${profile}" />
 <input type="hidden" name="remoteIp" id="remoteIp" value="${remoteIp}" />
 
-<script src="../js/jquery-1.8.2.min.js"></script>
-<script src="../js/common.js"></script>
-
+<script src="/${basePath}/js/jquery-1.8.2.min.js"></script>
+<script src="/${basePath}/js/common.js"></script>
+<script src="/${basePath}/js/websocket.js"></script>
 <script>
 
 function restart(){
@@ -193,7 +179,7 @@ function restart(){
 
 <script>
 
-$(function(){
+$(document).ready(function() {
 
     $('#restart').click(function(){
     	alert("1111");
@@ -210,13 +196,42 @@ $(function(){
 
              success: function(data){
 
-                      
-
                       }
 
          });
 
     });
+    
+    $("#deploy").on("click" , function() {
+    	var value1 = $(this).attr("value1");
+    	var srcUrl = "F:/yixin_fso_app/godzilla";
+    
+    	$.ajax({
+
+             type: "POST",
+
+             url: "/${basePath}/mvn/${sid}/godzilla/TEST/deploy.do",
+
+             data: {
+             		srcUrl:srcUrl,
+             		},
+
+             dataType: "json",
+
+             success: function(data){
+						alert(data);
+                      }
+
+         });
+         
+         
+        showlogin();
+		
+		var usernameArea = '${username}-'+'mvn';
+		send(usernameArea);
+		$("#messagebox").empty();
+    });
+    
 
 });
   
@@ -234,6 +249,13 @@ window.onload=function(){
 		}
 	}
 	shadowClose();
+	document.getElementById('close').click();
+}
+function showlogin(){
+	var oShadow=document.getElementById('shadow');
+	var oShadowBox=document.getElementById('shadow_box');
+	oShadow.style.display='';	
+	oShadowBox.style.display='';	
 }
 </script>
 </body>

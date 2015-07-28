@@ -15,7 +15,7 @@
  */
 package cn.godzilla.echo.test.websocket;
 
-import cn.godzilla.echo.test.mq.ConsumerTest;
+import cn.godzilla.echo.test.websocket.*;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.EventLoopGroup;

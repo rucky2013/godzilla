@@ -1,5 +1,7 @@
 package cn.godzilla.web;
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -13,6 +15,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import cn.godzilla.common.ReturnCodeEnum;
 import cn.godzilla.common.StringUtil;
+import cn.godzilla.model.OperateLog;
+import cn.godzilla.model.Project;
+import cn.godzilla.service.OperateLogService;
+import cn.godzilla.service.ProjectService;
 import cn.godzilla.service.PropConfigService;
 import cn.godzilla.service.UserService;
 
@@ -26,6 +32,10 @@ public class UserController extends SuperController{
 	UserService userService;
 	@Autowired
 	PropConfigService propConfigService;
+	@Autowired
+	private ProjectService projectService ;
+	@Autowired
+	private OperateLogService operateLogService ;
 	/**
 	 * 登录页
 	 * 
@@ -34,7 +44,7 @@ public class UserController extends SuperController{
 	 * @return
 	 */
 	@RequestMapping(value="/welcome", method=RequestMethod.GET)
-	public Object welcome(HttpServletRequest request, HttpServletResponse response) {
+	public Object loginPage(HttpServletRequest request, HttpServletResponse response) {
 
 		logger.debug("*****UserController.welcome*****");
 		
@@ -75,7 +85,12 @@ public class UserController extends SuperController{
 			request.setAttribute("errormsg", ReturnCodeEnum.WRONG_PASSWORD.getReturnMsg());
 			return "/login";
 		case OK_LOGIN:
-			return "/loginsuccess";
+			List<Project> projects = projectService.queryAll();
+			List<OperateLog> logs = operateLogService.queryAll(Long.MAX_VALUE);
+			request.setAttribute("projects", projects);
+			request.setAttribute("logs", logs);
+			request.setAttribute("basePath", BASE_PATH);
+			return "/index";
 		default:
 			request.setAttribute("errorcode", ReturnCodeEnum.OK_LOGIN.getReturnCode());
 			request.setAttribute("errormsg", ReturnCodeEnum.OK_LOGIN.getReturnMsg());
@@ -96,4 +111,7 @@ public class UserController extends SuperController{
 		userService.logout(sid);//del redis sid-username 
 		return "/logout";
 	}
+	
+	
+	
 }

@@ -1,13 +1,14 @@
 package cn.godzilla.rpc.client;
 
-import cn.godzilla.rpc.util.Constant;
+import cn.godzilla.common.Constant;
+
 
 public class ClientFactory {
 
-	private static Client client = new Client(Constant.DEFAULT_PORT, "127.0.0.1");
+	private static Client client = new Client(Constant.RPC_DEFAULT_PORT, "127.0.0.1");
 	
 	static{
-		client = new Client(Constant.DEFAULT_PORT, "127.0.0.1");
+		client = new Client(Constant.RPC_DEFAULT_PORT, "127.0.0.1");
 		client.start();
 	}
 

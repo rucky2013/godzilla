@@ -5,8 +5,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
+import cn.godzilla.common.Constant;
 import cn.godzilla.rpc.api.RpcFactory;
-import cn.godzilla.rpc.util.Constant;
 
 /**
  * @author ding.lid
@@ -45,7 +45,7 @@ public class Util {
 
     public static RpcFactory getRpcFactoryImpl() throws IOException, ClassNotFoundException, IllegalAccessException, InstantiationException {
         initProperties();
-        Constant.DEFAULT_PORT = Integer.parseInt(properties.getProperty(RPC_PORT_KEY));
+        //Constant.RPC_DEFAULT_PORT = Integer.parseInt(properties.getProperty(RPC_PORT_KEY));
         String rpcFactoryClassName = properties.getProperty(RPC_FACTORY_IMPL_KEY);
         return Class.forName(rpcFactoryClassName).asSubclass(RpcFactory.class).newInstance();
     }

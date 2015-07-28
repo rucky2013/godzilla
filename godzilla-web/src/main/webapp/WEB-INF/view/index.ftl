@@ -1,7 +1,7 @@
 <!DOCTYPE html><html><head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>首页-哥斯拉</title>
-<link type="text/css" href="css/meta.css" rel="stylesheet"/>
+<link type="text/css" href="/${basePath}/css/meta.css" rel="stylesheet"/>
 </head>
 <body id="index" class="index">
 	<div class="main clearfix">	
@@ -36,7 +36,7 @@
             	<table width="200" border="0" class="table1">
                   <tr>
                     <#list projects as item>
-                    	<td><a href="project/check.html?projectCode=${item.projectCode}&profile=test" title="${item.projectCode}"><span></span>${item.projectName}</a></td>
+                    	<td><a href="/${basePath}/project/${sid}/${item.projectCode}/TEST/check.do" title="${item.projectCode}"><span></span>${item.projectName}</a></td>
                     </#list>
                     
                   </tr>
@@ -71,7 +71,7 @@
             </div>
         </div>
 	</div>
-<script src="js/jquery-1.8.2.min.js"></script>
-<script src="js/common.js"></script>
+<script src="/${basePath}/js/jquery-1.8.2.min.js"></script>
+<script src="/${basePath}/js/common.js"></script>
 </body>
 </html>

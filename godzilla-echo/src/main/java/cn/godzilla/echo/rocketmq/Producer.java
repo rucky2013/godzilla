@@ -46,7 +46,7 @@ public class Producer {
 		}
 	}
 	
-	public boolean sendMessageToWeb(EchoMessage echoMessage) {
+	public static boolean sendMessageToWeb(EchoMessage echoMessage) {
 		try {
             Message msg = new Message(Config.getMqTopic(),// topic
                 "echo",// tag

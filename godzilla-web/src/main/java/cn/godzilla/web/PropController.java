@@ -107,10 +107,10 @@ public class PropController extends SuperController implements Constant{
 	}
 	
 	@RequestMapping(value="/{sid}/{projectCode}/verifyProp" , method=RequestMethod.GET) 
-	public Object verifyPropPage(@PathVariable String sid, @PathVariable String projectCode, HttpServletRequest request) {
+	public Object verifyPropListPage(@PathVariable String sid, @PathVariable String projectCode, HttpServletRequest request) {
 		
 		String selectedProjectCode = StringUtil.getReqPrameter(request, "selectedProjectCode", "godzilla");
-		String createBy = StringUtil.getReqPrameter(request, "createBy", this.getUser().getUserName());
+		String createBy = StringUtil.getReqPrameter(request, "createBy", "");
 		String selectedProfile = StringUtil.getReqPrameter(request, "selectedProfile", "");
 		
 		List<Project> projectList = projectService.queryAll();
@@ -129,11 +129,32 @@ public class PropController extends SuperController implements Constant{
 		return "config";
 	}
 	
-	@RequestMapping(value="/{sid}/{propId}/{projectCode}/verifyProp" , method=RequestMethod.POST) 
-	@ResponseBody
-	public Object verifyPropPage(@PathVariable String sid, @PathVariable String projectCode, @PathVariable String propId, HttpServletRequest request) {
+	
+	@RequestMapping(value="/{sid}/{createBy}/{projectCode}/{profile}/verifyProp" , method=RequestMethod.GET) 
+	public Object verifyPropDetailPage(@PathVariable String sid, @PathVariable String projectCode, @PathVariable String propId, HttpServletRequest request) {
 		
-		ReturnCodeEnum updateReturn = propConfigService.verifyPropById(propId, projectCode); 
+		List<PropConfig> propTestList = propConfigService.getPropConfigsByProjectcodeAndProfile(projectCode, TEST_PROFILE);
+		List<PropConfig> propQuasiProductList = propConfigService.getPropConfigsByProjectcodeAndProfile(projectCode, QUASIPRODUCT_PROFILE);
+		List<PropConfig> propProductList = propConfigService.getPropConfigsByProjectcodeAndProfile(projectCode, PRODUCT_PROFILE);
+		
+		
+		request.setAttribute("user", this.getUser());
+		request.setAttribute("projectCode_", projectCode);
+		request.setAttribute("propTestList", propTestList);
+		request.setAttribute("propQuasiProductList", propQuasiProductList);
+		request.setAttribute("propProductList", propProductList);
+		request.setAttribute("basePath", BASE_PATH);
+		
+		return "";
+	}
+	
+	@RequestMapping(value="/{sid}/{createBy}/{projectCode}/{profile}/verifyProp" , method=RequestMethod.POST) 
+	@ResponseBody
+	public Object verifyProp(@PathVariable String sid, @PathVariable String createBy, @PathVariable String projectCode, @PathVariable String profile, HttpServletRequest request) {
+		String status = StringUtil.getReqPrameter(request, "status", "0");
+		String auditor_text = StringUtil.getReqPrameter(request, "auditor_text", "");
+		
+		ReturnCodeEnum updateReturn = propConfigService.verifyPropById(createBy, projectCode, profile, status, auditor_text); 
 		switch(updateReturn) {
 		case OK_VERIFYPROP:
 			return SUCCESS;

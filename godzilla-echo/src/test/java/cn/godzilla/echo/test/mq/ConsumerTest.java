@@ -57,9 +57,9 @@ public class ConsumerTest {
 				for (Message msg : msgs) {
 					byte[] data = msg.getBody();
 					EchoMessage echoMessage = Serializer.deserializer(data, EchoMessage.class);
-					String sidArea = echoMessage.getSid() + "-" + echoMessage.getArea();
+					String usernameArea = echoMessage.getUsername() + "-" + echoMessage.getArea();
 					String info = echoMessage.getInfo();
-					Channel channel = MainClass.channelsMap.get(sidArea);
+					Channel channel = MainClass.channelsMap.get(usernameArea);
 					try {
 						if (channel!=null){//&&channel.isWritable()) {
 							channel.write(new TextWebSocketFrame(info));

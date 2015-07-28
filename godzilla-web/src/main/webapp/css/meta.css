@@ -120,8 +120,7 @@ h4.title{ background:#edeef0;height:42px; line-height:42px!important; color:#7c7
 .query_del{ background:url(../img/query_del_bg.png) no-repeat; width:40px; height:24px; overflow:hidden; text-indent:-9999px; display:block; cursor:pointer; border:none; outline:none;}
 .data_odd{ position:absolute; top:42px; left:20px; font-size:12px; color:#ea0202;}
 /*---界面操作 operation---*/
-.pos{ position:relative;}
-.abs{ position:absolute;}
+.pos,.abs{ position:absolute;}
 #operation .table2 .sp,#operation .table2 .sp02{ padding:0;}
 #operation .table2 .sp a,#operation .table2 .sp02 a{display:block; width:38px; height:22px; text-decoration:none}
 #operation .table2 .sp a{ background:url(../img/operation_btn.png) no-repeat}
@@ -161,3 +160,35 @@ h4.title{ background:#edeef0;height:42px; line-height:42px!important; color:#7c7
 .table_con td{ padding-left:15px;}
 .state_red{ color:#ea0202;}
 .operation a:hover{ text-decoration:underline;}
+
+
+/*--哥斯拉后台登陆模块 by zj 2015.7.28--*/
+.login-win-body{width:100%;}
+.header{width:100%;background:#fff;}
+.header h1{padding:20px 0;font-weight:bold;font-size:26px;color:#0097e0;width:1040px;margin:0 auto;}
+.bodyMain-wrap{width:100%;background:#aee5ff url("../img/bg-body.jpg") no-repeat;height:574px;}
+.login-warp{width:1040px;height:100%;margin:0 auto;position: relative;}
+.login-box{position: absolute;right:84px;top:98px;width:306px;height:270px;background:#fff;box-shadow:0 0 13px rgba(0,0,0,.2);-webkit-box-shadow:0 0 13px rgba(0,0,0,.2);-moz-box-shadow:0 0 13px rgba(0,0,0,.2);-ms-box-shadow:0 0 13px rgba(0,0,0,.2);trasnform:translateZ(0);-webkit-transform:translateZ(0);padding:50px 0 0 34px;}
+.loginForm .item-div{height:40px;margin-bottom: 18px;clear: both;position: relative;}
+.inputBox {width: 178px;height:40px;padding:0 30px 0 64px;border:0;border:1px solid #e2e5e6;}
+.loginForm{overflow: hidden;}
+.inputBox,.submitFieldset .btn{border-radius:3px;-webkit-border-radius:3px;-moz-border-radius:3px;-ms-border-radius:3px;}
+.accountNum s,.passWord s{display:block;position:absolute;top:1px;left:0;width:45px;height:40px;background:#e2e5e6 url("../img/login_bg.png") no-repeat 0 0;}
+.accountNum s{background-position:10px 8px;}
+.passWord s{background-position:11px -27px;}
+.input_onfocus .userName_icon,.input_onfocus .UserpassWord_icon{background-color:#0097e0 !important;}
+.input_onfocus .userName,.input_onfocus .UserpassWord{border:1px solid #0097e0;}
+.input_onfocus .userName_icon{background-position:11px -78px;}
+.input_onfocus .UserpassWord_icon{background-position:11px -114px;}
+.resetPassword:link,.resetPassword:visited{color:#0097e0;font-size:12px;display:block;float:right;margin-right: 22px;width:60px;}
+.submitFieldset .btn{cursor:pointer;border:0;color:#fff;width:271px;height:44px;background:#0097e0;font:bold 18px/44px Microsoft YaHei;}
+.submitFieldset .btn:hover{background:#52b8ea;}
+.resetWrap_psd{height:auto !important;margin-bottom:35px !important; overflow:hidden;}
+/*新增文本域和新按钮 2015.7.28*/
+ .ft-Textarea{width:799px;min-height:200px;border-right:1px solid #f1f1f1;border-bottom:1px solid #f1f1f1;background:#fff;}
+.textareaWrap{width:796px;}
+.textareaWrap textarea{border:0;width:770px;min-height:200px;height:200px;height:auto; overflow-y:auto;padding:15px;background: transparent;line-height:30px;resize: none;}
+.checkBtn{text-align:center;height:;margin-top:40px; overflow: hidden;}
+.checkBtn button{cursor:pointer; display:inline-block;border:0;color:#fcfcfc;height:42px;width:82px;background:url("../img/checkBtn.png") no-repeat;text-align: center;line-height:42px;font:normal 14px/42px "微软雅黑","黑体";margin-right:40px;}
+.checkBtn .checkPass{background-position:0 0;}
+.checkBtn .notcheckPass{background-position:-83px 0;}

@@ -42,7 +42,7 @@ import com.alibaba.rocketmq.common.message.MessageExt;
 public class Consumer implements Constant{
 
 	public static void main(String[] args) throws InterruptedException, MQClientException, IOException {
-		DefaultMQPushConsumer consumer = new DefaultMQPushConsumer(Config.getMqConsumerName());
+		DefaultMQPushConsumer consumer = new DefaultMQPushConsumer(Config.getMqConsumerName()+"1");
 		consumer.setNamesrvAddr(Config.getMqNamesrvAddr());
 		/**
 		 * 设置Consumer第一次启动是从队列头部开始消费还是队列尾部开始消费<br>
@@ -59,10 +59,16 @@ public class Consumer implements Constant{
 				System.out.println(Thread.currentThread().getName() + " Receive New Messages: " + msgs);
 				for (Message msg : msgs) {
 					byte[] data = msg.getBody();
-					EchoMessage echoMessage = Serializer.deserializer(data, EchoMessage.class);
-					String sidArea = echoMessage.getSid() + "-" + echoMessage.getArea();
+					EchoMessage echoMessage = null;
+					try {
+						echoMessage = Serializer.deserializer(data, EchoMessage.class);
+					} catch(Exception e) {
+						e.printStackTrace();
+						continue;
+					}
+					String usernameArea = echoMessage.getUsername() + "-" + echoMessage.getArea();
 					String info = echoMessage.getInfo();
-					Channel channel = MainClass.channelsMap.get(sidArea);
+					Channel channel = MainClass.channelsMap.get(usernameArea);
 					try {
 						if (channel!=null){//&&channel.isWritable()) {
 							channel.write(new TextWebSocketFrame(info));

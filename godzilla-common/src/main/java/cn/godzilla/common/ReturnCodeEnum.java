@@ -18,13 +18,18 @@ public enum ReturnCodeEnum {
 	NO_ADDUPDATEPROP("100011","添加更新配置失败"),
 	NO_VERIFYPROP("100012","审核配置失败"),
 	NO_AUTHORITY("100013","没有审核权限"),
-	
+	//mvn
+	NO_MVNDEPLOY("100014","mvn部署失败"),
+	NO_CHANGEPOM("100015","mvn部署失败:替换pom文件失败"),
+	NO_RPCFACTORY("100016", "mvn部署失败:rpc初始化错误"),
 	//user模块
 	OK_CHECKUSER("200001","验证用户成功"),
 	OK_LOGIN("200002","用户登录成功"),
 	//prop模块
 	OK_ADDUPDATEPROP("200011","添加更新配置成功"),
 	OK_VERIFYPROP("200012","审核配置成功"),
+	//mvn
+	OK_MVNDEPLOY("200014","mvn部署成功"),
 	;
 	
 	public String returnCode;

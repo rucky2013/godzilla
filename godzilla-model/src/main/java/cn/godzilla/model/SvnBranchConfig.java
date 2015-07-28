@@ -13,7 +13,10 @@ public class SvnBranchConfig implements Serializable{
 	private Long id;
 	
 	private String projectCode;
-	
+	/**
+	 * 例如
+	 * XX/branch/test-0508
+	 */
 	private String branchUrl;
 	
 	private String branchName;

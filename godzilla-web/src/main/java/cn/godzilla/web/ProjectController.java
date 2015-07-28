@@ -35,8 +35,8 @@ import cn.godzilla.service.SvnConflictService;
 
 
 @Controller
-@RequestMapping("project")
-public class ProjectController {
+@RequestMapping("/project")
+public class ProjectController extends SuperController implements Constant{
 	
 	@Autowired
 	ProjectService projectService ;
@@ -269,16 +269,13 @@ public class ProjectController {
 		}
 		return null;
 	}
-	@RequestMapping(value = "check", method = RequestMethod.GET)
-	public ModelAndView checkPorject(@RequestParam("projectCode") String projectCode,
-			@RequestParam("profile") String profile,
-			HttpServletRequest request, HttpServletResponse response){
 		
-		
-		
+	@RequestMapping(value="/{sid}/{projectCode}/{profile}/check", method = RequestMethod.GET)
+	public Object queryProp(@PathVariable String sid, @PathVariable String projectCode, @PathVariable String profile, HttpServletRequest request) {
+			
 		ModelAndView view = new ModelAndView();
 		
-		view.setViewName("project");
+		view.setViewName("gesila1");
 		
 		if(StringUtil.isEmpty(projectCode)){
 			view.setViewName("index");
@@ -316,15 +313,14 @@ public class ProjectController {
 			projPrivate = new ProjPrivate();
 			projPrivate.setIfVirtual(Constant.FALSE);  //默认未启用
 		}
-		
+		request.setAttribute("username", this.getUser().getUserName());
 		request.setAttribute("remoteIp", remoteIp);
 		request.setAttribute("repositoryUrl", repositoryUrl);
-		request.setAttribute("projectCode", projectCode);
 		request.setAttribute("svnBranchConfigs", svnBranchConfigs);
 		request.setAttribute("operateLogs", operateLogs);
 		request.setAttribute("projStatus", projStatus);
-		request.setAttribute("profile", profile);
 		request.setAttribute("projPrivate", projPrivate);
+		request.setAttribute("basePath", BASE_PATH);
 		
 		return view ;
 	}

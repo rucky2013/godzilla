@@ -24,12 +24,12 @@ import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 public class CustomTextFrameHandler extends SimpleChannelInboundHandler<TextWebSocketFrame> {
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, TextWebSocketFrame frame) throws Exception {
-    	String sidArea = ((TextWebSocketFrame) frame).text();
+    	String usernameArea = ((TextWebSocketFrame) frame).text();
         
-    	if(!MainClass.channelsMap.containsKey(sidArea)) {
+    	if(!MainClass.channelsMap.containsKey(usernameArea)) {
         	Channel channel = ctx.channel();
-        	MainClass.channelsMap.put(sidArea, channel);
+        	MainClass.channelsMap.put(usernameArea, channel);
         }
-        ctx.channel().write(new TextWebSocketFrame(sidArea.toUpperCase()+":send message later"));
+        ctx.channel().write(new TextWebSocketFrame(usernameArea.toUpperCase()+":send message later"));
     }
 }

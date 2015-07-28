@@ -66,56 +66,13 @@ public class PropConfigServiceImpl implements PropConfigService {
 	}
 
 	
-	@Override
-	public RpcResult propToPom(String project_code, String branchname, String profile) throws DocumentException, IOException,  Exception {
-		/**
-		 * 1.get pom.xml path
-		 */
-		String[] args = new String[1];
-		args[0] = branchname;
-		String parentPomPath = StringUtil.getPath("parentPom",args);
-		String webPomPath = StringUtil.getPath("webPom",args);
-		
-		try {
-			/**
-			 * 2.get propconfigs from DB
-			 */
-			String parentVersion = getParentversionByProjectcodeAndProfile(project_code, profile);
-			List<PropConfig> propconfigs = getPropConfigsByProjectcodeAndProfile(project_code, profile);
-			/**
-			 * 3.save propconfigs cover pom.xml
-			 */
-			XmlUtil.coverParentPom(parentVersion, parentPomPath, StringUtil.getPath("parentPom1",args));
-			XmlUtil.coverWebPom(propconfigs, webPomPath, StringUtil.getPath("webPom1",args));
-		} catch(Exception e) {
-			e.printStackTrace();
-		}
-		return RpcResult.create(SUCCESS);
-	}
-	/**
-	 * 获取项目父pom的  parent.version 
-	 * @param project_code
-	 * @param profile
-	 * @return
-	 */
-	private String getParentversionByProjectcodeAndProfile(String project_code, String profile) {
-		
-		return "0.0.1-SNAPSHOT11";
-	}
-	/**
-	 * 获取项目的  所有审核配置项 
-	 * @param project_code
-	 * @param profile
-	 * @return list
-	 */
-	private List<PropConfig> getPropConfigsByProjectcodeAndProfile(String project_code, String profile) {
+	public List<PropConfig> getPropConfigsByProjectcodeAndProfile(String project_code, String profile) {
 		
 		Map<String, String> parameters = new HashMap<String, String>();
 		parameters.put("projectCode", project_code);
 		parameters.put("profile", profile);
 		return dao.queryListByProjectcodeAndProfile(parameters);
 	}
-	
 	/**
 	 * 获取项目的  所有审核配置项 
 	 * @param project_code
@@ -237,17 +194,19 @@ public class PropConfigServiceImpl implements PropConfigService {
 	}
 	
 	@Override
-	public ReturnCodeEnum verifyPropById(String propId, String projectCode) {
+	public ReturnCodeEnum verifyPropById(String createBy, String projectCode, String profile, String status, String auditor_text){
 		boolean hasAuthority = SuperController.checkFunright(projectCode);
 		if(!hasAuthority) {
 			return ReturnCodeEnum.getByReturnCode(NO_AUTHORITY);
 		} 
 		Map<String, String> parameterMap = new HashMap<String, String>();
-		parameterMap.put("id", propId);
+		parameterMap.put("createBy", createBy);
 		parameterMap.put("project_code", projectCode);
+		parameterMap.put("profile", profile);
+		
 		parameterMap.put("auditor", SuperController.getUser().getUserName());
-		parameterMap.put("auditor_text", AUDITOR_TEXT);
-		parameterMap.put("status", "1");
+		parameterMap.put("auditor_text", auditor_text);
+		parameterMap.put("status", status);
 		int dbReturn = dao.changeStatusByIdAndProjectcode(parameterMap);
 		return dbReturn>0
 				?ReturnCodeEnum.getByReturnCode(NO_VERIFYPROP)
