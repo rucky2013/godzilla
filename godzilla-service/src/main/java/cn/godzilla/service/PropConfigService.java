@@ -26,30 +26,37 @@ public interface PropConfigService extends Constant{
 	    public List<PropConfig> queryList(Map<String, String> map);
 	    
 	    /**
+	     * 查询  某项目   各个环境下配置   并返回 json格式 数据
+	     * 审核状态的配置 status = 1
+	     * @param projectCode
+	     * @param propTest
+	     * @param propQuasiProduct
+	     * @param propProduct
+	     */
+		public void findPropByProjectCode(String projectCode, StringBuilder propTest, StringBuilder propQuasiProduct, StringBuilder propProduct);
+	
+		
+		/**
 		 * 获取项目的  所有审核配置项 
+		 * 审核状态的配置 status = 1
+		 * 根据 projectcode 和 profile
+		 * 返回list
 		 * @param project_code
 		 * @param profile
 		 * @return list
 		 */
 		public List<PropConfig> getPropConfigsByProjectcodeAndProfile(String project_code, String profile) ;
 		
-	    /**
-	     * 查询  某项目   各个环境下配置   并返回 json格式 数据
-	     * @param projectCode
-	     * @param propTest
-	     * @param propQuasiProduct
-	     * @param propProduct
-	     */
-		public void findPropByUsername(String projectCode, StringBuilder propTest, StringBuilder propQuasiProduct, StringBuilder propProduct);
 		/**
-		 * 添加或者更改 某项目 各个环境下配置 
+		 * 添加 某项目 各个环境下配置   未审核
+		 * 审核状态为 status = 0
 		 * @param projectCode
 		 * @param propTest
 		 * @param propQuasiProduct
 		 * @param propProduct
 		 * @return 
 		 */
-		public ReturnCodeEnum addOrUpdateProp(String projectCode, String propTest, String propQuasiProduct, String propProduct);
+		public ReturnCodeEnum addNotVerifyProp(String projectCode, String propTest, String propQuasiProduct, String propProduct);
 		
 		/**
 		 * 查询 所有环境 并加上all选项
@@ -57,17 +64,45 @@ public interface PropConfigService extends Constant{
 		 */
 		public Map<String, String> queryAllProfile();
 
-		public List<PropConfig> queryByProjectcodeAndCreatebyAndProfile(String projectCode, String createBy, String profile, String verifyStatus);
-		
 		/**
-		 * 审核通过 某配置
-		 * 1.验证当前用户 是否有修改项目的权限
-		 * 2.审核 某编写人 某项目 某环境下的  所有配置
+		 * 查询 /显示  某项目  某人  某环境下  的所有审核配置
+		 * @param projectCode
 		 * @param createBy
-		 * @param projectCode 
-		 * @param profile 
-		 * @param status 
+		 * @param profile
+		 * @param verifyStatus
 		 * @return
 		 */
-		public ReturnCodeEnum verifyPropById(String createBy, String projectCode, String profile, String status, String auditor_text);
+		public List<PropConfig> queryByProjectcodeAndCreatebyAndProfileAndStatus(String projectCode, String createBy, String profile, String verifyStatus);
+		
+		/**
+		 * 查询 /显示  某项目  某人  某环境下  的所有审核配置
+		 * @param projectCode
+		 * @param createBy
+		 * @param profile
+		 * @param verifyStatus
+		 * @return
+		 */
+		List<PropConfig> queryByProjectcodeAndCreatebyAndProfileGroupBy(String projectCode, String createBy, String profile, String status);
+		/**
+	     * 查询  某项目   各个环境下配置   并返回 json格式 数据
+	     * 
+	     * @param projectCode
+	     * @param propTest
+	     * @param propQuasiProduct
+	     * @param propProduct
+	     */
+		public void findPropByCreatebyAndProjectcodeAndProfileAndStatus(String createBy, String projectCode, String profile, StringBuilder propTest, StringBuilder propQuasiProduct, StringBuilder propProduct, String status);
+
+		/**
+		 * 审核通过  某人 某项目 某环境下的 所有配置
+		 * @param createBy
+		 * @param projectCode
+		 * @param profile
+		 * @param status
+		 * @param auditor_text
+		 * @return
+		 */
+		public ReturnCodeEnum verifyPropByCreatebyAndProjectcodeAndProfile(String createBy, String projectCode, String profile, String status, String auditor_text);
+
+		
 }

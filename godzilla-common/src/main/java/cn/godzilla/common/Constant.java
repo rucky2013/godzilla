@@ -14,7 +14,7 @@ public interface Constant {
 	
 	public final String NOTYET_VERIFY_STATUS = "0";//未审核
 	public final String OK_VERIFY_STATUS = "1";//审核通过
-	public final String STOP_VERIFY_STATUS = "2";//驳回
+	public final String STOP_VERIFY_STATUS = "2";//未通过
 	public final String PROJECT_ENV = "dev";
 	public final String SHELL_PATH = "F:/yixin_fso_app/godzilla/document/shell/server";
 	/**

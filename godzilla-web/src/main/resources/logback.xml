@@ -1,49 +1,51 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/2002/xmlspec/dtd/2.10/xmlspec.dtd">
- -->
+<!-- <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/2002/xmlspec/dtd/2.10/xmlspec.dtd"> -->
 <configuration>
 
 	<property name="LOG_HOME" value="D:\\logs\\godzilla\\" />
-	
+
 	<property name="LOG_LEVEL" value="DEBUG" />
-	
-	<!-- 控制台输出 -->    
+
+	<!-- 控制台输出 -->
 	<appender name="stdout" class="ch.qos.logback.core.ConsoleAppender">
 		<encoder>
-			<pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %-4relative [%thread] %-5level %logger{36} - %msg%n</pattern>
+			<pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %-4relative [%thread] %-5level
+				%logger{36} - %msg%n</pattern>
 		</encoder>
 	</appender>
-	
-	<!-- 将Controller按照每天生成日志文件 --> 
-	<appender name="godzillalog" class="ch.qos.logback.core.rolling.RollingFileAppender">
-		<!-- 日志输出编码 -->  
-      	<Encoding>UTF-8</Encoding>
+
+	<!-- 将Controller按照每天生成日志文件 -->
+	<appender name="godzillalog"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<!-- 日志输出编码 -->
+		<Encoding>UTF-8</Encoding>
 		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-			<!--日志文件输出的文件名-->
-			<FileNamePattern>${LOG_HOME}/godzilla/log-%d{yyyy-MM-dd}.log</FileNamePattern>
-			<!-- 存活时间（天）  -->
+			<!--日志文件输出的文件名 -->
+			<FileNamePattern>${LOG_HOME}/godzilla/log-%d{yyyy-MM-dd}.log
+			</FileNamePattern>
+			<!-- 存活时间（天） -->
 			<MaxHistory>365</MaxHistory>
 		</rollingPolicy>
 		<encoder>
-			<!--格式化输出：%d表示日期，%thread表示线程名，%-5level：级别从左显示5个字符宽度%msg：日志消息，%n是换行符-->
-      		<pattern>%date %-4relative [%thread] %-5level %logger{36} [%file : %line] - %msg%n</pattern>  
-    	</encoder>
+			<!--格式化输出：%d表示日期，%thread表示线程名，%-5level：级别从左显示5个字符宽度%msg：日志消息，%n是换行符 -->
+			<pattern>%date %-4relative [%thread] %-5level %logger{36} [%file :
+				%line] - %msg%n</pattern>
+		</encoder>
 	</appender>
-	
-		
-  	<!-- 日志输出模块划分 -->
-  	<logger name="cn.godzilla" level="${LOG_LEVEL}">  
-  		<appender-ref ref="godzillalog" />  
- 	</logger>
- 	
+
+
+	<!-- 日志输出模块划分 -->
+	<logger name="cn.godzilla" level="${LOG_LEVEL}">
+		<appender-ref ref="godzillalog" />
+	</logger>
+
 	<logger name="java.sql" level="${LOG_LEVEL}">
 		<appender-ref ref="stdout" />
 		<appender-ref ref="logdao" />
 	</logger>
-	
-	<root level="${LOG_LEVEL}">  
-        <appender-ref ref="stdout" />  
-    </root>
-	
+
+	<root level="${LOG_LEVEL}">
+		<appender-ref ref="stdout" />
+	</root>
+
 </configuration>

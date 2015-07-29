@@ -198,7 +198,7 @@ $(function(){
 		//alert(encodeURI(p1Json));
 		$.ajax({ 
 		 	type: 'POST', 
-			url: '../' + sid + '/' + projectCode + '.do',
+			url: '/${basePath}/prop/' + sid + '/' + projectCode + '.do',
 			data: {
 				p1:p1json,
 				p2:p2json,
@@ -207,6 +207,8 @@ $(function(){
 			success: function(data){
 				if(data == 'SUCCESS') {
 					alert("SUCCESS");
+					//重新进入查询页
+					window.location.href = '/${basePath}/prop/' + sid + '/' + projectCode + '.do';
 				} else {
 					alert("FAILURE");
 				}

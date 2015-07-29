@@ -25,5 +25,11 @@ public interface PropConfigMapper {
 	
 	List<PropConfig> queryByProjectcodeAndCreatebyAndProfile(Map<String, String> parameterMap);
 
-	int changeStatusByIdAndProjectcode(Map<String, String> parameterMap);
+	List<PropConfig> queryByProjectcodeAndCreatebyAndProfileGroupBy(Map<String, String> parameterMap);
+
+	int changeStatusByNewverify(Map<String, String> parameterMap);
+
+	void updatePropLastValue(Map<String, Object> parameterMap1);
+
+	int verifyOKProp(Map<String, String> parameterMap);
 }

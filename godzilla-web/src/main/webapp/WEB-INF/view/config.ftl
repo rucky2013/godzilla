@@ -2,12 +2,8 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>配置审核-哥斯拉</title>
 <link type="text/css" href="/${basePath}/css/meta.css" rel="stylesheet"/>
-<script src="/${basePath}/js/mySelect.js"></script>
-<script>
-window.onload=function(){
-	mySelect('application');
-};
-</script>
+
+
 </head>
 <body id="config" class="config">
 	<div class="main">	
@@ -59,9 +55,9 @@ window.onload=function(){
                 	<select name="selectedProfile">
                 		<#list profileList?keys as key>
                 			<#if key == selectedProfile!'ALL'>
-							  <option value="${key}" selected="selected">${profileList[key]}</option>
+							  <option value="${profileList[key]}" selected="selected">${key}</option>
 							<#else>
-							  <option value="${key}">${profileList[key]}</option>
+							  <option value="${profileList[key]}">${key}</option>
 							</#if>  
                     	</#list>
               		</select>
@@ -148,21 +144,7 @@ $(document).ready(function() {
 		
 		//进入审核页面
 		window.location.href = varifyDetailPageUrl;
-		
-		<!-- $.ajax({ 
-		 	type: 'POST', 
-			url: varifyUrl,
-			data: {
-				},
-			success: function(data){
-				if(data == 'SUCCESS') {
-					$(this).attr("value1", "");
-					$(this).remove();
-				} else {
-					alert("审核失败");
-				}
-      	}}); -->
-	}
+	});
 	
 })
 

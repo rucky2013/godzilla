@@ -5,6 +5,8 @@
  * @param map
  */
 function json2Map(str, map) {
+	if(str=='')
+		str = '{}';
 	 var obj = eval('(' + str + ')');
 	 
 	 for(var k in obj) {

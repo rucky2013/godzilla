@@ -61,9 +61,9 @@ window.onload=function(){
                 	<select name="selectedProfile">
                 		<#list profileList?keys as key>
                 			<#if key == selectedProfile!'ALL'>
-							  <option value="${key}" selected="selected">${profileList[key]}</option>
+							  <option value="${profileList[key]}" selected="selected">${key}</option>
 							<#else>
-							  <option value="${key}">${profileList[key]}</option>
+							  <option value="${profileList[key]}">${key}</option>
 							</#if>  
                     	</#list>
               		</select>
