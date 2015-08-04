@@ -16,12 +16,12 @@ if (window.WebSocket) {
   socket.onopen = function(event) {
     /*var ta = document.getElementById('messagebox');
     ta.value = "Web Socket opened!";*/
-	 alert("open");
+	// alert("open");
   };
   socket.onclose = function(event) {
     /*var ta = document.getElementById('messagebox');
     ta.value = ta.value + "Web Socket closed"; */
-	  alert("closed");
+	 // alert("closed");
   };
 } else {
   alert("Your browser does not support Web Socket.");

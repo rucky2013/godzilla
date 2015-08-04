@@ -13,7 +13,7 @@ $("#tab2 li").click(
 	function(){
 		var num=$(this).index();
 		$(this).addClass("current").siblings().removeClass("current");
-		$("#tabCon2 li:eq("+num+")").show().siblings().hide();
+		//$("#tabCon2 li:eq("+num+")").show().siblings().hide();
 	}
 );
 

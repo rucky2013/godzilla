@@ -20,6 +20,11 @@ public class Project implements Serializable{
 
     private Integer status;
 
+    private String checkoutPath;
+
+    private String version;
+    private String deployVersion;
+    
     public Long getId() {
         return id;
     }
@@ -75,4 +80,28 @@ public class Project implements Serializable{
     public void setStatus(Integer status) {
         this.status = status;
     }
+
+	public String getCheckoutPath() {
+		return checkoutPath;
+	}
+
+	public void setCheckoutPath(String checkoutPath) {
+		this.checkoutPath = checkoutPath;
+	}
+
+	public String getVersion() {
+		return version;
+	}
+
+	public void setVersion(String version) {
+		this.version = version;
+	}
+
+	public String getDeployVersion() {
+		return deployVersion;
+	}
+
+	public void setDeployVersion(String deployVersion) {
+		this.deployVersion = deployVersion;
+	}
 }

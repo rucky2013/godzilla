@@ -92,8 +92,62 @@
       branch_name as branchName, create_by as createBy, create_time as createTime, 
       create_version as createVersion, current_version as currentVersion ,status </sql>
   <select id="queryListByProjectCode" resultType="cn.godzilla.model.SvnBranchConfig" parameterType="java.lang.String">
-  	select <include refid="queryColumns" /> from t_g_svn_branch_config where project_code = #{projectCode}
-  	
+  	select <include refid="queryColumns" /> from t_g_svn_branch_config 
+  	where project_code = #{projectCode}
+  	group by create_version
   </select>
+  
+  <insert id="insertBranch" useGeneratedKeys="true" keyProperty="id" parameterType="java.util.Map" >
+  
+    insert into t_g_svn_branch_config
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="projectCode != null" >
+        project_code,
+      </if>
+      <if test="branchUrl != null" >
+        branch_url,
+      </if>
+      <if test="branchName != null" >
+        branch_name,
+      </if>
+      <if test="createBy != null" >
+        create_by,
+      </if>
+        create_time,
+      <if test="createVersion != null" >
+        create_version,
+      </if>
+      <if test="currentVersion != null" >
+        current_version,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="projectCode != null" >
+        #{projectCode,jdbcType=VARCHAR},
+      </if>
+      <if test="branchUrl != null" >
+        #{branchUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="branchName != null" >
+        #{branchName,jdbcType=VARCHAR},
+      </if>
+      <if test="createBy != null" >
+        #{createBy,jdbcType=VARCHAR},
+      </if>
+        now(),
+      <if test="createVersion != null" >
+        #{createVersion,jdbcType=VARCHAR},
+      </if>
+      <if test="currentVersion != null" >
+        #{currentVersion,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
   
 </mapper>

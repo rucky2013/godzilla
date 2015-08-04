@@ -67,17 +67,17 @@ public abstract class SuperController implements Constant{
 		return sidThreadLocal.get();
 	}
 	
-	public void distroyContext() {
+	protected void distroyContext() {
 		sidThreadLocal.set(null);
 	}
 	
-	public static List<FunRight> getFunRights() {
+	protected static List<FunRight> getFunRights() {
 		String username = getUser().getUserName();
 		List<FunRight> funRightList = funRightService.findFunRightsByUsername(username);
 		return funRightList;
 	}
 	
-	public static boolean checkFunright(String projectCode) {
+	protected static boolean checkFunright(String projectCode) {
 		List<FunRight> funRightList = getFunRights();
 		
 		for(FunRight fr:funRightList) {
@@ -87,6 +87,21 @@ public abstract class SuperController implements Constant{
 		}
 		
 		return false;
+	}
+	
+	protected static String getBranchNameByBranchUrl(String branchUrl) {
+		String branchName = "";
+		if(branchUrl.endsWith("/")) {
+			branchName = branchUrl.substring(branchUrl.lastIndexOf("/", branchUrl.length()-2)+1, branchUrl.length()-2);
+		} else {
+			branchName = branchUrl.substring(branchUrl.lastIndexOf("/")+1);
+		}
+		return branchName;
+	}
+	
+	public static void main(String args[]) {
+		String branchUrl = "http://10.100.142.37:9090/svn/fso/godzilla/branch/godzilla-bug2/";
+		System.out.println(getBranchNameByBranchUrl(branchUrl));
 	}
 	
 }

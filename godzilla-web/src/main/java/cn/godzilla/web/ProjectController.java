@@ -269,60 +269,63 @@ public class ProjectController extends SuperController implements Constant{
 		}
 		return null;
 	}
+	
+	/**
+	 * 源代码设置 -->添加或修改源代码设置
+	 * @param sid
+	 * @param projectCode
+	 * @param profile
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping(value="/{sid}/{projectCode}/{profile}/srcEdit", method = RequestMethod.GET)
+	@ResponseBody
+	public Object srcEdit(@PathVariable String sid, @PathVariable String projectCode, @PathVariable String profile, HttpServletRequest request) {
 		
-	@RequestMapping(value="/{sid}/{projectCode}/{profile}/check", method = RequestMethod.GET)
-	public Object queryProp(@PathVariable String sid, @PathVariable String projectCode, @PathVariable String profile, HttpServletRequest request) {
-			
-		ModelAndView view = new ModelAndView();
+		//权限验证??
+		String srcId = StringUtil.getReqPrameter(request, "srcId");
+		String repositoryUrl = StringUtil.getReqPrameter(request, "repositoryUrl");
+		String checkoutPath = StringUtil.getReqPrameter(request, "checkoutPath");
+		String version = StringUtil.getReqPrameter(request, "version");
+		String deployVersion = StringUtil.getReqPrameter(request, "deployVersion");
 		
-		view.setViewName("gesila1");
+		boolean flag = projectService.srcEdit(srcId, repositoryUrl, checkoutPath, version, deployVersion);
 		
-		if(StringUtil.isEmpty(projectCode)){
-			view.setViewName("index");
-			return view;
+		if(flag){
+			logger.info("************源代码设置End**************");
+			return SUCCESS;
+		}else{
+			logger.error("************源代码设置Error**************");
+			return FAILURE;
 		}
-		if(StringUtil.isEmpty(profile)){
-			
-			profile = Constant.PROFILE_TEST ;  //TEST
-		}
+	}
+	
+	/**
+	 * 
+	 * @param sid
+	 * @param projectCode
+	 * @param profile
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping(value="/{sid}/{projectCode}/{profile}/projectConfig", method = RequestMethod.GET)
+	public Object projectConfig(@PathVariable String sid, @PathVariable String projectCode, @PathVariable String profile, HttpServletRequest request) {
 		
-		ClientConfig client = clientConfigService.queryDetail(projectCode, profile) ;
-		
-		String remoteIp = client.getRemoteIp() ;
+		//权限验证??
+		ClientConfig clientConfig = clientConfigService.queryDetail(projectCode, profile) ;
 		
 		Project project = projectService.qureyByProCode(projectCode);
-		
-		String repositoryUrl = project.getRepositoryUrl();
-		
 		List<SvnBranchConfig> svnBranchConfigs = svnBranchConfigService.queryListByProjectCode(projectCode);
-		
 		List<OperateLog> operateLogs = operateLogService.queryList(projectCode, profile);
 		
-		ProjStatus projStatus =  projStatusService.queryDetail(projectCode, "lizw",profile);
-		
-		if(projStatus == null){
-			
-			projStatus = new ProjStatus();
-			projStatus.setCurrentStatus(0);
-			projStatus.setProcessRate(0);
-		}
-		
-		ProjPrivate projPrivate = projPrivateService.queryDetail(projectCode, "lizw");
-		
-		if(projPrivate == null){
-			projPrivate = new ProjPrivate();
-			projPrivate.setIfVirtual(Constant.FALSE);  //默认未启用
-		}
 		request.setAttribute("username", this.getUser().getUserName());
-		request.setAttribute("remoteIp", remoteIp);
-		request.setAttribute("repositoryUrl", repositoryUrl);
+		request.setAttribute("clientConfig", clientConfig);
 		request.setAttribute("svnBranchConfigs", svnBranchConfigs);
 		request.setAttribute("operateLogs", operateLogs);
-		request.setAttribute("projStatus", projStatus);
-		request.setAttribute("projPrivate", projPrivate);
+		request.setAttribute("project", project);
 		request.setAttribute("basePath", BASE_PATH);
 		
-		return view ;
+		return "gesila1";
 	}
 	
 }

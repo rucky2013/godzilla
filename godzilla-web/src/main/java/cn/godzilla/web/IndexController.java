@@ -89,17 +89,6 @@ public class IndexController extends SuperController{
 		logger.debug("********projects.size"+projects.size());
 		logger.debug("********logs.size"+logs.size());
 		
-//		try {
-//			request.getRequestDispatcher("index").forward(request, response);
-//		} catch (ServletException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		} catch (IOException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//		view.addObject("projects", projects);
-//		view.addObject("logs", "ces");
 		return view ;
 	}
 

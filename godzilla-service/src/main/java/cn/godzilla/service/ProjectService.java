@@ -18,4 +18,16 @@ public interface ProjectService{
     
     public Project save(Project project);
 
+    /**
+	 * 源代码设置-->添加或修改源代码设置
+	 * @param projectCode
+	 * @param repositoryUrl
+	 * @param checkoutPath
+	 * @param version
+	 * @param deployVersion
+	 * @param deployVersion2 
+	 * @return
+	 */
+	boolean srcEdit(String srcId, String repositoryUrl, String checkoutPath, String version, String deployVersion);
+
 }

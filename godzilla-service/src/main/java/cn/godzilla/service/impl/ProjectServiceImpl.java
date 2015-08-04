@@ -1,6 +1,8 @@
 package cn.godzilla.service.impl;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -58,6 +60,20 @@ public class ProjectServiceImpl implements ProjectService {
 			dao.insertSelective(project);
 		}
 		return dao.qureyByProCode(project.getProjectCode());
+	}
+	@Override
+	public boolean srcEdit(String srcId, String repositoryUrl, String checkoutPath, String version, String deployVersion) {
+		Map<String, String> parameterMap = new HashMap<String, String>();
+		
+		parameterMap.put("srcId", srcId);
+		parameterMap.put("repositoryUrl", repositoryUrl);
+		parameterMap.put("checkoutPath", checkoutPath);
+		parameterMap.put("version", version);
+		parameterMap.put("deployVersion", deployVersion);
+		
+		int index = dao.updateProjectById(parameterMap);
+		
+		return index>0;
 	}
 
 }

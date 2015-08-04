@@ -36,7 +36,7 @@
             	<table width="200" border="0" class="table1">
                   <tr>
                     <#list projects as item>
-                    	<td><a href="/${basePath}/project/${sid}/${item.projectCode}/TEST/check.do" title="${item.projectCode}"><span></span>${item.projectName}</a></td>
+                    	<td><a href="/${basePath}/project/${sid}/${item.projectCode}/TEST/projectConfig.do" title="${item.projectCode}"><span></span>${item.projectName}</a></td>
                     </#list>
                     
                   </tr>

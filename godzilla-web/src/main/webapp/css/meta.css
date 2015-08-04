@@ -131,18 +131,18 @@ h4.title{ background:#edeef0;height:42px; line-height:42px!important; color:#7c7
 
 	/*---弹出层---*/
 .mar150_l{ margin-left:150px;}
-#shadow{position:fixed;top:0;left:0;width:100%;height:100%;background:#aaa;opacity:0.6;filter:alpha(opacity:60); display:block;}
-#shadow_box{ position:absolute; width:450px; left:50%; top:20%; margin-left:-225px; border-radius:5px; background:#fff; display:block;}
-#shadow_box h5{ height:46px; line-height:46px; text-align:center; font-size:14px; color:#fff; background:#0097e0; border-radius:5px 5px 0 0;}
-#close{ position:absolute; right:15px; top:15px; cursor:pointer; background:url(../img/close.png) no-repeat; width:17px; height:17px; text-indent:-9999px; overflow:hidden; display:block;}
-#shadow_box .shadow_con{ padding:20px;}
-#shadow_box .shadow_con .uname{ font-size:12px; color:#535353;}
-#shadow_box .shadow_con .check_con{ margin-top:20px;}
-#shadow_box .shadow_con .check_con li{ line-height:24px; float:left; list-style:none; margin-right:45px; cursor:pointer}
-#shadow_box .shadow_con .check_con b{ background:url(../img/check_bg.png) no-repeat; display:block; float:left; width:12px; height:12px; margin-top:7px; margin-right:5px; overflow:hidden; text-indent:-9999px; cursor:pointer;}
-#shadow_box .shadow_con .shadow_btn{ width:100px; height:36px; line-height:36px; text-align:center; background:#0097e0; color:#fff; border:none; outline:none; border-radius:5px; cursor:pointer; margin-top:50px;}
-#shadow_box .shadow_con .shadow_btn:hover{ background:#54b9ea;}
-#shadow_box .shadow_con .check_con b.checked{ background:url(../img/check_bg.png) no-repeat 0 -12px;}
+#shadow{position:fixed;top:0;left:0;width:100%;height:100%;background:#aaa;opacity:0.6;filter:alpha(opacity:60); display:block; z-index:10;}
+.shadow_box{ position:absolute; width:450px; left:50%; top:20%; margin-left:-225px; border-radius:5px; background:#fff; display:block; z-index:11;}
+.shadow_box h5{ height:46px; line-height:46px; text-align:center; font-size:14px; color:#fff; background:#0097e0; border-radius:5px 5px 0 0;}
+.close{ position:absolute; right:15px; top:15px; cursor:pointer; background:url(../img/close.png) no-repeat; width:17px; height:17px; text-indent:-9999px; overflow:hidden; display:block;}
+.shadow_box .shadow_con{ padding:20px;}
+.shadow_box .shadow_con .uname{ font-size:12px; color:#535353;}
+.shadow_box .shadow_con .check_con{ margin-top:20px;}
+.shadow_box .shadow_con .check_con li{ line-height:24px; float:left; list-style:none; margin-right:45px; cursor:pointer}
+.shadow_box .shadow_con .check_con b{ background:url(../img/check_bg.png) no-repeat; display:block; float:left; width:12px; height:12px; margin-top:7px; margin-right:5px; overflow:hidden; text-indent:-9999px; cursor:pointer;}
+.shadow_box .shadow_con .shadow_btn{ width:100px; height:36px; line-height:36px; text-align:center; background:#0097e0; color:#fff; border:none; outline:none; border-radius:5px; cursor:pointer; margin-top:50px;}
+.shadow_box .shadow_con .shadow_btn:hover{ background:#54b9ea;}
+.shadow_box .shadow_con .check_con b.checked{ background:url(../img/check_bg.png) no-repeat 0 -12px;}
 	/*--添加用户--*/
 .user_con{ margin-bottom:20px; padding-left:70px;}
 .user_con label{ float:left; font-size:14px; color:#535353; line-height:26px; width:80px; margin-right:30px;}

@@ -22,8 +22,8 @@ import cn.godzilla.service.ProjPrivateService;
 import cn.godzilla.service.SvnBranchConfigService;
 
 @Controller
-@RequestMapping("setting")
-public class SvnBranchConfigController {
+@RequestMapping("svnbranch")
+public class SvnBranchConfigController extends SuperController implements Constant{
 
 	private final Logger logger = LogManager.getLogger(SvnBranchConfigController.class);
 
@@ -34,10 +34,76 @@ public class SvnBranchConfigController {
 	ProjPrivateService projPrivateService;
 
 	/**
+	 * 分支设置
+	 * @param sid
+	 * @param projectCode
+	 * @param profile
+	 * @param branchUrl
+	 * @param currentVersion
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping(value = "/{sid}/{projectCode}/{profile}/add", method = RequestMethod.GET)
+	@ResponseBody
+	public Object add(@PathVariable String sid, @PathVariable String projectCode, @PathVariable String profile, 
+			@RequestParam("branchUrl") String branchUrl,
+			@RequestParam("currentVersion") String currentVersion,
+			HttpServletRequest request, HttpServletResponse response) {
+
+		
+		logger.info("**************添加分支设置***********projectCode:" + projectCode
+				+ ",branchUrl:" + branchUrl);
+
+		boolean flag = svnBranchConfigService.addNewBranch(projectCode, branchUrl, currentVersion);
+		
+		if(flag){
+			logger.info("************添加分支设置End**************");
+			return SUCCESS;
+		}else{
+			logger.error("************添加分支设置Error**************");
+			return FAILURE;
+		}
+	}
+	
+	/**
+	 * 分支编辑 保存  
+	 * @param sid
+	 * @param projectCode
+	 * @param profile
+	 * @param branchUrl
+	 * @param currentVersion
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping(value = "/{sid}/{projectCode}/{profile}/edit", method = RequestMethod.GET)
+	@ResponseBody
+	public Object edit(@PathVariable String sid, @PathVariable String projectCode, @PathVariable String profile, 
+			@RequestParam("id") String id,
+			@RequestParam("branchUrl") String branchUrl,
+			@RequestParam("currentVersion") String currentVersion,
+			HttpServletRequest request, HttpServletResponse response) {
+
+		
+		logger.info("**************分支编辑 保存***********projectCode:" + projectCode
+				+ ",branchUrl:" + branchUrl);
+
+		boolean flag = svnBranchConfigService.editBranch(id, branchUrl, currentVersion);
+		
+		if(flag){
+			logger.info("************分支编辑 保存End**************");
+			return SUCCESS;
+		}else{
+			logger.error("************分支编辑 保存Error**************");
+			return FAILURE;
+		}
+	}
+
+	/**
 	 * 根据项目编号projectCode，查询分支列表
 	 * 
 	 * @param projectCode
-	 *            项目编号
 	 * @param request
 	 * @param response
 	 * @return
@@ -87,32 +153,6 @@ public class SvnBranchConfigController {
 
 	}
 	
-	@RequestMapping(value = "branch/add", method = RequestMethod.POST)
-	@ResponseBody
-	public boolean addBranch(
-			@RequestParam("projectCode") String projectCode,
-			@RequestParam("branchUrl") String branchUrl,
-			@RequestParam("branchName") String branchName,
-			HttpServletRequest request, HttpServletResponse response) {
-
-		logger.info("**************操作分支设置***********projectCode:" + projectCode
-				+ ",branchUrl:" + branchUrl + ",branchName:"
-				+ branchName);
-
-		SvnBranchConfig svnBranchConfig = new SvnBranchConfig();
-
-		svnBranchConfig.setBranchName(branchName);
-		svnBranchConfig.setBranchUrl(branchUrl);
-		svnBranchConfig.setProjectCode(projectCode);
-
-		if (svnBranchConfigService.insert(svnBranchConfig) > 0){
-			
-			return true ;
-		}
-		return false;
-
-	}
-
 	/**
 	 * 关闭虚拟主干
 	 * 
