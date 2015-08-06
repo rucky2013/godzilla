@@ -26,11 +26,11 @@ import cn.godzilla.model.PropConfig;
 public class XmlUtil {
 	private static final Logger logger = LogManager.getLogger(XmlUtil.class);
 
-	public static final String PARENT_POMPATH = "F:/yixin_fso_app/godzilla/pom.xml";
-	public static final String SAVE_PARENT_POMPATH = "F:/yixin_fso_app/godzilla/pom1.xml";
+	//public static final String PARENT_POMPATH = "F:/yixin_fso_app/godzilla/pom.xml";
+	//public static final String SAVE_PARENT_POMPATH = "F:/yixin_fso_app/godzilla/pom1.xml";
 
-	public static final String WEB_POMPATH = "F:/yixin_fso_app/godzilla/godzilla-web/pom.xml";
-	public static final String SAVE_WEB_POMPATH = "F:/yixin_fso_app/godzilla/godzilla-web/pom1.xml";
+	//public static final String WEB_POMPATH = "F:/yixin_fso_app/godzilla/godzilla-web/pom.xml";
+	//public static final String SAVE_WEB_POMPATH = "F:/yixin_fso_app/godzilla/godzilla-web/pom1.xml";
 
 	public static void main(String args[]) throws DocumentException, IOException {
 		/*Document doc = parse(GET_XMLFILE_PATH);
@@ -39,7 +39,7 @@ public class XmlUtil {
 		// pom1.xml
 		Document doc1 = parse(SAVE_XMLFILE_PATH);
 		printDocument(doc1);*/
-		coverParentPom("SDFLJ", PARENT_POMPATH, SAVE_PARENT_POMPATH);
+		//coverParentPom("SDFLJ", PARENT_POMPATH, SAVE_PARENT_POMPATH);
 	}
 	
 	/**
@@ -103,7 +103,7 @@ public class XmlUtil {
 
 		System.out.println(properties.getText().toString());
 		
-		saveDocument(doc, SAVE_WEB_POMPATH);
+	//	saveDocument(doc, SAVE_WEB_POMPATH);
 	}
 
 	/**

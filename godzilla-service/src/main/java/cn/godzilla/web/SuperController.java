@@ -99,9 +99,9 @@ public abstract class SuperController implements Constant{
 		return branchName;
 	}
 	
-	public static void main(String args[]) {
+	/*public static void main(String args[]) {
 		String branchUrl = "http://10.100.142.37:9090/svn/fso/godzilla/branch/godzilla-bug2/";
 		System.out.println(getBranchNameByBranchUrl(branchUrl));
-	}
+	}*/
 	
 }

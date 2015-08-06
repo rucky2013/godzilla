@@ -85,7 +85,7 @@
 									<tr>
 										<td width="80" class="paddingR0">部署操作：</td>
 										<td class="bg1"><span class="spanArrange"><a
-												id="deploy" href="javacript:;" value1="" title="部署">部署</a></span><span
+												id="deploy" href="javacript:;" value1="${project.checkoutPath}" title="部署">部署</a></span><span
 											class="spanUseAgain"><a href="#" id="restart"
 												title="重新启用">重新启用</a></span></td>
 									</tr>
@@ -414,13 +414,12 @@ $(document).ready(function() {
     
     $("#deploy").on("click" , function() {
     	var value1 = $(this).attr("value1");
-    	var srcUrl = "F:/yixin_fso_app/godzilla";
     
     	$.ajax({
              type: "POST",
              url: "/${basePath}/mvn/${sid}/godzilla/TEST/deploy.do",
              data: {
-             		srcUrl:srcUrl,
+             		srcUrl: value1,
              		},
              dataType: "json",
              success: function(data){

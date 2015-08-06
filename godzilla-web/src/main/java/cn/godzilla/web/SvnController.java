@@ -62,8 +62,6 @@ public class SvnController extends SuperController implements Constant{
 		
 		logger.info("************代码合并Begin***********");
 		
-		String svnuser="wanglin" ;//用户名暂时写死
-		String svnpwd="1";
 		ClientConfig clientConfig = clientConfigService.queryDetail(projectCode, profile) ;
 		String clientIp = clientConfig.getRemoteIp();
 		List<SvnBranchConfig> svnBranchConfigs = svnBranchConfigService.queryListByProjectCode(projectCode);
@@ -72,7 +70,6 @@ public class SvnController extends SuperController implements Constant{
 		String localPath=project.getCheckoutPath(); 
 		
 		boolean flag = false;
-		boolean ifOneBranch = true;
 		
 		String branches = "";
 		for(SvnBranchConfig sbc: svnBranchConfigs) {
@@ -86,7 +83,6 @@ public class SvnController extends SuperController implements Constant{
 			BaseShellCommand command = new BaseShellCommand();
 			String str = "sh /home/godzilla/gzl/shell/server/svn_server_wl.sh merge "+trunkPath+" '"+branches+"' "+" "+callbackUrl+" "+projectCode+" "+ operator +" "+clientIp ;
 			flag = command.execute(str);
-			ifOneBranch = false;
 		} catch (Exception e) {
 			logger.error(e);
 			e.printStackTrace();
@@ -122,17 +118,13 @@ public class SvnController extends SuperController implements Constant{
 		
 		logger.info("************提交主干Begin***********");
 		
-		String svnuser="wanglin" ;//用户名暂时写死
-		String svnpwd="1";
 		ClientConfig clientConfig = clientConfigService.queryDetail(projectCode, profile) ;
 		String clientIp = clientConfig.getRemoteIp();
 		List<SvnBranchConfig> svnBranchConfigs = svnBranchConfigService.queryListByProjectCode(projectCode);
 		Project project = projectService.qureyByProCode(projectCode);
 		String trunkPath = project.getRepositoryUrl();
-		String localPath=project.getCheckoutPath(); 
 		
 		boolean flag = false;
-		boolean ifOneBranch = true;
 		
 		String branches = "";
 		for(SvnBranchConfig sbc: svnBranchConfigs) {

@@ -16,7 +16,7 @@ public interface Constant {
 	public final String OK_VERIFY_STATUS = "1";//审核通过
 	public final String STOP_VERIFY_STATUS = "2";//未通过
 	public final String PROJECT_ENV = "dev";
-	public final String SHELL_PATH = "F:/yixin_fso_app/godzilla/document/shell/server";
+	public final String SHELL_PATH = "/home/godzilla/gzl/shell/server";
 	/**
 	 * freemarker ftl url base path
 	 */
@@ -37,7 +37,7 @@ public interface Constant {
 	/**
 	 * rpc default value
 	 */
-	public final String DEFAULT_POM_BASEPATH = "F:/yixin_fso_app";
+	public final String DEFAULT_POM_BASEPATH = "/home/godzilla/gzl/work/godzilla";
 	
 	/**
 	 * echo KEY NAME 

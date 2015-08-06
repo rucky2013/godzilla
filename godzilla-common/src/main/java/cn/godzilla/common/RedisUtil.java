@@ -13,9 +13,9 @@ public class RedisUtil {
 	@Autowired
 	private MyStringRedisTemplate template;
 
-	public RedisUtil() {
+	/*public RedisUtil() {
 		// template.getConnectionFactory().getConnection().select(0);
-	}
+	}*/
 
 	public void set(String key, String value) {
 		template.opsForValue().set(key, value);

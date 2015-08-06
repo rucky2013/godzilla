@@ -1,15 +1,16 @@
-var server_host = "ws://localhost:9999/websocket"
+var server_host = "ws://10.100.142.65:9999/websocket"
 var socket;
-var showlength = 10;
+var showlength = 20;
 if (!window.WebSocket) {
   window.WebSocket = window.MozWebSocket;
 }
+var lock = false;
 if (window.WebSocket) {
   socket = new WebSocket(server_host);
   socket.onmessage = function(event) {
 	var length = $("#messagebox").find("div").length;
-	while(length>showlength) {
-		$("#messagebox").find("div：eq(0)").remove();
+	if(length>showlength) {
+		$("#messagebox").empty();
 	}
 	$("#messagebox").append('<div>' + event.data + '</div>');
   };

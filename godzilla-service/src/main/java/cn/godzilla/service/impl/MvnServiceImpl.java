@@ -63,7 +63,7 @@ public class MvnServiceImpl implements MvnService{
 		/**
 		 * 2.mvn deploy  3.将sh命令>queue
 		 */
-		boolean flag2 = this.deployProject(projectCode, srcUrl, profile, IP);
+		boolean flag2 = this.deployProject(srcUrl, projectCode, profile, IP);
 		
 		if(flag1&&flag2) {
 			return ReturnCodeEnum.getByReturnCode(OK_MVNDEPLOY);

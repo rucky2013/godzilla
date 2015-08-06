@@ -26,7 +26,10 @@ import cn.godzilla.service.UserService;
 @Controller
 @RequestMapping("/user")
 public class UserController extends SuperController{
-
+	
+	public UserController() {
+		super();
+	}
 	private final Logger logger = LogManager.getLogger(UserController.class);
 	@Autowired
 	UserService userService;
