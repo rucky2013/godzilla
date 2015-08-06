@@ -445,6 +445,12 @@ $(document).ready(function() {
 
              }
          });
+         
+        showWindow(1);
+		
+		var usernameArea = '${username}-'+'svn';
+		send(usernameArea);
+		$("#messagebox").empty();
     });
     $("#commit").on("click", function() {
     	$.ajax({
@@ -455,6 +461,12 @@ $(document).ready(function() {
 
              }
          });
+         
+        showWindow(1);
+		
+		var usernameArea = '${username}-'+'svn';
+		send(usernameArea);
+		$("#messagebox").empty();
     });
     
 

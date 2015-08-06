@@ -11,8 +11,8 @@
         </div>
         <div class="mainCon clearfix">
         	
-            <div id="shadow"></div>
-            <div id="shadow_box">
+            <div id="shadow" class="shadow"></div>
+            <div id="shadow_box" class="shadow_box">
                   <h5>用户登陆<span id="close">关闭</span></h5>
                   	<div class="shadow_con">
                     		<div class="user_con clearfix">

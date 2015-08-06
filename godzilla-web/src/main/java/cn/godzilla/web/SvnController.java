@@ -62,8 +62,8 @@ public class SvnController extends SuperController implements Constant{
 		
 		logger.info("************代码合并Begin***********");
 		
-		String svnuser="lizw" ;//用户名暂时写死
-		String svnpwd="lizw";
+		String svnuser="wanglin" ;//用户名暂时写死
+		String svnpwd="1";
 		ClientConfig clientConfig = clientConfigService.queryDetail(projectCode, profile) ;
 		String clientIp = clientConfig.getRemoteIp();
 		List<SvnBranchConfig> svnBranchConfigs = svnBranchConfigService.queryListByProjectCode(projectCode);
@@ -74,32 +74,22 @@ public class SvnController extends SuperController implements Constant{
 		boolean flag = false;
 		boolean ifOneBranch = true;
 		
+		String branches = "";
 		for(SvnBranchConfig sbc: svnBranchConfigs) {
-			//单分支 于主干 合并操作 merge
-			if(ifOneBranch) {
-				String branchPath = sbc.getBranchUrl();
-				try {
-					BaseShellCommand command = new BaseShellCommand();
-					String str = "sh /home/godzilla/svn_server.sh merge "+trunkPath+" "+localPath+" "+svnuser+" "+ svnpwd +" "+branchPath+" "+projectCode+" "+clientIp ;
-					flag = command.execute(str);
-					ifOneBranch = false;
-				} catch (Exception e) {
-					logger.error(e);
-					e.printStackTrace();
-				}
-			} else {
-				//多分支 与主干 合并操作 merge2
-				String branchPath = sbc.getBranchUrl();
-				try {
-					BaseShellCommand command = new BaseShellCommand();
-					String str = "sh /home/godzilla/svn_server.sh merge2 "+trunkPath+" "+localPath+" "+svnuser+" "+ svnpwd +" "+branchPath+" "+projectCode+" "+clientIp ;
-					flag = flag&&command.execute(str);
-				} catch (Exception e) {
-					logger.error(e);
-					e.printStackTrace();
-				}
-			}
-			
+			branches = sbc.getBranchUrl() + ",";
+		}
+		branches = branches.substring(0, branches.length()-1);
+		String callbackUrl = "http://localhost:8080/process-callback.do";
+		
+		String operator = super.getUser().getUserName();
+		try {
+			BaseShellCommand command = new BaseShellCommand();
+			String str = "sh /home/godzilla/gzl/shell/server/svn_server_wl.sh merge "+trunkPath+" '"+branches+"' "+" "+callbackUrl+" "+projectCode+" "+ operator +" "+clientIp ;
+			flag = command.execute(str);
+			ifOneBranch = false;
+		} catch (Exception e) {
+			logger.error(e);
+			e.printStackTrace();
 		}
 		
 		if(flag){
@@ -132,9 +122,8 @@ public class SvnController extends SuperController implements Constant{
 		
 		logger.info("************提交主干Begin***********");
 		
-		String svnuser="lizw" ;//用户名暂时写死
-		String svnpwd="lizw";
-		String branchPath = "";
+		String svnuser="wanglin" ;//用户名暂时写死
+		String svnpwd="1";
 		ClientConfig clientConfig = clientConfigService.queryDetail(projectCode, profile) ;
 		String clientIp = clientConfig.getRemoteIp();
 		List<SvnBranchConfig> svnBranchConfigs = svnBranchConfigService.queryListByProjectCode(projectCode);
@@ -143,9 +132,19 @@ public class SvnController extends SuperController implements Constant{
 		String localPath=project.getCheckoutPath(); 
 		
 		boolean flag = false;
+		boolean ifOneBranch = true;
+		
+		String branches = "";
+		for(SvnBranchConfig sbc: svnBranchConfigs) {
+			branches = sbc.getBranchUrl() + ",";
+		}
+		branches = branches.substring(0, branches.length()-1);
+		String callbackUrl = "http://localhost:8080/process-callback.do";
+		
+		String operator = super.getUser().getUserName();
 		
 		try {
-			String str = "sh /home/godzilla/svn_server.sh commit "+branchPath+" "+localPath+" "+svnuser+" "+ svnpwd +" "+trunkPath+" "+projectCode+" "+clientIp ;
+			String str = "sh /home/godzilla/gzl/shell/server/svn_server_wl.sh commit "+trunkPath+" '"+branches+"' "+" "+callbackUrl+" "+projectCode+" "+ operator +" "+clientIp ;
 			BaseShellCommand command = new BaseShellCommand();
 			flag = command.execute(str);
 			

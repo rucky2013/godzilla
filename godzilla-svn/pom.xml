@@ -16,7 +16,12 @@
   
   	<dependency>
 		<groupId>cn.godzilla</groupId>
-		<artifactId>godzilla-dao</artifactId>
+		<artifactId>godzilla-service</artifactId>
+		<version>${project.version}</version>
+	</dependency>
+	<dependency>
+		<groupId>cn.godzilla</groupId>
+		<artifactId>godzilla-echo</artifactId>
 		<version>${project.version}</version>
 	</dependency>
   	<dependency>

@@ -8,13 +8,18 @@ import java.io.InputStreamReader;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import cn.godzilla.echo.rocketmq.Producer;
+import cn.godzilla.echo.vo.EchoMessage;
+import cn.godzilla.web.SuperController;
 
-public class BaseShellCommand {
+
+public class BaseShellCommand extends SuperController{
 	
 	private final Logger logger = LogManager.getLogger(BaseShellCommand.class);
-
+	public static final String AREA = "svn";
+	public static final String ENCODING = "UTF-8";
 	public boolean execute(String command) {
-		
+		final String username = super.getUser().getUserName();
 		System.out.println(command);
 
 		Runtime rt = Runtime.getRuntime();
@@ -37,8 +42,9 @@ public class BaseShellCommand {
 						String line1 = null;
 						while ((line1 = br1.readLine()) != null) {
 							if (line1 != null) {
-								
 								logger.debug("******BaseShellCommand.execute-->InputStream******"+line1);
+								EchoMessage echoMessage = EchoMessage.getInstance(username, AREA, line1);
+								Producer.sendMessageToWeb(echoMessage);
 							}
 						}
 					} catch (Exception e) {
@@ -63,8 +69,9 @@ public class BaseShellCommand {
 						String line2 = null;
 						while ((line2 = br2.readLine()) != null) {
 							if (line2 != null) {
-
 								logger.debug("******BaseShellCommand.execute-->ErrorStream******"+line2);
+								EchoMessage echoMessage = EchoMessage.getInstance(username, AREA, line2);
+								Producer.sendMessageToWeb(echoMessage);
 							}
 						}
 					} catch (IOException e) {
