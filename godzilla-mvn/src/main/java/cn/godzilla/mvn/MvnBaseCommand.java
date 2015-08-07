@@ -46,9 +46,9 @@ public class MvnBaseCommand {
 						String line1 = null;
 						while ((line1 = br1.readLine()) != null) {
 							if (line1 != null) {
-								logger.debug("******MvnBaseCommand.execute-->InputStream******"+line1);
 								EchoMessage echoMessage = EchoMessage.getInstance(username, AREA, line1);
-								Producer.sendMessageToWeb(echoMessage);
+								boolean sendflag = Producer.sendMessageToWeb(echoMessage);
+								logger.debug("******MvnBaseCommand.execute-->InputStream******"+line1+",sendstate:"+sendflag);
 							}
 						}
 					} catch (Exception e) {
@@ -72,9 +72,9 @@ public class MvnBaseCommand {
 						String line2 = null;
 						while ((line2 = br2.readLine()) != null) {
 							if (line2 != null) {
-								logger.debug("******MvnBaseCommand.execute-->ErrorStream******"+line2);
 								EchoMessage echoMessage = EchoMessage.getInstance(username, AREA, line2);
-								Producer.sendMessageToWeb(echoMessage);
+								boolean sendflag = Producer.sendMessageToWeb(echoMessage);
+								logger.debug("******MvnBaseCommand.execute-->ErrorStream******"+line2+",sendstate:"+sendflag);
 							}
 						}
 					} catch (IOException e) {
@@ -90,6 +90,7 @@ public class MvnBaseCommand {
 			}.start();
 
 			p.waitFor();
+			Thread.sleep(1000);
 			p.destroy();
 			
 			logger.debug("********MvnBaseCommand.execute Success*******");

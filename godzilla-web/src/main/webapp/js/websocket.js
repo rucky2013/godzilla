@@ -8,11 +8,15 @@ var lock = false;
 if (window.WebSocket) {
   socket = new WebSocket(server_host);
   socket.onmessage = function(event) {
-	var length = $("#messagebox").find("div").length;
-	if(length>showlength) {
-		$("#messagebox").empty();
-	}
-	$("#messagebox").append('<div>' + event.data + '</div>');
+	//var length = $("#messagebox").find("div").length;
+	//if(length>showlength) {
+	//	$("#messagebox").empty();
+	//}
+	$("#messagebox").text($("#messagebox").text()+ ' \r\n' + event.data);
+	//始终显示最后一行
+	var psconsole = $('#messagebox');
+    if(psconsole.length)
+       psconsole.scrollTop(psconsole[0].scrollHeight - psconsole.height());
   };
   socket.onopen = function(event) {
     /*var ta = document.getElementById('messagebox');

@@ -22,7 +22,7 @@
 	</filter>
 	<filter-mapping>
 		<filter-name>authentication</filter-name>
-		<url-pattern>/</url-pattern>
+		<url-pattern>*.do</url-pattern>
 	</filter-mapping>
 	<!-- 授权
 	<filter>

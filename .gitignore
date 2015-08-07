@@ -13,3 +13,4 @@ local.properties
 target/
 logs/
 .svn
+META-INF/

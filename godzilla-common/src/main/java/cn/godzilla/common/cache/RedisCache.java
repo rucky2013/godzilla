@@ -45,18 +45,17 @@ public class RedisCache extends AbstractCache<String, String, CACHE_ENUM> {
 	 */
 	public Entry createEntry(CACHE_ENUM type, String suffix) {
 		try{
-			switch(type) {
-			case USERNAME: 
+			if(type==CACHE_ENUM.USERNAME) {
 				Entry entry1 = new Entry();
 				entry1.putPrefixKey(USERNAME_PREFIX);
 				entry1.putSuffixKey(suffix);
 				return entry1;
-			case USER:
+			} else if(type==CACHE_ENUM.USER){
 				Entry entry2 = new Entry();
 				entry2.putPrefixKey(USER_PREFIX);
 				entry2.putSuffixKey(suffix);
 				return entry2;
-			case PROJECTS:
+			} else if(type==CACHE_ENUM.PROJECTS){
 				Entry entry3 = new Entry();
 				entry3.putPrefixKey(PROJECTS_PREFIX);
 				entry3.putSuffixKey(suffix);

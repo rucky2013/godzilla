@@ -35,7 +35,11 @@ public enum ReturnCodeEnum {
 	public String returnCode;
 	public String returnMsg;
 	
-	private ReturnCodeEnum(String returnCode, String returnMsg) {
+	ReturnCodeEnum() {
+		this.returnCode = "";
+		this.returnMsg = "";
+	}
+	ReturnCodeEnum(String returnCode, String returnMsg) {
 		this.returnCode = returnCode;
 		this.returnMsg = returnMsg;
 	}

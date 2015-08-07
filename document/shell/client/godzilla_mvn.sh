@@ -44,8 +44,8 @@ info()
 	echo "whoami $WHO"
 	mvn --version
 }
-
-install()
+#install
+deploy()
 {
 	echo "install $BEGIN_STR" ;
 	if [ -z $POM_PATH ] || [ -z $PROJECT_ENV ] ; then
@@ -55,7 +55,7 @@ install()
 	fi 
 	mvn clean install -f $POM_PATH -P$PROJECT_ENV
 }
-deploy()
+deploy1()
 {
 	echo "deploy $BEGIN_STR"
 	mvn clean deploy -f $POM_PATH -P$PROJECT_ENV

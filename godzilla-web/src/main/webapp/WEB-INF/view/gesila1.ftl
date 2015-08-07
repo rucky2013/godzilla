@@ -219,12 +219,18 @@
 		
 			<div id="shadow" class="shadow" style="display: none"></div>
 			<div id="shadow_box1" class="shadow_box" style="display: none">
-				<h5>
+				<!--<h5>
 					console<span id="close1" class="close">关闭</span>
 				</h5>
 				<div class="shadow_con">
 					<div id="messagebox" class="user_con clearfix"></div>
-				</div>
+				</div>-->
+				<h5>实时日志<span class="close" id="close1">关闭</span></h5>
+                  	<div class="shadow_con" >
+                    	<textarea id="messagebox" rows="10" cols="55" style="overflow:scroll;" readonly="true" >
+							
+						</textarea>
+                    </div>
 			</div>
 			
 			

@@ -20,8 +20,10 @@ import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import cn.godzilla.common.Constant;
+import cn.godzilla.common.StringUtil;
 import cn.godzilla.common.config.Config;
 import cn.godzilla.echo.main.MainClass;
 import cn.godzilla.echo.serialize.Serializer;
@@ -35,28 +37,43 @@ import com.alibaba.rocketmq.client.exception.MQClientException;
 import com.alibaba.rocketmq.common.consumer.ConsumeFromWhere;
 import com.alibaba.rocketmq.common.message.Message;
 import com.alibaba.rocketmq.common.message.MessageExt;
+import com.alibaba.rocketmq.common.protocol.heartbeat.MessageModel;
 
 /**
  * Consumer，订阅消息
  */
 public class Consumer implements Constant{
-
+	
+	private static AtomicInteger id = new AtomicInteger();
+	private int getUniqueId(){
+		return id.addAndGet(1);
+	}
+	
 	public static void main(String[] args) throws InterruptedException, MQClientException, IOException {
-		DefaultMQPushConsumer consumer = new DefaultMQPushConsumer(Config.getMqConsumerName()+"1");
+		DefaultMQPushConsumer consumer = new DefaultMQPushConsumer(Config.getMqConsumerName()+id);
 		consumer.setNamesrvAddr(Config.getMqNamesrvAddr());
 		/**
-		 * 设置Consumer第一次启动是从队列头部开始消费还是队列尾部开始消费<br>
-		 * 如果非第一次启动，那么按照上次消费的位置继续消费
-		 */
+	     * 一个新的订阅组第一次启动从队列的最前位置开始消费<br>
+	     * 后续再启动接着上次消费的进度开始消费
+	     */
 		consumer.setConsumeFromWhere(ConsumeFromWhere.CONSUME_FROM_FIRST_OFFSET);
 
 		consumer.subscribe(Config.getMqTopic(), "*");
-
+		/**
+		 * 消息模型，支持以下两种 1、集群消费 2、广播消费
+		 * 
+		 */
+		//consumer.setMessageModel(MessageModel.BROADCASTING);
+		/**
+		 * 批量拉消息，一次最多拉多少条
+		 */
+		//consumer.setPullBatchSize(30);
+		
 		consumer.registerMessageListener(new MessageListenerConcurrently() {
 
 			@Override
 			public ConsumeConcurrentlyStatus consumeMessage(List<MessageExt> msgs, ConsumeConcurrentlyContext context) {
-				System.out.println(Thread.currentThread().getName() + " Receive New Messages: " + msgs);
+				
 				for (Message msg : msgs) {
 					byte[] data = msg.getBody();
 					EchoMessage echoMessage = null;
@@ -68,6 +85,7 @@ public class Consumer implements Constant{
 					}
 					String usernameArea = echoMessage.getUsername() + "-" + echoMessage.getArea();
 					String info = echoMessage.getInfo();
+					System.out.println("**************" + " Receive New Messages: *********>>||>>" + info);
 					Channel channel = MainClass.channelsMap.get(usernameArea);
 					try {
 						if (channel!=null){//&&channel.isWritable()) {

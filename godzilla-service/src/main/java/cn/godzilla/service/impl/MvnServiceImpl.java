@@ -16,6 +16,7 @@ import cn.godzilla.mvn.MvnBaseCommand;
 import cn.godzilla.rpc.api.RpcFactory;
 import cn.godzilla.rpc.main.Util;
 import cn.godzilla.service.ClientConfigService;
+import cn.godzilla.service.MvnProviderService;
 import cn.godzilla.service.MvnService;
 import cn.godzilla.service.PropConfigProviderService;
 import cn.godzilla.web.SuperController;
@@ -30,6 +31,8 @@ public class MvnServiceImpl implements MvnService{
 
 	private Map<String, PropConfigProviderService> propConfigProviderServices = 
 				new HashMap<String, PropConfigProviderService>();
+	private Map<String, MvnProviderService> mvnProviderServices = 
+			new HashMap<String, MvnProviderService>();
 	
 	@Override
 	public ReturnCodeEnum doDeploy(String srcUrl, String projectCode, String profile) {
@@ -63,7 +66,15 @@ public class MvnServiceImpl implements MvnService{
 		/**
 		 * 2.mvn deploy  3.将sh命令>queue
 		 */
-		boolean flag2 = this.deployProject(srcUrl, projectCode, profile, IP);
+		boolean flag2 = false;
+		try {
+			MvnProviderService mvnProviderService = mvnProviderServices.get(IP);
+			String username = SuperController.getUser().getUserName();
+			RpcResult result = mvnProviderService.deployProject(username, srcUrl, projectCode, profile, IP);
+			flag2 = result.getRpcCode().equals("0")?true:false;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		
 		if(flag1&&flag2) {
 			return ReturnCodeEnum.getByReturnCode(OK_MVNDEPLOY);
@@ -81,30 +92,16 @@ public class MvnServiceImpl implements MvnService{
 					propConfigProviderServices.put(linuxIp, propConfigProviderService);
 				}
 			}
+			if(mvnProviderServices.get(linuxIp)==null||"".equals(mvnProviderServices.get(linuxIp))) {
+				RpcFactory rpcFactory= null;
+				rpcFactory = Util.getRpcFactoryImpl();
+				MvnProviderService mvnProviderService = rpcFactory.getReference(MvnProviderService.class, linuxIp);
+				if(mvnProviderService!=null) {
+					mvnProviderServices.put(linuxIp, mvnProviderService);
+				}
+			}
 		}
 	}
 
-	private boolean deployProject(String srUrl, String projectCode, String profile, String IP) {
-		boolean flag = false;
-		try {
-			String POM_PATH = srUrl + "/pom.xml";
-			String USER_NAME = SuperController.getUser().getUserName();
-			String PROJECT_NAME = projectCode;
-			
-			MvnBaseCommand command = new MvnBaseCommand();
-			String shell = SHELL_PATH.endsWith("/")
-							?(SHELL_PATH+ "mvn_server.sh")
-									:(SHELL_PATH+"/" +"mvn_server.sh");
-			String str = "sh "+shell+" deploy "+POM_PATH+" "+USER_NAME+" "+PROJECT_NAME+" "+ PROJECT_ENV + IP ;
-			flag = command.execute(str, PROJECT_NAME, PROJECT_ENV, USER_NAME);
-			
-		} catch (Exception e) {
-			logger.error(e);
-			e.printStackTrace();
-		}
-		return flag;
-	}
-	
-	
 	
 }

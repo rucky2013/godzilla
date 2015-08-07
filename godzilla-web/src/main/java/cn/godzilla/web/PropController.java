@@ -8,7 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
+import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -28,7 +28,7 @@ import cn.godzilla.service.UserService;
  * @author 201407280166
  *
  */
-@Controller
+@Component
 @RequestMapping("/prop")
 public class PropController extends SuperController implements Constant{
  
@@ -84,10 +84,9 @@ public class PropController extends SuperController implements Constant{
 		
 		ReturnCodeEnum updateReturn = propConfigService.addNotVerifyProp(projectCode, propTest, propQuasiProduct, propProduct); 
 		
-		switch(updateReturn) {
-		case OK_ADDUPDATEPROP:
+		if(updateReturn == ReturnCodeEnum.OK_ADDUPDATEPROP) {
 			return SUCCESS;
-		case NO_ADDUPDATEPROP:
+		}  else if(updateReturn == ReturnCodeEnum.NO_ADDUPDATEPROP) {
 			return FAILURE;
 		}
 		return FAILURE;
@@ -206,14 +205,13 @@ public class PropController extends SuperController implements Constant{
 		String auditor_text = StringUtil.getReqPrameter(request, "auditor_text", "");
 		
 		ReturnCodeEnum updateReturn = propConfigService.verifyPropByCreatebyAndProjectcodeAndProfile(createBy, projectCode, profile, status, auditor_text); 
-		switch(updateReturn) {
-		case OK_VERIFYPROP:
+		if(updateReturn == ReturnCodeEnum.OK_VERIFYPROP) {
 			return SUCCESS;
-		case NO_VERIFYPROP:
+		} else if(updateReturn == ReturnCodeEnum.NO_VERIFYPROP){
 			return FAILURE;
-		default:
-			return FAILURE;	
 		}
+		return FAILURE;	
+		
 	}
 		
 		

@@ -29,20 +29,6 @@ help()
 	exit 1
 }
 
-if [[ "$ACTION" == "-help" ]] ; then
-	help
-	exit 1
-else
-	if [ -z "$IP" ] || [ -z "$SVN_BRANCH_PATH" ] || [ -z "$LOCAL_PATH" ] || [ -z "$USER_NAME" ] || [ -z "$PASSWORD" ] || [ -z "$SVN_TRUNK_PATH" ] || [ -z "$PROJECT_NAME" ]
-        then
-        echo "[ERROR]!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
-	echo "[ERROR] ERROR...............ARGS ERROR ,,,,,,, !!!!!!"
-	echo "[ERROR]For Help Please Execute: sh $SHELL_NAME -help!"
-	echo "[ERROR]!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"  
-        exit 1
-        fi
-fi
-
 echo "[INFO]****************参数信息***********************"
  
 echo "POM_PATH:${POM_PATH}"
@@ -57,8 +43,25 @@ echo "IP:${IP}"
 
 echo "[INFO]***************参数信息END***********************"
 
+
+if [[ "$ACTION" == "-help" ]] ; then
+	help
+	exit 1
+else
+	if [ -z "$IP" ] || [ -z "$PROJECT_NAME" ]
+        then
+        echo "[ERROR]!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+	echo "[ERROR] ERROR...............ARGS ERROR ,,,,,,, !!!!!!"
+	echo "[ERROR]For Help Please Execute: sh $SHELL_NAME -help!"
+	echo "[ERROR]!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"  
+        exit 1
+        fi
+fi
+
+
+
 mvn_deploy(){
-	ssh -p $PORT $USER@$IP "/home/godzilla/bash-godzilla/godzilla_mvn.sh deploy $POM_PATH $USER_NAME $PROJECT_NAME $PROJECT_ENV $IP"
+	ssh -p $PORT $USER@$IP "/home/godzilla/gzl/shell/client/godzilla_mvn.sh deploy $POM_PATH $USER_NAME $PROJECT_NAME $PROJECT_ENV $IP"
 	
 	exit ;	
 }

@@ -6,6 +6,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,7 +19,7 @@ import cn.godzilla.service.ClientConfigService;
 import cn.godzilla.service.MvnService;
 import cn.godzilla.service.PropConfigService;
 
-@Controller
+@Component
 @RequestMapping("/mvn")
 public class MvnController extends SuperController{
 	
@@ -43,14 +44,16 @@ public class MvnController extends SuperController{
 		String srcUrl = StringUtil.getReqPrameter(request, "srcUrl");
 		ReturnCodeEnum deployReturn = mvnService.doDeploy(srcUrl, projectCode, profile);
 		
-		switch(deployReturn) {
-		case OK_MVNDEPLOY: 
+		if(deployReturn == ReturnCodeEnum.OK_MVNDEPLOY) {
 			return SUCCESS;
-		case NO_MVNDEPLOY:
-		case NO_CHANGEPOM:
-		default:
+		} else if(deployReturn == ReturnCodeEnum.NO_MVNDEPLOY) {
+			
+		} else if(deployReturn == ReturnCodeEnum.NO_CHANGEPOM) {
+			return FAILURE;
+		} else {
 			return FAILURE;
 		}
+		return FAILURE;
 	}
 	
 }

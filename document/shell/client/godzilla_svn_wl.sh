@@ -59,15 +59,14 @@ function common() {
 	# 1.清空 本地路径
 	#***
 	echo "1.清空 本地路径$BEGIN_STR"
-	if [ -d $G_L_PATH ]
-		then
+	if [ -d $G_L_PATH ];then
 		echo "清除目录$G_L_PATH $BEGIN_STR" ;
 		time=`date +%F-%H-%M-%S`
 		mv $G_PATH"/work" "$RECYCLE_PATH$time" ;
 		mv $G_PATH"/conflict" "$RECYCLE_PATH$time" ;
 		mkdir $G_PATH"/work"
 		mkdir $G_PATH"/conflict"
-	fi
+	fi;
 	
 	#***
 	# 2.检出 主干代码
@@ -80,27 +79,27 @@ function common() {
 	cd $srcpath
 	mkdir ${PROJECT_NAME}
 	#echo $SVN_TRUNK $srcpath"/"$PROJECT_NAME $svnuser --non-interactive
-	svn co $SVN_TRUNK $srcpath"/"$PROJECT_NAME $svnuser --non-interactive
+	svn co $SVN_TRUNK $srcpath"/"$PROJECT_NAME $svnuser --non-interactive > null 
 	
 	#***
 	# 3.合并分支代码
 	#***
+	#svn merge http://10.100.142.37:9090/svn/fso/godzilla/branch/test-svn-b1 --username=wanglin --password=1 --non-interactive 
+	#SVN_BRANCHES=$3
+	
 	echo "3.合并分支代码$BEGIN_STR"
 	cd $srcpath/$PROJECT_NAME
-	#SVN_BRANCHES=$3
 	echo "SVN_BRANCHES:${SVN_BRANCHES}"
 	branch_array=${SVN_BRANCHES//,/ }    #这里是将var中的,替换为空格  
-	for element in $branch_array   
-	do  
-		#svn merge http://10.100.142.37:9090/svn/fso/godzilla/branch/test-svn-b1 --username=wanglin --password=1 --non-interactive 
+	for element in $branch_array; do  
 	    svn merge $element $svnuser --non-interactive   
-	    grep ">>>>>>>" -r .
-		if [ $? == 0 ];then
+	    svn st|grep '^[ ]*C'
+		if [ $? == 0 ] ;then
 			echo "Error: some conflicts still found! Please resolve all of them. " $element 
 			exit 2
-		fi
-		echo "合并分支："$element" finished! no conflict"
-	done  
+		fi;
+	done  ;
+	echo "合并分支:"$element" finished! no conflict"
 }
 
 function commit() {
@@ -109,11 +108,11 @@ function commit() {
 	#***
 	echo "4.提交到主干代码$BEGIN_STR"
 	cd $srcpath/$PROJECT_NAME
-	svn ci . -m "合并分支 提交人:"$USER_NAME" `date "+%Y%m%d %H:%M:%S" ` " $svnuser --non-interactive  
+	svn ci . -m "合并分支 提交人:"$USER_NAME" `date "+%Y%m%d %H:%M:%S" ` " $svnuser --non-interactive   > null
 	if [ $? == 1 ];then
 		echo "[Error]: svn commit failed! shell abort!"
 		exit 1 
-	fi
+	fi;
 }
 
 case $ACTION in
@@ -123,6 +122,7 @@ case $ACTION in
 	MERGE)
 		common
 		exit_code=$?
+		echo "exit_code:${exit_code}"
 		exit $exit_code	
 	;;
 	#------
@@ -132,6 +132,7 @@ case $ACTION in
 		common
 		commit
 		exit_code=$?
+		echo "exit_code:${exit_code}"
 		exit $exit_code		
 	;;
 	*)

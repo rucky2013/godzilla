@@ -8,7 +8,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
+import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -23,7 +23,7 @@ import cn.godzilla.service.PropConfigService;
 import cn.godzilla.service.UserService;
 
 
-@Controller
+@Component
 @RequestMapping("/user")
 public class UserController extends SuperController{
 	
@@ -74,31 +74,29 @@ public class UserController extends SuperController{
 		
 		ReturnCodeEnum loginReturn = userService.login(username, password, newsid);  //do login 
 		
-		switch(loginReturn) {
-		case NULL_NAMEPASSWORD: 
+		if(loginReturn == ReturnCodeEnum.NULL_NAMEPASSWORD) {
 			request.setAttribute("errorcode", ReturnCodeEnum.NULL_NAMEPASSWORD.getReturnCode());
 			request.setAttribute("errormsg", ReturnCodeEnum.NULL_NAMEPASSWORD.getReturnMsg());
 			return "/login";
-		case NOTEXIST_USER:
+		} else if(loginReturn == ReturnCodeEnum.NOTEXIST_USER) {
 			request.setAttribute("errorcode", ReturnCodeEnum.NOTEXIST_USER.getReturnCode());
 			request.setAttribute("errormsg", ReturnCodeEnum.NOTEXIST_USER.getReturnMsg());
 			return "/login";
-		case WRONG_PASSWORD:
+		} else if(loginReturn == ReturnCodeEnum.WRONG_PASSWORD) {
 			request.setAttribute("errorcode", ReturnCodeEnum.WRONG_PASSWORD.getReturnCode());
 			request.setAttribute("errormsg", ReturnCodeEnum.WRONG_PASSWORD.getReturnMsg());
 			return "/login";
-		case OK_LOGIN:
+		} else if(loginReturn == ReturnCodeEnum.OK_LOGIN) {
 			List<Project> projects = projectService.queryAll();
 			List<OperateLog> logs = operateLogService.queryAll(Long.MAX_VALUE);
 			request.setAttribute("projects", projects);
 			request.setAttribute("logs", logs);
 			request.setAttribute("basePath", BASE_PATH);
 			return "/index";
-		default:
-			request.setAttribute("errorcode", ReturnCodeEnum.OK_LOGIN.getReturnCode());
-			request.setAttribute("errormsg", ReturnCodeEnum.OK_LOGIN.getReturnMsg());
-			return "/login";
 		}
+		request.setAttribute("errorcode", ReturnCodeEnum.OK_LOGIN.getReturnCode());
+		request.setAttribute("errormsg", ReturnCodeEnum.OK_LOGIN.getReturnMsg());
+		return "/login";
 	}
 	/**
 	 * 退出

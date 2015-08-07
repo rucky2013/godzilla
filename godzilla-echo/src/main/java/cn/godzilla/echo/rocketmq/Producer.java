@@ -16,6 +16,7 @@
 package cn.godzilla.echo.rocketmq;
 
 import java.io.IOException;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import cn.godzilla.common.config.Config;
 import cn.godzilla.echo.serialize.Serializer;
@@ -37,9 +38,14 @@ public class Producer {
 	public static DefaultMQProducer producer;
 	public volatile static boolean isStart = false;
 	
+	private static AtomicInteger id = new AtomicInteger();
+	private int getUniqueId(){
+		return id.addAndGet(1);
+	}
+	
 	public static synchronized void start() throws IOException, MQClientException {
 		if(producer==null) {
-			producer = new DefaultMQProducer(Config.getMqProducerName());
+			producer = new DefaultMQProducer(Config.getMqProducerName()+id);
 	        producer.setNamesrvAddr(Config.getMqNamesrvAddr());
 	        producer.start();
 	        isStart = true;

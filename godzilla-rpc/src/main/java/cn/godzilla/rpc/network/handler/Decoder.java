@@ -1,6 +1,5 @@
 package cn.godzilla.rpc.network.handler;
 
-
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.channel.Channel;
 import org.jboss.netty.channel.ChannelHandlerContext;
@@ -16,20 +15,19 @@ public class Decoder extends ReplayingDecoder<DecodeState> {
 	}
 
 	@Override
-	protected Object decode(ChannelHandlerContext arg0, Channel arg1,
-			ChannelBuffer arg2, DecodeState arg3) throws Exception {
-		switch (arg3) {
-		case READ_LENGTH:
+	protected Object decode(ChannelHandlerContext arg0, Channel arg1, ChannelBuffer arg2, DecodeState arg3) throws Exception {
+		if (arg3 == DecodeState.READ_LENGTH) {
 			length = arg2.readInt();
 			this.checkpoint(DecodeState.READ_CONTENT);
-		case READ_CONTENT:
+		} else if (arg3 == DecodeState.READ_CONTENT) {
 			byte[] data = arg2.readBytes(length).array();
 			length = 0;
 			this.checkpoint(DecodeState.READ_LENGTH);
 			return data;
-		default:
+		} else {
 			throw new Exception("读取错误");
 		}
+		return null;
 	}
 
 }

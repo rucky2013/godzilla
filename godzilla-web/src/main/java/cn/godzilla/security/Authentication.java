@@ -20,6 +20,7 @@ import cn.godzilla.common.BusinessException;
 import cn.godzilla.common.ReturnCodeEnum;
 import cn.godzilla.service.UserService;
 import cn.godzilla.web.SuperController;
+import cn.godzilla.web.WebsocketController;
 
 /**
  * 身份验证
@@ -43,6 +44,11 @@ public class Authentication extends SuperController implements Filter {
 		applicationContext = WebApplicationContextUtils.getWebApplicationContext(context); 
 		userService = (UserService)applicationContext.getBean("userService");
         
+		try {
+			WebsocketController.start();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
         //两种获取方式都报错  
         
        /* ApplicationContext ac = new FileSystemXmlApplicationContext("classpath:applicationContext.xml");
@@ -58,12 +64,11 @@ public class Authentication extends SuperController implements Filter {
 		if(!this.escapeUrl(request)) {
 			String sid = this.getSidFromUrl(request);
 			ReturnCodeEnum userStatus = this.checkUser(userService, sid);
-			switch(userStatus) {
-			case NO_LOGIN:
+			if(userStatus == ReturnCodeEnum.NO_LOGIN) {
 				String prefix = req.getContextPath();
 				resp.sendRedirect(prefix+"/user/welcome.do");
 				return ;
-			case OK_CHECKUSER:
+			} else if(userStatus == ReturnCodeEnum.OK_CHECKUSER) {
 				this.initContext(userService, sid); //将sid保存到 threadlocal
 			}
 		}
