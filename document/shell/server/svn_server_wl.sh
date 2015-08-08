@@ -52,6 +52,12 @@ case $1 in
 		exit_code=$?
 		exit $exit_code
 	;;
+	status)
+		IP=$7
+		ssh -p $PORT $USER@$IP "/home/godzilla/gzl/shell/client/godzilla_svn_wl.sh STATUS $2 $3 $4 $5 $6"
+		exit_code=$?
+		exit $exit_code
+	;;
 	*)
      	echo "parameter not found"
      	exit 4

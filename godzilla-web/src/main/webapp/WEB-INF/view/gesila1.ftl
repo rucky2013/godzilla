@@ -440,7 +440,23 @@ $(document).ready(function() {
     });
     
     //svn
+    $("#show").on("click", function() {
+    	$.ajax({
+    		type: "GET",
+    		url: "/${basePath}/svn/${sid}/${projectCode}/${profile}/status.do",
+    		dataType: "json",
+    		success: function(data) {
+    		
+    		}
+    	});
+    	
+    	showWindow(1);
+    	
+    	var usernameArea = '${username}-' + 'svn';
+    	send(usernameArea);
+    	$("#messagebox").empty();
     
+    });
     $("#merge").on("click", function() {
 		$.ajax({
              type: "GET",

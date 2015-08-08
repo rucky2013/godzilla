@@ -115,6 +115,44 @@ function commit() {
 	fi;
 }
 
+	#***
+	# 0.功能不清晰，暂时这么写
+	#***
+function status() {
+
+	#***
+	# 1.清空 本地路径
+	#***
+	echo "1.清空 本地路径$BEGIN_STR"
+	if [ -d $G_L_PATH ];then
+		echo "清除目录$G_L_PATH $BEGIN_STR" ;
+		time=`date +%F-%H-%M-%S`
+		mv $G_PATH"/work" "$RECYCLE_PATH$time" ;
+		mv $G_PATH"/conflict" "$RECYCLE_PATH$time" ;
+		mkdir $G_PATH"/work"
+		mkdir $G_PATH"/conflict"
+	fi;
+	
+	#***
+	# 2.检出 主干代码
+	#***
+	echo "2.开始检出代码$BEGIN_STR"
+	#SVN主干
+	#SVN_TRUNK=$2
+	echo "SVN_TRUNK:${SVN_TRUNK}"
+	#svn co http://10.100.142.37:9090/svn/fso/godzilla/trunk /home/godzilla/gzl/work --username=wanglin --password=1 --non-interactive
+	cd $srcpath
+	mkdir ${PROJECT_NAME}
+	#echo $SVN_TRUNK $srcpath"/"$PROJECT_NAME $svnuser --non-interactive
+	svn co $SVN_TRUNK $srcpath"/"$PROJECT_NAME $svnuser --non-interactive > null 
+	
+	#***
+	# 3.显示状态
+	#***
+	echo "0.显示主干状态"
+	cd $srcpath/$PROJECT_NAME
+	svn status
+}
 case $ACTION in
 	#------
 	#初始合并分支到主干working copy
@@ -134,6 +172,16 @@ case $ACTION in
 		exit_code=$?
 		echo "exit_code:${exit_code}"
 		exit $exit_code		
+	;;
+	#------
+	#显示主干状态
+	#注:功能不清晰，暂时这么写
+	#------
+	STATUS)
+		status
+		exit_code=$?
+		echo "exit_code:${exit_code}"
+		exit $exit_code
 	;;
 	*)
      echo "parameter not found"

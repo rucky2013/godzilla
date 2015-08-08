@@ -42,7 +42,7 @@ public class IndexController extends SuperController{
 	@RequestMapping(value="/", method=RequestMethod.GET)
 	public Object loginPage1(HttpServletRequest request, HttpServletResponse response) {
 
-		logger.debug("*****UserController.welcome*****");
+		logger.debug("*****IndexController.loginPage1*****");
 		
 		request.setAttribute("basePath", BASE_PATH);
 		return "/login";
@@ -58,38 +58,9 @@ public class IndexController extends SuperController{
 	@RequestMapping(value="/index", method=RequestMethod.GET)
 	public Object loginPage2(HttpServletRequest request, HttpServletResponse response) {
 
-		logger.debug("*****UserController.welcome*****");
+		logger.debug("*****IndexController.loginPage2*****");
 		
 		request.setAttribute("basePath", BASE_PATH);
 		return "/login";
 	}
-	
-	/**
-	 * 首页
-	 * 
-	 * @param request
-	 * @param response
-	 * @return
-	 */
-	@RequestMapping(value="{sid}/index", method=RequestMethod.GET)
-	public ModelAndView index(@PathVariable String sid,HttpServletRequest request,HttpServletResponse response){
-		
-		List<Project> projects = projectService.queryAll();
-		
-		List<OperateLog> logs = operateLogService.queryAll(Long.MAX_VALUE);
-		
-		ModelAndView view = new ModelAndView();
-		
-		
-		view.setViewName("index");
-		
-		request.setAttribute("projects", projects);
-		request.setAttribute("logs", logs);
-		
-		logger.debug("********projects.size"+projects.size());
-		logger.debug("********logs.size"+logs.size());
-		
-		return view ;
-	}
-
 }

@@ -40,6 +40,57 @@ public class SvnController extends SuperController implements Constant{
 	private SvnBranchConfigService svnBranchConfigService;
 	@Autowired
 	private ClientConfigService clientConfigService;
+	
+	/**
+	 * 状态查看
+	 * @param sid
+	 * @param projectCode
+	 * @param profile
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping(value="/{sid}/{projectCode}/{profile}/status", method=RequestMethod.GET)
+	@ResponseBody
+	public Object doStatus(@PathVariable String sid, @PathVariable String projectCode,@PathVariable String profile, HttpServletRequest request, HttpServletResponse response) {
+		
+		logger.info("************状态查看Begin***********");
+		
+		ClientConfig clientConfig = clientConfigService.queryDetail(projectCode, profile) ;
+		String clientIp = clientConfig.getRemoteIp();
+		List<SvnBranchConfig> svnBranchConfigs = svnBranchConfigService.queryListByProjectCode(projectCode);
+		Project project = projectService.qureyByProCode(projectCode);
+		String trunkPath = project.getRepositoryUrl();
+		String localPath=project.getCheckoutPath(); 
+		
+		boolean flag = false;
+		
+		String branches = "";
+		for(SvnBranchConfig sbc: svnBranchConfigs) {
+			branches = sbc.getBranchUrl() + ",";
+		}
+		branches = branches.substring(0, branches.length()-1);
+		String callbackUrl = "http://localhost:8080/process-callback.do";
+		
+		String operator = super.getUser().getUserName();
+		try {
+			BaseShellCommand command = new BaseShellCommand();
+			String str = "sh /home/godzilla/gzl/shell/server/svn_server_wl.sh status "+trunkPath+" '"+branches+"' "+" "+callbackUrl+" "+projectCode+" "+ operator +" "+clientIp ;
+			flag = command.execute(str);
+		} catch (Exception e) {
+			logger.error(e);
+			e.printStackTrace();
+		}
+		
+		if(flag){
+			logger.info("************状态查看End**************");
+			return SUCCESS;
+		}else{
+			logger.error("************状态查看Error**************");
+			return FAILURE;
+		}
+	}
+	
 	/**
 	 * 代码合并
 	 * @param branchPath

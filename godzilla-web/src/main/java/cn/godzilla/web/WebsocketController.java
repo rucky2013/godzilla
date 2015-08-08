@@ -28,7 +28,7 @@ public class WebsocketController {
 	@RequestMapping(method=RequestMethod.GET)
 	public Object welcome(HttpServletRequest request, HttpServletResponse response) {
 
-		logger.debug("*****UserController.welcome*****");
+		logger.debug("*****WebsocketController.welcome*****");
 		return "/echo/websocket_test";
 	}
 	
