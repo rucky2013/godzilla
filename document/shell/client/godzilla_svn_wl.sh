@@ -22,6 +22,7 @@ CALL_BACK_URL=$4 		#回调url
 PROJECT_NAME=$5			#项目名(checkout目录名)
 USER_NAME=$6			#操作人
 
+if false; then
 echo "**********************参数信息***********************"
 echo "SHELL_NAME:${SHELL_NAME}"
 echo "ACTION:${ACTION}"
@@ -31,6 +32,7 @@ echo "CALL_BACK_URL:${CALL_BACK_URL}"
 echo "PROJECT_NAME:${PROJECT_NAME}"
 echo "USER_NAME:${USER_NAME}" 
 echo "********************参数信息END***********************"
+fi
 
 G_PATH="/home/godzilla/gzl"
 # 本地路径
@@ -58,7 +60,7 @@ function common() {
 	#***
 	# 1.清空 本地路径
 	#***
-	echo "1.清空 本地路径$BEGIN_STR"
+	echo "1.清空 本地路径$BEGIN_STR"  
 	if [ -d $G_L_PATH ];then
 		echo "清除目录$G_L_PATH $BEGIN_STR" ;
 		time=`date +%F-%H-%M-%S`
@@ -71,7 +73,7 @@ function common() {
 	#***
 	# 2.检出 主干代码
 	#***
-	echo "2.开始检出代码$BEGIN_STR"
+	echo "2.开始检出代码$BEGIN_STR" 
 	#SVN主干
 	#SVN_TRUNK=$2
 	echo "SVN_TRUNK:${SVN_TRUNK}"
@@ -123,9 +125,9 @@ function status() {
 	#***
 	# 1.清空 本地路径
 	#***
-	echo "1.清空 本地路径$BEGIN_STR"
+	echo "1.清空 本地路径$BEGIN_STR" > null
 	if [ -d $G_L_PATH ];then
-		echo "清除目录$G_L_PATH $BEGIN_STR" ;
+		echo "清除目录$G_L_PATH $BEGIN_STR" ;  > null
 		time=`date +%F-%H-%M-%S`
 		mv $G_PATH"/work" "$RECYCLE_PATH$time" ;
 		mv $G_PATH"/conflict" "$RECYCLE_PATH$time" ;
@@ -136,20 +138,20 @@ function status() {
 	#***
 	# 2.检出 主干代码
 	#***
-	echo "2.开始检出代码$BEGIN_STR"
+	echo "2.开始检出代码$BEGIN_STR"  > null
 	#SVN主干
 	#SVN_TRUNK=$2
-	echo "SVN_TRUNK:${SVN_TRUNK}"
+	echo "SVN_TRUNK:${SVN_TRUNK}" > null 
 	#svn co http://10.100.142.37:9090/svn/fso/godzilla/trunk /home/godzilla/gzl/work --username=wanglin --password=1 --non-interactive
 	cd $srcpath
 	mkdir ${PROJECT_NAME}
 	#echo $SVN_TRUNK $srcpath"/"$PROJECT_NAME $svnuser --non-interactive
-	svn co $SVN_TRUNK $srcpath"/"$PROJECT_NAME $svnuser --non-interactive > null 
+	svn co $SVN_TRUNK $srcpath"/"$PROJECT_NAME $svnuser --non-interactive > null  
 	
 	#***
 	# 3.显示状态
 	#***
-	echo "0.显示主干状态"
+	echo "0.显示主干状态"  > null 
 	cd $srcpath/$PROJECT_NAME
 	svn info
 }
@@ -176,6 +178,7 @@ case $ACTION in
 	#------
 	#显示主干状态
 	#注:功能不清晰，暂时这么写
+	#  只将 svn info 信息输出,其他信息>null
 	#------
 	STATUS)
 		status

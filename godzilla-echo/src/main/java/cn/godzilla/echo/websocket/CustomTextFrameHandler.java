@@ -28,6 +28,6 @@ public class CustomTextFrameHandler extends SimpleChannelInboundHandler<TextWebS
         // 每次 连接过来  新的 链接 覆盖掉 旧连接
         	Channel channel = ctx.channel();
         	MainClass.channelsMap.put(usernameArea, channel);
-        ctx.channel().write(new TextWebSocketFrame(usernameArea.toUpperCase()+":send message later"));
+        //ctx.channel().write(new TextWebSocketFrame(usernameArea.toUpperCase()+":send message later"));
     }
 }

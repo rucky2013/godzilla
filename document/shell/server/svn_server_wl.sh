@@ -26,6 +26,7 @@ IP=$7 					#客户端IP
 USER=godzilla
 PORT=2222				#ssh端口号
 
+if false; then
 echo "[INFO]****************参数信息***********************"
 
 echo "SHELL_NAME:${SHELL_NAME}"
@@ -38,6 +39,7 @@ echo "USER_NAME:${USER_NAME}"
 echo "IP:${IP}"
 
 echo "[INFO]***************参数信息END***********************"
+fi
 
 case $1 in
 	merge)
