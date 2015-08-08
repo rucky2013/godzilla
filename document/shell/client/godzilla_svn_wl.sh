@@ -151,7 +151,7 @@ function status() {
 	#***
 	echo "0.显示主干状态"
 	cd $srcpath/$PROJECT_NAME
-	svn status
+	svn info
 }
 case $ACTION in
 	#------
