@@ -45,7 +45,7 @@ public class Producer {
 	
 	public static synchronized void start() throws IOException, MQClientException {
 		if(producer==null) {
-			producer = new DefaultMQProducer(Config.getMqProducerName()+id);
+			producer = new DefaultMQProducer(Config.getMqProducerName());
 	        producer.setNamesrvAddr(Config.getMqNamesrvAddr());
 	        producer.start();
 	        isStart = true;

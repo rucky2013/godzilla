@@ -37,7 +37,7 @@ public class MvnBaseCommand {
 			final InputStream is2 = p.getErrorStream();
 
 			// 启动两个线程，一个线程负责读标准输出流，另一个负责读标准错误流 a
-			new Thread() {
+			Thread t1= new Thread() {
 				public void run() {
 
 					try {
@@ -61,9 +61,9 @@ public class MvnBaseCommand {
 						}
 					}
 				}
-			}.start();
+			};
 
-			new Thread() {
+			Thread t2 = new Thread() {
 				public void run() {
 
 					try {
@@ -87,10 +87,14 @@ public class MvnBaseCommand {
 						}
 					}
 				}
-			}.start();
+			};
 
 			p.waitFor();
-			Thread.sleep(1000);
+			t1.start();
+			t2.start();
+			t1.join();
+			t2.join();
+			
 			p.destroy();
 			
 			logger.debug("********MvnBaseCommand.execute Success*******");

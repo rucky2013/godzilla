@@ -50,7 +50,7 @@ public class Consumer implements Constant{
 	}
 	
 	public static void main(String[] args) throws InterruptedException, MQClientException, IOException {
-		DefaultMQPushConsumer consumer = new DefaultMQPushConsumer(Config.getMqConsumerName()+id);
+		DefaultMQPushConsumer consumer = new DefaultMQPushConsumer(Config.getMqConsumerName());
 		consumer.setNamesrvAddr(Config.getMqNamesrvAddr());
 		/**
 	     * 一个新的订阅组第一次启动从队列的最前位置开始消费<br>
