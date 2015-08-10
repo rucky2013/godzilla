@@ -87,12 +87,13 @@ public class BaseShellCommand extends SuperController{
 				}
 			};
 			
-			p.waitFor();
+			
 			t1.start();
 			t2.start();
 			t1.join();
 			t2.join();
 			
+			p.waitFor();
 			p.destroy();
 			
 			logger.debug("********BaseShellCommand.execute Success*******");

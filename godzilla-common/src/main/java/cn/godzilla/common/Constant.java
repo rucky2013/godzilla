@@ -30,7 +30,7 @@ public interface Constant {
 	/**
 	 * echo default value
 	 */
-	public final String DEFAULT_WEBSOCKET_PORT = "9999";
+	public final int DEFAULT_WEBSOCKET_PORT = 9999;
 	public final String DEFAULT_MQ_PRODUCER_NAME = "godzilla-producer";
 	public final String DEFAULT_MQ_CONSUMER_NAME = "godzilla-consumer";
 	public final String DEFAULT_MQ_NAMESRV_ADDR = "10.100.142.65:9876";

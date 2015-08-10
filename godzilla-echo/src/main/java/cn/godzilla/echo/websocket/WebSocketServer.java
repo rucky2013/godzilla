@@ -79,12 +79,17 @@ public class WebSocketServer {
 
             final Channel ch = sb.bind(port).sync().channel();
             System.out.println("Web socket server started at port " + port);
-
+            this.channel = ch;
             ch.closeFuture().sync();
         } finally {
             bossGroup.shutdownGracefully();
             workerGroup.shutdownGracefully();
         }
+    }
+    private Channel channel = null;
+    
+    public void stop() {
+    	channel.close();
     }
 
     public static void main(String[] args) throws Exception {

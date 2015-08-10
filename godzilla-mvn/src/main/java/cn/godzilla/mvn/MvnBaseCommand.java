@@ -89,12 +89,13 @@ public class MvnBaseCommand {
 				}
 			};
 
-			p.waitFor();
+			
 			t1.start();
 			t2.start();
 			t1.join();
 			t2.join();
 			
+			p.waitFor();
 			p.destroy();
 			
 			logger.debug("********MvnBaseCommand.execute Success*******");

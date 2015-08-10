@@ -44,11 +44,6 @@ public class Authentication extends SuperController implements Filter {
 		applicationContext = WebApplicationContextUtils.getWebApplicationContext(context); 
 		userService = (UserService)applicationContext.getBean("userService");
         
-		try {
-			WebsocketController.start();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
         //两种获取方式都报错  
         
        /* ApplicationContext ac = new FileSystemXmlApplicationContext("classpath:applicationContext.xml");
@@ -56,21 +51,26 @@ public class Authentication extends SuperController implements Filter {
 	}
 	
 	@Override
-	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException, BusinessException {
+	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
 		logger.info("authentication");
 		HttpServletResponse resp = (HttpServletResponse) response;
 		HttpServletRequest req = (HttpServletRequest)request;
 		
-		if(!this.escapeUrl(request)) {
-			String sid = this.getSidFromUrl(request);
-			ReturnCodeEnum userStatus = this.checkUser(userService, sid);
-			if(userStatus == ReturnCodeEnum.NO_LOGIN) {
-				String prefix = req.getContextPath();
-				resp.sendRedirect(prefix+"/user/welcome.do");
-				return ;
-			} else if(userStatus == ReturnCodeEnum.OK_CHECKUSER) {
-				this.initContext(userService, sid); //将sid保存到 threadlocal
+		try {
+			if(!this.escapeUrl(request)) {
+				String sid = this.getSidFromUrl(request);
+				ReturnCodeEnum userStatus = this.checkUser(userService, sid);
+				if(userStatus == ReturnCodeEnum.NO_LOGIN) {
+					throw new BusinessException("还未登录或sid失效");
+				} else if(userStatus == ReturnCodeEnum.OK_CHECKUSER) {
+					this.initContext(userService, sid); //将sid保存到 threadlocal
+				}
 			}
+		} catch(BusinessException e1) {
+			logger.error(e1.getMessage());
+			String prefix = req.getContextPath();
+			resp.sendRedirect(prefix+"/user/welcome.do");
+			return ;
 		}
 		chain.doFilter(request, response);
 		distroyContext(); //清空 threadlocal
