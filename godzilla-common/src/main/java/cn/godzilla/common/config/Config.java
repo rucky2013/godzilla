@@ -49,7 +49,7 @@ public class Config implements Constant {
 		String websocket_port = !StringUtils.isEmpty(
 				echo_properties.getProperty(WEBSOCKET_PORT_KEY)) ? 
 						echo_properties.getProperty(WEBSOCKET_PORT_KEY) :
-							DEFAULT_WEBSOCKET_PORT;
+							DEFAULT_WEBSOCKET_PORT+"";
 		return websocket_port;
 	}
 	

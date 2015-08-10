@@ -30,8 +30,18 @@ public class User implements Serializable{
     private String departName;
 
     private Integer isAdmin;
+    
+    private Date lastOperation;
+    
+    public Date getLastOperation() {
+		return lastOperation;
+	}
 
-    public Long getId() {
+	public void setLastOperation(Date lastOperation) {
+		this.lastOperation = lastOperation;
+	}
+
+	public Long getId() {
         return id;
     }
 

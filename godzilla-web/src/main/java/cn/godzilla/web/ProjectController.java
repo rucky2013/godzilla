@@ -301,7 +301,7 @@ public class ProjectController extends SuperController implements Constant{
 	}
 	
 	/**
-	 * 
+	 * 主界面
 	 * @param sid
 	 * @param projectCode
 	 * @param profile
@@ -313,18 +313,16 @@ public class ProjectController extends SuperController implements Constant{
 		
 		//权限验证??
 		ClientConfig clientConfig = clientConfigService.queryDetail(projectCode, profile) ;
-		
 		Project project = projectService.qureyByProCode(projectCode);
 		List<SvnBranchConfig> svnBranchConfigs = svnBranchConfigService.queryListByProjectCode(projectCode);
 		List<OperateLog> operateLogs = operateLogService.queryList(projectCode, profile);
-		
 		request.setAttribute("username", this.getUser().getUserName());
 		request.setAttribute("clientConfig", clientConfig);
 		request.setAttribute("svnBranchConfigs", svnBranchConfigs);
 		request.setAttribute("operateLogs", operateLogs);
 		request.setAttribute("project", project);
 		request.setAttribute("basePath", BASE_PATH);
-		
+		request.setAttribute("user", super.getUser());
 		return "gesila1";
 	}
 	

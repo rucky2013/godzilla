@@ -3,7 +3,7 @@
 SHELL_NAME=$0
 IP=$1
 TOMCAT_HOME=$2
-REMOTE_BASH_PATH=/home/godzilla/bash-godzilla/restart_client.sh
+REMOTE_BASH_PATH=/home/godzilla/gzl/shell/client/restart_client.sh
 PORT=2222
 USER=godzilla
 

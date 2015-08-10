@@ -36,7 +36,7 @@ public abstract class SuperController implements Constant{
 	 * 登录用户 设置其 sid 存到 当前线程 threadlocal
 	 * @param sid
 	 */
-	private void initContextBySid(String sid) {
+	protected void initContextBySid(String sid) {
 		sidThreadLocal.set(sid);
 	}
 	/**

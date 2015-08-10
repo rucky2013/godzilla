@@ -10,7 +10,7 @@
 	<div class="main">	
 		<div class="head  clearfix">
         	<h1><a class="logo" hidden="index.html" title="回到首页">哥斯拉</a></h1>
-            <div class="r">你好，刘宝剑！<a href="#" title="退出系统" class="btn1">退出</a></div>
+            <div class="r">你好，${user.userName}！<a id="showlogin" href="#" title="退出系统" class="btn1">退出</a></div>
         </div>
         <div class="mainCon clearfix">
         	<div class="mainConL l">
@@ -22,15 +22,15 @@
                   </tr>
                   <tr>
                     <td>登录时间：</td>
-                    <td>${user.lastLoginTime?string("yyyy-MM-dd HH:mm:ss")}</td>
+                    <td>${user.loginTime?string("yyyy-MM-dd")!''}</td>
                   </tr>
                   <tr>
                     <td>部&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;门：</td>
-                    <td>$//{user.departName}</td>
+                    <td>${user.departName!''}</td>
                   </tr>
                   <tr>
                     <td>上次操作：</td>
-                    <td>$//{user.lastOperaTime}</td>
+                    <td>${user.lastOperation!user.loginTime?string("yyyy-MM-dd")}</td>
                   </tr>
                 </table>
             </div>

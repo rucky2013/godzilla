@@ -7,7 +7,7 @@
 	<div class="main clearfix">	
 		<div class="head  clearfix">
         	<h1><a class="logo" hidden="index.html" title="回到首页">哥斯拉</a></h1>
-            <div class="r">你好，刘宝剑！<a href="#" title="退出系统" class="btn1">退出</a></div>
+            <div class="r">你好，${user.userName}！<a id="logout" href="#" title="退出系统" class="btn1">退出</a></div>
         </div>
         <div class="mainCon clearfix">
         	<div class="mainConL l">
@@ -15,19 +15,19 @@
                 <table>
                   <tr>
                     <td>姓&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;名：</td>
-                    <td>刘宝剑</td>
+                    <td>${user.userName}</td>
                   </tr>
                   <tr>
                     <td>登录时间：</td>
-                    <td>2015-05-30</td>
+                    <td>${user.loginTime?string("yyyy-MM-dd")!''}</td>
                   </tr>
                   <tr>
                     <td>部&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;门：</td>
-                    <td>财务与结算中心</td>
+                    <td>${user.departName!''}</td>
                   </tr>
                   <tr>
                     <td>上次操作：</td>
-                    <td>2015-05-30</td>
+                    <td>${user.lastOperation!user.loginTime?string("yyyy-MM-dd")}</td>
                   </tr>
                 </table>
             </div>
@@ -73,5 +73,13 @@
 	</div>
 <script src="/${basePath}/js/jquery-1.8.2.min.js"></script>
 <script src="/${basePath}/js/common.js"></script>
+<script>
+$(document).ready(function() {
+	// 退出
+    $("#logout").on("click", function() {
+		window.location.href = '/${basePath}/user/logout/${sid}.do';
+	});
+});
+</script>
 </body>
 </html>
