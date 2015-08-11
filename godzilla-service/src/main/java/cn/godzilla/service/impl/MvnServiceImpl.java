@@ -19,7 +19,7 @@ import cn.godzilla.service.ClientConfigService;
 import cn.godzilla.service.MvnProviderService;
 import cn.godzilla.service.MvnService;
 import cn.godzilla.service.PropConfigProviderService;
-import cn.godzilla.web.SuperController;
+import cn.godzilla.web.GodzillaApplication;
 
 @Service("mvnService")
 public class MvnServiceImpl implements MvnService{
@@ -69,7 +69,7 @@ public class MvnServiceImpl implements MvnService{
 		boolean flag2 = false;
 		try {
 			MvnProviderService mvnProviderService = mvnProviderServices.get(IP);
-			String username = SuperController.getUser().getUserName();
+			String username = GodzillaApplication.getUser().getUserName();
 			RpcResult result = mvnProviderService.deployProject(username, srcUrl, projectCode, profile, IP);
 			flag2 = result.getRpcCode().equals("0")?true:false;
 		} catch (Exception e) {

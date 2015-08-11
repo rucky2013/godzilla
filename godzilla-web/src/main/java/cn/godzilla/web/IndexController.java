@@ -22,7 +22,7 @@ import cn.godzilla.service.OperateLogService;
 import cn.godzilla.service.ProjectService;
 
 @Controller
-public class IndexController extends SuperController{
+public class IndexController extends GodzillaApplication{
 	
 	private final Logger logger = LogManager.getLogger(IndexController.class);
 	

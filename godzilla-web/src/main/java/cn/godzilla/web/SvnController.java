@@ -30,7 +30,7 @@ import cn.godzilla.svn.BaseShellCommand;
  */
 @Controller
 @RequestMapping(value="/svn")
-public class SvnController extends SuperController implements Constant{
+public class SvnController extends GodzillaApplication implements Constant{
 
 	private final Logger logger = LogManager.getLogger(SvnController.class);
 	

@@ -20,7 +20,7 @@ import cn.godzilla.dao.PropConfigMapper;
 import cn.godzilla.model.PropConfig;
 import cn.godzilla.model.RpcResult;
 import cn.godzilla.service.PropConfigService;
-import cn.godzilla.web.SuperController;
+import cn.godzilla.web.GodzillaApplication;
 
 import com.alibaba.fastjson.JSON;
 
@@ -153,7 +153,7 @@ public class PropConfigServiceImpl implements PropConfigService {
 			prop.setProValue(requestProp.get(requestKey));
 			
 			prop.setRemark("");
-			prop.setCreateBy(SuperController.getUser().getUserName());
+			prop.setCreateBy(GodzillaApplication.getUser().getUserName());
 			prop.setCreateTime(new Date());
 			prop.setUpdateTime(new Date());
 			prop.setLastValue("");//多人修改时，一个人通过会影响其他人的 旧值，所以不设置
@@ -261,7 +261,7 @@ public class PropConfigServiceImpl implements PropConfigService {
 		parameterMap.put("project_code", projectCode);
 		parameterMap.put("profile", profile);
 		
-		parameterMap.put("auditor", SuperController.getUser().getUserName());
+		parameterMap.put("auditor", GodzillaApplication.getUser().getUserName());
 		parameterMap.put("auditor_text", auditor_text);
 		parameterMap.put("status", status);
 		

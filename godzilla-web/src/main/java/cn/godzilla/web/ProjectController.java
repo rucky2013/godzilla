@@ -36,7 +36,7 @@ import cn.godzilla.service.SvnConflictService;
 
 @Controller
 @RequestMapping("/project")
-public class ProjectController extends SuperController implements Constant{
+public class ProjectController extends GodzillaApplication implements Constant{
 	
 	@Autowired
 	ProjectService projectService ;

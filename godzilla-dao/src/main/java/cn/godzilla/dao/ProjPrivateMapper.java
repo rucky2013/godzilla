@@ -13,4 +13,6 @@ public interface ProjPrivateMapper {
     int update(ProjPrivate record);
     
     ProjPrivate queryDetail(Map<String, String> map);
+
+	int deleteProjectPrivByusername(String editUsername);
 }

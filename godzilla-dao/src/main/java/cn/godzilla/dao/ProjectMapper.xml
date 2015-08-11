@@ -102,7 +102,7 @@
      from t_g_project p
      left join t_g_function_right r on p.project_code = r.project_code
      
-     where r.user_name = #{username}
+     where r.user_name = #{username} and r.status = 1
   </select>
   
   <update id="updateByProCode" parameterType="cn.godzilla.model.Project">
@@ -154,7 +154,7 @@
 <select id="queryAll" resultType="cn.godzilla.model.Project" parameterType="String">
 	select 
 	<include refid="query"/>
-	from t_g_project where status = 0
+	from t_g_project where status = 1
 </select>
 
 <update id="updateProjectById" parameterType="java.util.Map">

@@ -32,13 +32,19 @@
                 </table>
             </div>
         	<div class="mainConR r">
-            	<h2 id="tab1" class="current clearfix"><a href="jvascript:void(0)" class="a1" title="工作空间">工作空间</a><a  href="jvascript:void(0)" class="a2" title="管理权限">管理权限</a></h2>
-            	<table width="200" border="0" class="table1">
+            	<h2 id="tab1" class="current">
+					<a href="jvascript:void(0);" class="a1" title="工作空间">工作空间</a>
+					<#if user.isAdmin = 1>
+					<a href="/${basePath}/user/${sid}/userAuthList.do" class="a2" title="管理权限">管理权限</a>
+					<#else>
+					<a href="javascript:void(0);" class="a2" title="管理权限">管理权限</a>
+					</#if>
+				</h2>
+				<table width="200" border="0" class="table1">
                   <tr>
                     <#list projects as item>
                     	<td><a href="/${basePath}/project/${sid}/${item.projectCode}/TEST/projectConfig.do" title="${item.projectCode}"><span></span>${item.projectName}</a></td>
                     </#list>
-                    
                   </tr>
                 </table>
                 <div class="table2">

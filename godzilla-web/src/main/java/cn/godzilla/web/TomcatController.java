@@ -20,7 +20,7 @@ import cn.godzilla.web.util.PropertiesUtil;
 
 @Controller
 @RequestMapping(value = "tomcat")
-public class TomcatController extends SuperController{
+public class TomcatController extends GodzillaApplication{
 
 	private final static Logger logger = LogManager.getLogger(TomcatController.class);
 

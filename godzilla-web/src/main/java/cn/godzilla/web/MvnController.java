@@ -21,7 +21,7 @@ import cn.godzilla.service.PropConfigService;
 
 @Component
 @RequestMapping("/mvn")
-public class MvnController extends SuperController{
+public class MvnController extends GodzillaApplication{
 	
 	private final Logger logger = LogManager.getLogger(MvnController.class);
 	

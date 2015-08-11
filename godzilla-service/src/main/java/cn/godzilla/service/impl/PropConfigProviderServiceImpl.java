@@ -18,7 +18,7 @@ import cn.godzilla.dao.PropConfigMapper;
 import cn.godzilla.model.PropConfig;
 import cn.godzilla.model.RpcResult;
 import cn.godzilla.service.PropConfigProviderService;
-import cn.godzilla.web.SuperController;
+import cn.godzilla.web.GodzillaApplication;
 
 import com.alibaba.fastjson.JSON;
 

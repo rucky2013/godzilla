@@ -30,7 +30,7 @@ import cn.godzilla.service.UserService;
  */
 @Component
 @RequestMapping("/prop")
-public class PropController extends SuperController implements Constant{
+public class PropController extends GodzillaApplication implements Constant{
  
 	private final Logger logger = LogManager.getLogger(PropController.class);
 	@Autowired

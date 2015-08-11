@@ -10,10 +10,10 @@ import org.springframework.stereotype.Service;
 import cn.godzilla.dao.SvnBranchConfigMapper;
 import cn.godzilla.model.SvnBranchConfig;
 import cn.godzilla.service.SvnBranchConfigService;
-import cn.godzilla.web.SuperController;
+import cn.godzilla.web.GodzillaApplication;
 
 @Service("svnBranchConfigService")
-public class SvnBranchConfigServiceImpl extends SuperController implements SvnBranchConfigService {
+public class SvnBranchConfigServiceImpl extends GodzillaApplication implements SvnBranchConfigService {
 
 	@Autowired
 	private SvnBranchConfigMapper dao;

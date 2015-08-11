@@ -56,6 +56,7 @@
 		class="org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver">
 		<property name="viewClass"
 			value="org.springframework.web.servlet.view.freemarker.FreeMarkerView"></property>
+		<property name="allowRequestOverride" value="true" /><!--解决forword bug  -->
 		<property name="suffix" value=".ftl" />
 		<property name="contentType" value="text/html;charset=utf-8" />
 		<property name="exposeRequestAttributes" value="true" />

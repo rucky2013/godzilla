@@ -104,4 +104,19 @@ public class Project implements Serializable{
 	public void setDeployVersion(String deployVersion) {
 		this.deployVersion = deployVersion;
 	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if(!(obj instanceof Project)) {
+			return false;
+		}
+		Project pro = (Project)obj;
+		if(pro==this)
+			return true;
+		if(this.getProjectCode().equals(pro.getProjectCode())) {
+			return true;
+		} else {
+			return false;
+		}
+	}
 }

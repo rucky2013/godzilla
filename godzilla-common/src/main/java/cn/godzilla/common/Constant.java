@@ -70,10 +70,18 @@ public interface Constant {
 	public final static String NO_MVNDEPLOY = "100014";
 	public final static String NO_CHANGEPOM = "100015";
 	public final static String NO_RPCFACTORY = "100016";
+	public final static String NO_AUTHORIZATION = "100017";
+	public final static String NO_ADDUSER = "100019";
+	public final static String NO_SAMEPASSWORD = "100019";
+	public final static String NO_UPDATEFUNRIGHT = "100020";
 	
 	public final static String OK_CHECKUSER = "200001";
 	public final static String OK_LOGIN = "200002";
 	public final static String OK_ADDUPDATEPROP = "200011";
 	public final static String OK_VERIFYPROP = "200012";
 	public final static String OK_MVNDEPLOY = "200014";
+	public final static String OK_AUTHORIZATION = "200017";
+	public final static String OK_ADDUSER = "200018";
+	public final static String OK_UPDATEFUNRIGHT = "200020";
+	
 }

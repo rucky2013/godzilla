@@ -19,7 +19,7 @@ import cn.godzilla.service.ClientConfigService;
 import cn.godzilla.service.MvnProviderService;
 import cn.godzilla.service.MvnService;
 import cn.godzilla.service.PropConfigProviderService;
-import cn.godzilla.web.SuperController;
+import cn.godzilla.web.GodzillaApplication;
 
 public class MvnProviderServiceImpl implements MvnProviderService{
 	

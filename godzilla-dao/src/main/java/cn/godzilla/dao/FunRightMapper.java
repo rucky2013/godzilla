@@ -1,6 +1,7 @@
 package cn.godzilla.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import cn.godzilla.model.FunRight;
 
@@ -21,5 +22,7 @@ public interface FunRightMapper {
      */
     int insertSelective(FunRight record);
 
-	List<FunRight> queryRightsByUsername(String username);
+	List<FunRight> queryRightsByUsername(Map<String, Object> parameterMap);
+
+	int deleteRightsByusername(Map<String, Object> parameterMap);
 }

@@ -1,7 +1,11 @@
 package cn.godzilla.service;
 
+import java.util.List;
+import java.util.Map;
+
 import cn.godzilla.common.Constant;
 import cn.godzilla.common.ReturnCodeEnum;
+import cn.godzilla.model.Project;
 import cn.godzilla.model.User;
 
 public interface UserService extends Constant{
@@ -31,4 +35,54 @@ public interface UserService extends Constant{
 	 * @return
 	 */
 	public User getUserBySid(String sid);
+
+	/**
+	 * 查询所有 用户
+	 * @return
+	 */
+	public List<User> queryAllUser();
+
+	/**
+	 * 查询 username的所有项目权限
+	 * @param userName
+	 * @return
+	 */
+	public List<Project> queryProjectsByUsername(String userName);
+
+	/**
+	 * 查询 所有用户的所有项目权限
+	 * @param userName
+	 * @return
+	 */
+	public List<Map<String, Object>> getUserAuthList();
+
+	/**
+	 * 添加  用户 
+	 * @param username
+	 * @param password
+	 * @param confirm 
+	 * @param departname 
+	 * @return
+	 */
+	public ReturnCodeEnum addUser(String username, String password, String confirm, String departname);
+
+	/**
+	 * 获得用户的  所有权限项目 
+	 * 1.有权限
+	 * 0.没权限
+	 * @param editUsername
+	 * @return
+	 */
+	public List<Map<String, Object>> getUserProjects(String editUsername);
+	
+	/**
+	 * 编辑用户 工作台  项目权限
+	 * 1.设置当前用户所有项目权限为失效
+	 * 2.insert 新项目权限
+	 * 注：需要事务支持
+	 * @param editUsername
+	 * @param selectProjects
+	 * @return
+	 */
+	public ReturnCodeEnum updateUserProjects(String editUsername, String selectProjects);
 }

@@ -25,13 +25,13 @@ $(".sp a,.sp02 a").hover(
 	}
 );
 //多选框
-$(".check_con li").toggle(
+/*$(".check_con li").toggle(
 	function(){
 		$(this).find("b").addClass("checked");
 	},function(){
 		$(this).find("b").removeClass("checked");			
 	}
-);
+);*/
 $("#query h4.title span").toggle(
 	function(){
 		$(this).addClass("click").html("收起").attr("title","收起").parents("h4").next("table").show();

@@ -1,5 +1,8 @@
 package cn.godzilla.dao;
 
+import java.util.List;
+import java.util.Map;
+
 import cn.godzilla.model.User;
 
 public interface UserMapper {
@@ -20,4 +23,9 @@ public interface UserMapper {
     int insertSelective(User record);
 
 	User queryUserByUsername(String username);
+
+	int insertUser(User user);
+
+	List<User> queryAllUser();
+	
 }

@@ -24,7 +24,7 @@ import cn.godzilla.echo.websocket.WebSocketServer;
 
 @Component
 @RequestMapping("/demo")
-public class WebsocketController extends SuperController implements ApplicationListener {
+public class WebsocketController extends GodzillaApplication implements ApplicationListener {
 
 	private final Logger logger = LogManager.getLogger(WebsocketController.class);
 

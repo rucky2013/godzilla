@@ -21,21 +21,28 @@
                   </tr>
                   <tr>
                     <td>登录时间：</td>
-                    <td>${user.lastLoginTime?string("yyyy-MM-dd HH:mm:ss")}</td>
+                    <td>${user.loginTime?string("yyyy-MM-dd")!''}</td>
                   </tr>
                   <tr>
                     <td>部&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;门：</td>
-                    <td>$//{user.departName}</td>
+                    <td>${user.departName!''}</td>
                   </tr>
                   <tr>
                     <td>上次操作：</td>
-                    <td>$//{user.lastOperaTime}</td>
+                    <td>${user.lastOperation!user.loginTime?string("yyyy-MM-dd")}</td>
                   </tr>
                 </table>
             </div>
         	<div class="mainConR r">
-            	<h2 id="tab1" class="current"><a href="jvascript:;" class="a1" title="工作空间">工作空间</a><a  href="jvascript:;" class="a2">管理权限</a></h2>
-            	<h3 class="location">当前应用：Xuanyuan</h3>
+        		<h2 id="tab1" class="current">
+					<a href="jvascript:void(0);" class="a1" title="工作空间">工作空间</a>
+					<#if user.isAdmin = 1>
+					<a href="/${basePath}/user/${sid}/userAuthList.do" class="a2" title="管理权限">管理权限</a>
+					<#else>
+					<a href="javascript:void(0);" class="a2" title="管理权限">管理权限</a>
+					</#if>
+				</h2>
+            	<h3 class="location">当前应用：${projectCode}</h3>
             	
               <form id="search_form" action="/${basePath}/prop/${sid}/${projectCode}/verifyProp.do" method="GET">
               		<fieldset>

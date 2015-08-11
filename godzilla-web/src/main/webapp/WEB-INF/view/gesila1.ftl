@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>Xuanyuan-哥斯拉</title>
+<title>哥斯拉</title>
 <link type="text/css" href="/${basePath}/css/meta.css" rel="stylesheet" />
 </head>
 <body id="gesila1">
@@ -35,7 +35,12 @@
             </div>
 			<div class="mainConR r">
 				<h2 id="tab1" class="current">
-					<a href="../index.html" class="a1" title="工作空间">工作空间</a><a href="jvascript:void(0)" class="a2" title="管理权限">管理权限</a>
+					<a href="javascript:void(0);" class="a1" title="工作空间">工作空间</a>
+					<#if user.isAdmin = 1>
+					<a href="/${basePath}/user/${sid}/userAuthList.do" class="a2" title="管理权限">管理权限</a>
+					<#else>
+					<a href="javascript:void(0);" class="a2" title="管理权限">管理权限</a>
+					</#if>
 				</h2>
 				<h3 class="location">当前应用：${projectCode}</h3>
 
@@ -343,7 +348,7 @@
 	            },
 	            dataType: "json",
 	            success: function(data) {
-	
+					
 				}
 	        });
 	        showWindow(1);

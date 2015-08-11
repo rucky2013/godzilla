@@ -22,6 +22,11 @@ public enum ReturnCodeEnum {
 	NO_MVNDEPLOY("100014","mvn部署失败"),
 	NO_CHANGEPOM("100015","mvn部署失败:替换pom文件失败"),
 	NO_RPCFACTORY("100016", "mvn部署失败:rpc初始化错误"),
+	//authorization
+	NO_AUTHORIZATION("100017","没有项目权限"),
+	NO_ADDUSER("100018","添加用户失败"),
+	NO_SAMEPASSWORD("100019","密码不一样"),
+	NO_UPDATEFUNRIGHT("100020","更新用户权限失败"),
 	//user模块
 	OK_CHECKUSER("200001","验证用户成功"),
 	OK_LOGIN("200002","用户登录成功"),
@@ -30,6 +35,10 @@ public enum ReturnCodeEnum {
 	OK_VERIFYPROP("200012","审核配置成功"),
 	//mvn
 	OK_MVNDEPLOY("200014","mvn部署成功"),
+	//authorization
+	OK_AUTHORIZATION("200017","验证项目权限成功"),
+	OK_ADDUSER("200018","添加用户成功"),
+	OK_UPDATEFUNRIGHT("200020","更新用户权限成功"),
 	;
 	
 	public String returnCode;
