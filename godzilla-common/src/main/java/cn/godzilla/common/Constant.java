@@ -59,6 +59,7 @@ public interface Constant {
 	public final static String PROFILE_PRO_DEPLOY = "pro_deploy";
 	public final static String PROFILE_ONLINE = "online" ;
 
+	public final static String NO_AJAX = "100000";
 	public final static String NULL_NAMEPASSWORD = "100001";
 	public final static String NOTEXIST_USER = "100002";
 	public final static String WRONG_PASSWORD = "100003";
@@ -74,7 +75,14 @@ public interface Constant {
 	public final static String NO_ADDUSER = "100019";
 	public final static String NO_SAMEPASSWORD = "100019";
 	public final static String NO_UPDATEFUNRIGHT = "100020";
+	public final static String NO_CHANGECOMMIT = "100021";
+	public final static String NO_SVNCOMMIT = "100022";
+	public final static String NO_FOUNDCONFLICT = "100023";
+	public final static String NO_CLIENTPARAM = "100024";
+	public final static String NO_SERVERPARAM = "100025";
+	public final static String NO_JAVASHELLCALL = "100026";
 	
+	public final static String OK_AJAX = "200000";
 	public final static String OK_CHECKUSER = "200001";
 	public final static String OK_LOGIN = "200002";
 	public final static String OK_ADDUPDATEPROP = "200011";
@@ -83,5 +91,6 @@ public interface Constant {
 	public final static String OK_AUTHORIZATION = "200017";
 	public final static String OK_ADDUSER = "200018";
 	public final static String OK_UPDATEFUNRIGHT = "200020";
+	public final static String OK_SVNCOMMIT = "200021";
 	
 }

@@ -4,7 +4,11 @@
 
   
   <sql id="queryColumns">id, project_code as projectCode, profile, 
-      remote_ip as remoteIp, status</sql>
+      remote_ip as remoteIp, status, 
+      tomcat_password as tomcatPassword, 
+      tomcat_username as tomcatUsername,
+      tomcat_port as tomcatPort,
+      tomcat_need_plugin as tomcatNeedPlugin </sql>
   <select id="queryDetail" resultType="cn.godzilla.model.ClientConfig" parameterType="java.util.Map">
   	select <include refid="queryColumns" /> from t_g_client_config where project_code = #{projectCode} and profile = #{profile} and status = 0
   </select>

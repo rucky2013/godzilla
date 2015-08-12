@@ -44,7 +44,7 @@ public class TomcatController extends GodzillaApplication{
 			clientIp = "10.100.142.65";
 		}
 		String str = "/home/godzilla/gzl/shell/server/restart_server.sh " + clientIp + " /home/godzilla/tomcat-godzilla";
-		boolean flag = command.execute(str);
+		boolean flag = command.execute(str, super.getUser().getUserName());
 		if(flag) {
 			return SUCCESS;
 		} else {

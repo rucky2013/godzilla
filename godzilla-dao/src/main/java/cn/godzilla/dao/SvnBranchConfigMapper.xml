@@ -91,9 +91,10 @@
   <sql id="queryColumns">id, project_code as projectCode, branch_url as branchUrl, 
       branch_name as branchName, create_by as createBy, create_time as createTime, 
       create_version as createVersion, current_version as currentVersion ,status </sql>
+  
   <select id="queryListByProjectCode" resultType="cn.godzilla.model.SvnBranchConfig" parameterType="java.lang.String">
   	select <include refid="queryColumns" /> from t_g_svn_branch_config 
-  	where project_code = #{projectCode}
+  	where project_code = #{projectCode} and status = 1
   	group by create_version
   </select>
   
@@ -150,4 +151,9 @@
     </trim>
   </insert>
   
+  <update id="updateByProjectCode" parameterType="map">
+  	update t_g_svn_branch_config set
+        status = 0
+  	where project_code = #{project_code}
+  </update>
 </mapper>

@@ -70,5 +70,14 @@ public class SvnBranchConfigServiceImpl extends GodzillaApplication implements S
 		return index>0;
 	}
 
+	@Override
+	public int deletebranchesByProjectCode(String projectCode) {
+		Map<String, String> parameterMap = new HashMap<String, String>();
+		
+		parameterMap.put("project_code", projectCode);
+		int index = dao.updateByProjectCode(parameterMap);
+		return index;
+	}
+
 
 }

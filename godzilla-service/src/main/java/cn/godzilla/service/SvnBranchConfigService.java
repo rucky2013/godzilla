@@ -29,6 +29,12 @@ public interface SvnBranchConfigService {
 	 * @return
 	 */
 	boolean editBranch(String id, String branchUrl, String currentVersion);
+	/**
+	 * 删除已提交分支
+	 * @param projectCode
+	 * @return
+	 */
+	int deletebranchesByProjectCode(String projectCode);
 
 	
 }

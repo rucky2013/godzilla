@@ -6,7 +6,7 @@
 <body id="operation" class="operation">
 	<div class="main">	
 		<div class="head  clearfix">
-        	<h1><a class="logo" hidden="index.html" title="回到首页">哥斯拉</a></h1>
+        	<h1><a class="logo" href="#" title="回到首页">哥斯拉</a></h1>
             <div class="r">您好，请登录<a id="showlogin" href="#" title="登陆系统" class="btn1"  >登陆</a></div>
         </div>
         <div class="mainCon clearfix">

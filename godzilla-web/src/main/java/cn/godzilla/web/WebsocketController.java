@@ -64,9 +64,9 @@ public class WebsocketController extends GodzillaApplication implements Applicat
 	@Override
 	public void onApplicationEvent(ApplicationEvent event) {
 		if(event instanceof ContextRefreshedEvent) {
-			this.start();
+			if(isEcho) this.start();
 		} else if(event instanceof ContextClosedEvent) {
-			this.stop();
+			if(isEcho) this.stop();
 		}
 	}
 	

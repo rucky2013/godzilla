@@ -18,6 +18,43 @@ public class ClientConfig implements Serializable{
 	private String remoteIp;
 	
 	private Integer status ;
+	
+	private String tomcatPassword;
+	private String tomcatUsername;
+	private String tomcatPort;
+	private String tomcatNeedPlugin;
+	
+	public String getTomcatPassword() {
+		return tomcatPassword;
+	}
+
+	public void setTomcatPassword(String tomcatPassword) {
+		this.tomcatPassword = tomcatPassword;
+	}
+
+	public String getTomcatUsername() {
+		return tomcatUsername;
+	}
+
+	public void setTomcatUsername(String tomcatUsername) {
+		this.tomcatUsername = tomcatUsername;
+	}
+
+	public String getTomcatPort() {
+		return tomcatPort;
+	}
+
+	public void setTomcatPort(String tomcatPort) {
+		this.tomcatPort = tomcatPort;
+	}
+
+	public String getTomcatNeedPlugin() {
+		return tomcatNeedPlugin;
+	}
+
+	public void setTomcatNeedPlugin(String tomcatNeedPlugin) {
+		this.tomcatNeedPlugin = tomcatNeedPlugin;
+	}
 
 	public Long getId() {
 		return id;

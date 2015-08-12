@@ -5,41 +5,43 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
-import java.util.Iterator;
 import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
-import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 import org.dom4j.io.OutputFormat;
 import org.dom4j.io.SAXReader;
 import org.dom4j.io.XMLWriter;
-import org.xml.sax.SAXException;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
+import cn.godzilla.model.ClientConfig;
 import cn.godzilla.model.PropConfig;
 
 public class XmlUtil {
 	private static final Logger logger = LogManager.getLogger(XmlUtil.class);
 
-	//public static final String PARENT_POMPATH = "F:/yixin_fso_app/godzilla/pom.xml";
-	//public static final String SAVE_PARENT_POMPATH = "F:/yixin_fso_app/godzilla/pom1.xml";
+	public static final String PARENT_POMPATH = "F:/yixin_fso_app/godzilla/pom.xml";
+	public static final String SAVE_PARENT_POMPATH = "F:/yixin_fso_app/godzilla/pom1.xml";
 
-	//public static final String WEB_POMPATH = "F:/yixin_fso_app/godzilla/godzilla-web/pom.xml";
-	//public static final String SAVE_WEB_POMPATH = "F:/yixin_fso_app/godzilla/godzilla-web/pom1.xml";
+	public static final String WEB_POMPATH = "F:/yixin_fso_app/godzilla/godzilla-web/pom.xml";
+	public static final String SAVE_WEB_POMPATH = "F:/yixin_fso_app/godzilla/godzilla-web/pom1.xml";
 
 	public static void main(String args[]) throws DocumentException, IOException {
-		/*Document doc = parse(GET_XMLFILE_PATH);
+		Document doc = parse(WEB_POMPATH);
 		logger.info(doc);
 
 		// pom1.xml
-		Document doc1 = parse(SAVE_XMLFILE_PATH);
-		printDocument(doc1);*/
+		Document doc1 = parse(WEB_POMPATH);
+		printDocument(doc1);
 		//coverParentPom("SDFLJ", PARENT_POMPATH, SAVE_PARENT_POMPATH);
+		ClientConfig clientConfig = new ClientConfig();
+		clientConfig.setRemoteIp("10.100.142.651");
+		clientConfig.setTomcatPort("8080");
+		clientConfig.setTomcatUsername("godzilla");
+		clientConfig.setTomcatPassword("godzilla");
+		coverWebPomforPlugin("godzilla", clientConfig, WEB_POMPATH, SAVE_WEB_POMPATH);
 	}
 	
 	/**
@@ -79,6 +81,43 @@ public class XmlUtil {
 		saveDocument(doc, savePomPath);
 	}
 
+	/**
+	 * 覆盖  maven 部署war plugin
+	 * @param propconfigs
+	 * @param webPomPath
+	 * @param webPomPath2
+	 */
+	public static void coverWebPomforPlugin(String project_code, ClientConfig clientConfig, String webPomPath, String savePomPath) throws DocumentException, IOException {
+		Document doc = parse(webPomPath);
+		Element root = doc.getRootElement();
+		Element plugin = root.element("profiles").element("profile").element("build").element("plugins").element("plugin");
+		plugin.clearContent();
+		
+		
+		plugin.addElement("groupId").setText("org.apache.tomcat.maven");
+		plugin.addElement("artifactId").setText("tomcat7-maven-plugin");
+		plugin.addElement("version").setText("2.2");
+		plugin.addElement("configuration");
+			Element configuration = plugin.element("configuration");
+			configuration.addElement("url").setText("http://"+clientConfig.getRemoteIp()+":"+clientConfig.getTomcatPort()+"/manager/text");
+			configuration.addElement("server").setText(project_code);
+			configuration.addElement("username").setText("godzilla");
+			configuration.addElement("password").setText("godzilla");
+		plugin.addElement("executions");
+			Element executions = plugin.element("executions");
+			executions.addElement("execution");
+				Element execution = executions.element("execution");
+				execution.addElement("phase").setText("pre-integration-test");
+				execution.addElement("configuration");
+					Element configuration1 = execution.element("configuration");
+					configuration1.addElement("warFile").setText("target/${project.build.finalName}.war");
+					configuration1.addElement("path").setText("/${project.build.finalName}");
+				execution.addElement("goals");
+					Element goals = execution.element("goals");
+					goals.addElement("goal").setText("redeploy");
+		logger.info("++|++|++>coverWebPomforPlugin.plugin:"+plugin.getText().toString());
+		saveDocument(doc, savePomPath);
+	}
 
 	/**
 	 * 从根节点遍历，来修改XML文件,并保存。
@@ -146,5 +185,4 @@ public class XmlUtil {
 		writer.write(doc);
 		writer.close();
 	}
-	
 }

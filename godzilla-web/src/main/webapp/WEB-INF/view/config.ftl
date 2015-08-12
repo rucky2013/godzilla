@@ -6,10 +6,10 @@
 
 </head>
 <body id="config" class="config">
-	<div class="main">	
+		<div class="main">
 		<div class="head  clearfix">
-        	<h1><a class="logo" hidden="index.html" title="回到首页">哥斯拉</a></h1>
-            <div class="r">你好，刘宝剑！<a href="#" title="退出系统" class="btn1">退出</a></div>
+        	<h1><a class="logo" href="/${basePath}/user/${sid}/home.do" title="回到首页">哥斯拉</a></h1>
+            <div class="r">你好，${user.userName}！<a id="logout" href="#" title="退出系统" class="btn1">退出</a></div>
         </div>
         <div class="mainCon clearfix">
         	<div class="mainConL l">
@@ -33,17 +33,17 @@
                   </tr>
                 </table>
             </div>
-        	<div class="mainConR r">
-        		<h2 id="tab1" class="current">
-					<a href="jvascript:void(0);" class="a1" title="工作空间">工作空间</a>
+			<div class="mainConR r">
+				<h2 id="tab1" class="current">
+					<a href="/${basePath}/user/${sid}/home.do" class="a1" title="工作空间">工作空间</a>
 					<#if user.isAdmin = 1>
 					<a href="/${basePath}/user/${sid}/userAuthList.do" class="a2" title="管理权限">管理权限</a>
 					<#else>
 					<a href="javascript:void(0);" class="a2" title="管理权限">管理权限</a>
 					</#if>
 				</h2>
-            	<h3 class="location">当前应用：${projectCode}</h3>
-            	
+				<h3 class="location">当前应用：${projectCode}</h3>
+
               <form id="search_form" action="/${basePath}/prop/${sid}/${projectCode}/verifyProp.do" method="GET">
               		<fieldset>
                   	<label>提交人：</label><input type="text" name="createBy" placeholder="输入内容" />

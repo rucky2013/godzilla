@@ -11,6 +11,7 @@ BEGIN_STR=".............................................."
 # 1.svn commit failed!
 # 2.some conflicts still found!
 # 3.parameter not found
+# 5.branches is '' ,no need commit
 #***
 
 SHELL_NAME=$0			#脚本名称
@@ -98,6 +99,8 @@ function common() {
 	    svn st|grep '^[ ]*C'
 		if [ $? == 0 ] ;then
 			echo "Error: some conflicts still found! Please resolve all of them. " $element 
+			echo 2
+			echo 2
 			exit 2
 		fi;
 	done  ;
@@ -109,11 +112,18 @@ function commit() {
 	# 4.提交到主干代码
 	#***
 	echo "4.提交到主干代码$BEGIN_STR"
-	cd $srcpath/$PROJECT_NAME
-	svn ci . -m "合并分支 提交人:"$USER_NAME" `date "+%Y%m%d %H:%M:%S" ` " $svnuser --non-interactive   > null
-	if [ $? == 1 ];then
-		echo "[Error]: svn commit failed! shell abort!"
-		exit 1 
+	if [ "$SVN_BRANCHES" = "" ];then 
+		echo 5
+		exit 5 
+	else
+		cd $srcpath/$PROJECT_NAME
+		svn ci . -m "合并分支 提交人:"$USER_NAME" `date "+%Y%m%d %H:%M:%S" ` " $svnuser --non-interactive   > null
+		if [ $? == 1 ];then
+			echo "[Error]: svn commit failed! shell abort!"
+			echo 1
+			echo 1
+			exit 1
+		fi;
 	fi;
 }
 
@@ -162,7 +172,8 @@ case $ACTION in
 	MERGE)
 		common
 		exit_code=$?
-		echo "exit_code:${exit_code}"
+		echo "${exit_code}"
+		echo "${exit_code}"
 		exit $exit_code	
 	;;
 	#------
@@ -172,7 +183,8 @@ case $ACTION in
 		common
 		commit
 		exit_code=$?
-		echo "exit_code:${exit_code}"
+		echo "${exit_code}"
+		echo "${exit_code}"
 		exit $exit_code		
 	;;
 	#------
@@ -183,11 +195,14 @@ case $ACTION in
 	STATUS)
 		status
 		exit_code=$?
-		echo "exit_code:${exit_code}"
+		echo "${exit_code}"
+		echo "${exit_code}"
 		exit $exit_code
 	;;
 	*)
      echo "parameter not found"
+     echo 3
+	 echo 3
      exit 3
      ;;
 esac

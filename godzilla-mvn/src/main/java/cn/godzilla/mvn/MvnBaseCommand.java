@@ -9,10 +9,11 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.util.StringUtils;
 
+import cn.godzilla.common.Application;
 import cn.godzilla.echo.rocketmq.Producer;
 import cn.godzilla.echo.vo.EchoMessage;
 
-public class MvnBaseCommand {
+public class MvnBaseCommand extends Application{
 	
 	private final Logger logger = LogManager.getLogger(MvnBaseCommand.class);
 	public static final String AREA = "mvn";
@@ -47,8 +48,8 @@ public class MvnBaseCommand {
 						while ((line1 = br1.readLine()) != null) {
 							if (line1 != null) {
 								EchoMessage echoMessage = EchoMessage.getInstance(username, AREA, line1);
-								boolean sendflag = Producer.sendMessageToWeb(echoMessage);
-								logger.debug("******MvnBaseCommand.execute-->InputStream******"+line1+",sendstate:"+sendflag);
+								if(isEcho) Producer.sendMessageToWeb(echoMessage);
+								logger.info("******MvnBaseCommand.execute-->InputStream******"+line1);
 							}
 						}
 					} catch (Exception e) {
@@ -73,8 +74,8 @@ public class MvnBaseCommand {
 						while ((line2 = br2.readLine()) != null) {
 							if (line2 != null) {
 								EchoMessage echoMessage = EchoMessage.getInstance(username, AREA, line2);
-								boolean sendflag = Producer.sendMessageToWeb(echoMessage);
-								logger.debug("******MvnBaseCommand.execute-->ErrorStream******"+line2+",sendstate:"+sendflag);
+								if(isEcho)  Producer.sendMessageToWeb(echoMessage);
+								logger.info("******MvnBaseCommand.execute-->ErrorStream******"+line2);
 							}
 						}
 					} catch (IOException e) {

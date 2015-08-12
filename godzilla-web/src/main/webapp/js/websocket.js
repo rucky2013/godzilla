@@ -1,11 +1,12 @@
+var isEcho = false;
 var server_host = "ws://10.100.142.65:9999/websocket"
 var socket;
 var showlength = 20;
-if (!window.WebSocket) {
+if (isEcho &&!window.WebSocket) {
   window.WebSocket = window.MozWebSocket;
 }
 var lock = false;
-if (window.WebSocket) {
+if (isEcho &&window.WebSocket) {
   socket = new WebSocket(server_host);
   socket.onmessage = function(event) {
 	//var length = $("#messagebox").find("div").length;
@@ -28,12 +29,12 @@ if (window.WebSocket) {
     ta.value = ta.value + "Web Socket closed"; */
 	 // alert("closed");
   };
-} else {
+} else if(isEcho){
   alert("Your browser does not support Web Socket.");
 }
 
 function send(message) {
-  if (!window.WebSocket) { return; }
+  if (!isEcho&&!window.WebSocket) { return; }
   if (socket.readyState == WebSocket.OPEN) {
     socket.send(message);
   } else {

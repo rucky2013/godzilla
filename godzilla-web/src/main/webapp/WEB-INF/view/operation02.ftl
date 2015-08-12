@@ -4,9 +4,9 @@
 <link type="text/css" href="/${basePath}/css/meta.css" rel="stylesheet"/>
 </head>
 <body id="operation" class="operation">
-	<div class="main">	
+		<div class="main">
 		<div class="head  clearfix">
-        	<h1><a class="logo" hidden="index.html" title="回到首页">哥斯拉</a></h1>
+        	<h1><a class="logo" href="/${basePath}/user/${sid}/home.do" title="回到首页">哥斯拉</a></h1>
             <div class="r">你好，${user.userName}！<a id="logout" href="#" title="退出系统" class="btn1">退出</a></div>
         </div>
         <div class="mainCon clearfix">
@@ -31,8 +31,16 @@
                   </tr>
                 </table>
             </div>
-        	<div class="mainConR r">
-            	<h2 id="tab1" class="current"><a href="jvascript:;" class="a1" title="工作空间">工作空间</a><a  href="jvascript:;" class="a2">管理权限</a></h2>
+			<div class="mainConR r">
+				<h2 id="tab1" class="current">
+					<a href="/${basePath}/user/${sid}/home.do" class="a1" title="工作空间">工作空间</a>
+					<#if user.isAdmin = 1>
+					<a href="/${basePath}/user/${sid}/userAuthList.do" class="a2" title="管理权限">管理权限</a>
+					<#else>
+					<a href="javascript:void(0);" class="a2" title="管理权限">管理权限</a>
+					</#if>
+				</h2>
+
                 <div class="table2">
                 <table width="100%">
                 <thead>

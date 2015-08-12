@@ -8,7 +8,7 @@
 <body id="gesila1">
 	<div class="main">
 		<div class="head  clearfix">
-        	<h1><a class="logo" hidden="index.html" title="回到首页">哥斯拉</a></h1>
+        	<h1><a class="logo" href="/${basePath}/user/${sid}/home.do" title="回到首页">哥斯拉</a></h1>
             <div class="r">你好，${user.userName}！<a id="logout" href="#" title="退出系统" class="btn1">退出</a></div>
         </div>
         <div class="mainCon clearfix">
@@ -35,7 +35,7 @@
             </div>
 			<div class="mainConR r">
 				<h2 id="tab1" class="current">
-					<a href="javascript:void(0);" class="a1" title="工作空间">工作空间</a>
+					<a href="/${basePath}/user/${sid}/home.do" class="a1" title="工作空间">工作空间</a>
 					<#if user.isAdmin = 1>
 					<a href="/${basePath}/user/${sid}/userAuthList.do" class="a2" title="管理权限">管理权限</a>
 					<#else>
@@ -87,7 +87,7 @@
 									</tr>
 									<tr>
 										<td class="paddingR0">配置管理：</td>
-										<td class="bg1"><span class="spanAdd"><a class="prop_btn" value1="add" href="/${basePath}/prop/${sid}/${projectCode}.do" title="配置添加">配置添加</a></span><span class="spanQuery"><a class="prop_btn" value1="query" href="/${basePath}/prop/${sid}/${projectCode}/queryProp.do" title="配置查询">配置查询</a></span><span class="spanExamine"><a class="prop_btn" value1="verify" href="/${basePath}/prop/${sid}/${projectCode}/verifyProp.do" title="配置审核">配置审核</a></span></td>
+										<td class="bg1"><span class="spanAdd"><a class="prop_btn" value1="add" href="/${basePath}/prop/${sid}/${projectCode}/updateProp.do" title="配置添加">配置添加</a></span><span class="spanQuery"><a class="prop_btn" value1="query" href="/${basePath}/prop/${sid}/${projectCode}/queryProp.do" title="配置查询">配置查询</a></span><span class="spanExamine"><a class="prop_btn" value1="verify" href="/${basePath}/prop/${sid}/${projectCode}/verifyProp.do" title="配置审核">配置审核</a></span></td>
 									</tr>
 								</tbody>
 							</table>
@@ -120,7 +120,7 @@
 									</tr>
 									<tr>
 										<td class="paddingR0">配置管理：</td>
-										<td class="bg1"><span class="spanAdd"><a class="prop_btn" value1="add" href="/${basePath}/prop/${sid}/${projectCode}.do" title="配置添加">配置添加</a></span><span class="spanQuery"><a class="prop_btn" value1="query" href="/${basePath}/prop/${sid}/${projectCode}/queryProp.do" title="配置查询">配置查询</a></span><span class="spanExamine"><a class="prop_btn" value1="verify" href="/${basePath}/prop/${sid}/${projectCode}/verifyProp.do" title="配置审核">配置审核</a></span></td>
+										<td class="bg1"><span class="spanAdd"><a class="prop_btn" value1="add" href="/${basePath}/prop/${sid}/${projectCode}/updateProp.do" title="配置添加">配置添加</a></span><span class="spanQuery"><a class="prop_btn" value1="query" href="/${basePath}/prop/${sid}/${projectCode}/queryProp.do" title="配置查询">配置查询</a></span><span class="spanExamine"><a class="prop_btn" value1="verify" href="/${basePath}/prop/${sid}/${projectCode}/verifyProp.do" title="配置审核">配置审核</a></span></td>
 									</tr>
 								</tbody>
 							</table>
@@ -203,7 +203,9 @@
 				<h4 class="title">部署日志</h4>
 				<div id="recordTolls">
 					<ul>
-						<li class="l"><span>部署状态：<!--$/{projStatus.currentStatus}--></span><span class="progress"><strong style="width: $/{projStatus.processRate"></strong></span><span> <!--$/{projStatus.processRate}-->%
+						<li class="l"><span>部署状态：<!--$/{projStatus.currentStatus}--></span>
+						<span class="progress"><strong id="process" style="width: 0px"></strong></span>
+						<span id="processText"> <!--$/{projStatus.processRate}-->0%
 						</span></li>
 						<li class="r sp02"><a href="javascript:;" class="r tools1"><span class="edit">比较部署包信息</span></a><a href="javascript:;" class="r tools2"><span class="edit">比较部署包信息</span></a><a href="javascript:;" class="r tools3"><span class="edit">比较部署包信息</span></a></li>
 					</ul>
@@ -301,7 +303,6 @@
 	<script src="http://mini.jiasule.com/framework/jquery/1.8.0/jquery-1.8.0.min.js"></script>
 	<script src="/${basePath}/js/common.js"></script>
 	<script src="/${basePath}/js/websocket.js"></script>
-	<script src="/${basePath}/js/busi/gesila1.js"></script>
 	<script>
 		function shadowClose(index) {
 			var oClose = document.getElementById('close' + index);
@@ -327,6 +328,48 @@
 			oShadow.style.display = '';
 			oShadowBox.style.display = '';
 		}
+		function modelwindow() {
+			var oShadow = document.getElementById('shadow');
+			oShadow.style.display = '';
+		}
+		function releasewindow() {
+			var oShadow = document.getElementById('shadow');
+			oShadow.style.display = 'none';
+		}
+		//更新进度条 
+		
+		var timeout = false; //启动及关闭按钮  
+		function time() {  
+		  if(!timeout) return;  
+		  updateProcess();  
+		  setTimeout(time,1000); //time是指本身,延时递归调用自己,100为间隔调用时间,单位毫秒  
+		} 
+		function updateProcess() {
+			var sid='${sid}';
+			var projectCode='${projectCode}';
+			var profile = '${profile}';
+			
+			$.ajax({
+	            type: "POST",
+	            url: "/${basePath}/mvn/${sid}/${projectCode}/" + profile + "/process.do",
+	            data: {
+	            },
+	            dataType: "json",
+	            success: function(data) {
+					var result = data;
+					if(result.returncode=="200000") {
+						$("#process").width(result.processPercent * 148.0 / 100.0);
+						$("#processText").text(result.processPercent + "%");	
+						var intprocess = parseInt(result.processPercent);
+						if(intprocess >= 100){
+							$("#process").width(148);
+							$("#processText").text("100%");
+							timeout = false;
+						}
+					}
+				}
+	        });
+		}
 	</script>
 	<script>
 	$(document).ready(function() {
@@ -342,20 +385,30 @@
 	
 	        $.ajax({
 	            type: "POST",
-	            url: "/${basePath}/mvn/${sid}/godzilla/" + profile + "/deploy.do",
+	            url: "/${basePath}/mvn/${sid}/${projectCode}/" + profile + "/deploy.do",
 	            data: {
 	                srcUrl: value1,
 	            },
 	            dataType: "json",
 	            success: function(data) {
-					
+	            	//释放 整个界面
+	            	releasewindow();
+	            	$("#process").width(148);
+					$("#processText").text("100%");
+					timeout = false;
+					if (data == "SUCCESS") {
+	                    alert("success");
+	                    window.location.href = '/${basePath}/project/${sid}/${projectCode}/${profile}/projectConfig.do';
+	                } else {
+	                    alert("failed");
+	                }
 				}
 	        });
-	        showWindow(1);
-	
-	        var usernameArea = '${username}-' + 'mvn';
-	        send(usernameArea);
-	        $("#messagebox").empty();
+	        //模态化 整个界面
+	        modelwindow();
+	        //定时轮询 进度条更新
+	        timeout = true;
+	        time();
 	    });
 	    // 重新启动
 	    $('.restart').click(function() {
@@ -367,19 +420,21 @@
 	            },
 	            dataType: "json",
 	            success: function(data) {
-	
+					if (data == "SUCCESS") {
+	                    alert("success");
+	                } else {
+	                    alert("failed");
+	                }
 				}
 	        });
 	    });
 	    
 		//源代码设置
-	    $(".src_a").on("click",
-	    function() {
+	    $(".src_a").on("click", function() {
 	        showWindow(2);
 	    });
 		//分支设置
-	    $(".branch_a").on("click",
-	    function() {
+	    $(".branch_a").on("click", function() {
 	        showWindow(3);
 	    });
 	
@@ -395,10 +450,8 @@
 	                $(this).html('<input type="text" name="currentVersion"  value="' + param + '"/>  ');
 	            } else if (index == 3) {} else if (index == 4) {
 	                $(this).html('<a class="save_branch" value1="' + branchId + '" href="javascript:viod(0);" title="保存">保存</a>');
-	
 	            }
 	        });
-	
 	    });
 	
 	    // 分支保存 修改分支
@@ -492,16 +545,13 @@
 	            url: "/${basePath}/svn/${sid}/${projectCode}/${profile}/status.do",
 	            dataType: "json",
 	            success: function(data) {
-	
+					if(data.returncode=="200000") {
+						alert(data.echoMessage);
+					} else {
+	                    alert("failed");
+	                }
 				}
 	        });
-	
-	        showWindow(1);
-	
-	        var usernameArea = '${username}-' + 'svn';
-	        send(usernameArea);
-	        $("#messagebox").empty();
-	
 	    });
 	    // svn 合并分支
 	    $(".merge").on("click", function() {
@@ -510,15 +560,13 @@
 	            url: "/${basePath}/svn/${sid}/${projectCode}/${profile}/merge.do",
 	            dataType: "json",
 	            success: function(data) {
-	
+					if (data == "SUCCESS") {
+						alert("succes");
+	                } else {
+	                    alert("failed");
+	                }
 				}
 	        });
-	
-	        showWindow(1);
-	
-	        var usernameArea = '${username}-' + 'svn';
-	        send(usernameArea);
-	        $("#messagebox").empty();
 	    });
 	    // svn 提交主干
 	    $(".commit").on("click", function() {
@@ -527,15 +575,14 @@
 	            url: "/${basePath}/svn/${sid}/${projectCode}/${profile}/commit.do",
 	            dataType: "json",
 	            success: function(data) {
-	
+					if (data == "SUCCESS") {
+						alert("succes");
+						window.location.href = '/${basePath}/project/${sid}/${projectCode}/${profile}/projectConfig.do';
+	                } else {
+	                    alert("failed");
+	                }
 				}
 	        });
-	
-	        showWindow(1);
-	
-	        var usernameArea = '${username}-' + 'svn';
-	        send(usernameArea);
-	        $("#messagebox").empty();
 	    });
 	
 	    // 退出

@@ -46,7 +46,7 @@ public class PropController extends GodzillaApplication implements Constant{
 	 * @param response
 	 * @return
 	 */
-	@RequestMapping(value="/{sid}/{projectCode}", method=RequestMethod.GET)
+	@RequestMapping(value="/{sid}/{projectCode}/updateProp", method=RequestMethod.GET)
 	public Object updatePropPage(@PathVariable String sid, @PathVariable String projectCode,HttpServletRequest request) {
 
 		logger.debug("*****PropController.updatePropPage*****");
@@ -72,7 +72,7 @@ public class PropController extends GodzillaApplication implements Constant{
 	 * @param request
 	 * @return
 	 */
-	@RequestMapping(value="/{sid}/{projectCode}", method=RequestMethod.POST)
+	@RequestMapping(value="/{sid}/{projectCode}/updateProp", method=RequestMethod.POST)
 	@ResponseBody
 	public Object updateProp(@PathVariable String sid, @PathVariable String projectCode,HttpServletRequest request) {
 		

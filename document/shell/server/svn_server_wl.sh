@@ -12,6 +12,7 @@ BEGIN_STR=".............................................."
 # 2.some conflicts still found!
 # 3.client.sh parameter not found
 # 4.server.sh parameter not found
+# 5.branches is '' ,no need commit
 #***
 
 SHELL_NAME=$0			#脚本名称
@@ -62,6 +63,7 @@ case $1 in
 	;;
 	*)
      	echo "parameter not found"
+     	echo 4
      	exit 4
      ;;
 esac

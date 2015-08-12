@@ -2,16 +2,9 @@ package cn.godzilla.web;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ConcurrentHashMap;
-
-import javax.servlet.ServletContext;
-import javax.servlet.ServletRequest;
-import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.context.ApplicationContext;
 
-import cn.godzilla.common.Application;
-import cn.godzilla.common.BusinessException;
 import cn.godzilla.common.Constant;
 import cn.godzilla.common.ReturnCodeEnum;
 import cn.godzilla.model.FunRight;
@@ -20,16 +13,18 @@ import cn.godzilla.service.FunRightService;
 import cn.godzilla.service.UserService;
 import cn.godzilla.web.context.GodzillaContext;
 
-public abstract class GodzillaApplication extends Application implements Constant{
+public abstract class SuperController implements Constant{
 	
 	protected ApplicationContext applicationContext;
+	protected List<String> escapeUrls = new ArrayList<String>();
 	protected static UserService userService;
 	protected static FunRightService funRightService;
-	protected static ServletContext context;
-	protected List<String> escapeUrls = new ArrayList<String>();
 	
-	//部署进度百分比  <用户名-项目名-profile,百分比>
-	protected static ConcurrentHashMap<String, String> processPercent = new ConcurrentHashMap<String, String>(); 
+	private static ThreadLocal<GodzillaContext> gozillaThreadLocal = new ThreadLocal<GodzillaContext>() {
+		protected GodzillaContext initialValue() {
+			return new GodzillaContext();
+		};
+	};
 	
 	private static ThreadLocal<String> sidThreadLocal = new ThreadLocal<String> () {
 		protected String initialValue() {
@@ -53,22 +48,6 @@ public abstract class GodzillaApplication extends Application implements Constan
 		ReturnCodeEnum userStatus = userService.checkUserStatusBySid(sid);
 		return userStatus;
 	}
-	/**
-	 * 根据projectcode 判断当前用户是否 有此项目权限
-	 * @param projectCode
-	 * @return
-	 */
-	protected static ReturnCodeEnum checkFunright(String projectCode) {
-		List<FunRight> funRightList = getFunRights();
-		
-		for(FunRight fr:funRightList) {
-			if(fr.getProjectCode().equals(projectCode)) {
-				return ReturnCodeEnum.getByReturnCode(OK_AUTHORIZATION);
-			}
-		}
-		
-		return ReturnCodeEnum.getByReturnCode(NO_AUTHORIZATION);
-	}
 	
 	/**
 	 * 初始化 当前jvm缓存  
@@ -90,14 +69,24 @@ public abstract class GodzillaApplication extends Application implements Constan
 	
 	protected void distroyContext() {
 		sidThreadLocal.set(null);
-		echoMessageThreadLocal.set("");
-		shellReturnThreadLocal.set("");
 	}
 	
 	protected static List<FunRight> getFunRights() {
 		String username = getUser().getUserName();
 		List<FunRight> funRightList = funRightService.findFunRightsByUsername(username);
 		return funRightList;
+	}
+	
+	protected static boolean checkFunright(String projectCode) {
+		List<FunRight> funRightList = getFunRights();
+		
+		for(FunRight fr:funRightList) {
+			if(fr.getProjectCode().equals(projectCode)) {
+				return true;
+			}
+		}
+		
+		return false;
 	}
 	
 	protected static String getBranchNameByBranchUrl(String branchUrl) {
@@ -110,38 +99,6 @@ public abstract class GodzillaApplication extends Application implements Constan
 		return branchName;
 	}
 	
-	/**
-	 * url 的 第二个字符为 sid   例如 请求为   /godzilla-web/usr/${sid}/${projectcode}/getUser.do?XX
-	 * @param request
-	 * @return sid
-	 * @throws Exception 
-	 */
-	protected String getSidFromUrl(ServletRequest request) throws BusinessException {
-		String pathInfo = ((HttpServletRequest)request).getRequestURI();
-		
-		int start = pathInfo.indexOf("/", 1);
-		if(start <0) 
-			throw new BusinessException("url is wrong");
-		int second = pathInfo.indexOf("/", start+1);
-		if(second <0) 
-			throw new BusinessException("url is wrong");
-		int third = pathInfo.indexOf("/", second+1);
-		if(third <0) 
-			throw new BusinessException("url is wrong");
-		String sid = pathInfo.substring(second+1, third);
-		return sid;
-	}
-	
-	protected boolean escapeUrl(ServletRequest request) {
-		String pathInfo = ((HttpServletRequest)request).getContextPath()  + ((HttpServletRequest)request).getRequestURI() + (((HttpServletRequest)request).getPathInfo()==null ? "":((HttpServletRequest)request).getPathInfo());
-		
-		for(String escapeUrl:escapeUrls) {
-			if(pathInfo.contains(escapeUrl)) {
-				return true;
-			}
-		}
-		return false;
-	}
 	/*public static void main(String args[]) {
 		String branchUrl = "http://10.100.142.37:9090/svn/fso/godzilla/branch/godzilla-bug2/";
 		System.out.println(getBranchNameByBranchUrl(branchUrl));

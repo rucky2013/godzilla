@@ -27,6 +27,13 @@ public enum ReturnCodeEnum {
 	NO_ADDUSER("100018","添加用户失败"),
 	NO_SAMEPASSWORD("100019","密码不一样"),
 	NO_UPDATEFUNRIGHT("100020","更新用户权限失败"),
+	//svn model
+	NO_CHANGECOMMIT("100021", "没有更改可以提交"),
+	NO_SVNCOMMIT("100022", "svn提交失败"),
+	NO_FOUNDCONFLICT("100023", "合并出现冲突，请先解决冲突"),
+	NO_CLIENTPARAM("100024", "client.sh缺少参数"),
+	NO_SERVERPARAM("100025", "server.sh缺少参数"),
+	NO_JAVASHELLCALL("100026", "java调用shell执行失败"),
 	//user模块
 	OK_CHECKUSER("200001","验证用户成功"),
 	OK_LOGIN("200002","用户登录成功"),
@@ -39,6 +46,8 @@ public enum ReturnCodeEnum {
 	OK_AUTHORIZATION("200017","验证项目权限成功"),
 	OK_ADDUSER("200018","添加用户成功"),
 	OK_UPDATEFUNRIGHT("200020","更新用户权限成功"),
+	//svn model
+	OK_SVNCOMMIT("200021", "提交合并成功"),
 	;
 	
 	public String returnCode;

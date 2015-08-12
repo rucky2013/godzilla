@@ -12,23 +12,25 @@ import org.springframework.stereotype.Service;
 import cn.godzilla.common.ReturnCodeEnum;
 import cn.godzilla.model.ClientConfig;
 import cn.godzilla.model.RpcResult;
-import cn.godzilla.mvn.MvnBaseCommand;
 import cn.godzilla.rpc.api.RpcFactory;
 import cn.godzilla.rpc.main.Util;
 import cn.godzilla.service.ClientConfigService;
 import cn.godzilla.service.MvnProviderService;
 import cn.godzilla.service.MvnService;
 import cn.godzilla.service.PropConfigProviderService;
+import cn.godzilla.service.SvnService;
 import cn.godzilla.web.GodzillaApplication;
 
 @Service("mvnService")
-public class MvnServiceImpl implements MvnService{
+public class MvnServiceImpl extends GodzillaApplication implements MvnService {
 	
 	private final Logger logger = LogManager.getLogger(MvnServiceImpl.class);
 	
 	@Autowired
 	private ClientConfigService clientConfigService;
-
+	@Autowired
+	private SvnService svnService;
+	
 	private Map<String, PropConfigProviderService> propConfigProviderServices = 
 				new HashMap<String, PropConfigProviderService>();
 	private Map<String, MvnProviderService> mvnProviderServices = 
@@ -36,12 +38,30 @@ public class MvnServiceImpl implements MvnService{
 	
 	@Override
 	public ReturnCodeEnum doDeploy(String srcUrl, String projectCode, String profile) {
+		String sid = super.getSid();
+		String pencentkey = sid + "-" + projectCode + "-" + profile;
 		
 		ClientConfig clientconfig = clientConfigService.queryDetail(projectCode, profile);
 		String IP = clientconfig.getRemoteIp();
 		
-		/**
+		/*
+		 * -1.svn合并提交主干
+		 * if svn commit success or svn no changecommit
+		 * 		continue
+		 * else 
+		 * 		break
+		 */
+		ReturnCodeEnum svnreturn = svnService.svnCommit(projectCode, profile);
+		
+		if(svnreturn==ReturnCodeEnum.OK_SVNCOMMIT||svnreturn==ReturnCodeEnum.NO_CHANGECOMMIT){
+			logger.info("************svn合并提交主干 成功**************");
+		} else if(svnreturn==ReturnCodeEnum.NO_SVNCOMMIT){
+			logger.error("************mvn部署 第-1步:svn合并提交主干 失败**************");
+			return svnreturn;
+		} 
+		/*
 		 * 0.get RpcFactory and init rpcservice
+		 * percent 30%
 		 */
 		try {
 			this.initRpc(IP);
@@ -49,8 +69,10 @@ public class MvnServiceImpl implements MvnService{
 			e.printStackTrace();
 			return ReturnCodeEnum.getByReturnCode(NO_RPCFACTORY);
 		}
-		/**
+		processPercent.put(pencentkey, "30");
+		/*
 		 * 1.替换pom文件 配置变量
+		 * percent 50%
 		 */
 		boolean flag1 = false;
 		try {
@@ -63,8 +85,29 @@ public class MvnServiceImpl implements MvnService{
 		if(!flag1){
 			return ReturnCodeEnum.getByReturnCode(NO_CHANGEPOM);
 		}
-		/**
+		processPercent.put(pencentkey, "50");
+		
+		final String processKey1 = sid + "-" + projectCode + "-" + profile;
+		Thread t1 = new Thread(new Runnable() {
+			@Override
+			public void run() {
+				while(true) {
+					try {
+						Thread.currentThread().sleep(1000);
+						String processValue = GodzillaApplication.processPercent.get(processKey1);
+						int prVal = Integer.parseInt(processValue);
+						if(prVal>=95) break;
+						GodzillaApplication.processPercent.put(processKey1, ++prVal+"");
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+				}
+			}
+		});
+		t1.start();
+		/*
 		 * 2.mvn deploy  3.将sh命令>queue
+		 * percent 90%
 		 */
 		boolean flag2 = false;
 		try {
@@ -75,7 +118,8 @@ public class MvnServiceImpl implements MvnService{
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+		t1.interrupt();
+		processPercent.put(pencentkey, "100");
 		if(flag1&&flag2) {
 			return ReturnCodeEnum.getByReturnCode(OK_MVNDEPLOY);
 		}
@@ -93,7 +137,7 @@ public class MvnServiceImpl implements MvnService{
 				}
 			}
 			if(mvnProviderServices.get(linuxIp)==null||"".equals(mvnProviderServices.get(linuxIp))) {
-				RpcFactory rpcFactory= null;
+                RpcFactory rpcFactory= null;
 				rpcFactory = Util.getRpcFactoryImpl();
 				MvnProviderService mvnProviderService = rpcFactory.getReference(MvnProviderService.class, linuxIp);
 				if(mvnProviderService!=null) {
@@ -101,6 +145,16 @@ public class MvnServiceImpl implements MvnService{
 				}
 			}
 		}
+	}
+
+	@Override
+	public String getProcessPercent(String sid, String projectCode, String profile) {
+		
+		String pencentkey = sid + "-" + projectCode + "-" + profile;
+		
+		String percent = processPercent.get(pencentkey)==null?"0":processPercent.get(pencentkey);
+		
+		return percent;
 	}
 
 	

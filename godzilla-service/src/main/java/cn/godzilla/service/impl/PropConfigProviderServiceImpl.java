@@ -1,62 +1,27 @@
 package cn.godzilla.service.impl;
 
 import java.io.IOException;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.dom4j.DocumentException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
-import cn.godzilla.common.ReturnCodeEnum;
-import cn.godzilla.common.StringUtil;
 import cn.godzilla.common.xml.XmlUtil;
+import cn.godzilla.dao.ClientConfigMapper;
 import cn.godzilla.dao.PropConfigMapper;
+import cn.godzilla.model.ClientConfig;
 import cn.godzilla.model.PropConfig;
 import cn.godzilla.model.RpcResult;
 import cn.godzilla.service.PropConfigProviderService;
-import cn.godzilla.web.GodzillaApplication;
-
-import com.alibaba.fastjson.JSON;
 
 public class PropConfigProviderServiceImpl implements PropConfigProviderService {
 
 	@Autowired
-	private PropConfigMapper dao;
-	
-	public int insert(PropConfig record) {
-
-		return dao.insert(record);
-	}
-
-	public int insertSelective(PropConfig record) {
-
-		return dao.insertSelective(record);
-	}
-
-	public int update(PropConfig record) {
-
-		return dao.update(record);
-	}
-
-	public PropConfig queryDetailById(long id) {
-
-		return dao.queryDetailById(id);
-	}
-
-	public PropConfig queryDetailByKey(Map<String, String> map) {
-
-		return dao.queryDetailByKey(map);
-	}
-
-	public List<PropConfig> queryList(Map<String, String> map) {
-		
-		return dao.queryList(map);
-	}
-
+	private PropConfigMapper propConfigMapper;
+	@Autowired
+	private ClientConfigMapper clientConfigMapper;
 	
 	@Override
 	public RpcResult propToPom(String project_code, String srcUrl, String profile) throws DocumentException, IOException,  Exception {
@@ -70,18 +35,36 @@ public class PropConfigProviderServiceImpl implements PropConfigProviderService 
 			/**
 			 * 2.get propconfigs from DB
 			 */
-			String parentVersion = getParentversionByProjectcodeAndProfile(project_code, profile);
-			List<PropConfig> propconfigs = getPropConfigsByProjectcodeAndProfile(project_code, profile);
+			String parentVersion = this.getParentversionByProjectcodeAndProfile(project_code, profile);
+			List<PropConfig> propconfigs = this.getPropConfigsByProjectcodeAndProfile(project_code, profile);
 			/**
 			 * 3.save propconfigs cover pom.xml
 			 */
 			XmlUtil.coverParentPom(parentVersion, parentPomPath, parentPomPath);
 			XmlUtil.coverWebPom(propconfigs, webPomPath, webPomPath);
+			/**
+			 * 4.change deploy war tomcat properties for web/pom.xml
+			 * if tomcat-need-plugin == 0
+			 *    goto last-line; 
+			 */
+			ClientConfig clientConfig = this.getTomcatpluginProp(project_code, profile);
+			if(clientConfig.getTomcatNeedPlugin()!=null && !"0".equals(clientConfig.getTomcatNeedPlugin())){
+				XmlUtil.coverWebPomforPlugin(project_code, clientConfig, webPomPath, webPomPath);
+			}
+			
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
 		return RpcResult.create(SUCCESS);
 	}
+	private ClientConfig getTomcatpluginProp(String project_code, String profile) {
+		Map<String, String> parameterMap = new HashMap<String, String>();
+		parameterMap.put("project_code", project_code);
+		parameterMap.put("profile", profile);
+		ClientConfig clientConfig = clientConfigMapper.queryDetail(parameterMap);
+		return clientConfig;
+	}
+
 	/**
 	 * 获取项目父pom的  parent.version 
 	 * @param project_code
@@ -98,7 +81,7 @@ public class PropConfigProviderServiceImpl implements PropConfigProviderService 
 		Map<String, String> parameters = new HashMap<String, String>();
 		parameters.put("projectCode", project_code);
 		parameters.put("profile", profile);
-		return dao.queryListByProjectcodeAndProfile(parameters);
+		return propConfigMapper.queryListByProjectcodeAndProfile(parameters);
 	}
 	
 }

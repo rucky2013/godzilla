@@ -13,12 +13,13 @@ import org.springframework.context.event.ContextClosedEvent;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
 
+import cn.godzilla.common.Application;
 import cn.godzilla.echo.rocketmq.Producer;
 
 import com.alibaba.rocketmq.client.exception.MQClientException;
 
 @Component
-public class MainClass implements ApplicationListener{
+public class MainClass extends Application implements ApplicationListener{
 	
 	private final Logger logger = LogManager.getLogger(MainClass.class);
 	
@@ -35,11 +36,11 @@ public class MainClass implements ApplicationListener{
 		
 		if(event instanceof ContextRefreshedEvent) {
 			if(!started) {
-				this.start();
+				if(isEcho) this.start();
 				started = true;
 			} 
 		} else if(event instanceof ContextClosedEvent) {
-			this.stop();
+			if(isEcho) this.stop();
 		}
 		
 	}
