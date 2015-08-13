@@ -18,12 +18,20 @@ public class ClientConfig implements Serializable{
 	private String remoteIp;
 	
 	private Integer status ;
-	
+	private String deployVersion;
 	private String tomcatPassword;
 	private String tomcatUsername;
 	private String tomcatPort;
 	private String tomcatNeedPlugin;
 	
+	public String getDeployVersion() {
+		return deployVersion;
+	}
+
+	public void setDeployVersion(String deployVersion) {
+		this.deployVersion = deployVersion;
+	}
+
 	public String getTomcatPassword() {
 		return tomcatPassword;
 	}

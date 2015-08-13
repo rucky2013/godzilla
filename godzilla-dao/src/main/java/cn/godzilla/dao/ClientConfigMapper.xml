@@ -5,12 +5,20 @@
   
   <sql id="queryColumns">id, project_code as projectCode, profile, 
       remote_ip as remoteIp, status, 
+      deploy_version as deployVersion,
       tomcat_password as tomcatPassword, 
       tomcat_username as tomcatUsername,
       tomcat_port as tomcatPort,
       tomcat_need_plugin as tomcatNeedPlugin </sql>
   <select id="queryDetail" resultType="cn.godzilla.model.ClientConfig" parameterType="java.util.Map">
-  	select <include refid="queryColumns" /> from t_g_client_config where project_code = #{projectCode} and profile = #{profile} and status = 0
+  	select <include refid="queryColumns" /> from t_g_client_config where project_code = #{projectCode} and profile = #{profile} and status = 1
   </select>
   
+  <update id="updateDeployversion" parameterType="java.util.Map">
+  	update t_g_client_config set
+  		deploy_version = #{deploy_version}
+  	where project_code = #{project_code}
+  		and profile = #{profile}
+  		and status = 1
+  </update>
 </mapper>

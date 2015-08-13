@@ -48,14 +48,13 @@ public class SvnBranchConfigController extends GodzillaApplication implements Co
 	@ResponseBody
 	public Object add(@PathVariable String sid, @PathVariable String projectCode, @PathVariable String profile, 
 			@RequestParam("branchUrl") String branchUrl,
-			@RequestParam("currentVersion") String currentVersion,
 			HttpServletRequest request, HttpServletResponse response) {
 
 		
 		logger.info("**************添加分支设置***********projectCode:" + projectCode
 				+ ",branchUrl:" + branchUrl);
 
-		boolean flag = svnBranchConfigService.addNewBranch(projectCode, branchUrl, currentVersion);
+		boolean flag = svnBranchConfigService.addNewBranch(projectCode, profile, branchUrl);
 		
 		if(flag){
 			logger.info("************添加分支设置End**************");
@@ -82,14 +81,13 @@ public class SvnBranchConfigController extends GodzillaApplication implements Co
 	public Object edit(@PathVariable String sid, @PathVariable String projectCode, @PathVariable String profile, 
 			@RequestParam("id") String id,
 			@RequestParam("branchUrl") String branchUrl,
-			@RequestParam("currentVersion") String currentVersion,
 			HttpServletRequest request, HttpServletResponse response) {
 
 		
 		logger.info("**************分支编辑 保存***********projectCode:" + projectCode
 				+ ",branchUrl:" + branchUrl);
 
-		boolean flag = svnBranchConfigService.editBranch(id, branchUrl, currentVersion);
+		boolean flag = svnBranchConfigService.editBranch(projectCode, profile, id, branchUrl);
 		
 		if(flag){
 			logger.info("************分支编辑 保存End**************");

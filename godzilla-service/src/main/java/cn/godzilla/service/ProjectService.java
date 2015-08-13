@@ -25,9 +25,19 @@ public interface ProjectService{
 	 * @param checkoutPath
 	 * @param version
 	 * @param deployVersion
+     * @param profile 
+     * @param projectCode 
 	 * @param deployVersion2 
 	 * @return
 	 */
-	boolean srcEdit(String srcId, String repositoryUrl, String checkoutPath, String version, String deployVersion);
+	boolean srcEdit(String srcId, String repositoryUrl, String checkoutPath, String projectCode, String profile);
+
+	/**
+	 * 更新  项目 版本号
+	 * @param projectCode
+	 * @param profile
+	 * @return
+	 */
+	public boolean refreshProjectVersion(String projectCode, String profile);
 
 }

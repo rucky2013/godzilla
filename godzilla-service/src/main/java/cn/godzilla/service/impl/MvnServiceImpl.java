@@ -11,12 +11,14 @@ import org.springframework.stereotype.Service;
 
 import cn.godzilla.common.ReturnCodeEnum;
 import cn.godzilla.model.ClientConfig;
+import cn.godzilla.model.Project;
 import cn.godzilla.model.RpcResult;
 import cn.godzilla.rpc.api.RpcFactory;
 import cn.godzilla.rpc.main.Util;
 import cn.godzilla.service.ClientConfigService;
 import cn.godzilla.service.MvnProviderService;
 import cn.godzilla.service.MvnService;
+import cn.godzilla.service.ProjectService;
 import cn.godzilla.service.PropConfigProviderService;
 import cn.godzilla.service.SvnService;
 import cn.godzilla.web.GodzillaApplication;
@@ -28,6 +30,8 @@ public class MvnServiceImpl extends GodzillaApplication implements MvnService {
 	
 	@Autowired
 	private ClientConfigService clientConfigService;
+	@Autowired
+	private ProjectService projectService;
 	@Autowired
 	private SvnService svnService;
 	
@@ -110,22 +114,54 @@ public class MvnServiceImpl extends GodzillaApplication implements MvnService {
 		 * percent 90%
 		 */
 		boolean flag2 = false;
-		try {
-			MvnProviderService mvnProviderService = mvnProviderServices.get(IP);
-			String username = GodzillaApplication.getUser().getUserName();
-			RpcResult result = mvnProviderService.deployProject(username, srcUrl, projectCode, profile, IP);
-			flag2 = result.getRpcCode().equals("0")?true:false;
-		} catch (Exception e) {
-			e.printStackTrace();
+		if("godzilla".equals(projectCode)) {
+			flag2 = true;
+		} else {
+			try {
+				MvnProviderService mvnProviderService = mvnProviderServices.get(IP);
+				String username = GodzillaApplication.getUser().getUserName();
+				RpcResult result = mvnProviderService.deployProject(username, srcUrl, projectCode, profile, IP);
+				flag2 = result.getRpcCode().equals("0")?true:false;
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
+		
 		t1.interrupt();
 		processPercent.put(pencentkey, "100");
 		if(flag1&&flag2) {
+			
+			/*
+			 * end.部署成功  更新 部署版本号 
+			 */
+			boolean flag3 = this.updateDeployVersion(projectCode, profile);
 			return ReturnCodeEnum.getByReturnCode(OK_MVNDEPLOY);
 		}
 		return ReturnCodeEnum.getByReturnCode(NO_MVNDEPLOY);
 	}
 	
+	private boolean updateDeployVersion(String projectCode, String profile) {
+		Project project = projectService.qureyByProCode(projectCode);
+		String trunkPath = project.getRepositoryUrl();
+		
+		ReturnCodeEnum versionreturn = svnService.getVersion(trunkPath, projectCode, profile);
+		if(!versionreturn.equals(ReturnCodeEnum.getByReturnCode(OK_SVNVERSION))) {
+			return false;
+		}
+		
+		String deployVersion = svnVersionThreadLocal.get();
+		
+		Map<String, String> parameterMap = new HashMap<String, String>();
+		
+		parameterMap.put("deploy_version", deployVersion);
+		parameterMap.put("project_code", projectCode);
+		parameterMap.put("profile", profile);
+		
+		int update = clientConfigService.updateDeployVersionByCodeAndProfile(parameterMap);
+		
+		return update>0;
+	}
+
 	private void initRpc(String linuxIp) throws ClassNotFoundException, IllegalAccessException, InstantiationException, IOException {
 		synchronized(propConfigProviderServices) {
 			if(propConfigProviderServices.get(linuxIp)==null||"".equals(propConfigProviderServices.get(linuxIp))) {

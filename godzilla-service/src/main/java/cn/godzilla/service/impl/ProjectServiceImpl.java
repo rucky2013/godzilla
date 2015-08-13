@@ -7,16 +7,22 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.sun.tools.javac.resources.version;
+
+import cn.godzilla.common.ReturnCodeEnum;
 import cn.godzilla.dao.ProjectMapper;
 import cn.godzilla.model.Project;
 import cn.godzilla.service.ProjectService;
+import cn.godzilla.service.SvnService;
+import cn.godzilla.web.GodzillaApplication;
 
 @Service("projectService")
-public class ProjectServiceImpl implements ProjectService {
+public class ProjectServiceImpl extends GodzillaApplication implements ProjectService {
 
 	@Autowired
 	private ProjectMapper dao;
-	
+	@Autowired
+	private SvnService svnService;
 	@Override
 	public int insert(Project project) {
 		
@@ -62,16 +68,39 @@ public class ProjectServiceImpl implements ProjectService {
 		return dao.qureyByProCode(project.getProjectCode());
 	}
 	@Override
-	public boolean srcEdit(String srcId, String repositoryUrl, String checkoutPath, String version, String deployVersion) {
+	public boolean srcEdit(String srcId, String repositoryUrl, String checkoutPath, String projectCode, String profile) {
+		
+		ReturnCodeEnum versionreturn = svnService.getVersion(repositoryUrl, projectCode, profile);
+		if(!versionreturn.equals(ReturnCodeEnum.getByReturnCode(OK_SVNVERSION))) {
+			return false;
+		}
+		String version = svnVersionThreadLocal.get();
 		Map<String, String> parameterMap = new HashMap<String, String>();
 		
 		parameterMap.put("srcId", srcId);
 		parameterMap.put("repositoryUrl", repositoryUrl);
 		parameterMap.put("checkoutPath", checkoutPath);
 		parameterMap.put("version", version);
-		parameterMap.put("deployVersion", deployVersion);
 		
 		int index = dao.updateProjectById(parameterMap);
+		
+		return index>0;
+	}
+	
+	public boolean refreshProjectVersion(String projectCode, String profile) {
+		Project project = this.qureyByProCode(projectCode);
+		String trunkPath = project.getRepositoryUrl();
+		
+		ReturnCodeEnum versionreturn = svnService.getVersion(trunkPath, projectCode, profile);
+		if(!versionreturn.equals(ReturnCodeEnum.getByReturnCode(OK_SVNVERSION))) {
+			return false;
+		}
+		String version = svnVersionThreadLocal.get();
+		
+		Map<String, String> parameterMap = new HashMap<String, String>();
+		parameterMap.put("project_code", projectCode);
+		parameterMap.put("version", version);
+		int index = dao.updateVersionByProjectcode(parameterMap);
 		
 		return index>0;
 	}

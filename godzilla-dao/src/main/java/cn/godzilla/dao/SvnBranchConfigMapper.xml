@@ -156,4 +156,12 @@
         status = 0
   	where project_code = #{project_code}
   </update>
+  
+  <update id="updateVersionById" parameterType="map">
+  	update t_g_svn_branch_config set
+        current_version = #{current_version}
+  	where id=#{id}
+  		
+  </update>
+  
 </mapper>

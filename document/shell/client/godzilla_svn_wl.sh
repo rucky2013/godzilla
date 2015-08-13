@@ -65,8 +65,16 @@ function common() {
 	if [ -d $G_L_PATH ];then
 		echo "清除目录$G_L_PATH $BEGIN_STR" ;
 		time=`date +%F-%H-%M-%S`
-		mv $G_PATH"/work" "$RECYCLE_PATH$time" ;
-		mv $G_PATH"/conflict" "$RECYCLE_PATH$time" ;
+		mv $G_PATH"/work" "$RECYCLE_PATH$time" 
+		mv $G_PATH"/conflict" "$RECYCLE_PATH$time" 
+		#if [ -d $G_L_PATH"/work" ];then
+		#	rm -rf $G_L_PATH"/work"
+		#fi;
+		#if [ -d PATH"/conflict" ];then
+		#	rm -rf $G_L_PATH"/conflict"
+		#fi;
+		#rm -rf $G_L_PATH"/work"
+		#rm -rf $G_L_PATH"/conflict"
 		mkdir $G_PATH"/work"
 		mkdir $G_PATH"/conflict"
 	fi;
@@ -135,12 +143,20 @@ function status() {
 	#***
 	# 1.清空 本地路径
 	#***
-	echo "1.清空 本地路径$BEGIN_STR" > null
+	echo "1.清空 本地路径$BEGIN_STR"  
 	if [ -d $G_L_PATH ];then
-		echo "清除目录$G_L_PATH $BEGIN_STR" ;  > null
+		echo "清除目录$G_L_PATH $BEGIN_STR" ;
 		time=`date +%F-%H-%M-%S`
-		mv $G_PATH"/work" "$RECYCLE_PATH$time" ;
-		mv $G_PATH"/conflict" "$RECYCLE_PATH$time" ;
+		mv $G_PATH"/work" "$RECYCLE_PATH$time" 
+		mv $G_PATH"/conflict" "$RECYCLE_PATH$time" 
+		#if [ -d $G_L_PATH"/work" ];then
+		#	rm -rf $G_L_PATH"/work"
+		#fi;
+		#if [ -d PATH"/conflict" ];then
+		#	rm -rf $G_L_PATH"/conflict"
+		#fi;
+		#rm -rf $G_L_PATH"/work"
+		#rm -rf $G_L_PATH"/conflict"
 		mkdir $G_PATH"/work"
 		mkdir $G_PATH"/conflict"
 	fi;
@@ -165,6 +181,53 @@ function status() {
 	cd $srcpath/$PROJECT_NAME
 	svn info
 }
+
+function getVersion(){
+
+	#***
+	# 1.清空 本地路径
+	#***
+	echo "1.清空 本地路径$BEGIN_STR"  
+	if [ -d $G_L_PATH ];then
+		echo "清除目录$G_L_PATH $BEGIN_STR" ;
+		time=`date +%F-%H-%M-%S`
+		mv $G_PATH"/work" "$RECYCLE_PATH$time" 
+		mv $G_PATH"/conflict" "$RECYCLE_PATH$time" 
+		#if [ -d $G_L_PATH"/work" ];then
+		#	rm -rf $G_L_PATH"/work"
+		#fi;
+		#if [ -d PATH"/conflict" ];then
+		#	rm -rf $G_L_PATH"/conflict"
+		#fi;
+		#rm -rf $G_L_PATH"/work"
+		#rm -rf $G_L_PATH"/conflict"
+		mkdir $G_PATH"/work"
+		mkdir $G_PATH"/conflict"
+	fi;
+	
+	#***
+	# 2.检出 主干代码 注：此为version操作地址
+	#***
+	echo "2.开始检出代码$BEGIN_STR"  > null
+	#SVN主干
+	#SVN_TRUNK=$2
+	echo "SVN_TRUNK:${SVN_TRUNK}" > null 
+	#svn co http://10.100.142.37:9090/svn/fso/godzilla/trunk /home/godzilla/gzl/work --username=wanglin --password=1 --non-interactive
+	cd $srcpath
+	mkdir ${PROJECT_NAME}
+	#echo $SVN_TRUNK $srcpath"/"$PROJECT_NAME $svnuser --non-interactive
+	svn co $SVN_TRUNK $srcpath"/"$PROJECT_NAME $svnuser --non-interactive > null  
+	
+	#***
+	# 3.显示状态
+	#***
+	echo "0.显示主干状态"  > null 
+	cd $srcpath/$PROJECT_NAME
+	#version=`svn info | grep "^最后修改的版本:"|awk  '{print $2}'`
+	version=`svn log $svnuser | grep "^r"| head -1|awk '{print $1}'`
+	echo "version${version}"
+}
+
 case $ACTION in
 	#------
 	#初始合并分支到主干working copy
@@ -194,6 +257,13 @@ case $ACTION in
 	#------
 	STATUS)
 		status
+		exit_code=$?
+		echo "${exit_code}"
+		echo "${exit_code}"
+		exit $exit_code
+	;;
+	VERSION)
+		getVersion
 		exit_code=$?
 		echo "${exit_code}"
 		echo "${exit_code}"

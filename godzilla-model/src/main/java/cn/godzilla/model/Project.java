@@ -23,7 +23,6 @@ public class Project implements Serializable{
     private String checkoutPath;
 
     private String version;
-    private String deployVersion;
     
     public Long getId() {
         return id;
@@ -97,14 +96,6 @@ public class Project implements Serializable{
 		this.version = version;
 	}
 
-	public String getDeployVersion() {
-		return deployVersion;
-	}
-
-	public void setDeployVersion(String deployVersion) {
-		this.deployVersion = deployVersion;
-	}
-	
 	@Override
 	public boolean equals(Object obj) {
 		if(!(obj instanceof Project)) {

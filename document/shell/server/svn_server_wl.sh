@@ -17,7 +17,7 @@ BEGIN_STR=".............................................."
 
 SHELL_NAME=$0			#脚本名称
 ACTION=$1				#命令选择
-SVN_TRUNK=$2  			#SVN主干
+SVN_TRUNK=$2  			#SVN主干 version命令时 操作地址
 SVN_BRANCHES=$3 		#SVN所有分支(以,分隔)
 CALL_BACK_URL=$4 		#回调url
 PROJECT_NAME=$5			#项目名(checkout目录名)
@@ -58,6 +58,12 @@ case $1 in
 	status)
 		IP=$7
 		ssh -p $PORT $USER@$IP "/home/godzilla/gzl/shell/client/godzilla_svn_wl.sh STATUS $2 $3 $4 $5 $6"
+		exit_code=$?
+		exit $exit_code
+	;;
+	version)
+		IP=$7
+		ssh -p $PORT $USER@$IP "/home/godzilla/gzl/shell/client/godzilla_svn_wl.sh VERSION $2 $3 $4 $5 $6"
 		exit_code=$?
 		exit $exit_code
 	;;

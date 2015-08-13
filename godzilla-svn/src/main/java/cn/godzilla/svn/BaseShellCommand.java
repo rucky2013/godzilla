@@ -38,8 +38,10 @@ public class BaseShellCommand extends Application{
 			if(!isEcho){
 				if(command.contains(" status ")) {
 					inThreadPrint1(p);
-				} else {
+				} else if(command.contains(" version ")) {
 					inThreadPrint2(p);
+				} else {
+					inThreadPrint3(p);
 				}
 				
 			} else {
@@ -100,10 +102,44 @@ public class BaseShellCommand extends Application{
 	}
 	/**
 	 * no echo
-	 * svn merge commit 
+	 * svn version 
 	 * @param p
 	 */
 	private void inThreadPrint2(Process p) {
+		// 获取进程的标准输入流
+		final InputStream is1 = p.getInputStream();
+		try {
+			BufferedReader br1 = new BufferedReader(
+					new InputStreamReader(is1, "UTF-8"));
+			String line1 = null;
+			while ((line1 = br1.readLine()) != null) {
+				if (line1 != null) {
+					logger.info("******BaseShellCommand.execute-->InputStream******"+line1);
+					if(line1.startsWith("versionr")) {
+						String version = line1.replaceAll("versionr", "");
+						svnVersionThreadLocal.set(version);
+					}
+					String message = shellReturnThreadLocal.get();
+					shellReturnThreadLocal.set(line1);
+				}
+			}
+		} catch (Exception e) {
+			logger.debug("******Stream closed******");
+		} finally {
+			try {
+				is1.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	/**
+	 * no echo
+	 * svn merge commit 
+	 * @param p
+	 */
+	private void inThreadPrint3(Process p) {
 		// 获取进程的标准输入流
 		final InputStream is1 = p.getInputStream();
 		try {

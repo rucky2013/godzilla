@@ -45,11 +45,15 @@ public class PropConfigProviderServiceImpl implements PropConfigProviderService 
 			/**
 			 * 4.change deploy war tomcat properties for web/pom.xml
 			 * if tomcat-need-plugin == 0
-			 *    goto last-line; 
+			 *    delete plugin; 
+			 * else 
+			 * 	  replace plugin;
 			 */
 			ClientConfig clientConfig = this.getTomcatpluginProp(project_code, profile);
 			if(clientConfig.getTomcatNeedPlugin()!=null && !"0".equals(clientConfig.getTomcatNeedPlugin())){
 				XmlUtil.coverWebPomforPlugin(project_code, clientConfig, webPomPath, webPomPath);
+			} else {
+				XmlUtil.deleteWebPomPlugin(webPomPath, webPomPath);
 			}
 			
 		} catch(Exception e) {

@@ -118,6 +118,22 @@ public class XmlUtil {
 		logger.info("++|++|++>coverWebPomforPlugin.plugin:"+plugin.getText().toString());
 		saveDocument(doc, savePomPath);
 	}
+	
+	/**
+	 * 删除  plugin  web.pom
+	 * @param webPomPath
+	 * @param savePomPath
+	 * @throws DocumentException 
+	 * @throws IOException 
+	 */
+	public static void deleteWebPomPlugin(String webPomPath, String savePomPath) throws DocumentException, IOException {
+		Document doc = parse(webPomPath);
+		Element root = doc.getRootElement();
+		Element plugins = root.element("profiles").element("profile").element("build").element("plugins");
+		plugins.clearContent();
+		logger.info("++|++|++>deleteWebPomPlugin.plugins:"+plugins.getText().toString());
+		saveDocument(doc, savePomPath);
+	}
 
 	/**
 	 * 从根节点遍历，来修改XML文件,并保存。
@@ -185,4 +201,6 @@ public class XmlUtil {
 		writer.write(doc);
 		writer.close();
 	}
+
+	
 }

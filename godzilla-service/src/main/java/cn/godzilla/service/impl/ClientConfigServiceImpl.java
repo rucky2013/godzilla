@@ -27,4 +27,12 @@ public class ClientConfigServiceImpl implements ClientConfigService {
 		return dao.queryDetail(map);
 	}
 
+	@Override
+	public int updateDeployVersionByCodeAndProfile(Map<String, String> parameterMap) {
+		
+		return dao.updateDeployversion(parameterMap);
+	}
+	
+	
+
 }

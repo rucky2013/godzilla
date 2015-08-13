@@ -20,4 +20,6 @@ public interface ProjectMapper {
     List<Project> queryAll();
 
 	int updateProjectById(Map<String, String> parameterMap);
+
+	int updateVersionByProjectcode(Map<String, String> parameterMap);
 }

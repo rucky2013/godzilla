@@ -12,7 +12,6 @@
     <result column="status" property="status" jdbcType="INTEGER" />
     <result column="checkout_path" jdbcType="VARCHAR" property="checkoutPath" />
     <result column="version" jdbcType="VARCHAR" property="version" />
-    <result column="deploy_version" jdbcType="VARCHAR" property="deployVersion" />
   </resultMap>
   
   <insert id="insert" parameterType="cn.godzilla.model.Project" >
@@ -20,11 +19,10 @@
     insert into t_g_project (id, project_code, project_name, 
       repository_url, create_by, manager, 
       status, checkout_path, 
-    version, deploy_version)
+    version)
     values (#{id,jdbcType=BIGINT}, #{projectCode,jdbcType=VARCHAR}, #{projectName,jdbcType=VARCHAR}, 
       #{repositoryUrl,jdbcType=VARCHAR}, #{createBy,jdbcType=VARCHAR}, #{manager,jdbcType=VARCHAR}, 
-      #{status,jdbcType=INTEGER}, #{checkoutPath,jdbcType=VARCHAR}, #{version,jdbcType=VARCHAR}, 
-      #{deployVersion,jdbcType=VARCHAR})
+      #{status,jdbcType=INTEGER}, #{checkoutPath,jdbcType=VARCHAR}, #{version,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="cn.godzilla.model.Project" >
     
@@ -57,9 +55,6 @@
       <if test="version != null">
         version,
       </if>
-      <if test="deployVersion != null">
-        deploy_version,
-      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -89,16 +84,13 @@
       <if test="version != null">
         #{version,jdbcType=VARCHAR},
       </if>
-      <if test="deployVersion != null">
-        #{deployVersion,jdbcType=VARCHAR},
-      </if>
     </trim>
   </insert>
   
   <select id="queryProjectsByUsername" parameterType="string" resultMap="BaseResultMap">
   	select p.id, p.project_code, p.project_name, 
       p.repository_url, p.create_by, p.manager,  p.status, p.checkout_path, 
-    p.version, p.deploy_version
+    p.version
      from t_g_project p
      left join t_g_function_right r on p.project_code = r.project_code
      
@@ -133,9 +125,6 @@
       <if test="version != null">
         version = #{version,jdbcType=VARCHAR},
       </if>
-      <if test="deployVersion != null">
-        deploy_version = #{deployVersion,jdbcType=VARCHAR},
-      </if>
 	</trim>
 	where project_code = #{projectCode}
 </update>
@@ -143,7 +132,7 @@
 <sql id="query">
 	id, project_code as projectCode, project_name as projectName, 
     repository_url as repositoryUrl, create_by as createBy, manager, status, checkout_path as checkoutPath, 
-    version, deploy_version as deployVersion
+    version
 </sql>
 <select id="qureyByProCode" resultType="cn.godzilla.model.Project" parameterType="String">
 	select 
@@ -169,11 +158,15 @@
       <if test="version != null">
         version = #{version,jdbcType=VARCHAR},
       </if>
-      <if test="deployVersion != null">
-        deploy_version = #{deployVersion,jdbcType=VARCHAR},
-      </if>
 	</trim>
 	where id = #{srcId} 
 </update>
+<update id="updateVersionByProjectcode" parameterType="java.util.Map">
+	update t_g_project set
+        version = #{version,jdbcType=VARCHAR}
+	where project_code = #{project_code}
+		and status = 1
+</update>
+
 
 </mapper>

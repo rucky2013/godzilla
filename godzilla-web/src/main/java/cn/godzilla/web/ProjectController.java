@@ -286,10 +286,10 @@ public class ProjectController extends GodzillaApplication implements Constant{
 		String srcId = StringUtil.getReqPrameter(request, "srcId");
 		String repositoryUrl = StringUtil.getReqPrameter(request, "repositoryUrl");
 		String checkoutPath = StringUtil.getReqPrameter(request, "checkoutPath");
-		String version = StringUtil.getReqPrameter(request, "version");
-		String deployVersion = StringUtil.getReqPrameter(request, "deployVersion");
+		//String version = StringUtil.getReqPrameter(request, "version");
+		//String deployVersion = StringUtil.getReqPrameter(request, "deployVersion");
 		
-		boolean flag = projectService.srcEdit(srcId, repositoryUrl, checkoutPath, version, deployVersion);
+		boolean flag = projectService.srcEdit(srcId, repositoryUrl, checkoutPath, projectCode, profile);
 		
 		if(flag){
 			logger.info("************源代码设置End**************");
@@ -314,8 +314,15 @@ public class ProjectController extends GodzillaApplication implements Constant{
 		//权限验证??
 		ClientConfig clientConfig = clientConfigService.queryDetail(projectCode, profile) ;
 		Project project = projectService.qureyByProCode(projectCode);
+		//刷新项目 版本
+		projectService.refreshProjectVersion(projectCode, profile);
+		project = projectService.qureyByProCode(projectCode);
+		//刷新分支 版本
 		List<SvnBranchConfig> svnBranchConfigs = svnBranchConfigService.queryListByProjectCode(projectCode);
+		svnBranchConfigService.refreshBranchesVersion(svnBranchConfigs);
+		svnBranchConfigs = svnBranchConfigService.queryListByProjectCode(projectCode);
 		List<OperateLog> operateLogs = operateLogService.queryList(projectCode, profile);
+		
 		request.setAttribute("username", this.getUser().getUserName());
 		request.setAttribute("clientConfig", clientConfig);
 		request.setAttribute("svnBranchConfigs", svnBranchConfigs);

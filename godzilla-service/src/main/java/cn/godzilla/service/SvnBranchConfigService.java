@@ -15,11 +15,11 @@ public interface SvnBranchConfigService {
 	/**
 	 * 分支设置-->添加分支  
 	 * @param projectCode
+	 * @param profile
 	 * @param branchUrl
-	 * @param currentVersion
 	 * @return
 	 */
-	boolean addNewBranch(String projectCode, String branchUrl, String currentVersion);
+	boolean addNewBranch(String projectCode, String profile, String branchUrl);
 
 	/**
 	 * 分支编辑  保存  
@@ -28,13 +28,18 @@ public interface SvnBranchConfigService {
 	 * @param currentVersion
 	 * @return
 	 */
-	boolean editBranch(String id, String branchUrl, String currentVersion);
+	boolean editBranch(String projectCode, String profile, String id, String branchUrl);
 	/**
 	 * 删除已提交分支
 	 * @param projectCode
 	 * @return
 	 */
 	int deletebranchesByProjectCode(String projectCode);
+	/**
+	 * 刷新分支版本
+	 * @param svnBranchConfigs
+	 */
+	boolean refreshBranchesVersion(List<SvnBranchConfig> svnBranchConfigs);
 
 	
 }

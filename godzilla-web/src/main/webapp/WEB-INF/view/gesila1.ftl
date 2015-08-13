@@ -171,7 +171,7 @@
 							<td width="216"><small>${project.repositoryUrl}</small></td>
 							<td width="216"><small>${project.checkoutPath}</small></td>
 							<td>${project.version}</td>
-							<td>${project.deployVersion}</td>
+							<td>${clientConfig.deployVersion}</td>
 						</tr>
 						</#if>
 
@@ -256,7 +256,7 @@
 			</div>
 
 
-			<div id="shadow_box2" class="shadow_box">
+			<div id="shadow_box2" class="shadow_box" style="display:none">
 				<h5>
 					源代码设置->add<span id="close2" class="close">关闭</span>
 				</h5>
@@ -268,26 +268,17 @@
 					<div class="user_con clearfix">
 						<label>源代码存放路径：</label> <input id="checkoutPath" type="text" name="checkoutPath" value="${project.checkoutPath}" />
 					</div>
-					<div class="user_con clearfix">
-						<label>当前版本号：</label> <input id="version" type="text" name="version" value="${project.version}" />
-					</div>
-					<div class="user_con clearfix">
-						<label>部署版本号：</label> <input id="deployVersion" type="text" name="deployVersion" value="${project.deployVersion}" />
-					</div>
 					<input id="editSrcBtn" type="button" class="shadow_btn mar150_l" value="修改" />
 				</div>
 			</div>
 
-			<div id="shadow_box3" class="shadow_box">
+			<div id="shadow_box3" class="shadow_box" style="display:none">
 				<h5>
 					分支设置->add<span id="close3" class="close">关闭</span>
 				</h5>
 				<div class="shadow_con">
 					<div class="user_con clearfix">
 						<label>分支路径：</label> <input id="branchUrl" type="text" name="branchUrl" />
-					</div>
-					<div class="user_con clearfix">
-						<label>当前版本号：</label> <input id="currentVersion" type="text" name="currentVersion" />
 					</div>
 					<input id="addBranchBtn" type="button" class="shadow_btn mar150_l" value="添加" />
 				</div>
@@ -445,10 +436,10 @@
 	            if (index == 0) {
 	                var param = $(this).html();
 	                $(this).html('<input type="text" name="branchUrl"  value="' + param + '"/>  ');
-	            } else if (index == 1) {} else if (index == 2) {
-	                var param = $(this).html();
-	                $(this).html('<input type="text" name="currentVersion"  value="' + param + '"/>  ');
-	            } else if (index == 3) {} else if (index == 4) {
+	            } else if (index == 1) {
+	            } else if (index == 2) {
+	            } else if (index == 3) {
+	            } else if (index == 4) {
 	                $(this).html('<a class="save_branch" value1="' + branchId + '" href="javascript:viod(0);" title="保存">保存</a>');
 	            }
 	        });
@@ -458,13 +449,10 @@
 	    $(".save_branch").live("click", function() {
 	        var branchId = $(this).attr("value1");
 	        var branchUrl = "";
-	        var currentVersion = "";
 	        $(this).parent().parent().find("td").each(function(index, element) {
 	            if (index == 0) {
 	                branchUrl = $(this).find("input").val();
-	            } else if (index == 2) {
-	                currentVersion = $(this).find("input").val();
-	            }
+	            } 
 	        });
 	
 	        $.ajax({
@@ -474,7 +462,6 @@
 	            data: {
 	                id: branchId,
 	                branchUrl: branchUrl,
-	                currentVersion: currentVersion,
 	            },
 	            success: function(data) {
 	                if (data == "SUCCESS") {
@@ -487,12 +474,10 @@
 	    });
 	
 	    // 源代码设置-->添加或修改源代码设置
-	    $(".editSrcBtn").on("click", function() {
+	    $("#editSrcBtn").on("click", function() {
 	        var srcId = $("#srcId").val();
 	        var repositoryUrl = $("#repositoryUrl").val();
 	        var checkoutPath = $("#checkoutPath").val();
-	        var version = $("#version").val();
-	        var deployVersion = $("#deployVersion").val();
 	
 	        $.ajax({
 	            type: "GET",
@@ -502,8 +487,6 @@
 	                srcId: srcId,
 	                repositoryUrl: repositoryUrl,
 	                checkoutPath: checkoutPath,
-	                version: version,
-	                deployVersion: deployVersion,
 	            },
 	            success: function(data) {
 	                if (data == "SUCCESS") {
@@ -515,10 +498,9 @@
 	        });
 	    });
 	    // 分支设置-->添加分支
-	    $(".addBranchBtn").on("click", function() {
+	    $("#addBranchBtn").on("click", function() {
 	
 	        var branchUrl = $("#branchUrl").val();
-	        var currentVersion = $("#currentVersion").val();
 	
 	        $.ajax({
 	            type: "GET",
@@ -526,7 +508,6 @@
 	            dataType: "json",
 	            data: {
 	                branchUrl: branchUrl,
-	                currentVersion: currentVersion,
 	            },
 	            success: function(data) {
 	                if (data == "SUCCESS") {

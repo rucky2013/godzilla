@@ -14,4 +14,10 @@ public class Application {
 			return "";
 		};
 	};
+	protected static ThreadLocal<String> svnVersionThreadLocal = 
+			new ThreadLocal<String>() {
+		protected String initialValue() {
+			return "";
+		};
+	};
 }
