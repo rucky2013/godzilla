@@ -17,7 +17,7 @@ public interface MvnService extends Constant{
 	 * @param projectCode
 	 * @param profile
 	 */
-	ReturnCodeEnum doDeploy(String srcUrl, String projectCode, String profile);
+	ReturnCodeEnum doDeploy(String srcUrl, String projectCode, String profile, String parentVersion);
 	
 	/**
 	 * 部署项目进行进度百分比

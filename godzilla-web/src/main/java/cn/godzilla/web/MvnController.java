@@ -19,6 +19,7 @@ import cn.godzilla.common.ReturnCodeEnum;
 import cn.godzilla.common.StringUtil;
 import cn.godzilla.service.ClientConfigService;
 import cn.godzilla.service.MvnService;
+import cn.godzilla.service.OperateLogService;
 
 @Component
 @RequestMapping("/mvn")
@@ -30,6 +31,8 @@ public class MvnController extends GodzillaApplication{
 	private ClientConfigService clientConfigService;
 	@Autowired
 	private MvnService mvnService;
+	@Autowired
+	private OperateLogService operateLogService;
 	/**
 	 * 部署
 	 * 源码路径/项目名/环境类型/
@@ -43,19 +46,23 @@ public class MvnController extends GodzillaApplication{
 
 		logger.debug("*****MvnController.deploy*****");
 		String srcUrl = StringUtil.getReqPrameter(request, "srcUrl");
+		String parentVersion = StringUtil.getReqPrameter(request, "parentVersion", "");
 		
-		ReturnCodeEnum deployReturn = mvnService.doDeploy(srcUrl, projectCode, profile);
+		ReturnCodeEnum deployReturn = mvnService.doDeploy(srcUrl, projectCode, profile, parentVersion);
 		
 		if(deployReturn == ReturnCodeEnum.OK_MVNDEPLOY) {
+			operateLogService.addOperateLog(super.getUser().getUserName(), projectCode, profile, DEPLOY, SUCCESS, ReturnCodeEnum.OK_MVNDEPLOY.getReturnMsg());
 			return SUCCESS;
 		} else if(deployReturn == ReturnCodeEnum.NO_MVNDEPLOY) {
-			
+			operateLogService.addOperateLog(super.getUser().getUserName(), projectCode, profile, DEPLOY, FAILURE, ReturnCodeEnum.NO_MVNDEPLOY.getReturnMsg());
+			return FAILURE;
 		} else if(deployReturn == ReturnCodeEnum.NO_CHANGEPOM) {
+			operateLogService.addOperateLog(super.getUser().getUserName(), projectCode, profile, DEPLOY, FAILURE, ReturnCodeEnum.NO_CHANGEPOM.getReturnMsg());
 			return FAILURE;
 		} else {
+			operateLogService.addOperateLog(super.getUser().getUserName(), projectCode, profile, DEPLOY, FAILURE, FAILURE);
 			return FAILURE;
 		}
-		return FAILURE;
 	}
 	
 	@RequestMapping(value="/{sid}/{projectCode}/{profile}/process", method=RequestMethod.POST)

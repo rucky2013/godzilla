@@ -22,5 +22,5 @@ public interface PropConfigProviderService extends Constant{
 	     * @throws DocumentException 
 	     * @throws Exception 
 	     */
-	    public RpcResult propToPom(String project_code, String srcUrl, String profile) throws DocumentException, IOException, Exception;
+	    public RpcResult propToPom(String project_code, String srcUrl, String profile, String parentVersion) throws DocumentException, IOException, Exception;
 }

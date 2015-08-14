@@ -65,7 +65,7 @@
                      	<tr>
                         <td>${log.executeTime?string("yyyy-MM-dd HH:mm:ss")}</td>
                         <td>${log.projectCode}</td>
-                        <td>${log.operateCode}</td>
+                        <td>${log.operation}</td>
                         <td class="fail">${log.executeResult}</td>
                         <td>${log.resultInfo}</td>
                       </tr>

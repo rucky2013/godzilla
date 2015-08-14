@@ -28,7 +28,7 @@ public class BaseShellCommand extends Application{
 			
 		}
 		System.out.println(command);
-
+		
 		Runtime rt = Runtime.getRuntime();
 		Process p = null;
 		try {

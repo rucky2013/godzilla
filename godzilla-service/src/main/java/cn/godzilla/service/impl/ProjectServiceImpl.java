@@ -105,4 +105,10 @@ public class ProjectServiceImpl extends GodzillaApplication implements ProjectSe
 		return index>0;
 	}
 
+	@Override
+	public List<Project> queryProjectsByUsername(String username) {
+		List<Project> projects = dao.queryProjectsByUsername(username);
+		return projects;
+	}
+
 }

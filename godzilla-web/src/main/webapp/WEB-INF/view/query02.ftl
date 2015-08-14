@@ -67,12 +67,9 @@ window.onload=function(){
                   		</select>
                 	<label>环境：</label>
                 	<select name="selectedProfile">
+                		<option value="" selected="selected">All</option>
                 		<#list profileList?keys as key>
-                			<#if key == selectedProfile!'ALL'>
-							  <option value="${profileList[key]}" selected="selected">${key}</option>
-							<#else>
-							  <option value="${profileList[key]}">${key}</option>
-							</#if>  
+							<option value="${profileList[key]}">${key}</option>
                     	</#list>
               		</select>
               		

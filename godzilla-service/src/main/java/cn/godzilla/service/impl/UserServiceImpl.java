@@ -80,6 +80,8 @@ public class UserServiceImpl extends GodzillaApplication implements UserService{
 	
 	private void onLogin(String username, String password, String newsid) {
 		
+		//更新user login lasttime
+		userMapper.updateLogintimeByUsername(username);
 		User user = userMapper.queryUserByUsername(username);
 		List<Project> projects = projectMapper.queryProjectsByUsername(username);
 		

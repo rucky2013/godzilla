@@ -27,5 +27,7 @@ public interface UserMapper {
 	int insertUser(User user);
 
 	List<User> queryAllUser();
+
+	void updateLogintimeByUsername(String username);
 	
 }

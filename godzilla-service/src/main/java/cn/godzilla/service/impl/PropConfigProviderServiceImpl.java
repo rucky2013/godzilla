@@ -8,6 +8,7 @@ import java.util.Map;
 import org.dom4j.DocumentException;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import cn.godzilla.common.StringUtil;
 import cn.godzilla.common.xml.XmlUtil;
 import cn.godzilla.dao.ClientConfigMapper;
 import cn.godzilla.dao.PropConfigMapper;
@@ -24,7 +25,7 @@ public class PropConfigProviderServiceImpl implements PropConfigProviderService 
 	private ClientConfigMapper clientConfigMapper;
 	
 	@Override
-	public RpcResult propToPom(String project_code, String srcUrl, String profile) throws DocumentException, IOException,  Exception {
+	public RpcResult propToPom(String project_code, String srcUrl, String profile, String parentVersion) throws DocumentException, IOException,  Exception {
 		/**
 		 * 1.get pom.xml path
 		 */
@@ -35,7 +36,7 @@ public class PropConfigProviderServiceImpl implements PropConfigProviderService 
 			/**
 			 * 2.get propconfigs from DB
 			 */
-			String parentVersion = this.getParentversionByProjectcodeAndProfile(project_code, profile);
+			parentVersion = StringUtil.isEmpty(parentVersion)?DEFAULT_VERSION_PARENTPOM:parentVersion;
 			List<PropConfig> propconfigs = this.getPropConfigsByProjectcodeAndProfile(project_code, profile);
 			/**
 			 * 3.save propconfigs cover pom.xml
@@ -77,7 +78,7 @@ public class PropConfigProviderServiceImpl implements PropConfigProviderService 
 	 */
 	private String getParentversionByProjectcodeAndProfile(String project_code, String profile) {
 		
-		return VERSION_PARENTPOM;
+		return DEFAULT_VERSION_PARENTPOM;
 	}
 
 	public List<PropConfig> getPropConfigsByProjectcodeAndProfile(String project_code, String profile) {

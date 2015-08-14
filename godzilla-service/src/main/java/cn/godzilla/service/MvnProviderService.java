@@ -15,6 +15,6 @@ public interface MvnProviderService extends Constant{
 	 * @param projectCode
 	 * @param profile
 	 */
-	public RpcResult deployProject(String username, String srUrl, String projectCode, String profile, String IP) ;
+	public RpcResult mvnDeploy(String str, String PROJECT_NAME, String projectEnv, String USER_NAME);
 	
 }

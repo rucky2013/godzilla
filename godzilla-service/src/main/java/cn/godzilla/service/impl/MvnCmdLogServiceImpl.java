@@ -26,6 +26,16 @@ public class MvnCmdLogServiceImpl implements MvnCmdLogService {
 		
 		return dao.insertSelective(record);
 	}
+	@Override
+	public int addMvnCmdLog(String username, String projectCode, String profile, String commands, String resultInfo) {
+		MvnCmdLog record = new MvnCmdLog();
+		record.setUserName(username);
+		record.setProjectCode(projectCode);
+		record.setProfile(profile);
+		record.setCommands(commands);
+		record.setResultInfo(resultInfo);
+		return dao.insertSelective(record);
+	}
 
 	@Override
 	public List<MvnCmdLog> queryList() {

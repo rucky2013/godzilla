@@ -69,7 +69,7 @@ public enum ReturnCodeEnum {
 	}
 	
 	public String getReturnMsg() {
-		return returnMsg;
+		return returnCode+":"+returnMsg;
 	}
 	
 	public static ReturnCodeEnum getByReturnCode(String returnCode) {

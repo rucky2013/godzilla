@@ -40,4 +40,5 @@ public interface ProjectService{
 	 */
 	public boolean refreshProjectVersion(String projectCode, String profile);
 
+	public List<Project> queryProjectsByUsername(String username);
 }

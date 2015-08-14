@@ -26,7 +26,15 @@ public class SvnCmdLogServiceImpl implements SvnCmdLogService{
 
 		return dao.insertSelective(record);
 	}
-
+	@Override
+	public int addSvnCommandLog(String username, String repositoryUrl, String command, String realName) {
+		SvnCmdLog record = new SvnCmdLog();
+		record.setUserName(username);
+		record.setRepositoryUrl(repositoryUrl);
+		record.setCommands(command);
+		record.setRealName(realName);
+		return dao.insertSelective(record);
+	}
 	@Override
 	public List<SvnCmdLog> queryList() {
 

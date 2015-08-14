@@ -12,4 +12,7 @@ public interface SvnCmdLogService{
     
     public List<SvnCmdLog> queryList();
 
+	int addSvnCommandLog(String username, String repositoryUrl, String command, String realName);
+
+
 }

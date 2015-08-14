@@ -169,7 +169,6 @@ public class PropConfigServiceImpl implements PropConfigService {
 	@Override
 	public Map<String, String> queryAllProfile() {
 		Map<String, String> profileMap = new HashMap<String, String>();
-		profileMap.put("ALL","");
 		profileMap.put("TEST","TEST");
 		profileMap.put("PRODUCT","PRODUCT");
 		profileMap.put("QUASIPRODUCT","QUASIPRODUCT");
@@ -298,7 +297,7 @@ public class PropConfigServiceImpl implements PropConfigService {
 			return dbReturn1>0&&dbReturn2>0
 					?ReturnCodeEnum.getByReturnCode(OK_VERIFYPROP)
 							:ReturnCodeEnum.getByReturnCode(NO_VERIFYPROP);
-		} else if (NOTYET_VERIFY_STATUS.equals(status)) {
+		} else if (STOP_VERIFY_STATUS.equals(status)) {
 			/**
 			 * 更新所有 待审核配置状态
 			 */

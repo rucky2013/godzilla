@@ -10,13 +10,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import cn.godzilla.model.ClientConfig;
 import cn.godzilla.service.ClientConfigService;
+import cn.godzilla.service.OperateLogService;
 import cn.godzilla.svn.BaseShellCommand;
-import cn.godzilla.web.util.PropertiesUtil;
 
 @Controller
 @RequestMapping(value = "tomcat")
@@ -26,7 +25,8 @@ public class TomcatController extends GodzillaApplication{
 
 	@Autowired
 	private ClientConfigService clientConfigService;
-	
+	@Autowired
+	private OperateLogService operateLogService;
 	@RequestMapping(value = "/{sid}/{projectCode}/{profile}/restart", method = RequestMethod.GET)
 	@ResponseBody
 	public Object restart(@PathVariable String sid, @PathVariable String projectCode,@PathVariable String profile, HttpServletRequest request, HttpServletResponse response) {
@@ -44,10 +44,18 @@ public class TomcatController extends GodzillaApplication{
 			clientIp = "10.100.142.65";
 		}
 		String str = "/home/godzilla/gzl/shell/server/restart_server.sh " + clientIp + " /home/godzilla/tomcat-godzilla";
-		boolean flag = command.execute(str, super.getUser().getUserName());
+		boolean flag = false;
+		if("godzilla".equals(projectCode)) {
+			flag = true;
+		} else {
+			flag = command.execute(str, super.getUser().getUserName());
+		}
+		
 		if(flag) {
+			operateLogService.addOperateLog(super.getUser().getUserName(), projectCode, profile, TOMCATRESTART, SUCCESS, "tomcat重启SUCCESS");
 			return SUCCESS;
 		} else {
+			operateLogService.addOperateLog(super.getUser().getUserName(), projectCode, profile, TOMCATRESTART, FAILURE, "tomcat重启FAILURE");
 			return FAILURE;
 		}
 	}

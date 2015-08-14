@@ -1,7 +1,5 @@
 package cn.godzilla.web;
 
-import java.util.List;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -16,8 +14,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import cn.godzilla.common.Constant;
-import cn.godzilla.model.ProjPrivate;
-import cn.godzilla.model.SvnBranchConfig;
+import cn.godzilla.common.ReturnCodeEnum;
+import cn.godzilla.service.OperateLogService;
 import cn.godzilla.service.ProjPrivateService;
 import cn.godzilla.service.SvnBranchConfigService;
 
@@ -33,6 +31,8 @@ public class SvnBranchConfigController extends GodzillaApplication implements Co
 	@Autowired
 	ProjPrivateService projPrivateService;
 
+	@Autowired
+	OperateLogService operateLogService;
 	/**
 	 * 分支设置
 	 * @param sid
@@ -57,9 +57,11 @@ public class SvnBranchConfigController extends GodzillaApplication implements Co
 		boolean flag = svnBranchConfigService.addNewBranch(projectCode, profile, branchUrl);
 		
 		if(flag){
+			operateLogService.addOperateLog(super.getUser().getUserName(), projectCode, profile, BRANCHADD, SUCCESS, "添加分支设置SUCCESS");
 			logger.info("************添加分支设置End**************");
 			return SUCCESS;
 		}else{
+			operateLogService.addOperateLog(super.getUser().getUserName(), projectCode, profile, BRANCHADD, FAILURE, "添加分支设置FAILURE");
 			logger.error("************添加分支设置Error**************");
 			return FAILURE;
 		}
@@ -90,9 +92,11 @@ public class SvnBranchConfigController extends GodzillaApplication implements Co
 		boolean flag = svnBranchConfigService.editBranch(projectCode, profile, id, branchUrl);
 		
 		if(flag){
+			operateLogService.addOperateLog(super.getUser().getUserName(), projectCode, profile, BRANCHEDIT, SUCCESS, "分支编辑 保存SUCCESS");
 			logger.info("************分支编辑 保存End**************");
 			return SUCCESS;
 		}else{
+			operateLogService.addOperateLog(super.getUser().getUserName(), projectCode, profile, BRANCHEDIT, FAILURE, "分支编辑 保存FAILURE");
 			logger.error("************分支编辑 保存Error**************");
 			return FAILURE;
 		}

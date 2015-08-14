@@ -81,6 +81,10 @@
                          		  <input id="username" type="text" name="username" placeholder="输入内容" />        
                          </div>
                          <div class="user_con clearfix">
+                         		  <label>部&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;门：</label>
+                         		  <input id="departname" type="text" name="departname" placeholder="输入部门" />        
+                         </div>
+                         <div class="user_con clearfix">
                          		  <label>密&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;码：</label>
                          		  <input id="password" type="text" name="password" placeholder="输入密码" />        
                          </div>
@@ -107,6 +111,7 @@
 	</div>
 <script src="/${basePath}/js/jquery-1.8.2.min.js"></script>
 <script src="/${basePath}/js/common.js"></script>
+<script src="/${basePath}/js/md5.js"></script>
 
 <script>
 $(document).ready(function() {
@@ -123,7 +128,8 @@ $(document).ready(function() {
 		var username = $("#username").val();
 		var password = $("#password").val();
 		var confirm = $("#confirm").val();
-		
+		password = hex_md5(password);
+		confirm = hex_md5(confirm);
 		$.ajax({
 	            type: "GET",
 	            url: "/${basePath}/user/${sid}/addUser.do",

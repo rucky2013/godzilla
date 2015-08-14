@@ -60,12 +60,9 @@
                   		</select>
                 	<label>环境：</label>
                 	<select name="selectedProfile">
+                		<option value="" selected="selected">All</option>
                 		<#list profileList?keys as key>
-                			<#if key == selectedProfile!'ALL'>
-							  <option value="${profileList[key]}" selected="selected">${key}</option>
-							<#else>
-							  <option value="${profileList[key]}">${key}</option>
-							</#if>  
+							<option value="${profileList[key]}">${key}</option>
                     	</#list>
               		</select>
               		
@@ -119,7 +116,7 @@
 	                    <td class="operation">
 	                    	<#if prop.status == 0>
 		                    	<a class="verify_btn" href="javascript:;" 
-		                    	value1="/${basePath}/prop/${sid}/${prop.createBy}/${prop.projectCode}/${prop.profile}/verifyProp.do">审核</a>
+		                    	value1="/${basePath}/prop/${sid}/${prop.projectCode}/${prop.createBy}/${prop.profile}/verifyProp.do">审核</a>
 							<#elseif prop.status == 1>
 							<#elseif prop.status == 2>
 							</#if>  

@@ -4,9 +4,11 @@ import java.io.Serializable;
 import java.util.Date;
 
 public class OperateLog implements Serializable{
+	
     /**
 	 * 
 	 */
+	
 	private static final long serialVersionUID = 1L;
 
 	private Long id;
@@ -16,6 +18,8 @@ public class OperateLog implements Serializable{
     private String projectCode;
 
     private String profile;
+    
+    private String operation;
 
     private Integer operateCode;
 
@@ -25,7 +29,15 @@ public class OperateLog implements Serializable{
 
     private String resultInfo;
 
-    public Long getId() {
+    public String getOperation() {
+		return operation;
+	}
+
+	public void setOperation(String operation) {
+		this.operation = operation;
+	}
+
+	public Long getId() {
         return id;
     }
 

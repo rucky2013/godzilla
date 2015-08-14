@@ -28,7 +28,7 @@ public class ConsumerMain {
 		final PropConfigProviderService reference2 = rpcFactory.getReference(PropConfigProviderService.class, serverIp);
 		RpcResult result = null;
 		try {
-			 result =  reference2.propToPom("godzilla", "F:/yixin_fso_app/godzilla", "TEST");
+			 result =  reference2.propToPom("godzilla", "F:/yixin_fso_app/godzilla", "TEST", "");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

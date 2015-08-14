@@ -13,5 +13,5 @@ public interface OperateLogMapper {
     
     List<OperateLog> queryList(Map<String, String> map);
     
-    List<OperateLog> queryAll(Map<String, Long> map);
+    List<OperateLog> queryAll(Map<String, Object> map);
 }

@@ -14,6 +14,7 @@ import cn.godzilla.model.SvnBranchConfig;
 import cn.godzilla.service.ClientConfigService;
 import cn.godzilla.service.ProjectService;
 import cn.godzilla.service.SvnBranchConfigService;
+import cn.godzilla.service.SvnCmdLogService;
 import cn.godzilla.service.SvnService;
 import cn.godzilla.svn.BaseShellCommand;
 import cn.godzilla.web.GodzillaApplication;
@@ -28,13 +29,12 @@ public class SvnServiceImpl extends GodzillaApplication implements SvnService {
 	private SvnBranchConfigService svnBranchConfigService;
 	@Autowired
 	private ClientConfigService clientConfigService;
-	
+	@Autowired
+	private SvnCmdLogService svnCmdLogService;
 	@Override
 	public ReturnCodeEnum getVersion(String trunkPath, String projectCode, String profile) {
 		ClientConfig clientConfig = clientConfigService.queryDetail(projectCode, profile) ;
 		String clientIp = clientConfig.getRemoteIp();
-		Project project = projectService.qureyByProCode(projectCode);
-		String localPath="";
 		String branches = "";
 		boolean flag = false;
 		
@@ -49,6 +49,8 @@ public class SvnServiceImpl extends GodzillaApplication implements SvnService {
 			logger.error(e);
 			e.printStackTrace();
 		}
+		String username = super.getUser().getUserName();
+		svnCmdLogService.addSvnCommandLog(username, trunkPath, str, username);
 		//shell返回值 ：通过shell 最后一行 echo 
 		String shellReturn = shellReturnThreadLocal.get();
 		//如果合并成功  1.shell执行返回true 2.shell返回值为 0 
@@ -75,15 +77,17 @@ public class SvnServiceImpl extends GodzillaApplication implements SvnService {
 		for(SvnBranchConfig sbc: svnBranchConfigs) {
 			branches = sbc.getBranchUrl() + ",";
 		}
-		if(branches.length()>1) {
+		if("".equals(branches)) {
+			branches = "empty";
+		} else {
 			branches = branches.substring(0, branches.length()-1);
 		}
 		String callbackUrl = "http://localhost:8080/process-callback.do";
 		
 		String operator = super.getUser().getUserName();
-		
+		String str="";
 		try {
-			String str = "sh /home/godzilla/gzl/shell/server/svn_server_wl.sh commit "+trunkPath+" '"+branches+"' "+" "+callbackUrl+" "+projectCode+" "+ operator +" "+clientIp ;
+			str = "sh /home/godzilla/gzl/shell/server/svn_server_wl.sh commit "+trunkPath+" '"+branches+"' "+" "+callbackUrl+" "+projectCode+" "+ operator +" "+clientIp ;
 			BaseShellCommand command = new BaseShellCommand();
 			flag = command.execute(str, super.getUser().getUserName());
 			
@@ -94,6 +98,9 @@ public class SvnServiceImpl extends GodzillaApplication implements SvnService {
 		//shell返回值 ：通过shell 最后一行 echo 
 		String shellReturn = shellReturnThreadLocal.get();
 		//如果合并成功  1.shell执行返回true 2.shell返回值为 0 
+		
+		String username = super.getUser().getUserName();
+		svnCmdLogService.addSvnCommandLog(username, trunkPath, str, username);
 		
 		if(flag&&"0".equals(shellReturn)){
 			//成功则 1.删除  当前分支

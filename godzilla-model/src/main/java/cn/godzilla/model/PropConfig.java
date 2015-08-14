@@ -34,6 +34,7 @@ public class PropConfig implements Serializable{
      * 0:未审核
      * 1:通过
      * 2:未通过
+     * 3:被修改替换
      */
     private Integer status;
 

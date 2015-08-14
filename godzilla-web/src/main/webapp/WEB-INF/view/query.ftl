@@ -4,9 +4,6 @@
 <link type="text/css" href="/${basePath}/css/meta.css" rel="stylesheet"/>
 </head>
 <body id="query">
-<input type="hidden" name="projectCode" id="projectCode" value="${projectCode}" />
-<input type="hidden" name="sid" id="sid" value="${sid}" />
-
 		<div class="main">
 		<div class="head  clearfix">
         	<h1><a class="logo" href="/${basePath}/user/${sid}/home.do" title="回到首页">哥斯拉</a></h1>
@@ -198,13 +195,11 @@ $(function(){
 		var p1json = JSON.stringify(p1.container);
 		var p2json = JSON.stringify(p2.container);
 		var p3json = JSON.stringify(p3.container);
-		var sid = $("#sid").val();
-		var projectCode = $("#projectCode").val();
 		
 		//alert(encodeURI(p1Json));
 		$.ajax({ 
 		 	type: 'POST', 
-			url: '/${basePath}/prop/' + sid + '/' + projectCode + '/updateProp.do',
+			url: '/${basePath}/prop/${sid}/${projectCode}/updateProp.do',
 			data: {
 				p1:p1json,
 				p2:p2json,
@@ -214,7 +209,7 @@ $(function(){
 				if(data == 'SUCCESS') {
 					alert("SUCCESS");
 					//重新进入查询页
-					window.location.href = '/${basePath}/prop/' + sid + '/' + projectCode + '/updateProp.do';
+					window.location.href = "/${basePath}/project/${sid}/${projectCode}/TEST/projectConfig.do"
 				} else {
 					alert("FAILURE");
 				}

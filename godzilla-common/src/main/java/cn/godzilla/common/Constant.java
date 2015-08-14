@@ -5,12 +5,29 @@ public interface Constant {
 	public final int TRUE = 1;
 	public final int FALSE = 0 ;
 	
-	public final String VERSION_PARENTPOM = "1.0.1-SNAPSHOT";
+	public final String DEFAULT_VERSION_PARENTPOM = "1.0.0-SNAPSHOT";
 	
 	public int RPC_DEFAULT_PORT = 8855;
 	public final String SUCCESS = "SUCCESS";
 	public final String FAILURE = "FAILURE";
 	public final String AUDITOR_TEXT = "审核通过";
+	
+	/**
+	 * log constant
+	 */
+	public final int SUCC = 1;
+	public final int FAIL = -2;
+	public final String DEPLOY = "deploy";
+	public final String SRCEDIT = "srcEdit";
+	public final String UPDATEPROP = "updateProp";
+	public final String VERIFYPROP = "verifyProp";
+	public final String BRANCHADD = "branchadd";
+	public final String BRANCHEDIT = "branchedit";
+	public final String SVNSTATUS = "svnstatus";
+	public final String SVNMERGE = "svnmerge";
+	public final String SVNCOMMIT = "svncommit";
+	public final String TOMCATRESTART = "tomcatrestart";
+	
 	
 	public final String NOTYET_VERIFY_STATUS = "0";//未审核
 	public final String OK_VERIFY_STATUS = "1";//审核通过

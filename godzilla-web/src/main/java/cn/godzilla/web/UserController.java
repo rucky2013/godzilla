@@ -114,7 +114,7 @@ public class UserController extends GodzillaApplication{
 	@RequestMapping(value="/{sid}/home", method=RequestMethod.GET)
 	public Object home(@PathVariable String sid, HttpServletRequest request, HttpServletResponse response) {
 		
-		List<Project> projects = projectService.queryAll();
+		List<Project> projects = projectService.queryProjectsByUsername(super.getUser().getUserName());
 		List<OperateLog> logs = operateLogService.queryAll(Long.MAX_VALUE);
 		if(logs.size()==0){
 			super.getUser().setLastOperation(null);
@@ -184,7 +184,7 @@ public class UserController extends GodzillaApplication{
 		String username = StringUtil.getReqPrameter(request, "username", "");
 		String password = StringUtil.getReqPrameter(request, "password", "");
 		String confirm = StringUtil.getReqPrameter(request, "confirm", "");
-		String departname = StringUtil.getReqPrameter(request, "confirm", "");
+		String departname = StringUtil.getReqPrameter(request, "departname", "");
 		
 		//password is md5 
 		ReturnCodeEnum returnEnum = userService.addUser(username, password, confirm, departname);

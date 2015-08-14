@@ -108,19 +108,9 @@
 								<tbody>
 									<tr>
 										<td width="80" class="paddingR0">部署操作：</td>
-										<td class="bg1"><span class="spanArrange"><a class="deploy" href="javacript:;" value1="${project.checkoutPath}" value2="QUASIPRODUCT" title="部署">部署</a></span><span class="spanUseAgain"><a href="#" class="restart" value2="QUASIPRODUCT" title="重新启动">重新启动</a></span></td>
-									</tr>
-									<tr>
-										<td class="paddingR0">SVN操作：</td>
-										<td class="bg1"><span class="spanViewState"><a class="show" href="javacript:;" title="查看状态">查看状态</a></span> <span class="spanMerge"><a class="merge" href="javacript:;" title="合并代码">合并代码</a></span> <span class="spnSubmit"><a class="commit" href="javacript:;" title="提交主干">提交主干</a></span></td>
-									</tr>
-									<tr>
-										<td class="paddingR0">设置操作：</td>
-										<td class="bg1"><span class="spanSoureCode"><a class="src_a" href="javacript:;" title="源代码设置">源代码设置</a></span> <span class="spanBranch"><a class="branch_a" href="javacript:;" title="分之设置">分支设置</a></span></td>
-									</tr>
-									<tr>
-										<td class="paddingR0">配置管理：</td>
-										<td class="bg1"><span class="spanAdd"><a class="prop_btn" value1="add" href="/${basePath}/prop/${sid}/${projectCode}/updateProp.do" title="配置添加">配置添加</a></span><span class="spanQuery"><a class="prop_btn" value1="query" href="/${basePath}/prop/${sid}/${projectCode}/queryProp.do" title="配置查询">配置查询</a></span><span class="spanExamine"><a class="prop_btn" value1="verify" href="/${basePath}/prop/${sid}/${projectCode}/verifyProp.do" title="配置审核">配置审核</a></span></td>
+										<td class="bg1">
+										<span class="spanArrange"><a class="deploy" href="javacript:;" value1="${project.checkoutPath}" value2="QUASIPRODUCT" title="打包">打包</a></span>
+										</td>
 									</tr>
 								</tbody>
 							</table>
@@ -168,10 +158,10 @@
 						</tr>
 						<#else>
 						<tr>
-							<td width="216"><small>${project.repositoryUrl}</small></td>
-							<td width="216"><small>${project.checkoutPath}</small></td>
-							<td>${project.version}</td>
-							<td>${clientConfig.deployVersion}</td>
+							<td width="216"><small>${project.repositoryUrl!''}</small></td>
+							<td width="216"><small>${project.checkoutPath!''}</small></td>
+							<td>${project.version!''}</td>
+							<td>${clientConfig.deployVersion!''}</td>
 						</tr>
 						</#if>
 
@@ -192,8 +182,8 @@
 						<#list svnBranchConfigs as branch>
 						<tr>
 							<td width="310">${branch.branchUrl}</td>
-							<td>${branch.createBy}</td>
-							<td>${branch.currentVersion}</td>
+							<td>${branch.createBy!''}</td>
+							<td>${branch.currentVersion!''}</td>
 							<td>${branch.createTime?string("yyyy-MM-dd HH:mm:ss")}</td>
 							<td><a class="edit_branch" value1="${branch.id}" href="javascript:viod(0);" title="编辑">编辑</a></td>
 						</tr>
@@ -203,9 +193,9 @@
 				<h4 class="title">部署日志</h4>
 				<div id="recordTolls">
 					<ul>
-						<li class="l"><span>部署状态：<!--$/{projStatus.currentStatus}--></span>
+						<li class="l"><span>部署状态：</span>
 						<span class="progress"><strong id="process" style="width: 0px"></strong></span>
-						<span id="processText"> <!--$/{projStatus.processRate}-->0%
+						<span id="processText">0%
 						</span></li>
 						<li class="r sp02"><a href="javascript:;" class="r tools1"><span class="edit">比较部署包信息</span></a><a href="javascript:;" class="r tools2"><span class="edit">比较部署包信息</span></a><a href="javascript:;" class="r tools3"><span class="edit">比较部署包信息</span></a></li>
 					</ul>
@@ -224,7 +214,7 @@
 							<tr>
 								<td>${log.executeTime?string("yyyy-MM-dd HH:mm:ss")}</td>
 								<td>${log.userName}</td>
-								<td>${log.operateCode}</td>
+								<td>${log.operation}</td>
 								<td class="fail">${log.executeResult}</td>
 								<td>${log.resultInfo}</td>
 							</tr>
@@ -263,10 +253,10 @@
 				<div class="shadow_con">
 
 					<div class="user_con clearfix">
-						<label>源代码svn路径：</label> <input id="repositoryUrl" type="text" name="repositoryUrl" value="${project.repositoryUrl}" />
+						<label>源代码svn路径：</label> <input id="repositoryUrl" type="text" name="repositoryUrl" value="${project.repositoryUrl!''}" />
 					</div>
 					<div class="user_con clearfix">
-						<label>源代码存放路径：</label> <input id="checkoutPath" type="text" name="checkoutPath" value="${project.checkoutPath}" />
+						<label>源代码存放路径：</label> <input id="checkoutPath" type="text" name="checkoutPath" value="${project.checkoutPath!''}" />
 					</div>
 					<input id="editSrcBtn" type="button" class="shadow_btn mar150_l" value="修改" />
 				</div>
@@ -283,6 +273,21 @@
 					<input id="addBranchBtn" type="button" class="shadow_btn mar150_l" value="添加" />
 				</div>
 			</div>
+			
+			<div id="shadow_box4" class="shadow_box" style="display:none">
+				<h5>
+					部署版本号设置-><span id="close4" class="close">关闭</span>
+				</h5>
+				<div class="shadow_con">
+					<input type="hidden" id="value11" name="value11" value="" />
+					<input type="hidden" id="value22" name="value22" value="" />
+					<div class="user_con clearfix">
+						<label>版本号：</label> <input id="parentVersion" type="text" name="parentVersion" value="1.0.0-SNAPSHOT" />
+					</div>
+					<input id="deployBtn" type="button" class="shadow_btn mar150_l" value="部署" />
+				</div>
+			</div>
+			
 		</div>
 
 	</div>
@@ -369,11 +374,19 @@
 			window.location.href = '/${basePath}/user/logout/${sid}.do';
 		});
 		
-		// 部署
-	    $(".deploy").on("click", function() {
+		//部署弹出框  输入版本
+		$(".deploy").on("click", function() {
 	        var value1 = $(this).attr("value1");
+	        $("#value11").val(value1);
 	        var profile = $(this).attr("value2");
-	
+	        $("#value22").val(profile);
+	        showWindow(4);
+		})	       
+		// 部署
+	    $("#deployBtn").on("click", function() {
+	        var value1 = $("#value11").val();
+	        var profile =  $("#value22").val();
+			
 	        $.ajax({
 	            type: "POST",
 	            url: "/${basePath}/mvn/${sid}/${projectCode}/" + profile + "/deploy.do",
@@ -403,6 +416,9 @@
 	    });
 	    // 重新启动
 	    $('.restart').click(function() {
+	    	if (!confirm("是否确定重新启动"))  {  
+	    		return ;
+	    	}
 	        var profile = $(this).attr("value2");
 	        $.ajax({
 	            type: "GET",
@@ -447,6 +463,9 @@
 	
 	    // 分支保存 修改分支
 	    $(".save_branch").live("click", function() {
+	    	if (!confirm("是否确定提交修改分支"))  {  
+	    		return ;
+	    	}
 	        var branchId = $(this).attr("value1");
 	        var branchUrl = "";
 	        $(this).parent().parent().find("td").each(function(index, element) {
@@ -536,6 +555,9 @@
 	    });
 	    // svn 合并分支
 	    $(".merge").on("click", function() {
+	    	if (!confirm("是否确定合并分支"))  {  
+	    		return ;
+	    	}
 	        $.ajax({
 	            type: "GET",
 	            url: "/${basePath}/svn/${sid}/${projectCode}/${profile}/merge.do",
@@ -551,6 +573,9 @@
 	    });
 	    // svn 提交主干
 	    $(".commit").on("click", function() {
+	    	if (!confirm("是否确定提交主干"))  {  
+	    		return ;
+	    	}
 	        $.ajax({
 	            type: "GET",
 	            url: "/${basePath}/svn/${sid}/${projectCode}/${profile}/commit.do",

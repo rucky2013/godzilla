@@ -114,5 +114,11 @@
     from t_g_user 
     where user_name = #{username} and status = 1
   </select>
-  
+  <update id="updateLogintimeByUsername"  parameterType="string" >
+  	update t_g_user set 
+  	login_time = now(),
+  	last_login_time = now()
+  	where user_name = #{user_name} 
+  	and status = 1
+  </update>
 </mapper>

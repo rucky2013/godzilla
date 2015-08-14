@@ -19,6 +19,7 @@ import cn.godzilla.common.ReturnCodeEnum;
 import cn.godzilla.common.StringUtil;
 import cn.godzilla.model.Project;
 import cn.godzilla.model.PropConfig;
+import cn.godzilla.service.OperateLogService;
 import cn.godzilla.service.ProjectService;
 import cn.godzilla.service.PropConfigService;
 import cn.godzilla.service.UserService;
@@ -39,6 +40,8 @@ public class PropController extends GodzillaApplication implements Constant{
 	PropConfigService propConfigService;
 	@Autowired
 	ProjectService projectService;
+	@Autowired
+	OperateLogService operateLogService;
 	/**
 	 * 进入配置修改页
 	 * 
@@ -85,8 +88,10 @@ public class PropController extends GodzillaApplication implements Constant{
 		ReturnCodeEnum updateReturn = propConfigService.addNotVerifyProp(projectCode, propTest, propQuasiProduct, propProduct); 
 		
 		if(updateReturn == ReturnCodeEnum.OK_ADDUPDATEPROP) {
+			operateLogService.addOperateLog(super.getUser().getUserName(), projectCode, "", UPDATEPROP, SUCCESS, ReturnCodeEnum.OK_ADDUPDATEPROP.getReturnMsg());
 			return SUCCESS;
 		}  else if(updateReturn == ReturnCodeEnum.NO_ADDUPDATEPROP) {
+			operateLogService.addOperateLog(super.getUser().getUserName(), projectCode, "", UPDATEPROP, FAILURE, ReturnCodeEnum.NO_ADDUPDATEPROP.getReturnMsg());
 			return FAILURE;
 		}
 		return FAILURE;
@@ -160,7 +165,7 @@ public class PropController extends GodzillaApplication implements Constant{
 	 * @param request
 	 * @return
 	 */
-	@RequestMapping(value="/{sid}/{createBy}/{projectCode}/{profile}/verifyProp" , method=RequestMethod.GET) 
+	@RequestMapping(value="/{sid}/{projectCode}/{createBy}/{profile}/verifyProp" , method=RequestMethod.GET) 
 	public Object verifyPropDetailPage(@PathVariable String sid, @PathVariable String createBy, @PathVariable String projectCode, @PathVariable String profile, HttpServletRequest request) {
 		
 		/*List<PropConfig> propTestList = propConfigService.getPropConfigsByProjectcodeAndProfile(projectCode, TEST_PROFILE);
@@ -198,7 +203,16 @@ public class PropController extends GodzillaApplication implements Constant{
 		return "query_textarea";
 	}
 	
-	@RequestMapping(value="/{sid}/{createBy}/{projectCode}/{profile}/verifyProp" , method=RequestMethod.POST) 
+	/**
+	 * 审核
+	 * @param sid
+	 * @param createBy
+	 * @param projectCode
+	 * @param profile
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping(value="/{sid}/{projectCode}/{createBy}/{profile}/verifyProp" , method=RequestMethod.POST) 
 	@ResponseBody
 	public Object verifyProp(@PathVariable String sid, @PathVariable String createBy, @PathVariable String projectCode, @PathVariable String profile, HttpServletRequest request) {
 		String status = StringUtil.getReqPrameter(request, "status", "0");
@@ -206,10 +220,13 @@ public class PropController extends GodzillaApplication implements Constant{
 		
 		ReturnCodeEnum updateReturn = propConfigService.verifyPropByCreatebyAndProjectcodeAndProfile(createBy, projectCode, profile, status, auditor_text); 
 		if(updateReturn == ReturnCodeEnum.OK_VERIFYPROP) {
+			operateLogService.addOperateLog(super.getUser().getUserName(), projectCode, profile, VERIFYPROP, SUCCESS, ReturnCodeEnum.OK_VERIFYPROP.getReturnMsg());
 			return SUCCESS;
 		} else if(updateReturn == ReturnCodeEnum.NO_VERIFYPROP){
+			operateLogService.addOperateLog(super.getUser().getUserName(), projectCode, profile, VERIFYPROP, FAILURE, ReturnCodeEnum.NO_VERIFYPROP.getReturnMsg());
 			return FAILURE;
 		}
+		operateLogService.addOperateLog(super.getUser().getUserName(), projectCode, profile, VERIFYPROP, FAILURE, FAILURE);
 		return FAILURE;	
 		
 	}

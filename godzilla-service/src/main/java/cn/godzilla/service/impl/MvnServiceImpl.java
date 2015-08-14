@@ -13,9 +13,11 @@ import cn.godzilla.common.ReturnCodeEnum;
 import cn.godzilla.model.ClientConfig;
 import cn.godzilla.model.Project;
 import cn.godzilla.model.RpcResult;
+import cn.godzilla.mvn.MvnBaseCommand;
 import cn.godzilla.rpc.api.RpcFactory;
 import cn.godzilla.rpc.main.Util;
 import cn.godzilla.service.ClientConfigService;
+import cn.godzilla.service.MvnCmdLogService;
 import cn.godzilla.service.MvnProviderService;
 import cn.godzilla.service.MvnService;
 import cn.godzilla.service.ProjectService;
@@ -34,6 +36,8 @@ public class MvnServiceImpl extends GodzillaApplication implements MvnService {
 	private ProjectService projectService;
 	@Autowired
 	private SvnService svnService;
+	@Autowired
+	private MvnCmdLogService mvnCmdLogService;
 	
 	private Map<String, PropConfigProviderService> propConfigProviderServices = 
 				new HashMap<String, PropConfigProviderService>();
@@ -41,7 +45,7 @@ public class MvnServiceImpl extends GodzillaApplication implements MvnService {
 			new HashMap<String, MvnProviderService>();
 	
 	@Override
-	public ReturnCodeEnum doDeploy(String srcUrl, String projectCode, String profile) {
+	public ReturnCodeEnum doDeploy(String srcUrl, String projectCode, String profile, String parentVersion) {
 		String sid = super.getSid();
 		String pencentkey = sid + "-" + projectCode + "-" + profile;
 		
@@ -81,7 +85,7 @@ public class MvnServiceImpl extends GodzillaApplication implements MvnService {
 		boolean flag1 = false;
 		try {
 			PropConfigProviderService propConfigProviderService = propConfigProviderServices.get(IP);
-			RpcResult result = propConfigProviderService.propToPom(projectCode, srcUrl, profile);
+			RpcResult result = propConfigProviderService.propToPom(projectCode, srcUrl, profile, parentVersion);
 			flag1 = result.getRpcCode().equals("0")?true:false;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -120,7 +124,7 @@ public class MvnServiceImpl extends GodzillaApplication implements MvnService {
 			try {
 				MvnProviderService mvnProviderService = mvnProviderServices.get(IP);
 				String username = GodzillaApplication.getUser().getUserName();
-				RpcResult result = mvnProviderService.deployProject(username, srcUrl, projectCode, profile, IP);
+				RpcResult result = this.deployProject(mvnProviderService, username, srcUrl, projectCode, profile, IP);
 				flag2 = result.getRpcCode().equals("0")?true:false;
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -138,6 +142,36 @@ public class MvnServiceImpl extends GodzillaApplication implements MvnService {
 			return ReturnCodeEnum.getByReturnCode(OK_MVNDEPLOY);
 		}
 		return ReturnCodeEnum.getByReturnCode(NO_MVNDEPLOY);
+	}
+	
+	public RpcResult deployProject(MvnProviderService mvnProviderService, String username, String srUrl, String projectCode, String profile, String IP) {
+		boolean flag2 = false;
+		RpcResult result = null;
+		String commands = "";
+		try {
+			String POM_PATH = srUrl + "/pom.xml";
+			String USER_NAME = username;
+			String PROJECT_NAME = projectCode;
+			
+			
+			String shell = SHELL_CLIENT_PATH.endsWith("/")
+							?(SHELL_CLIENT_PATH+ "godzilla_mvn.sh")
+									:(SHELL_CLIENT_PATH+"/" +"godzilla_mvn.sh");
+			String str = "sh "+shell+" deploy "+POM_PATH+" "+USER_NAME+" "+PROJECT_NAME+" "+ PROJECT_ENV ;
+			result = mvnProviderService.mvnDeploy(str, PROJECT_NAME, PROJECT_ENV, USER_NAME);
+			commands = str;
+			flag2 = result.getRpcCode().equals("0")?true:false;
+		} catch (Exception e) {
+			logger.error(e);
+			e.printStackTrace();
+			return RpcResult.create(FAILURE);
+		}
+		if(flag2) {
+			mvnCmdLogService.addMvnCmdLog(username, projectCode, profile, commands, "mvn deploy 执行成功");
+		} else {
+			mvnCmdLogService.addMvnCmdLog(username, projectCode, profile, commands, "mvn deploy 执行失败");
+		}
+		return result;
 	}
 	
 	private boolean updateDeployVersion(String projectCode, String profile) {
@@ -192,6 +226,8 @@ public class MvnServiceImpl extends GodzillaApplication implements MvnService {
 		
 		return percent;
 	}
+	
+	
 
 	
 }

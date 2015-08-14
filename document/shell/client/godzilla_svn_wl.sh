@@ -62,21 +62,31 @@ function common() {
 	# 1.清空 本地路径
 	#***
 	echo "1.清空 本地路径$BEGIN_STR"  
-	if [ -d $G_L_PATH ];then
-		echo "清除目录$G_L_PATH $BEGIN_STR" ;
+	if [ -d $G_PATH ];then
+		echo "清除目录$G_PATH $BEGIN_STR" ;
 		time=`date +%F-%H-%M-%S`
-		mv $G_PATH"/work" "$RECYCLE_PATH$time" 
-		mv $G_PATH"/conflict" "$RECYCLE_PATH$time" 
-		#if [ -d $G_L_PATH"/work" ];then
-		#	rm -rf $G_L_PATH"/work"
+		temp1=${G_PATH}"/work/"${PROJECT_NAME}
+		echo "temp1:${temp1}"
+		if [ -d ${temp1} ];then
+			echo "mv${temp1}"
+			mv ${temp1} "$RECYCLE_PATH$time" 
+		fi;
+		temp2=${G_PATH}"/conflict"
+		echo "temp2:${temp2}"
+		if [ -d ${temp2} ];then
+			echo "mv${temp2}"
+			mv ${temp2} "$RECYCLE_PATH$time" 
+		fi;
+		#if [ -d $G_PATH"/work" ];then
+		#	rm -rf $G_PATH"/work"
 		#fi;
 		#if [ -d PATH"/conflict" ];then
-		#	rm -rf $G_L_PATH"/conflict"
+		#	rm -rf $G_PATH"/conflict"
 		#fi;
-		#rm -rf $G_L_PATH"/work"
-		#rm -rf $G_L_PATH"/conflict"
-		mkdir $G_PATH"/work"
-		mkdir $G_PATH"/conflict"
+		#rm -rf $G_PATH"/work"
+		#rm -rf $G_PATH"/conflict"
+		#mkdir $G_PATH"/work"
+		mkdir ${temp2}
 	fi;
 	
 	#***
@@ -102,7 +112,10 @@ function common() {
 	cd $srcpath/$PROJECT_NAME
 	echo "SVN_BRANCHES:${SVN_BRANCHES}"
 	branch_array=${SVN_BRANCHES//,/ }    #这里是将var中的,替换为空格  
-	for element in $branch_array; do  
+	for element in $branch_array; do 
+		if [ "$SVN_BRANCHES" = "empty" ];then 
+			continue
+		fi; 
 	    svn merge $element $svnuser --non-interactive   
 	    svn st|grep '^[ ]*C'
 		if [ $? == 0 ] ;then
@@ -120,7 +133,7 @@ function commit() {
 	# 4.提交到主干代码
 	#***
 	echo "4.提交到主干代码$BEGIN_STR"
-	if [ "$SVN_BRANCHES" = "" ];then 
+	if [ "$SVN_BRANCHES" = "empty" ];then 
 		echo 5
 		exit 5 
 	else
@@ -144,21 +157,31 @@ function status() {
 	# 1.清空 本地路径
 	#***
 	echo "1.清空 本地路径$BEGIN_STR"  
-	if [ -d $G_L_PATH ];then
-		echo "清除目录$G_L_PATH $BEGIN_STR" ;
+	if [ -d $G_PATH ];then
+		echo "清除目录$G_PATH $BEGIN_STR" ;
 		time=`date +%F-%H-%M-%S`
-		mv $G_PATH"/work" "$RECYCLE_PATH$time" 
-		mv $G_PATH"/conflict" "$RECYCLE_PATH$time" 
-		#if [ -d $G_L_PATH"/work" ];then
-		#	rm -rf $G_L_PATH"/work"
+		temp1=${G_PATH}"/work/"${PROJECT_NAME}
+		echo "temp1:${temp1}"
+		if [ -d ${temp1} ];then
+			echo "mv${temp1}"
+			mv ${temp1} "$RECYCLE_PATH$time" 
+		fi;
+		temp2=${G_PATH}"/conflict"
+		echo "temp2:${temp2}"
+		if [ -d ${temp2} ];then
+			echo "mv${temp2}"
+			mv ${temp2} "$RECYCLE_PATH$time" 
+		fi;
+		#if [ -d $G_PATH"/work" ];then
+		#	rm -rf $G_PATH"/work"
 		#fi;
 		#if [ -d PATH"/conflict" ];then
-		#	rm -rf $G_L_PATH"/conflict"
+		#	rm -rf $G_PATH"/conflict"
 		#fi;
-		#rm -rf $G_L_PATH"/work"
-		#rm -rf $G_L_PATH"/conflict"
-		mkdir $G_PATH"/work"
-		mkdir $G_PATH"/conflict"
+		#rm -rf $G_PATH"/work"
+		#rm -rf $G_PATH"/conflict"
+		#mkdir $G_PATH"/work"
+		mkdir ${temp2}
 	fi;
 	
 	#***
@@ -188,21 +211,31 @@ function getVersion(){
 	# 1.清空 本地路径
 	#***
 	echo "1.清空 本地路径$BEGIN_STR"  
-	if [ -d $G_L_PATH ];then
-		echo "清除目录$G_L_PATH $BEGIN_STR" ;
+	if [ -d $G_PATH ];then
+		echo "清除目录$G_PATH $BEGIN_STR" ;
 		time=`date +%F-%H-%M-%S`
-		mv $G_PATH"/work" "$RECYCLE_PATH$time" 
-		mv $G_PATH"/conflict" "$RECYCLE_PATH$time" 
-		#if [ -d $G_L_PATH"/work" ];then
-		#	rm -rf $G_L_PATH"/work"
+		temp1=${G_PATH}"/work/"${PROJECT_NAME}
+		echo "temp1:${temp1}"
+		if [ -d ${temp1} ];then
+			echo "mv${temp1}"
+			mv ${temp1} "$RECYCLE_PATH$time" 
+		fi;
+		temp2=${G_PATH}"/conflict"
+		echo "temp2:${temp2}"
+		if [ -d ${temp2} ];then
+			echo "mv${temp2}"
+			mv ${temp2} "$RECYCLE_PATH$time" 
+		fi;
+		#if [ -d $G_PATH"/work" ];then
+		#	rm -rf $G_PATH"/work"
 		#fi;
 		#if [ -d PATH"/conflict" ];then
-		#	rm -rf $G_L_PATH"/conflict"
+		#	rm -rf $G_PATH"/conflict"
 		#fi;
-		#rm -rf $G_L_PATH"/work"
-		#rm -rf $G_L_PATH"/conflict"
-		mkdir $G_PATH"/work"
-		mkdir $G_PATH"/conflict"
+		#rm -rf $G_PATH"/work"
+		#rm -rf $G_PATH"/conflict"
+		#mkdir $G_PATH"/work"
+		mkdir ${temp2}
 	fi;
 	
 	#***

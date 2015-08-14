@@ -77,7 +77,7 @@
                       <textarea id="auditor_text" rows="5" cols="40"></textarea>
                     </div>
                   </div>
-                  <div class="checkBtn"><button class="checkPass verify_btn" value1="1">审核通过</button><button class="notcheckPass verify_btn" value1="0">审核未通过</button></div>
+                  <div class="checkBtn"><button class="checkPass verify_btn" value1="1">审核通过</button><button class="notcheckPass verify_btn" value1="2">审核未通过</button></div>
             </div>
         </div>
 
@@ -165,7 +165,7 @@ $(document).ready(function() {
 		
 		$.ajax({ 
 		 	type: 'POST', 
-			url: '/${basePath}/prop/' + sid + '/' + createBy +　'/' + projectCode + '/' + profile + '/' + 'verifyProp.do',
+			url: '/${basePath}/prop/' + sid + '/' + projectCode +　'/' + createBy + '/' + profile + '/' + 'verifyProp.do',
 			data: {
 				auditor_text:auditor_text,
 				status:status,

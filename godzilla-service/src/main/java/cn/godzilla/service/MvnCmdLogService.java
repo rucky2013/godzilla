@@ -11,6 +11,7 @@ public interface MvnCmdLogService{
     public int insertSelective(MvnCmdLog record);
     
     public List<MvnCmdLog> queryList();
-    
+
+	int addMvnCmdLog(String username, String projectCode, String profile, String commands, String resultInfo);
 
 }
