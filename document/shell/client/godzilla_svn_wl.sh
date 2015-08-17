@@ -69,13 +69,15 @@ function common() {
 		echo "temp1:${temp1}"
 		if [ -d ${temp1} ];then
 			echo "mv${temp1}"
-			mv ${temp1} "$RECYCLE_PATH$time" 
+			rm -rf ${temp1}
+			#mv ${temp1} "$RECYCLE_PATH$time" 
 		fi;
 		temp2=${G_PATH}"/conflict"
 		echo "temp2:${temp2}"
 		if [ -d ${temp2} ];then
 			echo "mv${temp2}"
-			mv ${temp2} "$RECYCLE_PATH$time" 
+			rm -rf ${temp2}
+			#mv ${temp2} "$RECYCLE_PATH$time" 
 		fi;
 		#if [ -d $G_PATH"/work" ];then
 		#	rm -rf $G_PATH"/work"
@@ -86,6 +88,7 @@ function common() {
 		#rm -rf $G_PATH"/work"
 		#rm -rf $G_PATH"/conflict"
 		#mkdir $G_PATH"/work"
+		mkdir ${temp1}
 		mkdir ${temp2}
 	fi;
 	
@@ -164,13 +167,15 @@ function status() {
 		echo "temp1:${temp1}"
 		if [ -d ${temp1} ];then
 			echo "mv${temp1}"
-			mv ${temp1} "$RECYCLE_PATH$time" 
+			rm -rf ${temp1}
+			#mv ${temp1} "$RECYCLE_PATH$time" 
 		fi;
 		temp2=${G_PATH}"/conflict"
 		echo "temp2:${temp2}"
 		if [ -d ${temp2} ];then
 			echo "mv${temp2}"
-			mv ${temp2} "$RECYCLE_PATH$time" 
+			rm -rf ${temp2}
+			#mv ${temp2} "$RECYCLE_PATH$time" 
 		fi;
 		#if [ -d $G_PATH"/work" ];then
 		#	rm -rf $G_PATH"/work"
@@ -181,6 +186,7 @@ function status() {
 		#rm -rf $G_PATH"/work"
 		#rm -rf $G_PATH"/conflict"
 		#mkdir $G_PATH"/work"
+		mkdir ${temp1}
 		mkdir ${temp2}
 	fi;
 	
@@ -218,13 +224,15 @@ function getVersion(){
 		echo "temp1:${temp1}"
 		if [ -d ${temp1} ];then
 			echo "mv${temp1}"
-			mv ${temp1} "$RECYCLE_PATH$time" 
+			rm -rf ${temp1}
+			#mv ${temp1} "$RECYCLE_PATH$time" 
 		fi;
 		temp2=${G_PATH}"/conflict"
 		echo "temp2:${temp2}"
 		if [ -d ${temp2} ];then
 			echo "mv${temp2}"
-			mv ${temp2} "$RECYCLE_PATH$time" 
+			rm -rf ${temp2}
+			#mv ${temp2} "$RECYCLE_PATH$time" 
 		fi;
 		#if [ -d $G_PATH"/work" ];then
 		#	rm -rf $G_PATH"/work"
@@ -235,6 +243,7 @@ function getVersion(){
 		#rm -rf $G_PATH"/work"
 		#rm -rf $G_PATH"/conflict"
 		#mkdir $G_PATH"/work"
+		mkdir ${temp1}
 		mkdir ${temp2}
 	fi;
 	

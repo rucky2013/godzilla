@@ -384,6 +384,10 @@
 		})	       
 		// 部署
 	    $("#deployBtn").on("click", function() {
+	    	
+	    	var oShadowBox = document.getElementById('shadow_box4');
+			oShadowBox.style.display = 'none';
+			
 	        var value1 = $("#value11").val();
 	        var profile =  $("#value22").val();
 			
