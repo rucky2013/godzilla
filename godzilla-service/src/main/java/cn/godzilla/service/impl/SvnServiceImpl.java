@@ -12,6 +12,7 @@ import cn.godzilla.model.ClientConfig;
 import cn.godzilla.model.Project;
 import cn.godzilla.model.SvnBranchConfig;
 import cn.godzilla.service.ClientConfigService;
+import cn.godzilla.service.OperateLogService;
 import cn.godzilla.service.ProjectService;
 import cn.godzilla.service.SvnBranchConfigService;
 import cn.godzilla.service.SvnCmdLogService;
@@ -31,6 +32,8 @@ public class SvnServiceImpl extends GodzillaApplication implements SvnService {
 	private ClientConfigService clientConfigService;
 	@Autowired
 	private SvnCmdLogService svnCmdLogService;
+	@Autowired
+	private OperateLogService operateLogService;
 	@Override
 	public ReturnCodeEnum getVersion(String trunkPath, String projectCode, String profile) {
 		ClientConfig clientConfig = clientConfigService.queryDetail(projectCode, profile) ;
@@ -121,5 +124,55 @@ public class SvnServiceImpl extends GodzillaApplication implements SvnService {
 		} else {
 			return ReturnCodeEnum.getByReturnCode(NO_JAVASHELLCALL);
 		}
+	}
+
+	@Override
+	public boolean svnMerge(String projectCode, String profile) {
+		logger.info("************代码合并Begin***********");
+		
+		ClientConfig clientConfig = clientConfigService.queryDetail(projectCode, profile) ;
+		String clientIp = clientConfig.getRemoteIp();
+		List<SvnBranchConfig> svnBranchConfigs = svnBranchConfigService.queryListByProjectCode(projectCode);
+		Project project = projectService.qureyByProCode(projectCode);
+		String trunkPath = project.getRepositoryUrl();
+		String localPath=project.getCheckoutPath(); 
+		
+		boolean flag = false;
+		
+		String branches = "";
+		for(SvnBranchConfig sbc: svnBranchConfigs) {
+			branches = sbc.getBranchUrl() + ",";
+		}
+		if("".equals(branches)) {
+			branches = "empty";
+		} else {
+			branches = branches.substring(0, branches.length()-1);
+		}
+		
+		String callbackUrl = "http://localhost:8080/process-callback.do";
+		
+		String operator = super.getUser().getUserName();
+		String str= "";
+		try {
+			BaseShellCommand command = new BaseShellCommand();
+			str = "sh /home/godzilla/gzl/shell/server/svn_server_wl.sh merge "+trunkPath+" '"+branches+"' "+" "+callbackUrl+" "+projectCode+" "+ operator +" "+clientIp ;
+			flag = command.execute(str, super.getUser().getUserName());
+		} catch (Exception e) {
+			logger.error(e);
+			e.printStackTrace();
+		}
+		
+		if(flag){
+			String username = super.getUser().getUserName();
+			svnCmdLogService.addSvnCommandLog(username, trunkPath, str, username);
+			operateLogService.addOperateLog(super.getUser().getUserName(), projectCode, profile, SVNMERGE, SUCCESS, "代码合并SUCCESS");
+			logger.info("************代码合并End**************");
+		}else{
+			String username = super.getUser().getUserName();
+			svnCmdLogService.addSvnCommandLog(username, trunkPath, str, username);
+			operateLogService.addOperateLog(super.getUser().getUserName(), projectCode, profile, SVNMERGE, FAILURE, "代码合并FAILURE");
+			logger.error("************代码合并Error**************");
+		}
+		return flag;
 	}
 }

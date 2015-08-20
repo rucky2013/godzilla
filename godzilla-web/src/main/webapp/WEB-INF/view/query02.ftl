@@ -118,5 +118,14 @@ window.onload=function(){
 	</div>
 <script src="/${basePath}/js/jquery-1.8.2.min.js"></script>
 <script src="/${basePath}/js/common.js"></script>
+
+<script>
+$(document).ready(function(){
+	// 退出
+    $("#logout").on("click", function() {
+		window.location.href = '/${basePath}/user/logout/${sid}.do';
+	});
+})
+</script>
 </body>
 </html>

@@ -1,0 +1,6 @@
+1./home/godzilla/gzl 目录copy
+2.client端 java -jar godzilla-rpc-provider.jar &
+ java -Xdebug -Xrunjdwp:transport=dt_socket,address=7070,server=y,suspend=y -jar godzilla-rpc-provider.jar 
+3.XX-web/pom.xml 中 profile 添加 dev的profile
+XX/pom.xml 中properties 添加 parent.version
+4.修改t_g_client_config表  tomcat配置 与 client ip

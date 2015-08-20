@@ -47,7 +47,7 @@ public class SvnController extends GodzillaApplication implements Constant{
 	@Autowired
 	private ClientConfigService clientConfigService;
 	@Autowired
-	private SvnService SvnService;
+	private SvnService svnService;
 	@Autowired
 	private OperateLogService operateLogService;
 	@Autowired
@@ -144,53 +144,13 @@ public class SvnController extends GodzillaApplication implements Constant{
 	@ResponseBody
 	public Object doMerge(@PathVariable String sid, @PathVariable String projectCode,@PathVariable String profile, HttpServletRequest request, HttpServletResponse response) {
 		
-		logger.info("************代码合并Begin***********");
-		
-		ClientConfig clientConfig = clientConfigService.queryDetail(projectCode, profile) ;
-		String clientIp = clientConfig.getRemoteIp();
-		List<SvnBranchConfig> svnBranchConfigs = svnBranchConfigService.queryListByProjectCode(projectCode);
-		Project project = projectService.qureyByProCode(projectCode);
-		String trunkPath = project.getRepositoryUrl();
-		String localPath=project.getCheckoutPath(); 
-		
-		boolean flag = false;
-		
-		String branches = "";
-		for(SvnBranchConfig sbc: svnBranchConfigs) {
-			branches = sbc.getBranchUrl() + ",";
-		}
-		if("".equals(branches)) {
-			branches = "empty";
-		} else {
-			branches = branches.substring(0, branches.length()-1);
-		}
-		
-		String callbackUrl = "http://localhost:8080/process-callback.do";
-		
-		String operator = super.getUser().getUserName();
-		String str= "";
-		try {
-			BaseShellCommand command = new BaseShellCommand();
-			str = "sh /home/godzilla/gzl/shell/server/svn_server_wl.sh merge "+trunkPath+" '"+branches+"' "+" "+callbackUrl+" "+projectCode+" "+ operator +" "+clientIp ;
-			flag = command.execute(str, super.getUser().getUserName());
-		} catch (Exception e) {
-			logger.error(e);
-			e.printStackTrace();
-		}
-		
+		boolean flag = svnService.svnMerge(projectCode, profile);
 		if(flag){
-			String username = super.getUser().getUserName();
-			svnCmdLogService.addSvnCommandLog(username, trunkPath, str, username);
-			operateLogService.addOperateLog(super.getUser().getUserName(), projectCode, profile, SVNMERGE, SUCCESS, "代码合并SUCCESS");
 			logger.info("************代码合并End**************");
-			return SUCCESS;
 		}else{
-			String username = super.getUser().getUserName();
-			svnCmdLogService.addSvnCommandLog(username, trunkPath, str, username);
-			operateLogService.addOperateLog(super.getUser().getUserName(), projectCode, profile, SVNMERGE, FAILURE, "代码合并FAILURE");
 			logger.error("************代码合并Error**************");
-			return FAILURE;
 		}
+		return flag;
 	}
 	/**
 	 * 提交主干
@@ -219,7 +179,7 @@ public class SvnController extends GodzillaApplication implements Constant{
 		
 		logger.info("************提交主干Begin***********");
 		
-		ReturnCodeEnum returncode = SvnService.svnCommit(projectCode, profile);
+		ReturnCodeEnum returncode = svnService.svnCommit(projectCode, profile);
 		if(returncode==ReturnCodeEnum.OK_SVNCOMMIT){
 			operateLogService.addOperateLog(super.getUser().getUserName(), projectCode, profile, SVNCOMMIT, SUCCESS, ReturnCodeEnum.OK_SVNCOMMIT.getReturnMsg());
 			logger.info("************提交主干End success**************");

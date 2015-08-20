@@ -6,8 +6,10 @@
 	http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
 	
 	<bean id="helloService" class="cn.godzilla.rpc.benchmark.service.HelloServiceImpl" />
-	<bean id="propConfigProviderService" class="cn.godzilla.service.impl.PropConfigProviderServiceImpl"></bean>
-	<bean id="mvnProviderService" class="cn.godzilla.service.impl.MvnProviderServiceImpl"></bean>
+	<bean id="propConfigProviderService" class="cn.godzilla.service.impl.PropConfigProviderServiceImpl">
+	</bean>
+	<bean id="mvnProviderService" class="cn.godzilla.service.impl.MvnProviderServiceImpl">
+	</bean>
 	
 	<!-- mq producer start 将shell输出 存入mq -->
 	<bean id="mainClass" class="cn.godzilla.echo.main.MainClass"></bean>

@@ -18,14 +18,9 @@ import cn.godzilla.model.RpcResult;
 import cn.godzilla.service.PropConfigProviderService;
 
 public class PropConfigProviderServiceImpl implements PropConfigProviderService {
-
-	@Autowired
-	private PropConfigMapper propConfigMapper;
-	@Autowired
-	private ClientConfigMapper clientConfigMapper;
 	
 	@Override
-	public RpcResult propToPom(String project_code, String srcUrl, String profile, String parentVersion) throws DocumentException, IOException,  Exception {
+	public RpcResult propToPom(String project_code, String srcUrl, String profile, String parentVersion, ClientConfig clientConfig) throws DocumentException, IOException,  Exception {
 		/**
 		 * 1.get pom.xml path
 		 */
@@ -37,10 +32,11 @@ public class PropConfigProviderServiceImpl implements PropConfigProviderService 
 			 * 2.get propconfigs from DB
 			 */
 			parentVersion = StringUtil.isEmpty(parentVersion)?DEFAULT_VERSION_PARENTPOM:parentVersion;
-			List<PropConfig> propconfigs = this.getPropConfigsByProjectcodeAndProfile(project_code, profile);
+			
 			/**
 			 * 3.save propconfigs cover pom.xml
 			 */
+			List<PropConfig> propconfigs = this.getPropConfigsByProjectcodeAndProfile(project_code, profile);
 			XmlUtil.coverParentPom(parentVersion, parentPomPath, parentPomPath);
 			XmlUtil.coverWebPom(propconfigs, webPomPath, webPomPath);
 			/**
@@ -50,7 +46,6 @@ public class PropConfigProviderServiceImpl implements PropConfigProviderService 
 			 * else 
 			 * 	  replace plugin;
 			 */
-			ClientConfig clientConfig = this.getTomcatpluginProp(project_code, profile);
 			if(clientConfig.getTomcatNeedPlugin()!=null && !"0".equals(clientConfig.getTomcatNeedPlugin())){
 				XmlUtil.coverWebPomforPlugin(project_code, clientConfig, webPomPath, webPomPath);
 			} else {
@@ -59,15 +54,20 @@ public class PropConfigProviderServiceImpl implements PropConfigProviderService 
 			
 		} catch(Exception e) {
 			e.printStackTrace();
+			return RpcResult.create(FAILURE);
 		}
 		return RpcResult.create(SUCCESS);
 	}
-	private ClientConfig getTomcatpluginProp(String project_code, String profile) {
-		Map<String, String> parameterMap = new HashMap<String, String>();
-		parameterMap.put("project_code", project_code);
-		parameterMap.put("profile", profile);
-		ClientConfig clientConfig = clientConfigMapper.queryDetail(parameterMap);
-		return clientConfig;
+	
+	@Autowired
+	private PropConfigMapper propConfigMapper;
+	
+	public List<PropConfig> getPropConfigsByProjectcodeAndProfile(String project_code, String profile) {
+		
+		Map<String, String> parameters = new HashMap<String, String>();
+		parameters.put("projectCode", project_code);
+		parameters.put("profile", profile);
+		return propConfigMapper.queryListByProjectcodeAndProfile(parameters);
 	}
 
 	/**
@@ -81,12 +81,4 @@ public class PropConfigProviderServiceImpl implements PropConfigProviderService 
 		return DEFAULT_VERSION_PARENTPOM;
 	}
 
-	public List<PropConfig> getPropConfigsByProjectcodeAndProfile(String project_code, String profile) {
-		
-		Map<String, String> parameters = new HashMap<String, String>();
-		parameters.put("projectCode", project_code);
-		parameters.put("profile", profile);
-		return propConfigMapper.queryListByProjectcodeAndProfile(parameters);
-	}
-	
 }

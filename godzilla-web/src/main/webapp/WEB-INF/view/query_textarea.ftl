@@ -185,5 +185,13 @@ $(document).ready(function() {
 
 
 </script>
+<script>
+$(document).ready(function(){
+	// 退出
+    $("#logout").on("click", function() {
+		window.location.href = '/${basePath}/user/logout/${sid}.do';
+	});
+})
+</script>
 </body>
 </html>

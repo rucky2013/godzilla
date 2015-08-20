@@ -2,6 +2,7 @@ package cn.godzilla.service.impl;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.logging.log4j.LogManager;
@@ -10,8 +11,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import cn.godzilla.common.ReturnCodeEnum;
+import cn.godzilla.dao.PropConfigMapper;
 import cn.godzilla.model.ClientConfig;
 import cn.godzilla.model.Project;
+import cn.godzilla.model.PropConfig;
 import cn.godzilla.model.RpcResult;
 import cn.godzilla.mvn.MvnBaseCommand;
 import cn.godzilla.rpc.api.RpcFactory;
@@ -53,19 +56,21 @@ public class MvnServiceImpl extends GodzillaApplication implements MvnService {
 		String IP = clientconfig.getRemoteIp();
 		
 		/*
-		 * -1.svn合并提交主干
+		 * -1.svn合并  
+		 * depresed-1.svn合并提交主干  
+		 *  不应该提交  20150820
 		 * if svn commit success or svn no changecommit
 		 * 		continue
 		 * else 
 		 * 		break
 		 */
-		ReturnCodeEnum svnreturn = svnService.svnCommit(projectCode, profile);
+		boolean flag = svnService.svnMerge(projectCode, profile);
 		
-		if(svnreturn==ReturnCodeEnum.OK_SVNCOMMIT||svnreturn==ReturnCodeEnum.NO_CHANGECOMMIT){
-			logger.info("************svn合并提交主干 成功**************");
-		} else if(svnreturn==ReturnCodeEnum.NO_SVNCOMMIT){
-			logger.error("************mvn部署 第-1步:svn合并提交主干 失败**************");
-			return svnreturn;
+		if(flag){
+			logger.info("************svn合并   成功**************");
+		} else {
+			logger.error("************mvn部署 第-1步:svn合并   失败**************");
+			return ReturnCodeEnum.getByReturnCode(NO_MVNDEPLOY);
 		} 
 		/*
 		 * 0.get RpcFactory and init rpcservice
@@ -85,7 +90,8 @@ public class MvnServiceImpl extends GodzillaApplication implements MvnService {
 		boolean flag1 = false;
 		try {
 			PropConfigProviderService propConfigProviderService = propConfigProviderServices.get(IP);
-			RpcResult result = propConfigProviderService.propToPom(projectCode, srcUrl, profile, parentVersion);
+			
+			RpcResult result = propConfigProviderService.propToPom(projectCode, srcUrl, profile, parentVersion, clientconfig);
 			flag1 = result.getRpcCode().equals("0")?true:false;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -144,6 +150,8 @@ public class MvnServiceImpl extends GodzillaApplication implements MvnService {
 		return ReturnCodeEnum.getByReturnCode(NO_MVNDEPLOY);
 	}
 	
+	
+
 	public RpcResult deployProject(MvnProviderService mvnProviderService, String username, String srUrl, String projectCode, String profile, String IP) {
 		boolean flag2 = false;
 		RpcResult result = null;
@@ -198,22 +206,22 @@ public class MvnServiceImpl extends GodzillaApplication implements MvnService {
 
 	private void initRpc(String linuxIp) throws ClassNotFoundException, IllegalAccessException, InstantiationException, IOException {
 		synchronized(propConfigProviderServices) {
-			if(propConfigProviderServices.get(linuxIp)==null||"".equals(propConfigProviderServices.get(linuxIp))) {
-				RpcFactory rpcFactory= null;
-				rpcFactory = Util.getRpcFactoryImpl();
-				PropConfigProviderService propConfigProviderService = rpcFactory.getReference(PropConfigProviderService.class, linuxIp);
+			//if(propConfigProviderServices.get(linuxIp)==null||"".equals(propConfigProviderServices.get(linuxIp))) {
+				RpcFactory rpcFactory1= null;
+				rpcFactory1 = Util.getRpcFactoryImpl();
+				PropConfigProviderService propConfigProviderService = rpcFactory1.getReference(PropConfigProviderService.class, linuxIp);
 				if(propConfigProviderService!=null) {
 					propConfigProviderServices.put(linuxIp, propConfigProviderService);
 				}
-			}
-			if(mvnProviderServices.get(linuxIp)==null||"".equals(mvnProviderServices.get(linuxIp))) {
-                RpcFactory rpcFactory= null;
-				rpcFactory = Util.getRpcFactoryImpl();
-				MvnProviderService mvnProviderService = rpcFactory.getReference(MvnProviderService.class, linuxIp);
+			//}
+			//if(mvnProviderServices.get(linuxIp)==null||"".equals(mvnProviderServices.get(linuxIp))) {
+                RpcFactory rpcFactory2= null;
+				rpcFactory2 = Util.getRpcFactoryImpl();
+				MvnProviderService mvnProviderService = rpcFactory2.getReference(MvnProviderService.class, linuxIp);
 				if(mvnProviderService!=null) {
 					mvnProviderServices.put(linuxIp, mvnProviderService);
 				}
-			}
+			//}
 		}
 	}
 

@@ -16,7 +16,7 @@ import cn.godzilla.service.PropConfigProviderService;
 import cn.godzilla.service.PropConfigService;
 
 public class ConsumerMain {
-	private static volatile int size = 3;
+	/*private static volatile int size = 3;
 
 	public static void main(String args[]) throws Exception {
 		final RpcFactory rpcFactory = Util.getRpcFactoryImpl();
@@ -81,5 +81,5 @@ public class ConsumerMain {
 		protected Person initialValue() {
 			return genPerson();
 		}
-	};
+	};*/
 }

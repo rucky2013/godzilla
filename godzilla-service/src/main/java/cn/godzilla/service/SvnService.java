@@ -7,6 +7,7 @@ public interface SvnService {
 	
 	ReturnCodeEnum svnCommit(String projectCode, String profile);
 
+	boolean svnMerge(String projectCode, String profile);
 	/**
 	 * 获取 资源地址 svn 版本号 存储在 Application.svnVersionThreadLocal 里
 	 * @param repositoryUrl

@@ -20,6 +20,7 @@ import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import cn.godzilla.common.BusinessException;
 import cn.godzilla.common.ReturnCodeEnum;
+import cn.godzilla.dao.ClientConfigMapper;
 import cn.godzilla.service.FunRightService;
 import cn.godzilla.service.UserService;
 import cn.godzilla.web.GodzillaApplication;

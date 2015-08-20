@@ -16,6 +16,7 @@ import org.dom4j.io.OutputFormat;
 import org.dom4j.io.SAXReader;
 import org.dom4j.io.XMLWriter;
 
+import cn.godzilla.common.BusinessException;
 import cn.godzilla.model.ClientConfig;
 import cn.godzilla.model.PropConfig;
 
@@ -52,14 +53,19 @@ public class XmlUtil {
 	 * @throws DocumentException 
 	 * @throws IOException 
 	 */
-	public static void coverParentPom(String parentVersion, String parentPomPath, String savePomPath) throws DocumentException, IOException {
-		Document doc = parse(parentPomPath);
-		Element root = doc.getRootElement();
-		Element parent_version = root.element("properties").element("parent.version");
+	public static void coverParentPom(String parentVersion, String parentPomPath, String savePomPath)  throws DocumentException, IOException {
+		try {
+			Document doc = parse(parentPomPath);
+			Element root = doc.getRootElement();
+			Element parent_version = root.element("properties").element("parent.version");
 
-		parent_version.setText(parentVersion);
-		logger.info("++|++|++>ParentPom.properties:"+parent_version.getText().toString());
-		saveDocument(doc, savePomPath);
+			parent_version.setText(parentVersion);
+			logger.info("++|++|++>ParentPom.properties:"+parent_version.getText().toString());
+			saveDocument(doc, savePomPath);
+		} catch( IOException | DocumentException e) {
+			logger.error("++|++|++>ParentPom.properties: 设置失败");
+			throw new BusinessException("ParentPom.properties: 设置失败");
+		}
 	}
 	/**
 	 * 将配置项  写入pom.xml
@@ -69,16 +75,21 @@ public class XmlUtil {
 	 * @throws IOException 
 	 */
 	public static void coverWebPom(List<PropConfig> propconfigs, String webPomPath, String savePomPath) throws DocumentException, IOException {
-		Document doc = parse(webPomPath);
-		Element root = doc.getRootElement();
-		Element properties = root.element("profiles").element("profile").element("properties");
-		properties.clearContent();
-		
-		for(PropConfig propconfig : propconfigs) {
-			properties.addElement(propconfig.getProKey()).setText(propconfig.getProValue());
+		try {
+			Document doc = parse(webPomPath);
+			Element root = doc.getRootElement();
+			Element properties = root.element("profiles").element("profile").element("properties");
+			properties.clearContent();
+			
+			for(PropConfig propconfig : propconfigs) {
+				properties.addElement(propconfig.getProKey()).setText(propconfig.getProValue());
+			}
+			logger.info("++|++|++>coverWebPom.properties:"+properties.getText().toString());
+			saveDocument(doc, savePomPath);
+		} catch( IOException | DocumentException e) {
+			logger.error("++|++|++>将配置项  写入pom.xml: 设置失败");
+			throw new BusinessException("将配置项  写入pom.xml: 设置失败");
 		}
-		logger.info("++|++|++>coverWebPom.properties:"+properties.getText().toString());
-		saveDocument(doc, savePomPath);
 	}
 
 	/**
@@ -88,35 +99,40 @@ public class XmlUtil {
 	 * @param webPomPath2
 	 */
 	public static void coverWebPomforPlugin(String project_code, ClientConfig clientConfig, String webPomPath, String savePomPath) throws DocumentException, IOException {
-		Document doc = parse(webPomPath);
-		Element root = doc.getRootElement();
-		Element plugin = root.element("profiles").element("profile").element("build").element("plugins").element("plugin");
-		plugin.clearContent();
-		
-		
-		plugin.addElement("groupId").setText("org.apache.tomcat.maven");
-		plugin.addElement("artifactId").setText("tomcat7-maven-plugin");
-		plugin.addElement("version").setText("2.2");
-		plugin.addElement("configuration");
-			Element configuration = plugin.element("configuration");
-			configuration.addElement("url").setText("http://"+clientConfig.getRemoteIp()+":"+clientConfig.getTomcatPort()+"/manager/text");
-			configuration.addElement("server").setText(project_code);
-			configuration.addElement("username").setText("godzilla");
-			configuration.addElement("password").setText("godzilla");
-		plugin.addElement("executions");
-			Element executions = plugin.element("executions");
-			executions.addElement("execution");
-				Element execution = executions.element("execution");
-				execution.addElement("phase").setText("pre-integration-test");
-				execution.addElement("configuration");
-					Element configuration1 = execution.element("configuration");
-					configuration1.addElement("warFile").setText("target/${project.build.finalName}.war");
-					configuration1.addElement("path").setText("/${project.build.finalName}");
-				execution.addElement("goals");
-					Element goals = execution.element("goals");
-					goals.addElement("goal").setText("redeploy");
-		logger.info("++|++|++>coverWebPomforPlugin.plugin:"+plugin.getText().toString());
-		saveDocument(doc, savePomPath);
+		try {
+			Document doc = parse(webPomPath);
+			Element root = doc.getRootElement();
+			Element plugin = root.element("profiles").element("profile").element("build").element("plugins").element("plugin");
+			plugin.clearContent();
+			
+			
+			plugin.addElement("groupId").setText("org.apache.tomcat.maven");
+			plugin.addElement("artifactId").setText("tomcat7-maven-plugin");
+			plugin.addElement("version").setText("2.2");
+			plugin.addElement("configuration");
+				Element configuration = plugin.element("configuration");
+				configuration.addElement("url").setText("http://"+clientConfig.getRemoteIp()+":"+clientConfig.getTomcatPort()+"/manager/text");
+				configuration.addElement("server").setText(project_code);
+				configuration.addElement("username").setText("godzilla");
+				configuration.addElement("password").setText("godzilla");
+			plugin.addElement("executions");
+				Element executions = plugin.element("executions");
+				executions.addElement("execution");
+					Element execution = executions.element("execution");
+					execution.addElement("phase").setText("pre-integration-test");
+					execution.addElement("configuration");
+						Element configuration1 = execution.element("configuration");
+						configuration1.addElement("warFile").setText("target/${project.build.finalName}.war");
+						configuration1.addElement("path").setText("/${project.build.finalName}");
+					execution.addElement("goals");
+						Element goals = execution.element("goals");
+						goals.addElement("goal").setText("redeploy");
+			logger.info("++|++|++>coverWebPomforPlugin.plugin:"+plugin.getText().toString());
+			saveDocument(doc, savePomPath);
+		} catch( IOException | DocumentException e) {
+			logger.error("++|++|++>覆盖  maven 部署war plugin: 设置失败");
+			throw new BusinessException("覆盖  maven 部署war plugin: 设置失败");
+		}
 	}
 	
 	/**
@@ -127,12 +143,17 @@ public class XmlUtil {
 	 * @throws IOException 
 	 */
 	public static void deleteWebPomPlugin(String webPomPath, String savePomPath) throws DocumentException, IOException {
-		Document doc = parse(webPomPath);
-		Element root = doc.getRootElement();
-		Element plugins = root.element("profiles").element("profile").element("build").element("plugins");
-		plugins.clearContent();
-		logger.info("++|++|++>deleteWebPomPlugin.plugins:"+plugins.getText().toString());
-		saveDocument(doc, savePomPath);
+		try {
+			Document doc = parse(webPomPath);
+			Element root = doc.getRootElement();
+			Element plugins = root.element("profiles").element("profile").element("build").element("plugins");
+			plugins.clearContent();
+			logger.info("++|++|++>deleteWebPomPlugin.plugins:"+plugins.getText().toString());
+			saveDocument(doc, savePomPath);
+		} catch( IOException | DocumentException e) {
+			logger.error("++|++|++>删除  plugin  web.pom: 设置失败");
+			throw new BusinessException("删除  plugin  web.pom: 设置失败");
+		}
 	}
 
 	/**
