@@ -35,10 +35,10 @@ public class SvnServiceImpl extends GodzillaApplication implements SvnService {
 	@Autowired
 	private OperateLogService operateLogService;
 	@Override
-	public ReturnCodeEnum getVersion(String trunkPath, String projectCode, String profile) {
-		ClientConfig clientConfig = clientConfigService.queryDetail(projectCode, profile) ;
+	public ReturnCodeEnum getVersion(String trunkPath, String projectCode) {
+		ClientConfig clientConfig = clientConfigService.queryDetail(projectCode, TEST_PROFILE) ;
 		String clientIp = clientConfig.getRemoteIp();
-		String branches = "";
+		String branches = EMPTY_BRANCH;
 		boolean flag = false;
 		
 		String callbackUrl = "http://localhost:8080/process-callback.do";
@@ -81,7 +81,7 @@ public class SvnServiceImpl extends GodzillaApplication implements SvnService {
 			branches = sbc.getBranchUrl() + ",";
 		}
 		if("".equals(branches)) {
-			branches = "empty";
+			branches = EMPTY_BRANCH;
 		} else {
 			branches = branches.substring(0, branches.length()-1);
 		}
@@ -144,7 +144,7 @@ public class SvnServiceImpl extends GodzillaApplication implements SvnService {
 			branches = sbc.getBranchUrl() + ",";
 		}
 		if("".equals(branches)) {
-			branches = "empty";
+			branches = EMPTY_BRANCH;
 		} else {
 			branches = branches.substring(0, branches.length()-1);
 		}

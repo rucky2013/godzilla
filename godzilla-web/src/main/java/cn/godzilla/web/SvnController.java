@@ -81,7 +81,7 @@ public class SvnController extends GodzillaApplication implements Constant{
 			branches = sbc.getBranchUrl() + ",";
 		}
 		if("".equals(branches)) {
-			branches = "empty";
+			branches = EMPTY_BRANCH;
 		} else {
 			branches = branches.substring(0, branches.length()-1);
 		}

@@ -186,7 +186,7 @@ public class MvnServiceImpl extends GodzillaApplication implements MvnService {
 		Project project = projectService.qureyByProCode(projectCode);
 		String trunkPath = project.getRepositoryUrl();
 		
-		ReturnCodeEnum versionreturn = svnService.getVersion(trunkPath, projectCode, profile);
+		ReturnCodeEnum versionreturn = svnService.getVersion(trunkPath, projectCode);
 		if(!versionreturn.equals(ReturnCodeEnum.getByReturnCode(OK_SVNVERSION))) {
 			return false;
 		}

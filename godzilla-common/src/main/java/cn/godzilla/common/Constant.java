@@ -6,6 +6,7 @@ public interface Constant {
 	public final int FALSE = 0 ;
 	
 	public final String DEFAULT_VERSION_PARENTPOM = "1.0.0-SNAPSHOT";
+	public final String EMPTY_BRANCH = "empty";
 	
 	public int RPC_DEFAULT_PORT = 8855;
 	public final String SUCCESS = "SUCCESS";

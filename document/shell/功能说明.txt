@@ -4,3 +4,4 @@
 														    -> exit(5)
 3.提交主干：清除work目录->检出主干代码->合并各个分支 if not found confilict-> 提交主干 ->删除分支
 														    -> exit(5)
+

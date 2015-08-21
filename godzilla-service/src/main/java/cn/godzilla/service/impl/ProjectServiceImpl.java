@@ -70,7 +70,7 @@ public class ProjectServiceImpl extends GodzillaApplication implements ProjectSe
 	@Override
 	public boolean srcEdit(String srcId, String repositoryUrl, String checkoutPath, String projectCode, String profile) {
 		
-		ReturnCodeEnum versionreturn = svnService.getVersion(repositoryUrl, projectCode, profile);
+		ReturnCodeEnum versionreturn = svnService.getVersion(repositoryUrl, projectCode);
 		if(!versionreturn.equals(ReturnCodeEnum.getByReturnCode(OK_SVNVERSION))) {
 			return false;
 		}
@@ -91,7 +91,7 @@ public class ProjectServiceImpl extends GodzillaApplication implements ProjectSe
 		Project project = this.qureyByProCode(projectCode);
 		String trunkPath = project.getRepositoryUrl();
 		
-		ReturnCodeEnum versionreturn = svnService.getVersion(trunkPath, projectCode, profile);
+		ReturnCodeEnum versionreturn = svnService.getVersion(trunkPath, projectCode);
 		if(!versionreturn.equals(ReturnCodeEnum.getByReturnCode(OK_SVNVERSION))) {
 			return false;
 		}

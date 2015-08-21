@@ -1,6 +1,14 @@
+@Deprecated
+/*
 1./home/godzilla/gzl 目录copy
 2.client端 java -jar godzilla-rpc-provider.jar &
  java -Xdebug -Xrunjdwp:transport=dt_socket,address=7070,server=y,suspend=y -jar godzilla-rpc-provider.jar 
 3.XX-web/pom.xml 中 profile 添加 dev的profile
 XX/pom.xml 中properties 添加 parent.version
-4.修改t_g_client_config表  tomcat配置 与 client ip
+4.修改t_g_client_config表  tomcat配置 与 client ip 
+*/
+
+----new------------
+1.找相关人员 注册帐号，并赋予项目权限（目前可使用项目为apollo,cupid,fso_newmanager,fso-lark,godzilla,hera,message-center,nuggets-server,venus,zeus-server，其他项目请找 管理员设置）
+2.启动客户端: java -jar /home/godzilla/gzl/rpc/godzilla-rpc-provider.jar &
+3.登录系统，进入项目，初始化各环境配置信息

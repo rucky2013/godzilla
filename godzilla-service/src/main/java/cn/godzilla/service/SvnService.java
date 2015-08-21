@@ -15,6 +15,6 @@ public interface SvnService {
 	 * @param profile
 	 * @return
 	 */
-	ReturnCodeEnum getVersion(String repositoryUrl, String projectCode, String profile);
+	ReturnCodeEnum getVersion(String repositoryUrl, String projectCode);
 
 }

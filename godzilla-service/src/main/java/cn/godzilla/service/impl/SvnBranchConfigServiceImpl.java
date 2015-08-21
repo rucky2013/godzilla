@@ -42,7 +42,7 @@ public class SvnBranchConfigServiceImpl extends GodzillaApplication implements S
 	@Override
 	public boolean addNewBranch(String projectCode, String profile, String branchUrl) {
 		
-		ReturnCodeEnum versionreturn = svnService.getVersion(branchUrl, projectCode, profile);
+		ReturnCodeEnum versionreturn = svnService.getVersion(branchUrl, projectCode);
 		if(!versionreturn.equals(ReturnCodeEnum.getByReturnCode(OK_SVNVERSION))) {
 			return false;
 		}
@@ -68,7 +68,7 @@ public class SvnBranchConfigServiceImpl extends GodzillaApplication implements S
 	@Override
 	public boolean editBranch(String projectCode, String profile, String id, String branchUrl) {
 		
-		ReturnCodeEnum versionreturn = svnService.getVersion(branchUrl, projectCode, profile);
+		ReturnCodeEnum versionreturn = svnService.getVersion(branchUrl, projectCode);
 		if(!versionreturn.equals(ReturnCodeEnum.getByReturnCode(OK_SVNVERSION))) {
 			return false;
 		}
@@ -102,7 +102,7 @@ public class SvnBranchConfigServiceImpl extends GodzillaApplication implements S
 		
 		boolean flag = false;
 		for(SvnBranchConfig branch: svnBranchConfigs){
-			ReturnCodeEnum versionreturn = svnService.getVersion(branch.getBranchUrl(), branch.getProjectCode(), PROFILE_TEST);
+			ReturnCodeEnum versionreturn = svnService.getVersion(branch.getBranchUrl(), branch.getProjectCode());
 			if(!versionreturn.equals(ReturnCodeEnum.getByReturnCode(OK_SVNVERSION))) {
 				return false;
 			}
