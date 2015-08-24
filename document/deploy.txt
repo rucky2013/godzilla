@@ -12,3 +12,4 @@ XX/pom.xml 中properties 添加 parent.version
 1.找相关人员 注册帐号，并赋予项目权限（目前可使用项目为apollo,cupid,fso_newmanager,fso-lark,godzilla,hera,message-center,nuggets-server,venus,zeus-server，其他项目请找 管理员设置）
 2.启动客户端: java -jar /home/godzilla/gzl/rpc/godzilla-rpc-provider.jar &
 3.登录系统，进入项目，初始化各环境配置信息
+4.zookeeper统一使用10.100.142.78:2181

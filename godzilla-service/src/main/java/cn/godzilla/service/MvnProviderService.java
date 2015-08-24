@@ -16,5 +16,5 @@ public interface MvnProviderService extends Constant{
 	 * @param profile
 	 */
 	public RpcResult mvnDeploy(String str, String PROJECT_NAME, String projectEnv, String USER_NAME);
-	
+
 }

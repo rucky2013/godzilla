@@ -1,5 +1,7 @@
 package cn.godzilla.service;
 
+import javax.servlet.http.HttpServletResponse;
+
 import cn.godzilla.common.Constant;
 import cn.godzilla.common.ReturnCodeEnum;
 import cn.godzilla.model.User;
@@ -27,5 +29,7 @@ public interface MvnService extends Constant{
 	 * @return
 	 */
 	String getProcessPercent(String sid, String projectCode, String profile);
+
+	ReturnCodeEnum downLoadWar(HttpServletResponse response, String projectCode, String profile);
 	
 }

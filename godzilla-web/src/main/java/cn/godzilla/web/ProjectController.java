@@ -12,21 +12,17 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.ModelAndView;
 
 import cn.godzilla.common.Constant;
 import cn.godzilla.common.ReturnCodeEnum;
 import cn.godzilla.common.StringUtil;
 import cn.godzilla.model.ClientConfig;
 import cn.godzilla.model.OperateLog;
-import cn.godzilla.model.ProjPrivate;
-import cn.godzilla.model.ProjStatus;
 import cn.godzilla.model.Project;
 import cn.godzilla.model.SvnBranchConfig;
-import cn.godzilla.model.SvnConflict;
 import cn.godzilla.service.ClientConfigService;
+import cn.godzilla.service.MvnService;
 import cn.godzilla.service.OperateLogService;
 import cn.godzilla.service.ProjPrivateService;
 import cn.godzilla.service.ProjStatusService;
@@ -59,6 +55,8 @@ public class ProjectController extends GodzillaApplication implements Constant{
 	
 	@Autowired
 	ProjPrivateService projPrivateService;
+	@Autowired
+	MvnService mvnService;
 	
 	private final Logger logger = LogManager.getLogger(ProjectController.class);
 	
@@ -123,6 +121,14 @@ public class ProjectController extends GodzillaApplication implements Constant{
 		request.setAttribute("basePath", BASE_PATH);
 		request.setAttribute("user", super.getUser());
 		return "gesila1";
+	}
+	
+	@RequestMapping(value="{sid}/{projectCode}/{profile}/download", method=RequestMethod.GET) 
+	public Object download(@PathVariable("sid") String sid, @PathVariable String projectCode, @PathVariable String profile, HttpServletResponse response) {
+		
+		ReturnCodeEnum returnEnum = mvnService.downLoadWar(response, projectCode, profile);
+		
+		return null;
 	}
 	
 }

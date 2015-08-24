@@ -75,7 +75,11 @@
 								<tbody>
 									<tr>
 										<td width="80" class="paddingR0">部署操作：</td>
-										<td class="bg1"><span class="spanArrange"><a class="deploy" href="javacript:;" value1="${project.checkoutPath}" value2="TEST" title="部署">部署</a></span><span class="spanUseAgain"><a href="#" class="restart" value2="TEST" title="重新启动">重新启动</a></span></td>
+										<td class="bg1">
+											<span class="spanArrange"><a class="deploy" href="javacript:;" value1="${project.checkoutPath}" value2="TEST" title="部署">部署</a></span>
+											<span class="spanUseAgain"><a href="#" class="restart" value2="TEST" title="重新启动">重新启动</a></span>
+											<span class="spanUseAgain"><a href="#" class="download" value2="TEST" title="下载war包">下载war包</a></span>
+										</td>
 									</tr>
 									<tr>
 										<td class="paddingR0">SVN操作：</td>
@@ -109,7 +113,8 @@
 									<tr>
 										<td width="80" class="paddingR0">部署操作：</td>
 										<td class="bg1">
-										<span class="spanArrange"><a class="deploy" href="javacript:;" value1="${project.checkoutPath}" value2="QUASIPRODUCT" title="打包">打包</a></span>
+											<span class="spanArrange"><a class="deploy" href="javacript:;" value1="${project.checkoutPath}" value2="QUASIPRODUCT" title="打包">打包</a></span>
+											<span class="spanUseAgain"><a href="#" class="download" value2="QUASIPRODUCT" title="下载war包">下载war包</a></span>
 										</td>
 									</tr>
 								</tbody>
@@ -131,7 +136,10 @@
 								<tbody>
 									<tr>
 										<td width="80" class="paddingR0">部署操作：</td>
-										<td class="bg1"><span class="spanArrange"><a class="deploy" href="javacript:;" value1="${project.checkoutPath}" value2="PRODUCT" title="打包">打包</a></span></td>
+										<td class="bg1">
+											<span class="spanArrange"><a class="deploy" href="javacript:;" value1="${project.checkoutPath}" value2="PRODUCT" title="打包">打包</a></span>
+											<span class="spanUseAgain"><a href="#" class="download" value2="PRODUCT" title="下载war包">下载war包</a></span>
+										</td>
 									</tr>
 								</tbody>
 							</table>
@@ -381,7 +389,8 @@
 	        var profile = $(this).attr("value2");
 	        $("#value22").val(profile);
 	        showWindow(4);
-		})	       
+		})	
+		
 		// 部署
 	    $("#deployBtn").on("click", function() {
 	    	
@@ -418,6 +427,28 @@
 	        timeout = true;
 	        time();
 	    });
+	    //下载war包
+		$(".download").on("click", function() {
+			if (!confirm("是否确定下载war包（注：此次下载为最近一次部署版本）"))  {  
+	    		return ;
+	    	}
+	    	var profile = $(this).attr("value2");
+	    	/*$.ajax({
+	    		type: "get",
+	    		url: "/${basePath}/project/${sid}/${projectCode}/"+profile+"/download.do",
+	    		data: {
+	    		},
+	    		dataType:"json",
+	    		success: function(data) {
+	    			if(data=="SUCCESS") {
+	    				alert("success");
+	    			} else {
+	    				alert("failed");
+	    			}
+	    		}
+	    	});*/
+	    	window.location.href = "/${basePath}/project/${sid}/${projectCode}/"+profile+"/download.do";
+		});
 	    // 重新启动
 	    $('.restart').click(function() {
 	    	if (!confirm("是否确定重新启动"))  {  

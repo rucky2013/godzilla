@@ -1,9 +1,14 @@
 package cn.godzilla.service.impl;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -11,28 +16,28 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import cn.godzilla.common.ReturnCodeEnum;
-import cn.godzilla.dao.PropConfigMapper;
 import cn.godzilla.model.ClientConfig;
 import cn.godzilla.model.Project;
-import cn.godzilla.model.PropConfig;
 import cn.godzilla.model.RpcResult;
-import cn.godzilla.mvn.MvnBaseCommand;
 import cn.godzilla.rpc.api.RpcFactory;
 import cn.godzilla.rpc.main.Util;
 import cn.godzilla.service.ClientConfigService;
 import cn.godzilla.service.MvnCmdLogService;
 import cn.godzilla.service.MvnProviderService;
 import cn.godzilla.service.MvnService;
+import cn.godzilla.service.OperateLogService;
 import cn.godzilla.service.ProjectService;
 import cn.godzilla.service.PropConfigProviderService;
 import cn.godzilla.service.SvnService;
+import cn.godzilla.svn.BaseShellCommand;
 import cn.godzilla.web.GodzillaApplication;
 
 @Service("mvnService")
 public class MvnServiceImpl extends GodzillaApplication implements MvnService {
 	
 	private final Logger logger = LogManager.getLogger(MvnServiceImpl.class);
-	
+	@Autowired
+	private OperateLogService operateLogService;
 	@Autowired
 	private ClientConfigService clientConfigService;
 	@Autowired
@@ -236,6 +241,88 @@ public class MvnServiceImpl extends GodzillaApplication implements MvnService {
 	}
 	
 	
-
+	public ReturnCodeEnum downLoadWar(HttpServletResponse response, String projectCode, String profile) {
+		
+		java.io.BufferedOutputStream bos = null;
+		java.io.BufferedInputStream bis = null;
+		String ctxPath = SAVE_WAR_PATH ;
+		String downLoadPath = ctxPath + "/" + projectCode + ".war";
+		logger.info("****downloadpath : "+ downLoadPath);
+		//1.ssh scp 到本地
+		this.copyWar(projectCode, profile);
+		
+		//2.输出
+		try {
+			long fileLength = new File(downLoadPath).length();
+			response.setContentType("application/x-msdownload;");
+			response.setHeader("Content-disposition", "attachment;filename=" + 
+					new String((projectCode+".war").getBytes("utf-8"),"ISO8859-1"));
+			response.setHeader("Content-Length", String.valueOf(fileLength));
+			
+			bis = new BufferedInputStream(new FileInputStream(downLoadPath));
+			bos = new BufferedOutputStream(response.getOutputStream());
+			byte[] buff = new byte[2048];
+			int bytesRead;
+			while(-1!=(bytesRead = bis.read(buff, 0, buff.length))) {
+				bos.write(buff, 0, bytesRead);
+			}
+		} catch(IOException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if(bis!=null)
+					bis.close();
+				if(bos!=null) 
+					bos.close();
+			} catch(IOException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return null;
+	}
+	
+	
+	private boolean copyWar(String projectCode, String profile) {
+		ClientConfig clientConfig = clientConfigService.queryDetail(projectCode, profile);
+		String clientIp = clientConfig.getRemoteIp();
+		
+		BaseShellCommand command = new BaseShellCommand();
+		
+		String tomcatHome = "";
+		
+		if("TEST".equals(profile)) {
+			clientIp = clientIp;
+			tomcatHome = "/app/tomcat";
+		} else if("QUASIPRODUCT".equals(profile)) {
+			clientIp = QUASIPRODUCT_WAR_IP;
+			tomcatHome = "/app/tomcat";
+		} else if("PRODUCT".equals(profile)) {
+			clientIp = PRODUCT_WAR_IP;
+			tomcatHome = "/app/tomcat";
+		}
+		
+		if("godzilla".equals(projectCode)) {
+			clientIp = "10.100.142.65";
+			tomcatHome = "/home/godzilla/tomcat-godzilla";
+		} 
+		tomcatHome += "/webapps/*.war";
+		String str = "sh /home/godzilla/gzl/shell/server/copywar_server.sh " + clientIp + " " + tomcatHome + " " + SAVE_WAR_PATH;;
+		boolean flag = false;
+		if("godzilla".equals(projectCode)) {
+			flag = true;
+		} else {
+			flag = command.execute(str, super.getUser().getUserName());
+		}
+		
+		if(flag) {
+			operateLogService.addOperateLog(super.getUser().getUserName(), projectCode, profile, COPYWAR, SUCCESS, "copy war success");
+			return true;
+		} else {
+			operateLogService.addOperateLog(super.getUser().getUserName(), projectCode, profile, COPYWAR, FAILURE, "copy war failure");
+			return false;
+		}
+		
+	}
 	
 }

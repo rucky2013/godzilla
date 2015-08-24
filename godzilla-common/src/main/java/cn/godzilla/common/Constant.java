@@ -28,6 +28,7 @@ public interface Constant {
 	public final String SVNMERGE = "svnmerge";
 	public final String SVNCOMMIT = "svncommit";
 	public final String TOMCATRESTART = "tomcatrestart";
+	public final String COPYWAR= "sshcopywar";
 	
 	
 	public final String NOTYET_VERIFY_STATUS = "0";//未审核
@@ -36,6 +37,9 @@ public interface Constant {
 	public final String PROJECT_ENV = "dev";
 	public final String SHELL_SERVER_PATH = "/home/godzilla/gzl/shell/server";
 	public final String SHELL_CLIENT_PATH = "/home/godzilla/gzl/shell/client";
+	public final String SAVE_WAR_PATH= "/home/godzilla/gzl/war";
+	public final String QUASIPRODUCT_WAR_IP= "";
+	public final String PRODUCT_WAR_IP = "";
 	/**
 	 * freemarker ftl url base path
 	 */
