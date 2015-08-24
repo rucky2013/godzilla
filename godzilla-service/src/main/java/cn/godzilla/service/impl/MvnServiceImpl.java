@@ -4,11 +4,13 @@ import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.swing.filechooser.FileFilter;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -251,12 +253,16 @@ public class MvnServiceImpl extends GodzillaApplication implements MvnService {
 		//1.ssh scp 到本地
 		this.copyWar(projectCode, profile);
 		
+		
+		//1.5 获取 war包 文件名
+		File warfilename = this.searchFile(new File(ctxPath), projectCode);
+		
 		//2.输出
 		try {
 			long fileLength = new File(downLoadPath).length();
 			response.setContentType("application/x-msdownload;");
 			response.setHeader("Content-disposition", "attachment;filename=" + 
-					new String((projectCode+".war").getBytes("utf-8"),"ISO8859-1"));
+					new String(warfilename.getName().getBytes("utf-8"),"ISO8859-1"));
 			response.setHeader("Content-Length", String.valueOf(fileLength));
 			
 			bis = new BufferedInputStream(new FileInputStream(downLoadPath));
@@ -280,6 +286,22 @@ public class MvnServiceImpl extends GodzillaApplication implements MvnService {
 		}
 		
 		return null;
+	}
+	
+	private File searchFile(final File folder, final String keyWord) {
+		File[] findFolders = folder.listFiles(new FilenameFilter() {// 运用内部匿名类获得文件
+			@Override
+			public boolean accept(File dir, String name) {
+				if (dir.isDirectory()
+                        || (dir.isFile() && name
+                                .toLowerCase()
+                                .contains(keyWord)))// 目录或文件包含关键字
+                    return true;
+                return false;
+			}
+
+        });
+		return findFolders[0];
 	}
 	
 	
