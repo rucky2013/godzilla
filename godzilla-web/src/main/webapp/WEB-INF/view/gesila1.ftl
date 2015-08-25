@@ -322,9 +322,11 @@
 			shadowClose(1);
 			shadowClose(2);
 			shadowClose(3);
+			shadowClose(4);
 			document.getElementById('close' + '1').click();
 			document.getElementById('close' + '2').click();
 			document.getElementById('close' + '3').click();
+			document.getElementById('close' + '4').click();
 		}
 		function showWindow(index) {
 			var oShadow = document.getElementById('shadow');

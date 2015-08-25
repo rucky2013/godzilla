@@ -38,8 +38,8 @@ public interface Constant {
 	public final String SHELL_SERVER_PATH = "/home/godzilla/gzl/shell/server";
 	public final String SHELL_CLIENT_PATH = "/home/godzilla/gzl/shell/client";
 	public final String SAVE_WAR_PATH= "/home/godzilla/gzl/war";
-	public final String QUASIPRODUCT_WAR_IP= "";
-	public final String PRODUCT_WAR_IP = "";
+	public final String QUASIPRODUCT_WAR_IP= "10.100.142.71";
+	public final String PRODUCT_WAR_IP = "10.100.142.72";
 	/**
 	 * freemarker ftl url base path
 	 */

@@ -332,11 +332,7 @@ public class MvnServiceImpl extends GodzillaApplication implements MvnService {
 		tomcatHome += "/webapps/*.war";
 		String str = "sh /home/godzilla/gzl/shell/server/copywar_server.sh " + clientIp + " " + tomcatHome + " " + SAVE_WAR_PATH;;
 		boolean flag = false;
-		if("godzilla".equals(projectCode)) {
-			flag = true;
-		} else {
-			flag = command.execute(str, super.getUser().getUserName());
-		}
+		flag = command.execute(str, super.getUser().getUserName());
 		
 		if(flag) {
 			operateLogService.addOperateLog(super.getUser().getUserName(), projectCode, profile, COPYWAR, SUCCESS, "copy war success");
