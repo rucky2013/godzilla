@@ -61,9 +61,9 @@ public class PropController extends GodzillaApplication implements Constant{
 		propConfigService.findPropByProjectCode(projectCode, propTest, propQuasiProduct, propProduct);
 		
 		request.setAttribute("user", this.getUser());
-		request.setAttribute("propTest", propTest.toString());
-		request.setAttribute("propQuasiProduct", propQuasiProduct.toString());
-		request.setAttribute("propProduct", propProduct.toString());
+		request.setAttribute("propTest", this.replaceHtml(propTest.toString()));
+		request.setAttribute("propQuasiProduct", this.replaceHtml(propQuasiProduct.toString()));
+		request.setAttribute("propProduct", this.replaceHtml(propProduct.toString()));
 		request.setAttribute("basePath", BASE_PATH);
 		return "/query";
 	}
@@ -106,25 +106,33 @@ public class PropController extends GodzillaApplication implements Constant{
 	@RequestMapping(value="/{sid}/{projectCode}/queryProp")
 	public Object queryPropPage(@PathVariable String sid, @PathVariable String projectCode, HttpServletRequest request) {
 		
-		String selectedProjectCode = StringUtil.getReqPrameter(request, "selectedProjectCode", "godzilla");
+		//String selectedProjectCode = StringUtil.getReqPrameter(request, "selectedProjectCode", "godzilla");
 		String createBy = StringUtil.getReqPrameter(request, "createBy", "");
 		String selectedProfile = StringUtil.getReqPrameter(request, "selectedProfile", "");
 		
 		List<Project> projectList = projectService.queryAll();
 		Map<String, String> profileList = propConfigService.queryAllProfile();
-		List<PropConfig> propList = propConfigService.queryByProjectcodeAndCreatebyAndProfileAndStatus(selectedProjectCode, createBy, selectedProfile, OK_VERIFY_STATUS);
-				
+		//List<PropConfig> propList = propConfigService.queryByProjectcodeAndCreatebyAndProfileAndStatus(selectedProjectCode, createBy, selectedProfile, OK_VERIFY_STATUS);
+		List<PropConfig> propList = propConfigService.queryByProjectcodeAndCreatebyAndProfileAndStatus(projectCode, createBy, selectedProfile, OK_VERIFY_STATUS);
+		
 		request.setAttribute("createBy", createBy);//提交人
-		request.setAttribute("selectedProjectCode", selectedProjectCode);
+		//request.setAttribute("selectedProjectCode", selectedProjectCode);
 		request.setAttribute("projectList", projectList);
 		request.setAttribute("selectedProfile", selectedProfile);
 		request.setAttribute("profileList", profileList);
-		request.setAttribute("propList", propList);
+		request.setAttribute("propList", this.replaceHtml(propList));
 		request.setAttribute("user", this.getUser());
 		request.setAttribute("basePath", BASE_PATH);
 		return "query02";
 	}
 	
+	private List<PropConfig> replaceHtml(List<PropConfig> propList) {
+		for(PropConfig prop: propList) {
+			prop.setProValue(prop.getProValue().replace("<", "&lt;").replace(">", "&gt;"));
+		}
+		return propList;
+	}
+
 	/**
 	 * 进入审核 列表页
 	 * @param sid
@@ -135,20 +143,21 @@ public class PropController extends GodzillaApplication implements Constant{
 	@RequestMapping(value="/{sid}/{projectCode}/verifyProp" , method=RequestMethod.GET) 
 	public Object verifyPropListPage(@PathVariable String sid, @PathVariable String projectCode, HttpServletRequest request) {
 		
-		String selectedProjectCode = StringUtil.getReqPrameter(request, "selectedProjectCode", "godzilla");
+		//String selectedProjectCode = StringUtil.getReqPrameter(request, "selectedProjectCode", "godzilla");
 		String createBy = StringUtil.getReqPrameter(request, "createBy", "");
 		String selectedProfile = StringUtil.getReqPrameter(request, "selectedProfile", "");
 		
 		List<Project> projectList = projectService.queryAll();
 		Map<String, String> profileList = propConfigService.queryAllProfile();
-		List<PropConfig> propList = propConfigService.queryByProjectcodeAndCreatebyAndProfileGroupBy(selectedProjectCode, createBy, selectedProfile, NOTYET_VERIFY_STATUS);
+		//List<PropConfig> propList = propConfigService.queryByProjectcodeAndCreatebyAndProfileGroupBy(selectedProjectCode, createBy, selectedProfile, NOTYET_VERIFY_STATUS);
+		List<PropConfig> propList = propConfigService.queryByProjectcodeAndCreatebyAndProfileGroupBy(projectCode, createBy, selectedProfile, NOTYET_VERIFY_STATUS);
 		
 		request.setAttribute("createBy", createBy);//提交人
-		request.setAttribute("selectedProjectCode", selectedProjectCode);
+		//request.setAttribute("selectedProjectCode", selectedProjectCode);
 		request.setAttribute("projectList", projectList);
 		request.setAttribute("selectedProfile", selectedProfile);
 		request.setAttribute("profileList", profileList);
-		request.setAttribute("propList", propList);
+		request.setAttribute("propList", this.replaceHtml(propList));
 		request.setAttribute("user", this.getUser());
 		request.setAttribute("basePath", BASE_PATH);
 		
@@ -190,19 +199,24 @@ public class PropController extends GodzillaApplication implements Constant{
 		
 		request.setAttribute("user", this.getUser());
 		
-		request.setAttribute("propTest", propTest.toString());
-		request.setAttribute("propQuasiProduct", propQuasiProduct.toString());
-		request.setAttribute("propProduct", propProduct.toString());
+		request.setAttribute("propTest", this.replaceHtml(propTest.toString()));
+		request.setAttribute("propQuasiProduct", this.replaceHtml(propQuasiProduct.toString()));
+		request.setAttribute("propProduct", this.replaceHtml(propProduct.toString()));
 		
-		request.setAttribute("oldpropTest", oldpropTest.toString());
-		request.setAttribute("oldpropQuasiProduct", oldpropQuasiProduct.toString());
-		request.setAttribute("oldpropProduct", oldpropProduct.toString());
+		request.setAttribute("oldpropTest", this.replaceHtml(oldpropTest.toString()));
+		request.setAttribute("oldpropQuasiProduct", this.replaceHtml(oldpropQuasiProduct.toString()));
+		request.setAttribute("oldpropProduct", this.replaceHtml(oldpropProduct.toString()));
 		
 		request.setAttribute("basePath", BASE_PATH);
 		
 		return "query_textarea";
 	}
 	
+	
+	private Object replaceHtml(String string) {
+		return string.replace("<", "&lt;").replace(">", "&gt;");
+	}
+
 	/**
 	 * 审核
 	 * @param sid

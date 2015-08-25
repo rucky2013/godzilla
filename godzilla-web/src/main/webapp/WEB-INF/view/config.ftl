@@ -47,17 +47,6 @@
               <form id="search_form" action="/${basePath}/prop/${sid}/${projectCode}/verifyProp.do" method="GET">
               		<fieldset>
                   	<label>提交人：</label><input type="text" name="createBy" placeholder="输入内容" />
-                  	<label>应用：</label>
-                  	${selectedProjectCode}
-                    	<select name="selectedProjectCode">
-                    		<#list projectList as project>
-                			  	<#if project.projectCode = selectedProjectCode!'godzilla'>
-								  <option value="${project.projectCode}" selected="selected">${project.projectCode}</option>
-								<#else>
-								  <option value="${project.projectCode}">${project.projectCode}</option>
-								</#if>  
-                    		</#list>
-                  		</select>
                 	<label>环境：</label>
                 	<select name="selectedProfile">
                 		<option value="" selected="selected">All</option>

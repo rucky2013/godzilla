@@ -2,12 +2,8 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>配置查询02-哥斯拉</title>
 <link type="text/css" href="/${basePath}/css/meta.css" rel="stylesheet"/>
-<script src="/${basePath}/js/mySelect.js"></script>
-<script>
-window.onload=function(){
-	mySelect('application');
-};
-</script>
+
+
 </head>
 <body id="query" class="query">
 <input type="hidden" name="projectCode" id="projectCode" value="${projectCode}" />
@@ -54,17 +50,6 @@ window.onload=function(){
               <form id="search_form" action="/${basePath}/prop/${sid}/${projectCode}/queryProp.do" method="POST">
               		<fieldset>
                   	<label>提交人：</label><input type="text" name="createBy" placeholder="输入内容" />
-                  	<label>应用：</label>
-                  	${selectedProjectCode}
-                    	<select name="selectedProjectCode">
-                    		<#list projectList as project>
-                			  	<#if project.projectCode = selectedProjectCode!'godzilla'>
-								  <option value="${project.projectCode}" selected="selected">${project.projectCode}</option>
-								<#else>
-								  <option value="${project.projectCode}">${project.projectCode}</option>
-								</#if>  
-                    		</#list>
-                  		</select>
                 	<label>环境：</label>
                 	<select name="selectedProfile">
                 		<option value="" selected="selected">All</option>

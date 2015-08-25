@@ -151,8 +151,18 @@ function shadowClose(index) {
 	oClose.onclick = function() {
 		oShadow.style.display = 'none';
 		oShadowBox.style.display = 'none';
-		window.location.href = "/${basePath}/${sid}/userAuthList.do"
+		window.location.href = "/${basePath}/user/${sid}/userAuthList.do"
 	}
+}
+window.onload = function() {
+	//关闭弹出层
+	shadowClose(1);
+}
+function showWindow(index) {
+	var oShadow = document.getElementById('shadow');
+	var oShadowBox = document.getElementById('shadow_box' + index);
+	oShadow.style.display = '';
+	oShadowBox.style.display = '';
 }
 </script>
 </body>
