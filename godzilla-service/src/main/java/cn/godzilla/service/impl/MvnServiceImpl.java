@@ -248,24 +248,24 @@ public class MvnServiceImpl extends GodzillaApplication implements MvnService {
 		java.io.BufferedOutputStream bos = null;
 		java.io.BufferedInputStream bis = null;
 		String ctxPath = SAVE_WAR_PATH ;
-		String downLoadPath = ctxPath + "/" + projectCode + ".war";
-		logger.info("****downloadpath : "+ downLoadPath);
+		//String downLoadPath = ctxPath + "/" + projectCode + ".war";
+		//logger.info("****downloadpath : "+ downLoadPath);
 		//1.ssh scp 到本地
 		this.copyWar(projectCode, profile);
 		
 		
 		//1.5 获取 war包 文件名
-		File warfilename = this.searchFile(new File(ctxPath), projectCode);
+		File warfile = this.searchFile(new File(ctxPath), projectCode);
 		
 		//2.输出
 		try {
-			long fileLength = new File(downLoadPath).length();
+			long fileLength = warfile.length();
 			response.setContentType("application/x-msdownload;");
 			response.setHeader("Content-disposition", "attachment;filename=" + 
-					new String(warfilename.getName().getBytes("utf-8"),"ISO8859-1"));
+					new String(warfile.getName().getBytes("utf-8"),"ISO8859-1"));
 			response.setHeader("Content-Length", String.valueOf(fileLength));
 			
-			bis = new BufferedInputStream(new FileInputStream(downLoadPath));
+			bis = new BufferedInputStream(new FileInputStream(warfile));
 			bos = new BufferedOutputStream(response.getOutputStream());
 			byte[] buff = new byte[2048];
 			int bytesRead;
@@ -292,12 +292,13 @@ public class MvnServiceImpl extends GodzillaApplication implements MvnService {
 		File[] findFolders = folder.listFiles(new FilenameFilter() {// 运用内部匿名类获得文件
 			@Override
 			public boolean accept(File dir, String name) {
-				if (dir.isDirectory()
-                        || (dir.isFile() && name
-                                .toLowerCase()
-                                .contains(keyWord)))// 目录或文件包含关键字
-                    return true;
-                return false;
+				logger.info("-----filename: "  + name);
+				// 目录或文件包含关键字
+				boolean flag = name.toLowerCase().contains(keyWord.toLowerCase());
+				if(flag)
+					return true;
+				else
+					return false;
 			}
 
         });
