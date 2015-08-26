@@ -15,7 +15,9 @@ import org.jboss.netty.channel.ChannelFactory;
 import org.jboss.netty.channel.ChannelPipeline;
 import org.jboss.netty.channel.ChannelPipelineFactory;
 import org.jboss.netty.channel.Channels;
+import org.jboss.netty.channel.socket.nio.NioServerBossPool;
 import org.jboss.netty.channel.socket.nio.NioServerSocketChannelFactory;
+import org.jboss.netty.channel.socket.nio.NioWorkerPool;
 
 import cn.godzilla.rpc.common.Entry;
 import cn.godzilla.rpc.common.Parameters;
@@ -69,7 +71,7 @@ public class Server {
 			
 			factory = new NioServerSocketChannelFactory(
 					Executors.newFixedThreadPool(2),
-					Executors.newFixedThreadPool(9), 8);
+					Executors.newFixedThreadPool(8), 8);
 			serverBootstrap = new ServerBootstrap(factory);
 			serverBootstrap.setPipelineFactory(new ChannelPipelineFactory() {
 				
@@ -125,6 +127,7 @@ public class Server {
 				entry.getRow().write(
 						Serializer.serialize(Result.success(result, null)));
 			} catch(Exception e) {
+				e.printStackTrace();
 				entry.getRow().write(failure);
 			}
 		}

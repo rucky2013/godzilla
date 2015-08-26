@@ -13,6 +13,7 @@ import org.jboss.netty.channel.ChannelPipeline;
 import org.jboss.netty.channel.ChannelPipelineFactory;
 import org.jboss.netty.channel.Channels;
 import org.jboss.netty.channel.socket.nio.NioClientSocketChannelFactory;
+import org.jboss.netty.channel.socket.oio.OioClientSocketChannelFactory;
 
 import cn.godzilla.rpc.network.handler.Decoder;
 import cn.godzilla.rpc.network.handler.Encoder;
@@ -44,7 +45,7 @@ public class Client {
 			throw new ClientStartException();
 		} else {
 			isStart = true;
-
+			
 			factory = new NioClientSocketChannelFactory(
 					Executors.newFixedThreadPool(10),
 					Executors.newFixedThreadPool(10), 2, 8);

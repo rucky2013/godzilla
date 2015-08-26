@@ -155,6 +155,9 @@ function commit() {
 	# 0.功能不清晰，暂时这么写
 	#***
 function status() {
+	svn info $SVN_TRUNK $svnuser
+}
+function statusOld() {
 
 	#***
 	# 1.清空 本地路径
@@ -210,8 +213,11 @@ function status() {
 	cd $srcpath/$PROJECT_NAME
 	svn info
 }
-
-function getVersion(){
+function getVersion() {
+	version=`svn log ${SVN_TRUNK} $svnuser | grep "^r"| head -1|awk '{print $1}'`
+	echo "version${version}"
+}
+function getVersionOld(){
 
 	#***
 	# 1.清空 本地路径

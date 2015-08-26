@@ -153,7 +153,7 @@
 							<th>源代码svn路径</th>
 							<th>源代码存放路径</th>
 							<th>当前版本号</th>
-							<th>部署版本号</th>
+							<!--<th>部署版本号</th>-->
 						</tr>
 					</thead>
 					<tbody>
@@ -169,12 +169,13 @@
 							<td width="216"><small>${project.repositoryUrl!''}</small></td>
 							<td width="216"><small>${project.checkoutPath!''}</small></td>
 							<td>${project.version!''}</td>
-							<td>${clientConfig.deployVersion!''}</td>
+							<!--<td>${clientConfig.deployVersion!''}</td>-->
 						</tr>
 						</#if>
 
 					</tbody>
 				</table>
+				<#if profile = 'TEST'>
 				<h4 class="title">分支设置</h4>
 				<table width="100%" border="0" class="table2">
 					<thead>
@@ -198,6 +199,7 @@
 						</#list>
 					</tbody>
 				</table>
+				</#if>
 				<h4 class="title">部署日志</h4>
 				<div id="recordTolls">
 					<ul>
@@ -347,8 +349,8 @@
 		var timeout = false; //启动及关闭按钮  
 		function time() {  
 		  if(!timeout) return;  
-		  updateProcess();  
-		  setTimeout(time,1000); //time是指本身,延时递归调用自己,100为间隔调用时间,单位毫秒  
+		  updateProcess();
+		  setTimeout(time,2000); //time是指本身,延时递归调用自己,100为间隔调用时间,单位毫秒  
 		} 
 		function updateProcess() {
 			var sid='${sid}';
@@ -401,12 +403,13 @@
 			
 	        var value1 = $("#value11").val();
 	        var profile =  $("#value22").val();
-			
+			var parentVersion = $("#parentVersion").val();
 	        $.ajax({
 	            type: "POST",
 	            url: "/${basePath}/mvn/${sid}/${projectCode}/" + profile + "/deploy.do",
 	            data: {
 	                srcUrl: value1,
+	                parentVersion: parentVersion,
 	            },
 	            dataType: "json",
 	            success: function(data) {
@@ -417,6 +420,8 @@
 					timeout = false;
 					if (data == "SUCCESS") {
 	                    alert("success");
+	                    $("#process").width(0);
+						$("#processText").text("0%");
 	                    window.location.href = '/${basePath}/project/${sid}/${projectCode}/${profile}/projectConfig.do';
 	                } else {
 	                    alert("failed");

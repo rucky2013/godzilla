@@ -125,7 +125,7 @@ public class MvnServiceImpl extends GodzillaApplication implements MvnService {
 				}
 			}
 		});
-		t1.start();
+		t1.start();/**/
 		/*
 		 * 2.mvn deploy  3.将sh命令>queue
 		 * percent 90%
@@ -149,9 +149,10 @@ public class MvnServiceImpl extends GodzillaApplication implements MvnService {
 		if(flag1&&flag2) {
 			
 			/*
-			 * end.部署成功  更新 部署版本号 
+			 * 存在定义 问题
+			 * end.部署成功  更新 部署版本号  
 			 */
-			boolean flag3 = this.updateDeployVersion(projectCode, profile);
+			//boolean flag3 = this.updateDeployVersion(projectCode, profile);
 			return ReturnCodeEnum.getByReturnCode(OK_MVNDEPLOY);
 		}
 		return ReturnCodeEnum.getByReturnCode(NO_MVNDEPLOY);
@@ -193,10 +194,10 @@ public class MvnServiceImpl extends GodzillaApplication implements MvnService {
 		Project project = projectService.qureyByProCode(projectCode);
 		String trunkPath = project.getRepositoryUrl();
 		
-		ReturnCodeEnum versionreturn = svnService.getVersion(trunkPath, projectCode);
+		/*ReturnCodeEnum versionreturn = svnService.getVersion(trunkPath, projectCode);
 		if(!versionreturn.equals(ReturnCodeEnum.getByReturnCode(OK_SVNVERSION))) {
 			return false;
-		}
+		}*/
 		
 		String deployVersion = svnVersionThreadLocal.get();
 		

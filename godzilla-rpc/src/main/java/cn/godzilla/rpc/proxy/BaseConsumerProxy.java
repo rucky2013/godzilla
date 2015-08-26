@@ -7,6 +7,7 @@ import java.util.concurrent.atomic.AtomicLong;
 import org.jboss.netty.channel.ChannelFuture;
 
 import cn.godzilla.common.Constant;
+import cn.godzilla.rpc.api.RpcException;
 import cn.godzilla.rpc.client.ClientFactory;
 import cn.godzilla.rpc.common.Parameters;
 import cn.godzilla.rpc.common.Result;
@@ -45,7 +46,7 @@ public abstract class BaseConsumerProxy {
 		};
 	}
 	
-	protected Object doInterval(String interfaceName, Object[] objs) {
+	protected Object doInterval(String interfaceName, Object[] objs) throws RpcException {
 		List<Class<?>> clazzs = new ArrayList<Class<?>>(objs.length);
 		List<Object> params = new ArrayList<Object>();
 		for(Object obj: objs) {
@@ -58,8 +59,20 @@ public abstract class BaseConsumerProxy {
 		parameters.setParameterTypes(clazzs);
 		parameters.setParameters(params);
 		
-		while(!channelFutureLocal.get().getChannel().isConnected())
-			;
+		int time = 0;
+		while(!channelFutureLocal.get().getChannel().isConnected()) {
+			System.out.println("channelFutureLocal.get().getChannel().isConnected() 睡眠");
+			try {
+				Thread.sleep(500);
+			} catch (InterruptedException e1) {
+				e1.printStackTrace();
+			}
+			if(time++>10) {
+				System.out.println("channelFutureLocal.get().getChannel().isConnected() 连接失败");
+				throw new RpcException("channelFutureLocal.get().getChannel().isConnected() 连接失败  beyond 10 time try is connected");
+			}
+		}
+		
 		try {
 			byte[] data = Serializer.serialize(parameters);
 			
@@ -73,15 +86,16 @@ public abstract class BaseConsumerProxy {
 			
 			if(!result.isSuccess()) {
 				System.out.println("出错啦");
+				throw new RpcException("调用失败啦");
 			}
 			
 			return result.getResult();
 		} catch(SerializeException e ) {
 			System.out.println("SerializeException 出错啦");
-			return null;
+			throw new RpcException("SerializeException 出错啦");
 		} catch(InterruptedException e ) {
 			System.out.println("InterruptedException 出错啦");
-			return null;
+			throw new RpcException("InterruptedException 出错啦");
 		}
 	}
 	

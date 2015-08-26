@@ -7,7 +7,7 @@ public class ServerFactory {
 	private static Server server;
 	
 	static {
-		server = new Server(Constant.RPC_DEFAULT_PORT, 10);
+		server = new Server(Constant.RPC_DEFAULT_PORT, 8);
 		server.start();
 	}
 	

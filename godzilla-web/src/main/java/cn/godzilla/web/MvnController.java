@@ -47,7 +47,8 @@ public class MvnController extends GodzillaApplication{
 		logger.debug("*****MvnController.deploy*****");
 		String srcUrl = StringUtil.getReqPrameter(request, "srcUrl");
 		String parentVersion = StringUtil.getReqPrameter(request, "parentVersion", "");
-		
+		String pencentkey = sid + "-" + projectCode + "-" + profile;
+		processPercent.put(pencentkey, "0");
 		ReturnCodeEnum deployReturn = mvnService.doDeploy(srcUrl, projectCode, profile, parentVersion);
 		
 		if(deployReturn == ReturnCodeEnum.OK_MVNDEPLOY) {
@@ -72,7 +73,10 @@ public class MvnController extends GodzillaApplication{
 		logger.debug("*****MvnController.process*****");
 		
 		String processPercent = mvnService.getProcessPercent(sid, projectCode, profile);
-		
+		if(processPercent.equals("100")) {
+			String pencentkey = sid + "-" + projectCode + "-" + profile;
+			super.processPercent.put(pencentkey, "0");
+		}
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		resultMap.put("returncode", OK_AJAX);
 		resultMap.put("returnmsg", SUCCESS);

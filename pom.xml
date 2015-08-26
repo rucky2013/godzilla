@@ -46,7 +46,7 @@
 		<jedis.version>2.6.1</jedis.version>
 		<cache.api.version>0.4</cache.api.version>
 		<fastjson.version>1.2.3</fastjson.version>
-		<netty.version>3.6.0.Final</netty.version>
+		<netty.version>3.6.0.Final</netty.version> 
 		<dom4j.version>1.6.1</dom4j.version>
 	</properties>
 	<build>
