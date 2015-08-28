@@ -69,7 +69,9 @@ public class ProjectServiceImpl extends GodzillaApplication implements ProjectSe
 	}
 	@Override
 	public boolean srcEdit(String srcId, String repositoryUrl, String checkoutPath, String projectCode, String profile) {
-		
+		/**
+		 * 1.update trunk version
+		 */
 		ReturnCodeEnum versionreturn = svnService.getVersion(repositoryUrl, projectCode);
 		if(!versionreturn.equals(ReturnCodeEnum.getByReturnCode(OK_SVNVERSION))) {
 			return false;
@@ -83,7 +85,9 @@ public class ProjectServiceImpl extends GodzillaApplication implements ProjectSe
 		parameterMap.put("version", version);
 		
 		int index = dao.updateProjectById(parameterMap);
-		
+		/**
+		 * 2.update branches version
+		 */
 		return index>0;
 	}
 	
