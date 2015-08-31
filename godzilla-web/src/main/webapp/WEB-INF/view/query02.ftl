@@ -49,7 +49,7 @@
 
               <form id="search_form" action="/${basePath}/prop/${sid}/${projectCode}/queryProp.do" method="POST">
               		<fieldset>
-                  	<label>提交人：</label><input type="text" name="createBy" placeholder="输入内容" />
+                  	<label>提交人：</label><input type="text" name="createBy" placeholder="输入内容" value="${createBy}" />
                 	<label>环境：</label>
                 	<select name="selectedProfile">
                 		<option value="" selected="selected">All</option>

@@ -9,7 +9,10 @@
 <!--<link rel="stylesheet" href="/resources/demos/style.css">-->
 <style>
  #sortable { list-style-type: none; margin: 0; padding: 0; width: 100%; }
-#sortable li { margin: 0 3px 3px 3px; padding: 0.4em; padding-left: 1.5em; font-size: 1.4em; height: 18px; }
+#sortable li { margin:3px 0; padding:10px 0;dispaly:block; clear:both;overflow:hidden;curcers:pointer}
+#sortable li span{display:block;float:left; text-align:center!important}
+.ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default{ border:0!important;background: #efefef
+!important;font-size:13px!important;font-weight:normal!important}
 </style>
 <script>
 $(function() {
@@ -62,9 +65,9 @@ $( "#sortable" ).disableSelection();
 				</h2>
 				<h3 class="location">当前应用：${projectCode}</h3>
 
-              <form id="search_form" action="/${basePath}/prop/${sid}/${projectCode}/queryProp.do" method="POST">
+              <form id="search_form" action="/${basePath}/prop/${sid}/${projectCode}/propSort.do" method="GET">
               		<fieldset>
-                  	<label>提交人：</label><input type="text" name="createBy" placeholder="输入内容" />
+                  	<label>提交人：</label><input type="text" name="createBy" placeholder="输入内容" value="${createBy}" />
                 	<label>环境：</label>
                 	<select name="selectedProfile">
                 		
@@ -87,7 +90,7 @@ $( "#sortable" ).disableSelection();
                 <table width="100%">
                 <thead>
                   <tr>
-                  	<th width="9%">ID</th>
+                  	<th width="10%">ID</th>
                     <th width="15%">配置项名称</th>
                     <th width="35%">配置值</th>
                     <th width="10%">提交人</th>
@@ -101,14 +104,22 @@ $( "#sortable" ).disableSelection();
                 	<ul id="sortable">
 	                	<#list propList as prop>
 	             		  <li class="ui-state-default">
-	             		  	<span value1="${prop.id}" class="prop_id">
+	             		  	<span value1="${prop.id}" class="prop_id" style="width:10%">
 	             		  	${prop.indexOrder}
 	             		  	</span>
-	             		  	
+	             		  	<span style="width:15%">
 	             		  	${prop.proKey}
+	             		  	</span>
+	             		  	<span style="width:35%">
 	             		  	${prop.proValue}
+	             		  	</span>
+	             		  	<span style="width:10%">
 	             		  	${prop.createBy}
+	             		  	</span>
+	             		  	<span style="width:15%">
 	             		  	${prop.projectCode}
+		             		</span>
+	             		  	<span style="width:15%">		             		
 		             		  	<#if prop.profile == 'TEST'>
 			                    	测试环境
 								<#elseif prop.profile == 'PRODUCT'>
@@ -116,7 +127,7 @@ $( "#sortable" ).disableSelection();
 								<#elseif prop.profile == 'QUASIPRODUCT'>
 									 准生产环境
 								</#if>  
-							
+							</span>
 							
 	             		  </li>
 	                 	</#list>
@@ -158,7 +169,7 @@ $(document).ready(function(){
 			success: function(data) {
 				if(data=='SUCCESS') {
 					alert("SUCCESS");
-					window.location.href = "/${basePath}/project/${sid}/${projectCode}/TEST/projectConfig.do"
+					window.location.href = "/${basePath}/prop/${sid}/${projectCode}/propSort.do?selectedProfile="+"${selectedProfile}"+"&createBy=" + "${createBy}";
 				} else {
 					alert("FAILURE");
 				}
