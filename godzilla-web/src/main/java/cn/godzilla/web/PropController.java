@@ -126,11 +126,73 @@ public class PropController extends GodzillaApplication implements Constant{
 		return "query02";
 	}
 	
+	/**
+	 * 配置排序 页面
+	 * @param sid
+	 * @param projectCode
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping(value="/{sid}/{projectCode}/propSort", method=RequestMethod.GET)
+	public Object propSortPage(@PathVariable String sid, @PathVariable String projectCode, HttpServletRequest request) {
+		
+		//String selectedProjectCode = StringUtil.getReqPrameter(request, "selectedProjectCode", "godzilla");
+		String createBy = StringUtil.getReqPrameter(request, "createBy", "");
+		String selectedProfile = StringUtil.getReqPrameter(request, "selectedProfile", PROFILE_TEST);
+		
+		List<Project> projectList = projectService.queryAll();
+		Map<String, String> profileList = propConfigService.queryAllProfile();
+		//List<PropConfig> propList = propConfigService.queryByProjectcodeAndCreatebyAndProfileAndStatus(selectedProjectCode, createBy, selectedProfile, OK_VERIFY_STATUS);
+		List<PropConfig> propList = propConfigService.queryByProjectcodeAndCreatebyAndProfileAndStatus(projectCode, createBy, selectedProfile, OK_VERIFY_STATUS);
+		
+		request.setAttribute("createBy", createBy);//提交人
+		//request.setAttribute("selectedProjectCode", selectedProjectCode);
+		request.setAttribute("projectList", projectList);
+		request.setAttribute("selectedProfile", selectedProfile);
+		request.setAttribute("profileList", profileList);
+		request.setAttribute("propList", this.replaceHtml(propList));
+		request.setAttribute("user", this.getUser());
+		request.setAttribute("basePath", BASE_PATH);
+		return "propSort";
+	}
+	
+	/**
+	 * 提交排序 结果
+	 * @param sid
+	 * @param projectCode
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping(value="/{sid}/{projectCode}/propSort", method=RequestMethod.POST)
+	@ResponseBody
+	public Object propSort(@PathVariable String sid, @PathVariable String projectCode, HttpServletRequest request) {
+		
+		//String selectedProjectCode = StringUtil.getReqPrameter(request, "selectedProjectCode", "godzilla");
+		String sortJson = StringUtil.getReqPrameter(request, "sortJson", "");
+		
+		ReturnCodeEnum returnenum = propConfigService.resortPropById(sortJson);
+		
+		if(returnenum == ReturnCodeEnum.OK_SORTPROP){
+			return SUCCESS;
+		} else {
+			return FAILURE;
+		}
+	}
+	
+	/**
+	 * 替换特殊字符  使之在html页面显示后台数据
+	 * @param propList
+	 * @return
+	 */
 	private List<PropConfig> replaceHtml(List<PropConfig> propList) {
 		for(PropConfig prop: propList) {
-			prop.setProValue(prop.getProValue().replace("<", "&lt;").replace(">", "&gt;"));
+			prop.setProValue(this.replaceHtml(prop.getProValue()));
 		}
 		return propList;
+	}
+	
+	private String replaceHtml(String string) {
+		return string.replace("<", "&lt;").replace(">", "&gt;").replace("'", "&#39;").replace("\"", "&quot;");
 	}
 
 	/**
@@ -213,10 +275,6 @@ public class PropController extends GodzillaApplication implements Constant{
 	}
 	
 	
-	private Object replaceHtml(String string) {
-		return string.replace("<", "&lt;").replace(">", "&gt;");
-	}
-
 	/**
 	 * 审核
 	 * @param sid

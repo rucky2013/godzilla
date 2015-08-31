@@ -91,7 +91,12 @@
 									</tr>
 									<tr>
 										<td class="paddingR0">配置管理：</td>
-										<td class="bg1"><span class="spanAdd"><a class="prop_btn" value1="add" href="/${basePath}/prop/${sid}/${projectCode}/updateProp.do" title="配置添加">配置添加</a></span><span class="spanQuery"><a class="prop_btn" value1="query" href="/${basePath}/prop/${sid}/${projectCode}/queryProp.do" title="配置查询">配置查询</a></span><span class="spanExamine"><a class="prop_btn" value1="verify" href="/${basePath}/prop/${sid}/${projectCode}/verifyProp.do" title="配置审核">配置审核</a></span></td>
+										<td class="bg1">
+											<span class="spanAdd"><a class="prop_btn" value1="add" href="/${basePath}/prop/${sid}/${projectCode}/updateProp.do" title="配置添加">配置添加</a></span>
+											<span class="spanQuery"><a class="prop_btn" value1="query" href="/${basePath}/prop/${sid}/${projectCode}/queryProp.do" title="配置查询">配置查询</a></span>
+											<span class="spanQuery"><a class="prop_btn" value1="sort" href="/${basePath}/prop/${sid}/${projectCode}/propSort.do" title="配置排序">配置排序</a></span>
+											<span class="spanExamine"><a class="prop_btn" value1="verify" href="/${basePath}/prop/${sid}/${projectCode}/verifyProp.do" title="配置审核">配置审核</a></span>
+										</td>
 									</tr>
 								</tbody>
 							</table>

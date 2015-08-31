@@ -74,7 +74,7 @@
                       </tbody>
                     </table>
                 </div>
-                <h4><a  href="#" class="btn2" title="更多信息">更多信息</a></h4>
+                <!--<h4><a  href="#" class="btn2" title="更多信息">更多信息</a></h4>-->
             </div>
         </div>
 	</div>

@@ -16,6 +16,7 @@
     <result column="status" property="status" jdbcType="INTEGER" />
     <result column="auditor" property="auditor" jdbcType="VARCHAR" />
     <result column="auditor_text" property="auditorText" jdbcType="VARCHAR" />
+    <result column="index_order" property="indexOrder" jdbcType="INTEGER" />
   </resultMap>
   <insert id="insert" parameterType="cn.godzilla.model.PropConfig" >
     
@@ -68,6 +69,7 @@
       <if test="auditorText != null" >
         auditor_text,
       </if>
+       index_order
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -107,23 +109,26 @@
       <if test="auditorText != null" >
         #{auditorText,jdbcType=VARCHAR},
       </if>
+       0
     </trim>
   </insert>
   <sql id="queryColumns">id, project_code as projectCode, profile, 
       pro_key as proKey, pro_value as proValue, remark, 
       create_by as createBy, create_time as createTime, update_time as updateTime, 
       last_value as lastValue, status, auditor, 
-      auditor_text as auditorText</sql>
+      auditor_text as auditorText, index_order as indexOrder</sql>
   <sql id="queryMaxColumns">max(id) as id, max(project_code) as projectCode, max(profile) as profile, 
       max(pro_key) as proKey, max(pro_value) as proValue, max(remark) as remark, 
       max(create_by) as createBy, max(create_time) as createTime, max(update_time) as updateTime, 
       max(last_value) as lastValue, max(status) as status, max(auditor) as auditor, 
-      auditor_text as auditorText</sql>
+      max(auditor_text) as auditorText, max(index_order) as indexOrder</sql>
   <select id="queryDetailById" parameterType="long" resultType="cn.godzilla.model.PropConfig">
-  	select <include refid="queryColumns" /> from t_g_properties_config where id = #{id}
+  	select <include refid="queryColumns" /> from t_g_properties_config where id = #{id} 
+	order by index_order , id 
   </select>
   <select id="queryDetailByKey" parameterType="java.util.Map" resultType="cn.godzilla.model.PropConfig">
   	select <include refid="queryColumns" /> from t_g_properties_config where project_code = #{projectCode} and profile = #{profile} and pro_key = #{proKey}
+  	order by index_order , id 
   </select>
   <select id="queryList" parameterType="java.util.Map" resultType="cn.godzilla.model.PropConfig">
   	select <include refid="queryColumns" /> from t_g_properties_config where project_code = #{projectCode} and profile = #{profile}
@@ -134,6 +139,7 @@
       <if test="auditor != null" >
         and auditor = #{auditor,jdbcType=VARCHAR}
       </if>
+      order by index_order , id 
   	
   </select>
   
@@ -141,6 +147,7 @@
   	select <include refid="queryColumns" /> from t_g_properties_config 
   	where project_code = #{projectCode} and profile = #{profile}
   	and status = 1
+  	order by index_order , id 
   	
   </select>
   
@@ -198,6 +205,13 @@ where b.project_code = #{project_code} and b.create_by = #{create_by} and b.stat
   	where id =  #{id} 
   </update>
   
+  <update id="updatePropIndex" parameterType="java.util.Map" >
+  	update t_g_properties_config set 
+  		index_order = #{index_order},
+  		update_time = now()
+  		
+  	where id = #{id}
+  </update>
    <update id="verifyOKProp"  parameterType="java.util.Map" >
   	update t_g_properties_config set 
   	
@@ -225,6 +239,7 @@ where b.project_code = #{project_code} and b.create_by = #{create_by} and b.stat
       <if test="create_by != '' and create_by != null" >
         and create_by = #{create_by} 
       </if>
+      order by index_order , id 
   </select>
   
   <select id="queryByProjectcodeAndCreatebyAndProfileGroupBy" parameterType="java.util.Map" resultType="cn.godzilla.model.PropConfig">
@@ -241,6 +256,7 @@ where b.project_code = #{project_code} and b.create_by = #{create_by} and b.stat
       </if>
       
       group by project_code, profile, create_by
+      order by index_order , id 
   </select>
   
 </mapper>

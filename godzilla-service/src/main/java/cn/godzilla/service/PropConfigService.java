@@ -104,5 +104,12 @@ public interface PropConfigService extends Constant{
 		 */
 		public ReturnCodeEnum verifyPropByCreatebyAndProjectcodeAndProfile(String createBy, String projectCode, String profile, String status, String auditor_text);
 
+		/**
+		 * 排序 配置
+		 * @param propSort
+		 * @return
+		 */
+		public ReturnCodeEnum resortPropById(String propSort);
+
 		
 }

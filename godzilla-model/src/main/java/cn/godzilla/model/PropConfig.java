@@ -28,8 +28,18 @@ public class PropConfig implements Serializable{
     private Date updateTime;
 
     private String lastValue;
+    
+    private Integer indexOrder;
+    
+    public Integer getIndexOrder() {
+		return indexOrder;
+	}
 
-    /**
+	public void setIndexOrder(Integer indexOrder) {
+		this.indexOrder = indexOrder;
+	}
+
+	/**
      * 审核状态
      * 0:未审核
      * 1:通过

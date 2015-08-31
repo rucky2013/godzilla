@@ -50,6 +50,7 @@ public enum ReturnCodeEnum {
 	//svn model
 	OK_SVNCOMMIT("200021", "提交合并成功"),
 	OK_SVNVERSION("200027","svn version获取成功"),
+	OK_SORTPROP("200028","prop sort成功"),
 	;
 	
 	public String returnCode;

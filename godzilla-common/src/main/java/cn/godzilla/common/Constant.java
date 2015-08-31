@@ -116,5 +116,6 @@ public interface Constant {
 	public final static String OK_UPDATEFUNRIGHT = "200020";
 	public final static String OK_SVNCOMMIT = "200021";
 	public final static String OK_SVNVERSION = "200027";
+	public final static String OK_SORTPROP = "200028";
 	
 }

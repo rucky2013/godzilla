@@ -4,8 +4,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import org.dom4j.DocumentException;
@@ -310,6 +312,19 @@ public class PropConfigServiceImpl implements PropConfigService {
 			return null;
 		}
 		
+	}
+
+	@Override
+	public ReturnCodeEnum resortPropById(String sortJson) {
+		Map<String , Integer> propMap = (Map<String, Integer>) JSON.parse(sortJson);
+		Set<Entry<String, Integer>> entrySet = propMap.entrySet();
+		for(Entry<String, Integer> entry : entrySet) {
+			Map<String , Integer> parameterMap = new HashMap<String, Integer>();
+			parameterMap.put("id", Integer.parseInt(entry.getKey()));
+			parameterMap.put("index_order", entry.getValue());
+			dao.updatePropIndex(parameterMap);
+		}
+		return ReturnCodeEnum.getByReturnCode(OK_SORTPROP);
 	}
 
 }

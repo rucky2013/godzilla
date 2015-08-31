@@ -1,7 +1,22 @@
 <!DOCTYPE html><html><head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>配置查询02-哥斯拉</title>
+<title>配置排序-哥斯拉</title>
 <link type="text/css" href="/${basePath}/css/meta.css" rel="stylesheet"/>
+
+ <link rel="stylesheet" href="http://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+<script src="http://code.jquery.com/jquery-1.10.2.js"></script>
+<script src="http://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+<!--<link rel="stylesheet" href="/resources/demos/style.css">-->
+<style>
+ #sortable { list-style-type: none; margin: 0; padding: 0; width: 100%; }
+#sortable li { margin: 0 3px 3px 3px; padding: 0.4em; padding-left: 1.5em; font-size: 1.4em; height: 18px; }
+</style>
+<script>
+$(function() {
+$( "#sortable" ).sortable();
+$( "#sortable" ).disableSelection();
+});
+</script>
 
 
 </head>
@@ -52,9 +67,13 @@
                   	<label>提交人：</label><input type="text" name="createBy" placeholder="输入内容" />
                 	<label>环境：</label>
                 	<select name="selectedProfile">
-                		<option value="" selected="selected">All</option>
+                		
                 		<#list profileList?keys as key>
-							<option value="${profileList[key]}">${key}</option>
+                			<#if profileList[key] = selectedProfile>
+                				<option value="${profileList[key]}" selected="selected">${key}</option>
+                			<#else>
+                				<option value="${profileList[key]}">${key}</option>
+                			</#if>
                     	</#list>
               		</select>
               		
@@ -68,47 +87,83 @@
                 <table width="100%">
                 <thead>
                   <tr>
-                    <th width="20%">配置项名称</th>
-                    <th width="40%">配置值</th>
+                  	<th width="9%">ID</th>
+                    <th width="15%">配置项名称</th>
+                    <th width="35%">配置值</th>
                     <th width="10%">提交人</th>
                     <th width="15%">应用名称</th>
                     <th width="15%">环境</th>
                   </tr>
                  </thead>
                  <tbody>
-                 	<#list propList as prop>
-             		  <tr>
-	                    <td>${prop.proKey}</td>
-	                    <td>${prop.proValue}</td>
-	                    <td>${prop.createBy}</td>
-	                    <td>${prop.projectCode}</td>
-	                    <td>
-	                    <#if prop.profile == 'TEST'>
-	                    	测试环境
-						<#elseif prop.profile == 'PRODUCT'>
-							生产环境
-						<#elseif prop.profile == 'QUASIPRODUCT'>
-							 准生产环境
-						</#if>  
-	                    </td>
-	                  </tr>
-                 	</#list>
-                  
                   </tbody>
                 </table>
+                	<ul id="sortable">
+	                	<#list propList as prop>
+	             		  <li class="ui-state-default">
+	             		  	<span value1="${prop.id}" class="prop_id">
+	             		  	${prop.indexOrder}
+	             		  	</span>
+	             		  	
+	             		  	${prop.proKey}
+	             		  	${prop.proValue}
+	             		  	${prop.createBy}
+	             		  	${prop.projectCode}
+		             		  	<#if prop.profile == 'TEST'>
+			                    	测试环境
+								<#elseif prop.profile == 'PRODUCT'>
+									生产环境
+								<#elseif prop.profile == 'QUASIPRODUCT'>
+									 准生产环境
+								</#if>  
+							
+							
+	             		  </li>
+	                 	</#list>
+	                 </ul>
                 </div>
                 <!--<h4><a  href="#" class="btn2" title="更多信息">更多信息</a></h4>-->
+                
+                <div class="checkBtn"><button id="sortBtn" class="checkPass verify_btn" value1="1">提交排序</button></div>
             </div>
         </div>
 	</div>
-<script src="/${basePath}/js/jquery-1.8.2.min.js"></script>
+<!--<script src="/${basePath}/js/jquery-1.8.2.min.js"></script>-->
 <script src="/${basePath}/js/common.js"></script>
+<script src="/${basePath}/js/map.js"></script>
 
 <script>
+var sortMap = new Map();
 $(document).ready(function(){
 	// 退出
     $("#logout").on("click", function() {
 		window.location.href = '/${basePath}/user/logout/${sid}.do';
+	});
+	
+	$("#sortBtn").on("click", function() {
+		
+		$("#sortable li").each(function(index,element) {
+			var prop_id = $(this).find(".prop_id").attr("value1");
+			sortMap.put(prop_id, index);
+		});
+		
+		var sortJson = JSON.stringify(sortMap.container);
+		
+		$.ajax({
+			type: 'post',
+			url: '/${basePath}/prop/${sid}/${projectCode}/propSort.do',
+			data: {
+				sortJson: sortJson,
+			},
+			success: function(data) {
+				if(data=='SUCCESS') {
+					alert("SUCCESS");
+					window.location.href = "/${basePath}/project/${sid}/${projectCode}/TEST/projectConfig.do"
+				} else {
+					alert("FAILURE");
+				}
+			}
+		});
 	});
 })
 </script>

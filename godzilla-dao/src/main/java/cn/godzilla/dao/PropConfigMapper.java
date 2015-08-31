@@ -32,4 +32,6 @@ public interface PropConfigMapper {
 	void updatePropLastValue(Map<String, Object> parameterMap1);
 
 	int verifyOKProp(Map<String, String> parameterMap);
+
+	int updatePropIndex(Map<String, Integer> parameterMap);
 }
