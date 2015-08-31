@@ -180,7 +180,8 @@ public class PropController extends GodzillaApplication implements Constant{
 	}
 	
 	/**
-	 * 替换特殊字符  使之在html页面显示后台数据
+	 * 将返回json串中de特殊字符替换 
+	 * 使之在html页面正常显示后台数据
 	 * @param propList
 	 * @return
 	 */
@@ -192,7 +193,7 @@ public class PropController extends GodzillaApplication implements Constant{
 	}
 	
 	private String replaceHtml(String string) {
-		return string.replace("<", "&lt;").replace(">", "&gt;").replace("'", "&#39;").replace("\"", "&quot;");
+		return string.replace("<", "&lt;").replace(">", "&gt;").replace("'", "&#39;");
 	}
 
 	/**
