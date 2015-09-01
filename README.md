@@ -14,11 +14,14 @@ Features:<br>
 2. 查看客户端服务器是否以配置godzilla帐号，是否安装jdk，svn，maven，是否创建godzilla工作目录/home/godzilla/gzl（查看是否具有client、rpc、work子目录）
 
 3. 启动客户端: 
-```java
-java -jar /home/godzilla/gzl/rpc/godzilla-rpc-provider.jar &
-```
+ 
+   <pre>
+   ```java
+   java -jar /home/godzilla/gzl/rpc/godzilla-rpc-provider.jar &
+   ```
+   </pre>
 
-4. 初始化项目（注意TEST环境下zookeeper使用地址为:10.100.142.78:2181）
+4.初始化项目（注意TEST环境下zookeeper使用地址为:10.100.142.78:2181）
 
 
 ## 功能说明 ##
