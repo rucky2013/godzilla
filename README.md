@@ -17,7 +17,8 @@ Features:<br>
 ```java
 java -jar /home/godzilla/gzl/rpc/godzilla-rpc-provider.jar &
 ```
-4.初始化项目（注意TEST环境下zookeeper使用地址为:10.100.142.78:2181）
+
+4. 初始化项目（注意TEST环境下zookeeper使用地址为:10.100.142.78:2181）
 
 
 ## 功能说明 ##
