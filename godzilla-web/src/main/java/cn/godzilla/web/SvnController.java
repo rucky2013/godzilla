@@ -147,10 +147,11 @@ public class SvnController extends GodzillaApplication implements Constant{
 		boolean flag = svnService.svnMerge(projectCode, profile);
 		if(flag){
 			logger.info("************代码合并End**************");
+			return SUCCESS;
 		}else{
 			logger.error("************代码合并Error**************");
+			return FAILURE;
 		}
-		return flag;
 	}
 	/**
 	 * 提交主干

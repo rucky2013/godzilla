@@ -69,7 +69,7 @@
 							<table width="100%" border="0">
 								<thead>
 									<tr>
-										<th colspan="2" align="left">godzilla@${clientConfig.remoteIp}</th>
+										<th colspan="2" align="left">${projectCode}@${clientConfig.remoteIp}</th>
 									</tr>
 								</thead>
 								<tbody>
