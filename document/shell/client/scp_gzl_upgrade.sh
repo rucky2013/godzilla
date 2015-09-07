@@ -2,7 +2,6 @@
 
 scp -P 2222 -r /home/godzilla/gzl/ godzilla@10.100.142.71:/home/godzilla/ 
 scp -P 2222 -r /home/godzilla/gzl/ godzilla@10.100.142.72:/home/godzilla/ 
-
 scp -P 2222 -r /home/godzilla/gzl/ godzilla@10.100.142.73:/home/godzilla/ 
 scp -P 2222 -r /home/godzilla/gzl/ godzilla@10.100.142.74:/home/godzilla/ 
 scp -P 2222 -r /home/godzilla/gzl/ godzilla@10.100.142.75:/home/godzilla/ 

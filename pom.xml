@@ -255,4 +255,17 @@
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
+	<!-- 将JAR包上传到本地Maven库 -->
+	<distributionManagement>
+		<!-- 发布版本地址（线上） -->
+    	<repository>
+			<id>nexus-releases</id>
+			<url>http://10.100.142.37:8080/nexus/content/repositories/releases/</url>
+		</repository>
+		<!-- 快照版本地址（开发） -->
+		<snapshotRepository>
+			<id>nexus-snapshots</id>
+			<url>http://10.100.142.37:8080/nexus/content/repositories/snapshots/</url>
+		</snapshotRepository>
+    </distributionManagement>
 </project>

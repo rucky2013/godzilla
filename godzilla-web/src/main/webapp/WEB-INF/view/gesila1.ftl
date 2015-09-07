@@ -79,6 +79,9 @@
 											<span class="spanArrange"><a class="deploy" href="javacript:;" value1="${project.checkoutPath}" value2="TEST" title="部署">部署</a></span>
 											<span class="spanUseAgain"><a href="#" class="restart" value2="TEST" title="重新启动">重新启动</a></span>
 											<span class="spanUseAgain"><a href="#" class="download" value2="TEST" title="下载war包">下载war包</a></span>
+											<#if user.isAdmin = 1>
+												<span class="spanUseAgain"><a href="#" class="upgrade" value2="TEST" title="升级客户端">升级客户端</a></span>
+											</#if>
 										</td>
 									</tr>
 									<tr>
@@ -94,7 +97,9 @@
 										<td class="bg1">
 											<span class="spanAdd"><a class="prop_btn" value1="add" href="/${basePath}/prop/${sid}/${projectCode}/updateProp.do" title="配置添加">配置添加</a></span>
 											<span class="spanArrange"><a class="prop_btn" value1="verify" href="/${basePath}/prop/${sid}/${projectCode}/verifyProp.do" title="配置审核">配置审核</a></span>
+											<#if user.isAdmin = 1>
 											<span class="spanBranch"><a class="prop_btn" value1="sort" href="/${basePath}/prop/${sid}/${projectCode}/propSort.do" title="配置排序">配置排序</a></span>
+											</#if>
 											<span class="spanQuery"><a class="prop_btn" value1="query" href="/${basePath}/prop/${sid}/${projectCode}/queryProp.do" title="配置查询">配置查询</a></span>
 										</td>
 									</tr>
@@ -111,7 +116,7 @@
 							<table width="100%" border="0">
 								<thead>
 									<tr>
-										<th colspan="2" align="left">godzilla@${clientConfig.remoteIp}</th>
+										<th colspan="2" align="left">${projectCode}@${clientConfig.remoteIp}</th>
 									</tr>
 								</thead>
 								<tbody>
@@ -135,7 +140,7 @@
 							<table width="100%" border="0">
 								<thead>
 									<tr>
-										<th colspan="2" align="left">godzilla@${clientConfig.remoteIp}</th>
+										<th colspan="2" align="left">${projectCode}@${clientConfig.remoteIp}</th>
 									</tr>
 								</thead>
 								<tbody>
@@ -461,6 +466,29 @@
 	    	});*/
 	    	window.location.href = "/${basePath}/project/${sid}/${projectCode}/"+profile+"/download.do";
 		});
+		
+		//升级客户端
+		$(".upgrade").on("click", function() {
+			if (!confirm("是否确定升级客户端（注：此次升级所有客户端）"))  {  
+	    		return ;
+	    	}
+	    	var profile = $(this).attr("value2");
+	    	$.ajax({
+	    		type: "get",
+	    		url: "/${basePath}/project/${sid}/${projectCode}/"+profile+"/upgrade.do",
+	    		data: {
+	    		},
+	    		dataType:"json",
+	    		success: function(data) {
+	    			if(data=="SUCCESS") {
+	    				alert("success");
+	    			} else {
+	    				alert("failed");
+	    			}
+	    		}
+	    	});
+		});
+		
 	    // 重新启动
 	    $('.restart').click(function() {
 	    	if (!confirm("是否确定重新启动"))  {  

@@ -18,7 +18,7 @@ Features:<br>
   <pre>
   
   ```java
-  java -jar /home/godzilla/gzl/rpc/godzilla-rpc-provider.jar &
+  java -jar /home/godzilla/gzl/rpc/godzilla-rpc-provider.jar  >/home/godzilla/gzl/rpc/log.txt 2>&1 &
   ```
   </pre>
 
@@ -28,6 +28,6 @@ Features:<br>
 ## 功能说明 ##
 1. 部署流程：清除work目录->检出主干代码->合并各个分支 if not found confilict->mvn deploy -Pdev
 
-2. 合并代码:清除work目录->检出主干代码->合并各个分支 if not found confilict-> success
+2. 合并代码：清除work目录->检出主干代码->合并各个分支 if not found confilict-> success
 
 3. 提交主干：清除work目录->检出主干代码->合并各个分支 if not found confilict-> 提交主干 ->删除分支

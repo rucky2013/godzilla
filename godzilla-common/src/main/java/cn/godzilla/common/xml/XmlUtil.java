@@ -78,7 +78,14 @@ public class XmlUtil {
 		try {
 			Document doc = parse(webPomPath);
 			Element root = doc.getRootElement();
-			Element properties = root.element("profiles").element("profile").element("properties");
+			List<Element> profileList = root.element("profiles").elements("profile");
+			Element testProfile = null;
+			for(Element profile: profileList) {
+				if("test".equals(profile.element("id").getText())){
+					testProfile = profile;
+				}
+			}
+			Element properties	= testProfile.addElement("properties");
 			properties.clearContent();
 			
 			for(PropConfig propconfig : propconfigs) {
@@ -102,9 +109,15 @@ public class XmlUtil {
 		try {
 			Document doc = parse(webPomPath);
 			Element root = doc.getRootElement();
-			Element plugin = root.element("profiles").element("profile").element("build").element("plugins").element("plugin");
-			plugin.clearContent();
 			
+			Element profiles = root.element("profiles");
+			profiles.clearContent();
+			Element profile = profiles.addElement("profile");
+			profile.addElement("id").setText("test");
+			Element build = profile.addElement("build");
+			Element plugins = build.addElement("plugins");
+			Element plugin = plugins.addElement("plugin");
+//			plugin.clearContent();
 			
 			plugin.addElement("groupId").setText("org.apache.tomcat.maven");
 			plugin.addElement("artifactId").setText("tomcat7-maven-plugin");
@@ -146,9 +159,14 @@ public class XmlUtil {
 		try {
 			Document doc = parse(webPomPath);
 			Element root = doc.getRootElement();
-			Element plugins = root.element("profiles").element("profile").element("build").element("plugins");
-			plugins.clearContent();
-			logger.info("++|++|++>deleteWebPomPlugin.plugins:"+plugins.getText().toString());
+			/*Element plugins = root.element("profiles").element("profile").element("build").element("plugins");
+			plugins.clearContent();*/
+			Element profiles = root.element("profiles");
+			profiles.clearContent();
+			Element profile = profiles.addElement("profile");
+			profile.addElement("id").setText("test");
+			
+			logger.info("++|++|++>deleteWebPomPlugin.plugins:");
 			saveDocument(doc, savePomPath);
 		} catch( IOException | DocumentException e) {
 			logger.error("++|++|++>删除  plugin  web.pom: 设置失败");

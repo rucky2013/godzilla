@@ -53,7 +53,7 @@ deploy()
 		echo "[ERROR!!!!] ARGS ERROR.........ERROR!......"
 		exit 1
 	fi 
-	mvn clean install -f $POM_PATH -P$PROJECT_ENV
+	mvn clean deploy -f $POM_PATH -P$PROJECT_ENV
 }
 deploy1()
 {

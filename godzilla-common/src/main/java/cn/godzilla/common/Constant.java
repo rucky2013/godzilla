@@ -34,7 +34,7 @@ public interface Constant {
 	public final String NOTYET_VERIFY_STATUS = "0";//未审核
 	public final String OK_VERIFY_STATUS = "1";//审核通过
 	public final String STOP_VERIFY_STATUS = "2";//未通过
-	public final String PROJECT_ENV = "dev";
+	public final String PROJECT_ENV = "test";
 	public final String SHELL_SERVER_PATH = "/home/godzilla/gzl/shell/server";
 	public final String SHELL_CLIENT_PATH = "/home/godzilla/gzl/shell/client";
 	public final String SAVE_WAR_PATH= "/home/godzilla/gzl/war";

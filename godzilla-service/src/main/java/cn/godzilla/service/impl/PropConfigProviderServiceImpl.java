@@ -34,12 +34,6 @@ public class PropConfigProviderServiceImpl implements PropConfigProviderService 
 			parentVersion = StringUtil.isEmpty(parentVersion)?DEFAULT_VERSION_PARENTPOM:parentVersion;
 			
 			/**
-			 * 3.save propconfigs cover pom.xml
-			 */
-			List<PropConfig> propconfigs = this.getPropConfigsByProjectcodeAndProfile(project_code, profile);
-			XmlUtil.coverParentPom(parentVersion, parentPomPath, parentPomPath);
-			XmlUtil.coverWebPom(propconfigs, webPomPath, webPomPath);
-			/**
 			 * 4.change deploy war tomcat properties for web/pom.xml
 			 * if tomcat-need-plugin == 0
 			 *    delete plugin; 
@@ -51,6 +45,14 @@ public class PropConfigProviderServiceImpl implements PropConfigProviderService 
 			} else {
 				XmlUtil.deleteWebPomPlugin(webPomPath, webPomPath);
 			}
+			
+			/**
+			 * 3.save propconfigs cover pom.xml
+			 */
+			List<PropConfig> propconfigs = this.getPropConfigsByProjectcodeAndProfile(project_code, profile);
+			XmlUtil.coverParentPom(parentVersion, parentPomPath, parentPomPath);
+			XmlUtil.coverWebPom(propconfigs, webPomPath, webPomPath);
+			
 			
 		} catch(Exception e) {
 			e.printStackTrace();

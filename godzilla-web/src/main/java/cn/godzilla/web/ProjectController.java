@@ -131,4 +131,12 @@ public class ProjectController extends GodzillaApplication implements Constant{
 		return null;
 	}
 	
+	@RequestMapping(value="{sid}/{projectCode}/{profile}/upgrade", method=RequestMethod.GET) 
+	@ResponseBody
+	public Object upgrade(HttpServletResponse response) {
+		
+		
+		return null;
+	}
+	
 }
