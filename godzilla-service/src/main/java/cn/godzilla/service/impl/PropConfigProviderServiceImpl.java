@@ -50,7 +50,8 @@ public class PropConfigProviderServiceImpl implements PropConfigProviderService 
 			 * 3.save propconfigs cover pom.xml
 			 */
 			List<PropConfig> propconfigs = this.getPropConfigsByProjectcodeAndProfile(project_code, profile);
-			XmlUtil.coverParentPom(parentVersion, parentPomPath, parentPomPath);
+			//XmlUtil.coverParentPom(parentVersion, parentPomPath, parentPomPath);
+			this.replaceHtml(propconfigs);
 			XmlUtil.coverWebPom(propconfigs, webPomPath, webPomPath);
 			
 			
@@ -59,6 +60,17 @@ public class PropConfigProviderServiceImpl implements PropConfigProviderService 
 			return RpcResult.create(FAILURE);
 		}
 		return RpcResult.create(SUCCESS);
+	}
+	
+	private List<PropConfig> replaceHtml(List<PropConfig> propList) {
+		for(PropConfig prop: propList) {
+			prop.setProValue(this.replaceHtml(prop.getProValue()));
+		}
+		return propList;
+	}
+	
+	private String replaceHtml(String string) {
+		return string.replace("&lt;", "<").replace("&gt;", ">").replace("&#39;", "'");
 	}
 	
 	@Autowired

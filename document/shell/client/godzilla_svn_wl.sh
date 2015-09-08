@@ -46,7 +46,7 @@ RECYCLE_PATH="/home/godzilla/recycle/"
 # 日志路径
 logpath="/home/godzilla/log/"
 # 修改为你的svn用户名和密码,将使用此用户密码访问你的svn
-svnuser=" --username=wanglin --password=1"
+svnuser=" --username=v-gaoyang@creditease.cn --password=888888"
 
 
 function callback() {

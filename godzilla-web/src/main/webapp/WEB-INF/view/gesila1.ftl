@@ -42,7 +42,7 @@
 					<a href="javascript:void(0);" class="a2" title="管理权限">管理权限</a>
 					</#if>
 				</h2>
-				<h3 class="location">当前应用：${projectCode}</h3>
+				<h3 class="location">当前应用：<a class="backindex" href="/${basePath}/project/${sid}/${projectCode}/TEST/projectConfig.do" title="${projectCode}">${projectCode}</a></h3>
 
 				<ul id="tab2" class="clearfix">
 					<#if profile = 'TEST'>
@@ -309,7 +309,7 @@
 					<input type="hidden" id="value11" name="value11" value="" />
 					<input type="hidden" id="value22" name="value22" value="" />
 					<div class="user_con clearfix">
-						<label>版本号：</label> <input id="parentVersion" type="text" name="parentVersion" value="1.0.0-SNAPSHOT" />
+						<label>版本号：</label> <input id="parentVersion" type="text" name="parentVersion" value="1.0.0.SNAPSHOT" />
 					</div>
 					<input id="deployBtn" type="button" class="shadow_btn mar150_l" value="部署" />
 				</div>

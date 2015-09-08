@@ -12,7 +12,7 @@ em,i{font-style:normal}
 .r{float:right}
 a,area{blr:expression(this.onFocus=this.blur())}
 a:focus{outline:none}/*for Firfox*/
-a:link,a:visited,a:hover,a:active{text-decoration:none;color:#fff}
+a:link,a:visited,a:hover,a:active{text-decoration:none;color:#b6b6b7}
 .clearfix:after{content:".";display:block;height:0;visibility:hidden;clear:both}
 .clearfix{*zoom:1}
 fieldset{border:none;margin:0;padding:0;margin-bottom:1px}
@@ -194,3 +194,7 @@ h4.title{ background:#edeef0;height:42px; line-height:42px!important; color:#7c7
 .checkBtn button{cursor:pointer; display:inline-block;border:0;color:#fcfcfc;height:42px;width:82px;background:url("../img/checkBtn.png") no-repeat;text-align: center;line-height:42px;font:normal 14px/42px "微软雅黑","黑体";margin-right:40px;}
 .checkBtn .checkPass{background-position:0 0;}
 .checkBtn .notcheckPass{background-position:-83px 0;}
+
+.backindex{
+	color:#b6b6b7;
+}

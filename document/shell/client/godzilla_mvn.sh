@@ -14,12 +14,20 @@ PROJECT_NAME=$4
 
 PROJECT_ENV=$5
 
+PARENT_VERSION=$6
+
+G_PATH="/home/godzilla/gzl"
+# 本地路径
+srcpath=$G_PATH"/work"
+
 WHO=`whoami`
 
 echo POM_PATH:$POM_PATH
 echo USER_NAME:$USER_NAME
 echo PROJECT_NAME:$PROJECT_NAME
 echo PROJECT_ENV:$PROJECT_ENV
+echo PARENT_VERSION:$PARENT_VERSION
+
 if [ $WHO == "root" ] ;then
 	
 	echo "ERROR !Can't support for user root !"
@@ -53,6 +61,13 @@ deploy()
 		echo "[ERROR!!!!] ARGS ERROR.........ERROR!......"
 		exit 1
 	fi 
+	echo $srcpath
+	cd $srcpath
+	echo $PROJECT_NAME
+	cd $PROJECT_NAME
+	mvn versions:set -DnewVersion=${PARENT_VERSION}
+	mvn -N versions:update-child-modules
+	
 	mvn clean deploy -f $POM_PATH -P$PROJECT_ENV
 }
 deploy1()

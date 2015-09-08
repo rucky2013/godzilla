@@ -63,7 +63,7 @@ $( "#sortable" ).disableSelection();
 					<a href="javascript:void(0);" class="a2" title="管理权限">管理权限</a>
 					</#if>
 				</h2>
-				<h3 class="location">当前应用：${projectCode}</h3>
+				<h3 class="location">当前应用：<a class="backindex" href="/${basePath}/project/${sid}/${projectCode}/TEST/projectConfig.do" title="${projectCode}">${projectCode}</a></h3>
 
               <form id="search_form" action="/${basePath}/prop/${sid}/${projectCode}/propSort.do" method="GET">
               		<fieldset>

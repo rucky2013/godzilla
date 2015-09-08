@@ -91,7 +91,8 @@ public class MvnServiceImpl extends GodzillaApplication implements MvnService {
 		}
 		processPercent.put(pencentkey, "30");
 		/*
-		 * 1.替换pom文件 配置变量
+		 * 1.替换pom文件 配置变量   
+		 * 20150908 parentVersion 改为由 mvn命令更改
 		 * percent 50%
 		 */
 		boolean flag1 = false;
@@ -137,7 +138,7 @@ public class MvnServiceImpl extends GodzillaApplication implements MvnService {
 			try {
 				MvnProviderService mvnProviderService = mvnProviderServices.get(IP);
 				String username = GodzillaApplication.getUser().getUserName();
-				RpcResult result = this.deployProject(mvnProviderService, username, srcUrl, projectCode, profile, IP);
+				RpcResult result = this.deployProject(mvnProviderService, username, srcUrl, projectCode, profile, IP, parentVersion);
 				flag2 = result.getRpcCode().equals("0")?true:false;
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -160,7 +161,7 @@ public class MvnServiceImpl extends GodzillaApplication implements MvnService {
 	
 	
 
-	public RpcResult deployProject(MvnProviderService mvnProviderService, String username, String srUrl, String projectCode, String profile, String IP) {
+	public RpcResult deployProject(MvnProviderService mvnProviderService, String username, String srUrl, String projectCode, String profile, String IP, String parentVersion) {
 		boolean flag2 = false;
 		RpcResult result = null;
 		String commands = "";
@@ -173,7 +174,7 @@ public class MvnServiceImpl extends GodzillaApplication implements MvnService {
 			String shell = SHELL_CLIENT_PATH.endsWith("/")
 							?(SHELL_CLIENT_PATH+ "godzilla_mvn.sh")
 									:(SHELL_CLIENT_PATH+"/" +"godzilla_mvn.sh");
-			String str = "sh "+shell+" deploy "+POM_PATH+" "+USER_NAME+" "+PROJECT_NAME+" "+ PROJECT_ENV ;
+			String str = "sh "+shell+" deploy "+POM_PATH+" "+USER_NAME+" "+PROJECT_NAME+" "+ PROJECT_ENV +" " +parentVersion;
 			result = mvnProviderService.mvnDeploy(str, PROJECT_NAME, PROJECT_ENV, USER_NAME);
 			commands = str;
 			flag2 = result.getRpcCode().equals("0")?true:false;

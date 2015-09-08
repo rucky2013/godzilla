@@ -90,6 +90,7 @@ public class XmlUtil {
 			
 			for(PropConfig propconfig : propconfigs) {
 				properties.addElement(propconfig.getProKey()).setText(propconfig.getProValue());
+				logger.info("++|++|++>coverWebPom.properties: <"+propconfig.getProKey()+">"+propconfig.getProValue()+"</"+propconfig.getProKey()+">");
 			}
 			logger.info("++|++|++>coverWebPom.properties:"+properties.getText().toString());
 			saveDocument(doc, savePomPath);
@@ -237,6 +238,7 @@ public class XmlUtil {
 	public static void saveDocument(Document doc, String filePath) throws IOException {
 		OutputFormat format = OutputFormat.createPrettyPrint();
 		XMLWriter writer = new XMLWriter(new FileOutputStream(filePath), format);
+		writer.setEscapeText(false);
 		writer.write(doc);
 		writer.close();
 	}
