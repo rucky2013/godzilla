@@ -59,8 +59,8 @@ killclients() {
 	ssh -p 2222 godzilla@10.100.142.84 "ps -ef|grep godzilla-rpc-provider.jar |head -1| awk '{print $2}'|xargs kill -9"
 }
 
-## 开启客户端线程
-startclients() {
+## debug开启客户端线程
+startclientsdebug() {
 	ssh -p 2222 godzilla@10.100.142.66 "/opt/jdk1.7.0_71/bin/java -Xdebug -Xrunjdwp:transport=dt_socket,address=7070,server=y,suspend=y -jar /home/godzilla/gzl/rpc/godzilla-rpc-provider.jar  >/home/godzilla/gzl/rpc/log.txt 2>&1 &" 
 	ssh -p 2222 godzilla@10.100.142.71 "/opt/jdk1.7.0_71/bin/java -Xdebug -Xrunjdwp:transport=dt_socket,address=7070,server=y,suspend=y -jar /home/godzilla/gzl/rpc/godzilla-rpc-provider.jar  >/home/godzilla/gzl/rpc/log.txt 2>&1 &"
 	ssh -p 2222 godzilla@10.100.142.72 "/opt/jdk1.7.0_71/bin/java -Xdebug -Xrunjdwp:transport=dt_socket,address=7070,server=y,suspend=y -jar /home/godzilla/gzl/rpc/godzilla-rpc-provider.jar  >/home/godzilla/gzl/rpc/log.txt 2>&1 &"
@@ -76,6 +76,25 @@ startclients() {
 	ssh -p 2222 godzilla@10.100.142.82 "/opt/jdk1.7.0_71/bin/java -Xdebug -Xrunjdwp:transport=dt_socket,address=7070,server=y,suspend=y -jar /home/godzilla/gzl/rpc/godzilla-rpc-provider.jar  >/home/godzilla/gzl/rpc/log.txt 2>&1 &"
 	ssh -p 2222 godzilla@10.100.142.83 "/opt/jdk1.7.0_71/bin/java -Xdebug -Xrunjdwp:transport=dt_socket,address=7070,server=y,suspend=y -jar /home/godzilla/gzl/rpc/godzilla-rpc-provider.jar  >/home/godzilla/gzl/rpc/log.txt 2>&1 &"
 	ssh -p 2222 godzilla@10.100.142.84 "/opt/jdk1.7.0_71/bin/java -Xdebug -Xrunjdwp:transport=dt_socket,address=7070,server=y,suspend=y -jar /home/godzilla/gzl/rpc/godzilla-rpc-provider.jar  >/home/godzilla/gzl/rpc/log.txt 2>&1 &"
+}
+
+## 开启客户端线程
+startclients() {
+	ssh -p 2222 godzilla@10.100.142.66 "/opt/jdk1.7.0_71/bin/java -jar /home/godzilla/gzl/rpc/godzilla-rpc-provider.jar  >/home/godzilla/gzl/rpc/log.txt 2>&1 &" 
+	ssh -p 2222 godzilla@10.100.142.71 "/opt/jdk1.7.0_71/bin/java -jar /home/godzilla/gzl/rpc/godzilla-rpc-provider.jar  >/home/godzilla/gzl/rpc/log.txt 2>&1 &"
+	ssh -p 2222 godzilla@10.100.142.72 "/opt/jdk1.7.0_71/bin/java -jar /home/godzilla/gzl/rpc/godzilla-rpc-provider.jar  >/home/godzilla/gzl/rpc/log.txt 2>&1 &"
+	ssh -p 2222 godzilla@10.100.142.73 "/opt/jdk1.7.0_71/bin/java -jar /home/godzilla/gzl/rpc/godzilla-rpc-provider.jar  >/home/godzilla/gzl/rpc/log.txt 2>&1 &"
+	ssh -p 2222 godzilla@10.100.142.74 "/opt/jdk1.7.0_71/bin/java -jar /home/godzilla/gzl/rpc/godzilla-rpc-provider.jar  >/home/godzilla/gzl/rpc/log.txt 2>&1 &"
+	ssh -p 2222 godzilla@10.100.142.75 "/opt/jdk1.7.0_71/bin/java -jar /home/godzilla/gzl/rpc/godzilla-rpc-provider.jar  >/home/godzilla/gzl/rpc/log.txt 2>&1 &"
+	ssh -p 2222 godzilla@10.100.142.76 "/opt/jdk1.7.0_71/bin/java -jar /home/godzilla/gzl/rpc/godzilla-rpc-provider.jar  >/home/godzilla/gzl/rpc/log.txt 2>&1 &"
+	ssh -p 2222 godzilla@10.100.142.77 "/opt/jdk1.7.0_71/bin/java -jar /home/godzilla/gzl/rpc/godzilla-rpc-provider.jar  >/home/godzilla/gzl/rpc/log.txt 2>&1 &"
+	ssh -p 2222 godzilla@10.100.142.78 "/opt/jdk1.7.0_71/bin/java -jar /home/godzilla/gzl/rpc/godzilla-rpc-provider.jar  >/home/godzilla/gzl/rpc/log.txt 2>&1 &"
+	ssh -p 2222 godzilla@10.100.142.79 "/opt/jdk1.7.0_71/bin/java -jar /home/godzilla/gzl/rpc/godzilla-rpc-provider.jar  >/home/godzilla/gzl/rpc/log.txt 2>&1 &"
+	ssh -p 2222 godzilla@10.100.142.80 "/opt/jdk1.7.0_71/bin/java -jar /home/godzilla/gzl/rpc/godzilla-rpc-provider.jar  >/home/godzilla/gzl/rpc/log.txt 2>&1 &"
+	ssh -p 2222 godzilla@10.100.142.81 "/opt/jdk1.7.0_71/bin/java -jar /home/godzilla/gzl/rpc/godzilla-rpc-provider.jar  >/home/godzilla/gzl/rpc/log.txt 2>&1 &"
+	ssh -p 2222 godzilla@10.100.142.82 "/opt/jdk1.7.0_71/bin/java -jar /home/godzilla/gzl/rpc/godzilla-rpc-provider.jar  >/home/godzilla/gzl/rpc/log.txt 2>&1 &"
+	ssh -p 2222 godzilla@10.100.142.83 "/opt/jdk1.7.0_71/bin/java -jar /home/godzilla/gzl/rpc/godzilla-rpc-provider.jar  >/home/godzilla/gzl/rpc/log.txt 2>&1 &"
+	ssh -p 2222 godzilla@10.100.142.84 "/opt/jdk1.7.0_71/bin/java -jar /home/godzilla/gzl/rpc/godzilla-rpc-provider.jar  >/home/godzilla/gzl/rpc/log.txt 2>&1 &"
 }
 
 

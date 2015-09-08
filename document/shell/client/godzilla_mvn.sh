@@ -50,7 +50,7 @@ info()
 	echo "SHELL_NAME $SHELL_NAME"
 	echo "HOME $HOME"
 	echo "whoami $WHO"
-	mvn --version
+	/app/maven/bin/mvn --version
 }
 #install
 deploy()
@@ -65,20 +65,20 @@ deploy()
 	cd $srcpath
 	echo $PROJECT_NAME
 	cd $PROJECT_NAME
-	mvn versions:set -DnewVersion=${PARENT_VERSION}
-	mvn -N versions:update-child-modules
+	/app/maven/bin/mvn versions:set -DnewVersion=${PARENT_VERSION}
+	/app/maven/bin/mvn -N versions:update-child-modules
 	
-	mvn clean deploy -f $POM_PATH -P$PROJECT_ENV
+	/app/maven/bin/mvn clean deploy -f $POM_PATH -P$PROJECT_ENV
 }
 deploy1()
 {
 	echo "deploy $BEGIN_STR"
-	mvn clean deploy -f $POM_PATH -P$PROJECT_ENV
+	/app/maven/bin/mvn clean deploy -f $POM_PATH -P$PROJECT_ENV
 }
 clean()
 {
 	echo "clean $BEGIN_STR"
-	mvn clean -f $POM_PATH
+	/app/maven/bin/mvn clean -f $POM_PATH
 }
 help()
 {
