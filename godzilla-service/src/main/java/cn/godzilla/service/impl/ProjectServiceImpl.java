@@ -7,18 +7,20 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.sun.tools.javac.resources.version;
-
 import cn.godzilla.common.ReturnCodeEnum;
 import cn.godzilla.dao.ProjectMapper;
 import cn.godzilla.model.Project;
+import cn.godzilla.service.OperateLogService;
 import cn.godzilla.service.ProjectService;
 import cn.godzilla.service.SvnService;
+import cn.godzilla.svn.BaseShellCommand;
 import cn.godzilla.web.GodzillaApplication;
 
 @Service("projectService")
 public class ProjectServiceImpl extends GodzillaApplication implements ProjectService {
 
+	@Autowired
+	private OperateLogService operateLogService;
 	@Autowired
 	private ProjectMapper dao;
 	@Autowired
@@ -115,4 +117,24 @@ public class ProjectServiceImpl extends GodzillaApplication implements ProjectSe
 		return projects;
 	}
 
+	@Override
+	public ReturnCodeEnum godzillaCommand(String actiion) {
+		BaseShellCommand command = new BaseShellCommand();
+		
+		String str = "sh /home/godzilla/gzl/shell/server/godzilla.sh " + actiion;
+		boolean flag = false;
+		
+		flag = command.execute(str, super.getUser().getUserName());
+		
+		if(flag) {
+			operateLogService.addOperateLog(super.getUser().getUserName(), "godzilla", "TEST", actiion, SUCCESS, actiion+" godzilla clients success");
+			return ReturnCodeEnum.getByReturnCode(OK_GODZILLA);
+		} else {
+			operateLogService.addOperateLog(super.getUser().getUserName(), "godzilla", "TEST", actiion, FAILURE, actiion+" godzilla clients failure");
+			return ReturnCodeEnum.getByReturnCode(NO_GODZILLA);
+		}
+	}
+
+	
+	
 }

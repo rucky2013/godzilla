@@ -79,11 +79,18 @@
 											<span class="spanArrange"><a class="deploy" href="javacript:;" value1="${project.checkoutPath}" value2="TEST" title="部署">部署</a></span>
 											<span class="spanUseAgain"><a href="#" class="restart" value2="TEST" title="重新启动">重新启动</a></span>
 											<span class="spanUseAgain"><a href="#" class="download" value2="TEST" title="下载war包">下载war包</a></span>
-											<#if user.isAdmin = 1>
-												<span class="spanUseAgain"><a href="#" class="upgrade" value2="TEST" title="升级客户端">升级客户端</a></span>
-											</#if>
 										</td>
 									</tr>
+									<#if user.isAdmin=1>
+									<tr>
+										<td width="80" class="paddingR0">客端操作：</td>
+										<td class="bg1">
+												<span class="spanUseAgain"><a href="#" class="upgrade" value2="TEST" title="升级客户端">升级客户端</a></span>
+												<span class="spanUseAgain"><a href="#" class="stopclients" value2="TEST" title="升级客户端">关闭客户端</a></span>
+												<span class="spanUseAgain"><a href="#" class="startclients" value2="TEST" title="升级客户端">打开客户端</a></span>
+										</td>
+									</tr>
+									</#if>
 									<tr>
 										<td class="paddingR0">SVN操作：</td>
 										<td class="bg1"><span class="spanViewState"><a class="show" href="javacript:;" title="查看状态">查看状态</a></span> <span class="spanMerge"><a class="merge" href="javacript:;" title="合并代码">合并代码</a></span> <span class="spnSubmit"><a class="commit" href="javacript:;" title="提交主干">提交主干</a></span></td>
@@ -316,7 +323,7 @@
 	<input type="hidden" name="profile" id="profile" value="${profile}" />
 	<input type="hidden" id="srcId" name="srcId" value="${project.id}" />
 
-	<script src="http://mini.jiasule.com/framework/jquery/1.8.0/jquery-1.8.0.min.js"></script>
+	<script src="/${basePath}/js/jquery-1.8.2.min.js"></script>
 	<script src="/${basePath}/js/common.js"></script>
 	<script src="/${basePath}/js/websocket.js"></script>
 	<script>
@@ -487,6 +494,49 @@
 	    			}
 	    		}
 	    	});
+		});
+		//关闭客户端
+		$(".stopclients").on("click", function() {
+			if(!confirm("是否确定关闭客户端（注：此次关闭所有客户端）")) {
+				return ;
+			}
+			var profile = $(this).attr("value2");
+			$.ajax({
+				type: "get",
+				url: "/${basePath}/project/${sid}/${projectCode}/"+profile+"/stopclients.do",
+				data:{
+				},
+				dataType:"json",
+				success: function(data) {
+					if(data=="SUCCESS") {
+						alert("success");
+					} else {
+						alert("failed");
+					}
+				}
+			});
+		});
+		
+		//打开客户端
+		$(".startclients").on("click", function() {
+			if(!confirm("是否确定打开客户端（注：此次打开所有客户端）")) {
+				return ;
+			}
+			var profile = $(this).attr("value2");
+			$.ajax({
+				type: "get",
+				url : "/${basePath}/project/${sid}/${projectCode}/"+profile+"/startclients.do", 
+				data: {
+				},
+				dataType: "json",
+				success: function(data) {
+					if(data=="SUCCESS") {
+						alert("success");
+					} else {
+						alert("failed");
+					}
+				}
+			});
 		});
 		
 	    // 重新启动

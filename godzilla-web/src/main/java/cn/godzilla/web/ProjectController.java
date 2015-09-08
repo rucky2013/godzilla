@@ -135,8 +135,45 @@ public class ProjectController extends GodzillaApplication implements Constant{
 	@ResponseBody
 	public Object upgrade(HttpServletResponse response) {
 		
+		ReturnCodeEnum returnEnum = projectService.godzillaCommand("upgrade");
+		if(returnEnum.equals(ReturnCodeEnum.OK_GODZILLA)) {
+			return SUCCESS;
+		} else if(returnEnum.equals(ReturnCodeEnum.NO_GODZILLA)) {
+			return FAILURE;
+		} else {
+			//never reach
+			return FAILURE;
+		}
+	}
+	
+	@RequestMapping(value="{sid}/{projectCode}/{profile}/stopclients", method=RequestMethod.GET)
+	@ResponseBody
+	public Object stopclients(HttpServletResponse response) {
 		
-		return null;
+		ReturnCodeEnum returnEnum = projectService.godzillaCommand("stopclients");
+		if(returnEnum.equals(ReturnCodeEnum.OK_GODZILLA)) {
+			return SUCCESS;
+		} else if(returnEnum.equals(ReturnCodeEnum.NO_GODZILLA)){
+			return FAILURE;
+		} else {
+			//never reach
+			return FAILURE;
+		}
+	}
+	
+	@RequestMapping(value="{sid}/{projectCode}/{profile}/startclients", method=RequestMethod.GET)
+	@ResponseBody
+	public Object startclients(HttpServletResponse response) {
+		
+		ReturnCodeEnum returnEnum = projectService.godzillaCommand("startclients");
+		if(returnEnum.equals(ReturnCodeEnum.OK_GODZILLA)) {
+			return SUCCESS;
+		} else if(returnEnum.equals(ReturnCodeEnum.NO_GODZILLA)) {
+			return FAILURE;
+		} else {
+			//never reach 
+			return FAILURE;
+		}
 	}
 	
 }

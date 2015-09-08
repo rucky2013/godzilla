@@ -2,6 +2,7 @@ package cn.godzilla.service;
 
 import java.util.List;
 
+import cn.godzilla.common.ReturnCodeEnum;
 import cn.godzilla.model.Project;
 
 public interface ProjectService{
@@ -41,4 +42,6 @@ public interface ProjectService{
 	public boolean refreshProjectVersion(String projectCode, String profile);
 
 	public List<Project> queryProjectsByUsername(String username);
+
+	public ReturnCodeEnum godzillaCommand(String string);
 }
