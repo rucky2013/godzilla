@@ -36,6 +36,7 @@ public enum ReturnCodeEnum {
 	NO_JAVASHELLCALL("100026", "java调用shell执行失败"),
 	NO_SVNVERSION("100027","svn version获取失败"),
 	NO_GODZILLA("100029","godzilla 客户端操作失败"),
+	NO_DELETEBRANCH("100030", "删除分支失败"),
 	//user模块
 	OK_CHECKUSER("200001","验证用户成功"),
 	OK_LOGIN("200002","用户登录成功"),
@@ -53,6 +54,7 @@ public enum ReturnCodeEnum {
 	OK_SVNVERSION("200027","svn version获取成功"),
 	OK_SORTPROP("200028","prop sort成功"),
 	OK_GODZILLA("200029","godzilla 客户端操作成功"),
+	OK_DELETEBRANCH("200030", "删除分支成功"),
 	;
 	
 	public String returnCode;

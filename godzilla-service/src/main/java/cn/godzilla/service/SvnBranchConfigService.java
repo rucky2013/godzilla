@@ -2,6 +2,7 @@ package cn.godzilla.service;
 
 import java.util.List;
 
+import cn.godzilla.common.ReturnCodeEnum;
 import cn.godzilla.model.SvnBranchConfig;
 
 public interface SvnBranchConfigService {
@@ -40,6 +41,8 @@ public interface SvnBranchConfigService {
 	 * @param svnBranchConfigs
 	 */
 	boolean refreshBranchesVersion(List<SvnBranchConfig> svnBranchConfigs);
+
+	ReturnCodeEnum deleteBranch(String projectCode, String profile, String id);
 
 	
 }

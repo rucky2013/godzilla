@@ -101,5 +101,24 @@ public class SvnBranchConfigController extends GodzillaApplication implements Co
 			return FAILURE;
 		}
 	}
+	
+	@RequestMapping(value="/{sid}/{projectCode}/{profile}/delete", method=RequestMethod.GET) 
+	@ResponseBody
+	public Object delete(@PathVariable String sid, @PathVariable String projectCode, @PathVariable String profile, 
+			@RequestParam("id") String id,
+			HttpServletRequest request, HttpServletResponse response) {
+		
+		logger.info("************分支编辑　删除×××××××××××××××××××***" ) ;
+		ReturnCodeEnum returnEnum = svnBranchConfigService.deleteBranch(projectCode, profile, id);
+		
+		if(returnEnum.equals(ReturnCodeEnum.OK_DELETEBRANCH)) {
+			return SUCCESS;
+		} else if(returnEnum.equals(ReturnCodeEnum.NO_DELETEBRANCH)) {
+			return FAILURE;
+		} else {
+			//never reach
+			return FAILURE;
+		}
+	}
 
 }

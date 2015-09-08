@@ -581,10 +581,35 @@
 	            } else if (index == 2) {
 	            } else if (index == 3) {
 	            } else if (index == 4) {
-	                $(this).html('<a class="save_branch" value1="' + branchId + '" href="javascript:viod(0);" title="保存">保存</a>');
+	                $(this).html('<a class="delete_branch" value1="' + branchId + '" href="javascript:viod(0);" title="删除">删除</a>'+
+	                '&nbsp;&nbsp;&nbsp;&nbsp;<a class="save_branch" value1="' + branchId + '" href="javascript:viod(0);" title="保存">保存</a>');
 	            }
 	        });
 	    });
+	    // 分支删除　修改分支
+	    $(".delete_branch").live("click", function() {
+	    	if(!confirm("是否确定删除分支")) {
+	    		return ;
+	    	}	
+	    	var branchId = $(this).attr("value1");
+	    	var branchUrl = "";
+	    	
+	    	$.ajax({
+	    		type:"get",
+	    		url: "/${basePath}/svnbranch/${sid}/${projectCode}/${profile}/delete.do",
+	    		dataType: "json",
+	    		data: {
+	    			id: branchId,
+	    		},
+	    		success: function(data) {
+	    			if(data=="SUCCESS") {
+	    				window.location.href = '/${basePath}/project/${sid}/${projectCode}/${profile}/projectConfig.do';
+	    			} else {
+	    				alert("failed");
+	    			}
+	    		}
+    		});
+    	});
 	
 	    // 分支保存 修改分支
 	    $(".save_branch").live("click", function() {

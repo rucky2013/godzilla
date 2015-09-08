@@ -20,4 +20,6 @@ public interface SvnBranchConfigMapper {
 	int updateByProjectCode(Map<String, String> parameterMap);
 
 	int updateVersionById(Map<String, String> parameterMap);
+
+	boolean deletebranchById(Map<String, Object> parameterMap);
 }

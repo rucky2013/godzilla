@@ -164,4 +164,10 @@
   		
   </update>
   
+  <update id="deletebranchById">
+  	update t_g_svn_branch_config set
+  		status = 0
+  	where id = #{id}
+  </update>
+  
 </mapper>

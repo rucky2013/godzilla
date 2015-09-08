@@ -105,6 +105,7 @@ public interface Constant {
 	public final static String NO_JAVASHELLCALL = "100026";
 	public final static String NO_SVNVERSION = "100027";
 	public final static String NO_GODZILLA = "100029";
+	public final static String NO_DELETEBRANCH = "100030";
 	
 	public final static String OK_AJAX = "200000";
 	public final static String OK_CHECKUSER = "200001";
@@ -119,5 +120,6 @@ public interface Constant {
 	public final static String OK_SVNVERSION = "200027";
 	public final static String OK_SORTPROP = "200028";
 	public final static String OK_GODZILLA = "200029";
+	public final static String OK_DELETEBRANCH = "200030";
 	
 }

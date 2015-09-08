@@ -117,5 +117,21 @@ public class SvnBranchConfigServiceImpl extends GodzillaApplication implements S
 		return flag;
 	}
 
+	@Override
+	public ReturnCodeEnum deleteBranch(String projectCode, String profile, String id) {
+		
+		boolean flag = false;
+		Map<String, Object> parameterMap = new HashMap<String, Object>();
+		parameterMap.put("id", id);
+		
+		flag = dao.deletebranchById(parameterMap);
+		
+		if(flag) {
+			return ReturnCodeEnum.getByReturnCode(OK_DELETEBRANCH);
+		} else {
+			return ReturnCodeEnum.getByReturnCode(NO_DELETEBRANCH);
+		}
+	}
+
 
 }
