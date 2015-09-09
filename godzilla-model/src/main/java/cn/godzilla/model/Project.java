@@ -21,10 +21,27 @@ public class Project implements Serializable{
     private Integer status;
 
     private String checkoutPath;
-
+    private String webPath;
+    private String warName;
     private String version;
     
-    public Long getId() {
+    public String getWarName() {
+		return warName;
+	}
+
+	public void setWarName(String warName) {
+		this.warName = warName;
+	}
+
+	public String getWebPath() {
+		return webPath;
+	}
+
+	public void setWebPath(String webPath) {
+		this.webPath = webPath;
+	}
+
+	public Long getId() {
         return id;
     }
 

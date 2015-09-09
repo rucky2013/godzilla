@@ -176,4 +176,34 @@ public class ProjectController extends GodzillaApplication implements Constant{
 		}
 	}
 	
+	@RequestMapping(value="{sid}/{projectCode}/{profile}/starttomcats", method=RequestMethod.GET)
+	@ResponseBody
+	public Object starttomcats(HttpServletResponse response) {
+		
+		ReturnCodeEnum returnEnum = projectService.godzillaCommand("starttomcats");
+		if(returnEnum.equals(ReturnCodeEnum.OK_GODZILLA)) {
+			return SUCCESS;
+		} else if(returnEnum.equals(ReturnCodeEnum.NO_GODZILLA)) {
+			return FAILURE;
+		} else {
+			//never reach 
+			return FAILURE;
+		}
+	}
+	
+	@RequestMapping(value="{sid}/{projectCode}/{profile}/stoptomcats", method=RequestMethod.GET)
+	@ResponseBody
+	public Object stoptomcats(HttpServletResponse response) {
+		
+		ReturnCodeEnum returnEnum = projectService.godzillaCommand("stoptomcats");
+		if(returnEnum.equals(ReturnCodeEnum.OK_GODZILLA)) {
+			return SUCCESS;
+		} else if(returnEnum.equals(ReturnCodeEnum.NO_GODZILLA)) {
+			return FAILURE;
+		} else {
+			//never reach 
+			return FAILURE;
+		}
+	}
+	
 }

@@ -239,7 +239,7 @@ where b.project_code = #{project_code} and b.create_by = #{create_by} and b.stat
       <if test="create_by != '' and create_by != null" >
         and create_by = #{create_by} 
       </if>
-      order by index_order , id 
+      order by index_order , id desc
   </select>
   
   <select id="queryByProjectcodeAndCreatebyAndProfileGroupBy" parameterType="java.util.Map" resultType="cn.godzilla.model.PropConfig">

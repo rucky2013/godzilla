@@ -83,11 +83,18 @@
 									</tr>
 									<#if user.isAdmin=1>
 									<tr>
-										<td width="80" class="paddingR0">客端操作：</td>
+										<td width="80" class="paddingR0">客端维护：</td>
 										<td class="bg1">
-												<span class="spanUseAgain"><a href="#" class="upgrade" value2="TEST" title="升级客户端">升级客户端</a></span>
-												<span class="spanUseAgain"><a href="#" class="stopclients" value2="TEST" title="升级客户端">关闭客户端</a></span>
-												<span class="spanUseAgain"><a href="#" class="startclients" value2="TEST" title="升级客户端">打开客户端</a></span>
+												<span class="spanUseAgain"><a href="#" class="upgrade" value2="TEST" title="升级客户端">升级</a></span>
+												<span class="spanUseAgain"><a href="#" class="stopclients" value2="TEST" title="关闭客户端">关闭</a></span>
+												<span class="spanUseAgain"><a href="#" class="startclients" value2="TEST" title="打开客户端">打开</a></span>
+										</td>
+									</tr>
+									<tr>
+										<td width="80" class="paddingR0">童木维护：</td>
+										<td class="bg1">
+												<span class="spanUseAgain"><a href="#" class="stoptomcats" value2="TEST" title="关闭tomcats">关闭</a></span>
+												<span class="spanUseAgain"><a href="#" class="starttomcats" value2="TEST" title="打开tomcats">打开</a></span>
 										</td>
 									</tr>
 									</#if>
@@ -103,10 +110,10 @@
 										<td class="paddingR0">配置管理：</td>
 										<td class="bg1">
 											<span class="spanAdd"><a class="prop_btn" value1="add" href="/${basePath}/prop/${sid}/${projectCode}/updateProp.do" title="配置添加">配置添加</a></span>
-											<span class="spanArrange"><a class="prop_btn" value1="verify" href="/${basePath}/prop/${sid}/${projectCode}/verifyProp.do" title="配置审核">配置审核</a></span>
 											<#if user.isAdmin = 1>
-											<span class="spanBranch"><a class="prop_btn" value1="sort" href="/${basePath}/prop/${sid}/${projectCode}/propSort.do" title="配置排序">配置排序</a></span>
+											<span class="spanArrange"><a class="prop_btn" value1="verify" href="/${basePath}/prop/${sid}/${projectCode}/verifyProp.do" title="配置审核">配置审核</a></span>
 											</#if>
+											<span class="spanBranch"><a class="prop_btn" value1="sort" href="/${basePath}/prop/${sid}/${projectCode}/propSort.do" title="配置排序">配置排序</a></span>
 											<span class="spanQuery"><a class="prop_btn" value1="query" href="/${basePath}/prop/${sid}/${projectCode}/queryProp.do" title="配置查询">配置查询</a></span>
 										</td>
 									</tr>
@@ -250,7 +257,7 @@
 					</table>
 				</div>
 				<h4>
-					<a href="#" class="btn2" title="更多信息">更多信息</a>
+					<!--<h4><a  href="#" class="btn2" title="更多信息">更多信息</a></h4>-->
 				</h4>
 			</div>
 
@@ -526,6 +533,50 @@
 			$.ajax({
 				type: "get",
 				url : "/${basePath}/project/${sid}/${projectCode}/"+profile+"/startclients.do", 
+				data: {
+				},
+				dataType: "json",
+				success: function(data) {
+					if(data=="SUCCESS") {
+						alert("success");
+					} else {
+						alert("failed");
+					}
+				}
+			});
+		});
+		
+		//关闭tomcat
+		$(".stoptomcats").on("click", function() {
+			if(!confirm("是否确定关闭tomcat（注：此次关闭所有tomcat）")) {
+				return ;
+			}
+			var profile = $(this).attr("value2");
+			$.ajax({
+				type: "get",
+				url: "/${basePath}/project/${sid}/${projectCode}/"+profile+"/stoptomcats.do",
+				data:{
+				},
+				dataType:"json",
+				success: function(data) {
+					if(data=="SUCCESS") {
+						alert("success");
+					} else {
+						alert("failed");
+					}
+				}
+			});
+		});
+		
+		//打开tomcat
+		$(".starttomcats").on("click", function() {
+			if(!confirm("是否确定打开tomcat（注：此次打开所有tomcat）")) {
+				return ;
+			}
+			var profile = $(this).attr("value2");
+			$.ajax({
+				type: "get",
+				url : "/${basePath}/project/${sid}/${projectCode}/"+profile+"/starttomcats.do", 
 				data: {
 				},
 				dataType: "json",

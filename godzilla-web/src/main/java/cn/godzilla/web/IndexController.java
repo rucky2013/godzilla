@@ -61,6 +61,6 @@ public class IndexController extends GodzillaApplication{
 		logger.debug("*****IndexController.loginPage2*****");
 		
 		request.setAttribute("basePath", BASE_PATH);
-		return "/login";
+		return "/index1";
 	}
 }

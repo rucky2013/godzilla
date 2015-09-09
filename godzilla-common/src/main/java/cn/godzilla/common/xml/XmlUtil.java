@@ -108,6 +108,7 @@ public class XmlUtil {
 	 */
 	public static void coverWebPomforPlugin(String project_code, ClientConfig clientConfig, String webPomPath, String savePomPath) throws DocumentException, IOException {
 		try {
+			logger.info("webPomPath:"+webPomPath);
 			Document doc = parse(webPomPath);
 			Element root = doc.getRootElement();
 			

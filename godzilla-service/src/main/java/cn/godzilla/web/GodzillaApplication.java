@@ -1,13 +1,24 @@
 package cn.godzilla.web;
 
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
+import org.apache.http.client.config.RequestConfig;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
 import org.springframework.context.ApplicationContext;
 
 import cn.godzilla.common.Application;
@@ -18,7 +29,6 @@ import cn.godzilla.model.FunRight;
 import cn.godzilla.model.User;
 import cn.godzilla.service.FunRightService;
 import cn.godzilla.service.UserService;
-import cn.godzilla.web.context.GodzillaContext;
 
 public abstract class GodzillaApplication extends Application implements Constant{
 	
@@ -147,4 +157,44 @@ public abstract class GodzillaApplication extends Application implements Constan
 		System.out.println(getBranchNameByBranchUrl(branchUrl));
 	}*/
 	
+	protected boolean ifSuccessStartTomcat(String IP, String war_name) {
+		int timeout = DEFAULT_TIMEOUT * 2;
+		int i = 0;
+		while (true) {
+			String test_url = "http://" + IP + ":8080/" + war_name + "/index.jsp";
+			StringBuilder rs = new StringBuilder();
+			try {
+				RequestConfig config = RequestConfig.custom().setSocketTimeout(10000).setConnectionRequestTimeout(10000).build();
+				CloseableHttpClient client = HttpClients.custom().setDefaultRequestConfig(config).build();
+				HttpResponse response = client.execute(new HttpGet(test_url));
+			
+	            if (HttpStatus.SC_OK == response.getStatusLine().getStatusCode()) {
+	                HttpEntity entity = response.getEntity();
+	                InputStreamReader insr = new InputStreamReader(entity.getContent());
+	                int respInt = insr.read();
+	                while (respInt != -1) {
+	                    rs.append((char) respInt);
+	                    respInt = insr.read();
+	                }
+	            } else if(true){
+	            	//如果信息码 为 4xx 或者 5xx 则退出
+	            }
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
+	        if (rs.toString().indexOf("<!--<h5>godzilla</h5>-->") != -1) {
+	            	return true;
+	        } else {
+	        	try {
+					Thread.sleep(500);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+	        }
+	        //time out seconds : return false;
+	        if(i>=timeout) {
+	        	return false;
+	        }
+		}
+	}
 }

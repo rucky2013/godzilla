@@ -68,7 +68,8 @@ deploy()
 	/app/maven/bin/mvn versions:set -DnewVersion=${PARENT_VERSION}
 	/app/maven/bin/mvn -N versions:update-child-modules
 	
-	/app/maven/bin/mvn clean deploy -f $POM_PATH -P$PROJECT_ENV
+	#/app/maven/bin/mvn clean deploy -f $POM_PATH -P$PROJECT_ENV
+	/app/maven/bin/mvn clean install -f $POM_PATH -P$PROJECT_ENV
 }
 deploy1()
 {

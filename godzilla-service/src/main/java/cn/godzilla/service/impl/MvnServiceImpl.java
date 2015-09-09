@@ -8,10 +8,13 @@ import java.io.FilenameFilter;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.swing.filechooser.FileFilter;
 
+import org.apache.http.client.fluent.Request;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,9 +62,11 @@ public class MvnServiceImpl extends GodzillaApplication implements MvnService {
 		String sid = super.getSid();
 		String pencentkey = sid + "-" + projectCode + "-" + profile;
 		
+		Project project = projectService.qureyByProCode(projectCode);
+		
+		String webPath = project.getWebPath();
 		ClientConfig clientconfig = clientConfigService.queryDetail(projectCode, profile);
 		String IP = clientconfig.getRemoteIp();
-		
 		/*
 		 * -1.svn合并  
 		 * depresed-1.svn合并提交主干  
@@ -77,7 +82,7 @@ public class MvnServiceImpl extends GodzillaApplication implements MvnService {
 			logger.info("************svn合并   成功**************");
 		} else {
 			logger.error("************mvn部署 第-1步:svn合并   失败**************");
-			return ReturnCodeEnum.getByReturnCode(NO_MVNDEPLOY);
+			return ReturnCodeEnum.getByReturnCode(NO_SVNMERGE);
 		} 
 		/*
 		 * 0.get RpcFactory and init rpcservice
@@ -99,7 +104,7 @@ public class MvnServiceImpl extends GodzillaApplication implements MvnService {
 		try {
 			PropConfigProviderService propConfigProviderService = propConfigProviderServices.get(IP);
 			
-			RpcResult result = propConfigProviderService.propToPom(projectCode, srcUrl, profile, parentVersion, clientconfig);
+			RpcResult result = propConfigProviderService.propToPom(projectCode, srcUrl, webPath, profile, parentVersion, clientconfig);
 			flag1 = result.getRpcCode().equals("0")?true:false;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -154,13 +159,23 @@ public class MvnServiceImpl extends GodzillaApplication implements MvnService {
 			 * end.部署成功  更新 部署版本号  
 			 */
 			//boolean flag3 = this.updateDeployVersion(projectCode, profile);
-			return ReturnCodeEnum.getByReturnCode(OK_MVNDEPLOY);
+			
+			/*
+			 * 3. httpclient 访问  ip:8080/war_name/index   查找 是否存在 <!--<h5>godzilla</h5>--> 字符串 判断 tomcat是否启动成功
+			 */
+			String warName = project.getWarName();
+			boolean flag4 = super.ifSuccessStartTomcat(IP, warName);
+			if(flag4) {
+				return ReturnCodeEnum.getByReturnCode(OK_MVNDEPLOY);
+			} else {
+				return ReturnCodeEnum.getByReturnCode(NO_MVNDEPLOY);
+			}
+			
 		}
 		return ReturnCodeEnum.getByReturnCode(NO_MVNDEPLOY);
 	}
 	
 	
-
 	public RpcResult deployProject(MvnProviderService mvnProviderService, String username, String srUrl, String projectCode, String profile, String IP, String parentVersion) {
 		boolean flag2 = false;
 		RpcResult result = null;
@@ -255,9 +270,10 @@ public class MvnServiceImpl extends GodzillaApplication implements MvnService {
 		//1.ssh scp 到本地
 		this.copyWar(projectCode, profile);
 		
-		
+		Project project = projectService.qureyByProCode(projectCode);
+		String warName= project.getWarName();
 		//1.5 获取 war包 文件名
-		File warfile = this.searchFile(new File(ctxPath), projectCode);
+		File warfile = this.searchFile(new File(ctxPath), warName);
 		
 		//2.输出
 		try {
