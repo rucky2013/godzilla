@@ -24,6 +24,7 @@ import cn.godzilla.common.ReturnCodeEnum;
 import cn.godzilla.model.ClientConfig;
 import cn.godzilla.model.Project;
 import cn.godzilla.model.RpcResult;
+import cn.godzilla.rpc.api.RpcException;
 import cn.godzilla.rpc.api.RpcFactory;
 import cn.godzilla.rpc.main.Util;
 import cn.godzilla.service.ClientConfigService;
@@ -137,13 +138,14 @@ public class MvnServiceImpl extends GodzillaApplication implements MvnService {
 		 * percent 90%
 		 */
 		boolean flag2 = false;
+		RpcResult result = null;
 		if("godzilla".equals(projectCode)) {
 			flag2 = true;
 		} else {
 			try {
 				MvnProviderService mvnProviderService = mvnProviderServices.get(IP);
 				String username = GodzillaApplication.getUser().getUserName();
-				RpcResult result = this.deployProject(mvnProviderService, username, srcUrl, projectCode, profile, IP, parentVersion);
+				result = this.deployProject(mvnProviderService, username, srcUrl, projectCode, profile, IP, parentVersion);
 				flag2 = result.getRpcCode().equals("0")?true:false;
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -171,6 +173,11 @@ public class MvnServiceImpl extends GodzillaApplication implements MvnService {
 				return ReturnCodeEnum.getByReturnCode(NO_MVNDEPLOY);
 			}
 			
+		} else if(flag1) {
+		} else if(flag2) {
+			if(result.equals(BUILDFAILURE)) {
+				return ReturnCodeEnum.getByReturnCode(NO_MVNBUILD);
+			}
 		}
 		return ReturnCodeEnum.getByReturnCode(NO_MVNDEPLOY);
 	}
@@ -190,6 +197,7 @@ public class MvnServiceImpl extends GodzillaApplication implements MvnService {
 							?(SHELL_CLIENT_PATH+ "godzilla_mvn.sh")
 									:(SHELL_CLIENT_PATH+"/" +"godzilla_mvn.sh");
 			String str = "sh "+shell+" deploy "+POM_PATH+" "+USER_NAME+" "+PROJECT_NAME+" "+ PROJECT_ENV +" " +parentVersion;
+			
 			result = mvnProviderService.mvnDeploy(str, PROJECT_NAME, PROJECT_ENV, USER_NAME);
 			commands = str;
 			flag2 = result.getRpcCode().equals("0")?true:false;
@@ -229,23 +237,31 @@ public class MvnServiceImpl extends GodzillaApplication implements MvnService {
 	}
 
 	private void initRpc(String linuxIp) throws ClassNotFoundException, IllegalAccessException, InstantiationException, IOException {
-		synchronized(propConfigProviderServices) {
-			//if(propConfigProviderServices.get(linuxIp)==null||"".equals(propConfigProviderServices.get(linuxIp))) {
-				RpcFactory rpcFactory1= null;
-				rpcFactory1 = Util.getRpcFactoryImpl();
-				PropConfigProviderService propConfigProviderService = rpcFactory1.getReference(PropConfigProviderService.class, linuxIp);
-				if(propConfigProviderService!=null) {
-					propConfigProviderServices.put(linuxIp, propConfigProviderService);
+		
+		while(true) {
+			try {
+				synchronized(propConfigProviderServices) {
+					//if(propConfigProviderServices.get(linuxIp)==null||"".equals(propConfigProviderServices.get(linuxIp))) {
+						RpcFactory rpcFactory1= null;
+						rpcFactory1 = Util.getRpcFactoryImpl();
+						PropConfigProviderService propConfigProviderService = rpcFactory1.getReference(PropConfigProviderService.class, linuxIp);
+						if(propConfigProviderService!=null) {
+							propConfigProviderServices.put(linuxIp, propConfigProviderService);
+						}
+					//}
+					//if(mvnProviderServices.get(linuxIp)==null||"".equals(mvnProviderServices.get(linuxIp))) {
+		                RpcFactory rpcFactory2= null;
+						rpcFactory2 = Util.getRpcFactoryImpl();
+						MvnProviderService mvnProviderService = rpcFactory2.getReference(MvnProviderService.class, linuxIp);
+						if(mvnProviderService!=null) {
+							mvnProviderServices.put(linuxIp, mvnProviderService);
+						}
+					//}
 				}
-			//}
-			//if(mvnProviderServices.get(linuxIp)==null||"".equals(mvnProviderServices.get(linuxIp))) {
-                RpcFactory rpcFactory2= null;
-				rpcFactory2 = Util.getRpcFactoryImpl();
-				MvnProviderService mvnProviderService = rpcFactory2.getReference(MvnProviderService.class, linuxIp);
-				if(mvnProviderService!=null) {
-					mvnProviderServices.put(linuxIp, mvnProviderService);
-				}
-			//}
+				break;
+			} catch(RpcException e) {
+				continue;
+			}
 		}
 	}
 
@@ -350,7 +366,7 @@ public class MvnServiceImpl extends GodzillaApplication implements MvnService {
 		tomcatHome += "/webapps/*.war";
 		String str = "sh /home/godzilla/gzl/shell/server/copywar_server.sh " + clientIp + " " + tomcatHome + " " + SAVE_WAR_PATH;;
 		boolean flag = false;
-		flag = command.execute(str, super.getUser().getUserName());
+		flag = command.execute(str, super.getUser().getUserName(), projectCode);
 		
 		if(flag) {
 			operateLogService.addOperateLog(super.getUser().getUserName(), projectCode, profile, COPYWAR, SUCCESS, "copy war success");

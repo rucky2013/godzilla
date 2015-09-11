@@ -10,15 +10,84 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.util.StringUtils;
 
 import cn.godzilla.common.Application;
+import cn.godzilla.common.Constant;
 import cn.godzilla.echo.rocketmq.Producer;
 import cn.godzilla.echo.vo.EchoMessage;
 
-public class MvnBaseCommand extends Application{
+public class MvnBaseCommand extends Application implements Constant{
 	
 	private final Logger logger = LogManager.getLogger(MvnBaseCommand.class);
 	public static final String AREA = "mvn";
 	public static final String ENCODING = "UTF-8";
-	public boolean execute(String command,String projectName,String env,final String username) {
+	
+	public boolean execute(String command, String projectName, String env, final String username) {
+		
+		logger.info(command);
+		Runtime rt = Runtime.getRuntime();
+		Process p = null;
+		try {
+			p = rt.exec(command);
+			
+			inThreadPrint1(p, username);
+			
+			p.waitFor();
+			p.destroy();
+			
+		} catch(Exception e) {
+			logger.info(e.getMessage()) ;
+			e.printStackTrace();
+			try {
+				p.getErrorStream().close();
+				p.getInputStream().close();
+				p.getOutputStream().close();
+			} catch(Exception e1) {
+				logger.error(e1.getMessage()) ;
+				e.printStackTrace();
+			}
+		}
+		
+		logger.debug("********MvnBaseCommand.execute Success*******");
+		
+		return true;
+		
+	}
+	private void inThreadPrint1(Process p, String username) {
+		final InputStream is1 = p.getInputStream();
+		
+		try {
+			BufferedReader br1 = new BufferedReader(
+					new InputStreamReader(is1, "utf-8"));
+			String line1 = null;
+			while((line1 = br1.readLine())!=null) {
+				if(line1 != null) {
+					
+					EchoMessage echoMessage = EchoMessage.getInstance(username, AREA, line1);
+					if(isEcho) Producer.sendMessageToWeb(echoMessage);
+					//判断 mvndeploy 是否 执行成功
+					if(line1.contains("BUILD SUCCESS")) {
+						String mvnBuild = mvnBuildThreadLocal.get();
+						mvnBuildThreadLocal.set(SUCCESS);
+					} else if(line1.contains("BUILD FAILURE")) {
+						String mvnBuild = mvnBuildThreadLocal.get();
+						mvnBuildThreadLocal.set(FAILURE);
+					}
+					
+					logger.info("******MvnBaseCommand.execute-->InputStream******"+line1);
+					
+				}
+			}
+		} catch(Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				is1.close();
+			} catch(IOException e1) {
+				e1.printStackTrace();
+			}
+		}
+	}
+	//no use 
+	public boolean executeNewThread(String command,String projectName,String env,final String username) {
 		
 		if(StringUtils.isEmpty(command) || StringUtils.isEmpty(projectName) || StringUtils.isEmpty(env) ||StringUtils.isEmpty(username)){
 			
@@ -49,6 +118,12 @@ public class MvnBaseCommand extends Application{
 							if (line1 != null) {
 								EchoMessage echoMessage = EchoMessage.getInstance(username, AREA, line1);
 								if(isEcho) Producer.sendMessageToWeb(echoMessage);
+								//判断 mvndeploy 是否 执行成功
+								if(line1.contains("BUILD SUCCESS")){
+									mvnBuildThreadLocal.set(SUCCESS);
+								} else if(line1.contains("BUILD FAILURE")) {
+									mvnBuildThreadLocal.set(BUILDFAILURE);
+								}
 								logger.info("******MvnBaseCommand.execute-->InputStream******"+line1);
 							}
 						}

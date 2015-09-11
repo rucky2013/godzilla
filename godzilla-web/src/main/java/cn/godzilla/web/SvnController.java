@@ -92,7 +92,7 @@ public class SvnController extends GodzillaApplication implements Constant{
 		try {
 			BaseShellCommand command = new BaseShellCommand();
 			str ="sh /home/godzilla/gzl/shell/server/svn_server_wl.sh status "+trunkPath+" '"+branches+"' "+" "+callbackUrl+" "+projectCode+" "+ operator +" "+clientIp ;
-			flag = command.execute(str, super.getUser().getUserName());
+			flag = command.execute(str, super.getUser().getUserName(), projectCode);
 		} catch (Exception e) {
 			logger.error(e);
 			e.printStackTrace();

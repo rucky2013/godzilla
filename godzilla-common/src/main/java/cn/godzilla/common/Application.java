@@ -20,4 +20,10 @@ public class Application {
 			return "";
 		};
 	};
+	protected static ThreadLocal<String> mvnBuildThreadLocal = 
+			new ThreadLocal<String>() {
+		protected String initialValue() {
+			return "";
+		};
+	};
 }

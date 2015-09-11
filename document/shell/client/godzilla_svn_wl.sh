@@ -22,8 +22,10 @@ SVN_BRANCHES=$3 		#SVN所有分支(以,分隔)
 CALL_BACK_URL=$4 		#回调url
 PROJECT_NAME=$5			#项目名(checkout目录名)
 USER_NAME=$6			#操作人
+SVNUSERNAME=$7			#svn
+SVNPASSWORD=$8			#svn
 
-if false; then
+if true; then
 echo "**********************参数信息***********************"
 echo "SHELL_NAME:${SHELL_NAME}"
 echo "ACTION:${ACTION}"
@@ -32,6 +34,8 @@ echo "SVN_BRANCHES:${SVN_BRANCHES}"
 echo "CALL_BACK_URL:${CALL_BACK_URL}"
 echo "PROJECT_NAME:${PROJECT_NAME}"
 echo "USER_NAME:${USER_NAME}" 
+echo "USER_NAME:${SVNUSERNAME}" 
+echo "USER_NAME:${SVNPASSWORD}" 
 echo "********************参数信息END***********************"
 fi
 
@@ -46,7 +50,7 @@ RECYCLE_PATH="/home/godzilla/recycle/"
 # 日志路径
 logpath="/home/godzilla/log/"
 # 修改为你的svn用户名和密码,将使用此用户密码访问你的svn
-svnuser=" --username=v-gaoyang@creditease.cn --password=888888"
+svnuser=" --username=${SVNUSERNAME} --password=${SVNPASSWORD}"
 
 
 function callback() {

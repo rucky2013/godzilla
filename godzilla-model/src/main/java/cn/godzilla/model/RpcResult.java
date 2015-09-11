@@ -36,6 +36,8 @@ public class RpcResult implements Serializable{
 		case "FAILURE":
 			rpcResult = new RpcResult(FAILURE,"failure");
 			break;
+		case "BUILDFAILURE":
+			rpcResult = new RpcResult(BUILDFAILURE,"BUILDFAILURE");
 		default:
 			rpcResult = new RpcResult(CREATEFAIL, "RpcResult create failed");
 		}
@@ -45,4 +47,5 @@ public class RpcResult implements Serializable{
 	private final static String SUCCESS = "0";
 	private final static String FAILURE = "1";
 	private final static String CREATEFAIL = "2";
+	private final static String BUILDFAILURE = "3";
 }

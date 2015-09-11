@@ -57,7 +57,7 @@ public class TomcatController extends GodzillaApplication{
 		if("godzilla".equals(projectCode)) {
 			flag = true;
 		} else {
-			flag = command.execute(str, super.getUser().getUserName());
+			flag = command.execute(str, super.getUser().getUserName(), projectCode);
 		}
 		
 		/*

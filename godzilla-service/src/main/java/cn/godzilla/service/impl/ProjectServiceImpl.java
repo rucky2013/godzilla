@@ -124,7 +124,7 @@ public class ProjectServiceImpl extends GodzillaApplication implements ProjectSe
 		String str = "sh /home/godzilla/gzl/shell/server/godzilla.sh " + actiion;
 		boolean flag = false;
 		
-		flag = command.execute(str, super.getUser().getUserName());
+		flag = command.execute(str, super.getUser().getUserName(), "");
 		
 		if(flag) {
 			operateLogService.addOperateLog(super.getUser().getUserName(), "godzilla", "TEST", actiion, SUCCESS, actiion+" godzilla clients success");

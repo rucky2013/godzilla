@@ -23,6 +23,8 @@ CALL_BACK_URL=$4 		#回调url
 PROJECT_NAME=$5			#项目名(checkout目录名)
 USER_NAME=$6			#操作人
 IP=$7 					#客户端IP 
+SVNUSERNAME=$8 					#客户端IP 
+SVNPASSWORD=$9 					#客户端IP 
 
 USER=godzilla
 PORT=2222				#ssh端口号
@@ -38,6 +40,8 @@ echo "CALL_BACK_URL:${CALL_BACK_URL}"
 echo "PROJECT_NAME:${PROJECT_NAME}"
 echo "USER_NAME:${USER_NAME}"
 echo "IP:${IP}"
+echo "SVNUSERNAME:${SVNUSERNAME}"
+echo "SVNPASSWORD:${SVNPASSWORD}"
 
 echo "[INFO]***************参数信息END***********************"
 fi
@@ -45,25 +49,25 @@ fi
 case $1 in
 	merge)
 		IP=$7
-		ssh -p $PORT $USER@$IP "/home/godzilla/gzl/shell/client/godzilla_svn_wl.sh MERGE $2 $3 $4 $5 $6"
+		ssh -p $PORT $USER@$IP "/home/godzilla/gzl/shell/client/godzilla_svn_wl.sh MERGE $2 $3 $4 $5 $6 $8 $9"
 		exit_code=$?
 		exit $exit_code		
 	;;
 	commit)
 		IP=$7
-		ssh -p $PORT $USER@$IP "/home/godzilla/gzl/shell/client/godzilla_svn_wl.sh COMMIT $2 $3 $4 $5 $6"
+		ssh -p $PORT $USER@$IP "/home/godzilla/gzl/shell/client/godzilla_svn_wl.sh COMMIT $2 $3 $4 $5 $6 $8 $9"
 		exit_code=$?
 		exit $exit_code
 	;;
 	status)
 		IP=$7
-		ssh -p $PORT $USER@$IP "/home/godzilla/gzl/shell/client/godzilla_svn_wl.sh STATUS $2 $3 $4 $5 $6"
+		ssh -p $PORT $USER@$IP "/home/godzilla/gzl/shell/client/godzilla_svn_wl.sh STATUS $2 $3 $4 $5 $6 $8 $9"
 		exit_code=$?
 		exit $exit_code
 	;;
 	version)
 		IP=$7
-		ssh -p $PORT $USER@$IP "/home/godzilla/gzl/shell/client/godzilla_svn_wl.sh VERSION $2 $3 $4 $5 $6"
+		ssh -p $PORT $USER@$IP "/home/godzilla/gzl/shell/client/godzilla_svn_wl.sh VERSION $2 $3 $4 $5 $6 $8 $9"
 		exit_code=$?
 		exit $exit_code
 	;;

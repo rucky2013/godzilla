@@ -176,8 +176,11 @@ public abstract class GodzillaApplication extends Application implements Constan
 	                    rs.append((char) respInt);
 	                    respInt = insr.read();
 	                }
-	            } else if(true){
+	            } else if(HttpStatus.SC_NOT_FOUND == response.getStatusLine().getStatusCode()){
 	            	//如果信息码 为 4xx 或者 5xx 则退出
+	            	return false;
+	            } else if(HttpStatus.SC_INTERNAL_SERVER_ERROR == response.getStatusLine().getStatusCode()) {
+	            	return false;
 	            }
 			} catch (IOException e1) {
 				e1.printStackTrace();
@@ -192,6 +195,7 @@ public abstract class GodzillaApplication extends Application implements Constan
 				}
 	        }
 	        //time out seconds : return false;
+	        i++;
 	        if(i>=timeout) {
 	        	return false;
 	        }

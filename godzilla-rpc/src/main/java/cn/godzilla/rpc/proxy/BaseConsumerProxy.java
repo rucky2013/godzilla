@@ -19,7 +19,8 @@ public abstract class BaseConsumerProxy {
 	private static final AtomicLong count = new AtomicLong(0);
 	
 	private ThreadLocal<ChannelFuture> channelFutureLocal;
-	
+	private String className;
+	private String ip;
 	static {
 		Thread thread = new Thread(new Runnable() {
 			
@@ -36,7 +37,9 @@ public abstract class BaseConsumerProxy {
 		});
 	}
 	
-	public BaseConsumerProxy(final String remoteAddress) {
+	public BaseConsumerProxy(final String className, final String remoteAddress) {
+		this.className = className;
+		this.ip = remoteAddress;
 		channelFutureLocal = new ThreadLocal<ChannelFuture>() {
 			
 			protected ChannelFuture initialValue() {
@@ -61,14 +64,15 @@ public abstract class BaseConsumerProxy {
 		
 		int time = 0;
 		while(!channelFutureLocal.get().getChannel().isConnected()) {
-			System.out.println("channelFutureLocal.get().getChannel().isConnected() 睡眠");
+			System.out.println("channelFutureLocal.get().getChannel().isConnected() 睡眠  className:"+className  + "--ip:"+ip);
 			try {
 				Thread.sleep(500);
 			} catch (InterruptedException e1) {
 				e1.printStackTrace();
 			}
 			if(time++>10) {
-				System.out.println("channelFutureLocal.get().getChannel().isConnected() 连接失败");
+				ProxyFactory.clazzMap.remove(className + ip);
+				System.out.println("channelFutureLocal.get().getChannel().isConnected() 连接失败 className:"+className  + "--ip:"+ip);
 				throw new RpcException("channelFutureLocal.get().getChannel().isConnected() 连接失败  beyond 10 time try is connected");
 			}
 		}

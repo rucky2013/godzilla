@@ -164,14 +164,14 @@ $(document).ready(function() {
 		var profile = $("#profile").val();
 		
 		var status = $(this).attr("value1");
-		var auditor_text = $("#auditor_text").text();
+		var auditor_text = $("#auditor_text").val();
 		
 		$.ajax({ 
 		 	type: 'POST', 
 			url: '/${basePath}/prop/' + sid + '/' + projectCode +　'/' + createBy + '/' + profile + '/' + 'verifyProp.do',
 			data: {
-				auditor_text:auditor_text,
-				status:status,
+				auditor_text :auditor_text,
+				status :status,
 				},
 			success: function(data){
 				if(data == 'SUCCESS') {

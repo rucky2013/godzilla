@@ -296,7 +296,7 @@ public class PropConfigServiceImpl implements PropConfigService {
 			 */
 			int dbReturn2 = dao.verifyOKProp(parameterMap);
 			
-			return dbReturn1>0&&dbReturn2>0
+			return dbReturn1>=0&&dbReturn2>=0
 					?ReturnCodeEnum.getByReturnCode(OK_VERIFYPROP)
 							:ReturnCodeEnum.getByReturnCode(NO_VERIFYPROP);
 		} else if (STOP_VERIFY_STATUS.equals(status)) {

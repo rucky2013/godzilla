@@ -19,7 +19,7 @@ public class BaseShellCommand extends Application{
 	private final Logger logger = LogManager.getLogger(BaseShellCommand.class);
 	public static final String AREA = "svn";
 	public static final String ENCODING = "UTF-8";
-	public boolean execute(String command, final String username) {
+	public boolean execute(String command, final String username, String projectCode) {
 		
 		if(StringUtils.isEmpty(command) || StringUtils.isEmpty(username)){
 			
@@ -27,6 +27,18 @@ public class BaseShellCommand extends Application{
 			return false ;
 			
 		}
+		
+		String svnusername = "";
+		String svnpassword = "";
+		if("xuanyuan".equals(projectCode)) {
+			svnusername = "liuchen";
+			svnpassword = "1";
+		} else {
+			svnusername = "v-gaoyang@creditease.cn";
+			svnpassword = "888888";
+		}
+		command += " " + svnusername + " " + svnpassword;
+		
 		System.out.println(command);
 		
 		Runtime rt = Runtime.getRuntime();

@@ -12,6 +12,7 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import cn.godzilla.common.Application;
 import cn.godzilla.common.ReturnCodeEnum;
 import cn.godzilla.model.ClientConfig;
 import cn.godzilla.model.RpcResult;
@@ -25,7 +26,7 @@ import cn.godzilla.service.MvnService;
 import cn.godzilla.service.PropConfigProviderService;
 import cn.godzilla.web.GodzillaApplication;
 
-public class MvnProviderServiceImpl implements MvnProviderService{
+public class MvnProviderServiceImpl extends Application implements MvnProviderService{
 	
 	private final Logger logger = LogManager.getLogger(MvnServiceImpl.class);
 
@@ -35,10 +36,16 @@ public class MvnProviderServiceImpl implements MvnProviderService{
 		boolean flag = false;
 		MvnBaseCommand command = new MvnBaseCommand();
 		flag = command.execute(str, PROJECT_NAME, PROJECT_ENV, USER_NAME);
-		if(flag) {
+		logger.info("mvnBuildThreadLocal:::"	+ mvnBuildThreadLocal.get());
+		String mvnBuild = mvnBuildThreadLocal.get();
+		boolean flag2 = mvnBuildThreadLocal.get().equals(SUCCESS)?true:false;
+		if(flag&&flag2) {
 			return RpcResult.create(SUCCESS);
-		} else {
+		} else if(flag){
 			return RpcResult.create(FAILURE);
+		} else {
+			//build failure
+			return RpcResult.create(BUILDFAILURE);
 		}
 	}
 

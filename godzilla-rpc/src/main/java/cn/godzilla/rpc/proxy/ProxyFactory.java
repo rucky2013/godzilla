@@ -60,7 +60,7 @@ public class ProxyFactory {
 		}
 	} */
 	//<class-name + ip, objImpl> 建立多机 rpc
-	private static final ConcurrentHashMap<String, Object> clazzMap = 
+	static final ConcurrentHashMap<String, Object> clazzMap = 
 			new ConcurrentHashMap<String, Object>();
 		
 	public static Object getConsumerProxy(Class<?> clazz, String ip) {
@@ -97,8 +97,8 @@ public class ProxyFactory {
 						}
 					});
 					
-					obj = enhancer.create(new Class[] {String.class},
-							new Object[] {ip});
+					obj = enhancer.create(new Class[] {String.class, String.class},
+							new Object[] {clazz.getName(), ip});
 					clazzMap.put(clazz.getName()+ip, obj);
 					return obj;
 					

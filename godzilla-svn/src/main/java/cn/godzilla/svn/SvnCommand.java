@@ -25,7 +25,7 @@ public class SvnCommand {
 		logger.debug("*******SVN Checkout Begin******"+"from:"+svnPath+"   to->"+localPath +" by:"+username);
 		
 		BaseShellCommand baseShellCommand = new BaseShellCommand();
-		if(baseShellCommand.execute(command, username)){
+		if(baseShellCommand.execute(command, username, "")){
 			
 			logger.debug("******Checkout Success!*****");
 			return true;
@@ -48,7 +48,7 @@ public class SvnCommand {
 		
 		logger.debug("**********mergeToBranch****"+command);
 		BaseShellCommand baseShellCommand = new BaseShellCommand();
-		if(baseShellCommand.execute(command, username)){
+		if(baseShellCommand.execute(command, username, "")){
 			return true;
 		}
 		
@@ -72,7 +72,7 @@ public class SvnCommand {
 		
 		logger.debug("**********resolve****"+command);
 		BaseShellCommand baseShellCommand = new BaseShellCommand();
-		if(baseShellCommand.execute(command, username)){
+		if(baseShellCommand.execute(command, username, "")){
 			return true;
 		}
 		return false ;
@@ -93,7 +93,7 @@ public class SvnCommand {
 		logger.debug("**********svnadd****"+command);
 		BaseShellCommand baseShellCommand = new BaseShellCommand();
 		
-		if(baseShellCommand.execute(command, username)){
+		if(baseShellCommand.execute(command, username, "")){
 			return true ;
 		}
 		
@@ -118,7 +118,7 @@ public class SvnCommand {
 		
 		BaseShellCommand baseShellCommand = new BaseShellCommand();
 		
-		if(baseShellCommand.execute(command, username)){
+		if(baseShellCommand.execute(command, username, "")){
 			return true;
 		}
 	
@@ -139,7 +139,7 @@ public class SvnCommand {
 		
 		BaseShellCommand baseShellCommand = new BaseShellCommand();
 		
-		if(baseShellCommand.execute(command, username)){
+		if(baseShellCommand.execute(command, username, "")){
 			return true;
 		}
 		return false;
@@ -156,7 +156,7 @@ public class SvnCommand {
 		logger.debug("*****rmLocalPath****"+command);
 		BaseShellCommand baseShellCommand = new BaseShellCommand();
 		String username = "";
-		if(baseShellCommand.execute(command, username)){
+		if(baseShellCommand.execute(command, username, "")){
 			return true;
 		}
 		return false;
@@ -178,7 +178,7 @@ public class SvnCommand {
 		
 		BaseShellCommand baseShellCommand = new BaseShellCommand();
 		
-		if(baseShellCommand.execute(command, username)){
+		if(baseShellCommand.execute(command, username, "")){
 			return true ;
 		}
 		return false ;
@@ -199,7 +199,7 @@ public class SvnCommand {
 		
 		logger.debug("**********mergeToBranch*****"+command);
 		BaseShellCommand baseShellCommand = new BaseShellCommand();
-		if(baseShellCommand.execute(command, username)){
+		if(baseShellCommand.execute(command, username, "")){
 			return true;
 		}
 		
@@ -221,7 +221,7 @@ public class SvnCommand {
 		
 		BaseShellCommand baseShellCommand = new BaseShellCommand();
 		
-		if(baseShellCommand.execute(command, username)){
+		if(baseShellCommand.execute(command, username, "")){
 			return true;
 		}
 		return false;

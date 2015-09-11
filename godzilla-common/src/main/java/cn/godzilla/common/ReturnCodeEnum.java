@@ -38,6 +38,7 @@ public enum ReturnCodeEnum {
 	NO_GODZILLA("100029","godzilla 客户端操作失败"),
 	NO_DELETEBRANCH("100030", "删除分支失败"),
 	NO_SVNMERGE("100031", "合并分支失败"),
+	NO_MVNBUILD("100032", "mvn build 失败"),
 	//user模块
 	OK_CHECKUSER("200001","验证用户成功"),
 	OK_LOGIN("200002","用户登录成功"),

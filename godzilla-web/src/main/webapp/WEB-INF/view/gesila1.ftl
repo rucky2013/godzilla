@@ -393,6 +393,7 @@
 						$("#process").width(result.processPercent * 148.0 / 100.0);
 						$("#processText").text(result.processPercent + "%");	
 						var intprocess = parseInt(result.processPercent);
+						
 						if(intprocess >= 100){
 							$("#process").width(148);
 							$("#processText").text("100%");

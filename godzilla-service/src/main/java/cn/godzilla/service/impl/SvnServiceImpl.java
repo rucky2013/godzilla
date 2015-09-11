@@ -47,7 +47,7 @@ public class SvnServiceImpl extends GodzillaApplication implements SvnService {
 		try {
 			BaseShellCommand command = new BaseShellCommand();
 			str ="sh /home/godzilla/gzl/shell/server/svn_server_wl.sh version "+trunkPath+" '"+branches+"' "+" "+callbackUrl+" "+projectCode+" "+ operator +" "+clientIp ;
-			flag = command.execute(str, super.getUser().getUserName());
+			flag = command.execute(str, super.getUser().getUserName(), projectCode);
 		} catch (Exception e) {
 			logger.error(e);
 			e.printStackTrace();
@@ -92,7 +92,7 @@ public class SvnServiceImpl extends GodzillaApplication implements SvnService {
 		try {
 			str = "sh /home/godzilla/gzl/shell/server/svn_server_wl.sh commit "+trunkPath+" '"+branches+"' "+" "+callbackUrl+" "+projectCode+" "+ operator +" "+clientIp ;
 			BaseShellCommand command = new BaseShellCommand();
-			flag = command.execute(str, super.getUser().getUserName());
+			flag = command.execute(str, super.getUser().getUserName(), projectCode);
 			
 		} catch (Exception e) {
 			logger.error(e);
@@ -156,7 +156,7 @@ public class SvnServiceImpl extends GodzillaApplication implements SvnService {
 		try {
 			BaseShellCommand command = new BaseShellCommand();
 			str = "sh /home/godzilla/gzl/shell/server/svn_server_wl.sh merge "+trunkPath+" '"+branches+"' "+" "+callbackUrl+" "+projectCode+" "+ operator +" "+clientIp ;
-			flag = command.execute(str, super.getUser().getUserName());
+			flag = command.execute(str, super.getUser().getUserName(), projectCode);
 		} catch (Exception e) {
 			logger.error(e);
 			e.printStackTrace();
