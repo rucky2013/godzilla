@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import cn.godzilla.common.ReturnCodeEnum;
+import cn.godzilla.common.response.ResponseBodyJson;
 import cn.godzilla.model.ClientConfig;
 import cn.godzilla.model.Project;
 import cn.godzilla.service.ClientConfigService;
@@ -77,10 +78,10 @@ public class TomcatController extends GodzillaApplication{
 		flag = flag && flag4;
 		if(flag) {
 			operateLogService.addOperateLog(super.getUser().getUserName(), projectCode, profile, TOMCATRESTART, SUCCESS, "tomcat重启SUCCESS");
-			return SUCCESS;
+			return ResponseBodyJson.custom().setAll(OK_AJAX, SUCCESS, "").build();
 		} else {
 			operateLogService.addOperateLog(super.getUser().getUserName(), projectCode, profile, TOMCATRESTART, FAILURE, "tomcat重启FAILURE");
-			return FAILURE;
+			return ResponseBodyJson.custom().setAll(NO_AJAX, FAILURE, "").build();
 		}
 	}
 }

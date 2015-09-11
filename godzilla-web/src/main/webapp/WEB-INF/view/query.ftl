@@ -40,7 +40,7 @@
 					<a href="javascript:void(0);" class="a2" title="管理权限">管理权限</a>
 					</#if>
 				</h2>
-				<h3 class="location">当前应用：<a class="backindex" href="/${basePath}/project/${sid}/${projectCode}/TEST/projectConfig.do" title="${projectCode}">${projectCode}</a></h3>
+				 <a class="backindex" href="/${basePath}/project/${sid}/${projectCode}/TEST/projectConfig.do" title="${projectCode}"><h3 class="location">当前应用：${projectCode}</h3></a>
  
                 <div class="clearfix" id="query_tab1">
                     <h4 class="title">测试环境<span title="展开">展开</span></h4>
@@ -105,7 +105,7 @@
 					</li>
                  </ul>
                 
-                <h4 style="text-align:center"><a  href="#" class="btn2 btnGreen" title="预览">预览</a><a id="btn_submit" href="#" class="btn2" title="提交审核">提交审核</a></h4>
+                <h4 style="text-align:center; margin-top: 30px;"><a id="btn_submit" href="#" class="btn2" title="提交审核">提交审核</a></h4>
 </div>
             </div>
         </div>

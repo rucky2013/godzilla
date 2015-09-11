@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import cn.godzilla.common.Constant;
 import cn.godzilla.common.ReturnCodeEnum;
 import cn.godzilla.common.StringUtil;
+import cn.godzilla.common.response.ResponseBodyJson;
 import cn.godzilla.model.ClientConfig;
 import cn.godzilla.model.OperateLog;
 import cn.godzilla.model.Project;
@@ -127,83 +128,68 @@ public class ProjectController extends GodzillaApplication implements Constant{
 	public Object download(@PathVariable("sid") String sid, @PathVariable String projectCode, @PathVariable String profile, HttpServletResponse response) {
 		
 		ReturnCodeEnum returnEnum = mvnService.downLoadWar(response, projectCode, profile);
-		
 		return null;
 	}
 	
+	/**
+	 * 升级客户端
+	 * @param response
+	 * @return 
+	 */
 	@RequestMapping(value="{sid}/{projectCode}/{profile}/upgrade", method=RequestMethod.GET) 
 	@ResponseBody
 	public Object upgrade(HttpServletResponse response) {
 		
 		ReturnCodeEnum returnEnum = projectService.godzillaCommand("upgrade");
-		if(returnEnum.equals(ReturnCodeEnum.OK_GODZILLA)) {
-			return SUCCESS;
-		} else if(returnEnum.equals(ReturnCodeEnum.NO_GODZILLA)) {
-			return FAILURE;
-		} else {
-			//never reach
-			return FAILURE;
-		}
+		return ResponseBodyJson.custom().setAll(returnEnum).build();
 	}
-	
+	/**
+	 * 关闭客户端
+	 * @param response
+	 * @return 
+	 */
 	@RequestMapping(value="{sid}/{projectCode}/{profile}/stopclients", method=RequestMethod.GET)
 	@ResponseBody
 	public Object stopclients(HttpServletResponse response) {
 		
 		ReturnCodeEnum returnEnum = projectService.godzillaCommand("stopclients");
-		if(returnEnum.equals(ReturnCodeEnum.OK_GODZILLA)) {
-			return SUCCESS;
-		} else if(returnEnum.equals(ReturnCodeEnum.NO_GODZILLA)){
-			return FAILURE;
-		} else {
-			//never reach
-			return FAILURE;
-		}
+		return ResponseBodyJson.custom().setAll(returnEnum).build();
 	}
-	
+	/**
+	 * 打开客户端
+	 * @param response
+	 * @return 
+	 */
 	@RequestMapping(value="{sid}/{projectCode}/{profile}/startclients", method=RequestMethod.GET)
 	@ResponseBody
 	public Object startclients(HttpServletResponse response) {
 		
 		ReturnCodeEnum returnEnum = projectService.godzillaCommand("startclients");
-		if(returnEnum.equals(ReturnCodeEnum.OK_GODZILLA)) {
-			return SUCCESS;
-		} else if(returnEnum.equals(ReturnCodeEnum.NO_GODZILLA)) {
-			return FAILURE;
-		} else {
-			//never reach 
-			return FAILURE;
-		}
+		return ResponseBodyJson.custom().setAll(returnEnum).build();
 	}
-	
+	/**
+	 * 打开tomcat
+	 * @param response
+	 * @return 
+	 */
 	@RequestMapping(value="{sid}/{projectCode}/{profile}/starttomcats", method=RequestMethod.GET)
 	@ResponseBody
 	public Object starttomcats(HttpServletResponse response) {
 		
 		ReturnCodeEnum returnEnum = projectService.godzillaCommand("starttomcats");
-		if(returnEnum.equals(ReturnCodeEnum.OK_GODZILLA)) {
-			return SUCCESS;
-		} else if(returnEnum.equals(ReturnCodeEnum.NO_GODZILLA)) {
-			return FAILURE;
-		} else {
-			//never reach 
-			return FAILURE;
-		}
+		return ResponseBodyJson.custom().setAll(returnEnum).build();
 	}
-	
+	/**
+	 * 关闭tomcat
+	 * @param response
+	 * @return 
+	 */
 	@RequestMapping(value="{sid}/{projectCode}/{profile}/stoptomcats", method=RequestMethod.GET)
 	@ResponseBody
 	public Object stoptomcats(HttpServletResponse response) {
 		
 		ReturnCodeEnum returnEnum = projectService.godzillaCommand("stoptomcats");
-		if(returnEnum.equals(ReturnCodeEnum.OK_GODZILLA)) {
-			return SUCCESS;
-		} else if(returnEnum.equals(ReturnCodeEnum.NO_GODZILLA)) {
-			return FAILURE;
-		} else {
-			//never reach 
-			return FAILURE;
-		}
+		return ResponseBodyJson.custom().setAll(returnEnum).build();
 	}
 	
 }

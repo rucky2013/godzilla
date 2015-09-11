@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import cn.godzilla.common.Constant;
 import cn.godzilla.common.ReturnCodeEnum;
+import cn.godzilla.common.response.ResponseBodyJson;
 import cn.godzilla.model.ClientConfig;
 import cn.godzilla.model.Project;
 import cn.godzilla.model.SvnBranchConfig;
@@ -105,21 +106,13 @@ public class SvnController extends GodzillaApplication implements Constant{
 			operateLogService.addOperateLog(username, projectCode, profile, SVNSTATUS, SUCCESS, "状态查看SUCCESS");
 			logger.info("************状态查看End**************");
 			String echoMessage = echoMessageThreadLocal.get();
-			Map<String, Object> resultMap = new HashMap<String, Object>();
-			resultMap.put("returncode", OK_AJAX);
-			resultMap.put("returnmsg", SUCCESS);
-			resultMap.put("echoMessage", echoMessage);		
-			return resultMap;
+			return ResponseBodyJson.custom().setAll(OK_AJAX, SUCCESS, echoMessage).build();
 		}else{
 			String username = super.getUser().getUserName();
 			svnCmdLogService.addSvnCommandLog(username, trunkPath, str, username);
 			operateLogService.addOperateLog(username, projectCode, profile, SVNSTATUS, FAILURE, "状态查看FAILURE");
 			logger.error("************状态查看Error**************");
-			Map<String, Object> resultMap = new HashMap<String, Object>();
-			resultMap.put("returncode", NO_AJAX);
-			resultMap.put("returnmsg", FAILURE);
-			resultMap.put("echoMessage", FAILURE);		
-			return resultMap;
+			return ResponseBodyJson.custom().setAll(NO_AJAX, FAILURE, "").build();
 		}
 		
 	}
@@ -147,10 +140,10 @@ public class SvnController extends GodzillaApplication implements Constant{
 		boolean flag = svnService.svnMerge(projectCode, profile);
 		if(flag){
 			logger.info("************代码合并End**************");
-			return SUCCESS;
+			return ResponseBodyJson.custom().setAll(OK_AJAX, SUCCESS, "").build();
 		}else{
 			logger.error("************代码合并Error**************");
-			return FAILURE;
+			return ResponseBodyJson.custom().setAll(NO_AJAX, FAILURE, "").build();
 		}
 	}
 	/**
@@ -180,39 +173,9 @@ public class SvnController extends GodzillaApplication implements Constant{
 		
 		logger.info("************提交主干Begin***********");
 		
-		ReturnCodeEnum returncode = svnService.svnCommit(projectCode, profile);
-		if(returncode==ReturnCodeEnum.OK_SVNCOMMIT){
-			operateLogService.addOperateLog(super.getUser().getUserName(), projectCode, profile, SVNCOMMIT, SUCCESS, ReturnCodeEnum.OK_SVNCOMMIT.getReturnMsg());
-			logger.info("************提交主干End success**************");
-			return SUCCESS;
-		} else if(returncode==ReturnCodeEnum.NO_SVNCOMMIT){
-			operateLogService.addOperateLog(super.getUser().getUserName(), projectCode, profile, SVNCOMMIT, FAILURE, ReturnCodeEnum.NO_SVNCOMMIT.getReturnMsg());
-			logger.error("************提交主干Error: svn提交失败**************");
-			return FAILURE;
-		} else if(returncode==ReturnCodeEnum.NO_FOUNDCONFLICT){
-			operateLogService.addOperateLog(super.getUser().getUserName(), projectCode, profile, SVNCOMMIT, FAILURE, ReturnCodeEnum.NO_FOUNDCONFLICT.getReturnMsg());
-			logger.error("************提交主干Erro  合并出现冲突，请先解决冲突**************");
-			return FAILURE;
-		} else if(returncode==ReturnCodeEnum.NO_CLIENTPARAM){
-			operateLogService.addOperateLog(super.getUser().getUserName(), projectCode, profile, SVNCOMMIT, FAILURE, ReturnCodeEnum.NO_CLIENTPARAM.getReturnMsg());
-			logger.error("************提交主干Error  client.sh缺少参数**************");
-			return FAILURE;
-		} else if(returncode==ReturnCodeEnum.NO_SERVERPARAM){
-			operateLogService.addOperateLog(super.getUser().getUserName(), projectCode, profile, SVNCOMMIT, FAILURE, ReturnCodeEnum.NO_SERVERPARAM.getReturnMsg());
-			logger.error("************提交主干Error server.sh缺少参数**************");
-			return FAILURE;
-		} else if(returncode==ReturnCodeEnum.NO_CHANGECOMMIT){ //没有更改可以提交
-			operateLogService.addOperateLog(super.getUser().getUserName(), projectCode, profile, SVNCOMMIT, FAILURE, ReturnCodeEnum.NO_CHANGECOMMIT.getReturnMsg());
-			logger.error("************提交主干Error 没有更改可以提交**************");
-			return FAILURE;
-		} else if(returncode==ReturnCodeEnum.NO_JAVASHELLCALL){
-			operateLogService.addOperateLog(super.getUser().getUserName(), projectCode, profile, SVNCOMMIT, FAILURE, ReturnCodeEnum.NO_JAVASHELLCALL.getReturnMsg());
-			logger.error("************提交主干Error  java调用shell执行失败**************");
-			return FAILURE;
-		} else {
-			operateLogService.addOperateLog(super.getUser().getUserName(), projectCode, profile, SVNCOMMIT, FAILURE, "提交主干FAILURE");
-			logger.error("************提交主干Error **************");
-			return FAILURE;
-		}
+		ReturnCodeEnum returnEnum = svnService.svnCommit(projectCode, profile);
+		operateLogService.addOperateLog(super.getUser().getUserName(), projectCode, profile, SVNCOMMIT, returnEnum.getStatus(), returnEnum.getReturnMsg());
+		logger.info("************提交主干End "+returnEnum.getStatus()+":"+returnEnum.getReturnMsg()+"**************");
+		return ResponseBodyJson.custom().setAll(returnEnum).build();
 	}
 }

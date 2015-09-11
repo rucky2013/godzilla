@@ -43,5 +43,11 @@ public interface ProjectService{
 
 	public List<Project> queryProjectsByUsername(String username);
 
+	/**
+	 * 
+	 * @param string
+	 * @return ReturnCodeEnum:
+	 * 			OK_GODZILLA  , NO_GODZILLA
+	 */
 	public ReturnCodeEnum godzillaCommand(String string);
 }

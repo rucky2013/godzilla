@@ -42,11 +42,16 @@
 				</h2>
 
 				<table width="200" border="0" class="table1">
-                  <tr>
-                    <#list projects as item>
-                    	<td><a href="/${basePath}/project/${sid}/${item.projectCode}/TEST/projectConfig.do" title="${item.projectCode}"><span></span>${item.projectName}</a></td>
-                    </#list>
-                  </tr>
+                  		<tr>
+	                    <#list projects as item>
+	                    	<#if (item_index+1) % 4 == 0>
+		                    		<td><a href="/${basePath}/project/${sid}/${item.projectCode}/TEST/projectConfig.do" title="${item.projectCode}"><span></span>${item.projectName}</a></td>
+	                    			</tr><tr>
+	                    	<#else>
+	                    			<td><a href="/${basePath}/project/${sid}/${item.projectCode}/TEST/projectConfig.do" title="${item.projectCode}"><span></span>${item.projectName}</a></td>
+	                    	</#if>
+	                    </#list>
+                		</tr>
                 </table>
                 <div class="table2">
                     <table>

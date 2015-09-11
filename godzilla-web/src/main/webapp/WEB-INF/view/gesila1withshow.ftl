@@ -42,7 +42,7 @@
 					<a href="javascript:void(0);" class="a2" title="管理权限">管理权限</a>
 					</#if>
 				</h2>
-				<h3 class="location">当前应用：<a class="backindex" href="/${basePath}/project/${sid}/${projectCode}/TEST/projectConfig.do" title="${projectCode}">${projectCode}</a></h3>
+				 <a class="backindex" href="/${basePath}/project/${sid}/${projectCode}/TEST/projectConfig.do" title="${projectCode}"><h3 class="location">当前应用：${projectCode}</h3></a>
 
 				<ul id="tab2" class="clearfix">
 					<#if profile = 'TEST'>

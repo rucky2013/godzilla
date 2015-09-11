@@ -39,6 +39,7 @@ public enum ReturnCodeEnum {
 	NO_DELETEBRANCH("100030", "删除分支失败"),
 	NO_SVNMERGE("100031", "合并分支失败"),
 	NO_MVNBUILD("100032", "mvn build 失败"),
+	OK_SUCCESS("200000", "SUCCESS"),
 	//user模块
 	OK_CHECKUSER("200001","验证用户成功"),
 	OK_LOGIN("200002","用户登录成功"),
@@ -80,6 +81,15 @@ public enum ReturnCodeEnum {
 		return returnCode+":"+returnMsg;
 	}
 	
+	public String getStatus() {
+		if(this.getReturnCode().indexOf("2")==0) {
+			return "SUCCESS";
+		} else if(this.getReturnCode().indexOf("1")==0) {
+			return "FAILURE";
+		} else {
+			return "FAILURE";
+		}
+	}
 	public static ReturnCodeEnum getByReturnCode(String returnCode) {
 		if(StringUtil.isEmpty(returnCode)) return null;  //null for empty returncode
 		for(ReturnCodeEnum r:ReturnCodeEnum.values()) {

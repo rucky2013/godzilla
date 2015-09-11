@@ -25,7 +25,7 @@ USER_NAME=$6			#操作人
 SVNUSERNAME=$7			#svn
 SVNPASSWORD=$8			#svn
 
-if true; then
+if false; then
 echo "**********************参数信息***********************"
 echo "SHELL_NAME:${SHELL_NAME}"
 echo "ACTION:${ACTION}"
@@ -310,8 +310,8 @@ case $ACTION in
 	STATUS)
 		status
 		exit_code=$?
-		echo "${exit_code}"
-		echo "${exit_code}"
+		#echo "${exit_code}"
+		#echo "${exit_code}"
 		exit $exit_code
 	;;
 	VERSION)

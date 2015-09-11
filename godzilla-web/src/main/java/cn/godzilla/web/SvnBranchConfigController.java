@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import cn.godzilla.common.Constant;
 import cn.godzilla.common.ReturnCodeEnum;
+import cn.godzilla.common.response.ResponseBodyJson;
 import cn.godzilla.service.OperateLogService;
 import cn.godzilla.service.ProjPrivateService;
 import cn.godzilla.service.SvnBranchConfigService;
@@ -94,11 +95,11 @@ public class SvnBranchConfigController extends GodzillaApplication implements Co
 		if(flag){
 			operateLogService.addOperateLog(super.getUser().getUserName(), projectCode, profile, BRANCHEDIT, SUCCESS, "分支编辑 保存SUCCESS");
 			logger.info("************分支编辑 保存End**************");
-			return SUCCESS;
+			return ResponseBodyJson.custom().setAll(OK_AJAX, SUCCESS, "").build();
 		}else{
 			operateLogService.addOperateLog(super.getUser().getUserName(), projectCode, profile, BRANCHEDIT, FAILURE, "分支编辑 保存FAILURE");
 			logger.error("************分支编辑 保存Error**************");
-			return FAILURE;
+			return ResponseBodyJson.custom().setAll(NO_AJAX, FAILURE, "").build();
 		}
 	}
 	
@@ -110,15 +111,7 @@ public class SvnBranchConfigController extends GodzillaApplication implements Co
 		
 		logger.info("************分支编辑　删除×××××××××××××××××××***" ) ;
 		ReturnCodeEnum returnEnum = svnBranchConfigService.deleteBranch(projectCode, profile, id);
-		
-		if(returnEnum.equals(ReturnCodeEnum.OK_DELETEBRANCH)) {
-			return SUCCESS;
-		} else if(returnEnum.equals(ReturnCodeEnum.NO_DELETEBRANCH)) {
-			return FAILURE;
-		} else {
-			//never reach
-			return FAILURE;
-		}
+		return ResponseBodyJson.custom().setAll(returnEnum).build();
 	}
 
 }

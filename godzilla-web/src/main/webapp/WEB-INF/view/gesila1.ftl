@@ -42,7 +42,7 @@
 					<a href="javascript:void(0);" class="a2" title="管理权限">管理权限</a>
 					</#if>
 				</h2>
-				<h3 class="location">当前应用：<a class="backindex" href="/${basePath}/project/${sid}/${projectCode}/TEST/projectConfig.do" title="${projectCode}">${projectCode}</a></h3>
+				<a class="backindex" href="/${basePath}/project/${sid}/${projectCode}/TEST/projectConfig.do" title="${projectCode}"><h3 class="location">当前应用：${projectCode}</h3></a>
 
 				<ul id="tab2" class="clearfix">
 					<#if profile = 'TEST'>
@@ -278,8 +278,7 @@
 						</textarea>
 				</div>
 			</div>
-
-
+			
 			<div id="shadow_box2" class="shadow_box" style="display:none">
 				<h5>
 					源代码设置->add<span id="close2" class="close">关闭</span>
@@ -316,7 +315,12 @@
 					<input type="hidden" id="value11" name="value11" value="" />
 					<input type="hidden" id="value22" name="value22" value="" />
 					<div class="user_con clearfix">
-						<label>版本号：</label> <input id="parentVersion" type="text" name="parentVersion" value="1.0.0.SNAPSHOT" />
+						<label>版本号：</label> <input id="parentVersion" type="text" name="parentVersion" value="1.0.0" />
+						<label>&nbsp;</label>
+						<select id="parentVersionSuffix" name="parentVersionSuffix">
+	                		<option value=".SNAPSHOT" selected="selected">.SNAPSHOT</option>
+							<option value=".RELEASE">.RELEASE</option>
+	              		</select>
 					</div>
 					<input id="deployBtn" type="button" class="shadow_btn mar150_l" value="部署" />
 				</div>
@@ -368,6 +372,10 @@
 			var oShadow = document.getElementById('shadow');
 			oShadow.style.display = 'none';
 		}
+		function modelwindow() {
+			var oShadow = document.getElementById('shadow');
+			oShadow.style.display = '';
+		}
 		//更新进度条 
 		
 		var timeout = false; //启动及关闭按钮  
@@ -390,9 +398,9 @@
 	            success: function(data) {
 					var result = data;
 					if(result.returncode=="200000") {
-						$("#process").width(result.processPercent * 148.0 / 100.0);
-						$("#processText").text(result.processPercent + "%");	
-						var intprocess = parseInt(result.processPercent);
+						$("#process").width(result.returnmemo * 148.0 / 100.0);
+						$("#processText").text(result.returnmemo + "%");	
+						var intprocess = parseInt(result.returnmemo);
 						
 						if(intprocess >= 100){
 							$("#process").width(148);
@@ -429,12 +437,14 @@
 	        var value1 = $("#value11").val();
 	        var profile =  $("#value22").val();
 			var parentVersion = $("#parentVersion").val();
+			var parentVersionSuffix = $("#parentVersionSuffix").val();
 	        $.ajax({
 	            type: "POST",
 	            url: "/${basePath}/mvn/${sid}/${projectCode}/" + profile + "/deploy.do",
 	            data: {
 	                srcUrl: value1,
 	                parentVersion: parentVersion,
+	                parentVersionSuffix : parentVersionSuffix,
 	            },
 	            dataType: "json",
 	            success: function(data) {
@@ -472,11 +482,16 @@
 	    		},
 	    		dataType:"json",
 	    		success: function(data) {
-	    			if(data=="SUCCESS") {
-	    				alert("success");
-	    			} else {
-	    				alert("failed");
-	    			}
+	    			if(data.returnmsg=="SUCCESS") {
+						//alert(data.echoMessage);
+						$("#alert").css("display", "block");
+						$("#alert_title").text(data.returnmsg);
+						$("#alert_text").text(data.returnmemo);
+					} else {
+	                    $("#alert").css("display", "block");
+						$("#alert_title").text(data.returnmsg);
+						$("#alert_text").text(data.returnmemo);
+	                }
 	    		}
 	    	});*/
 	    	window.location.href = "/${basePath}/project/${sid}/${projectCode}/"+profile+"/download.do";
@@ -487,7 +502,10 @@
 			if (!confirm("是否确定升级客户端（注：此次升级所有客户端）"))  {  
 	    		return ;
 	    	}
+	    	
+			modelwindow();
 	    	var profile = $(this).attr("value2");
+	    	
 	    	$.ajax({
 	    		type: "get",
 	    		url: "/${basePath}/project/${sid}/${projectCode}/"+profile+"/upgrade.do",
@@ -495,11 +513,16 @@
 	    		},
 	    		dataType:"json",
 	    		success: function(data) {
-	    			if(data=="SUCCESS") {
-	    				alert("success");
-	    			} else {
-	    				alert("failed");
-	    			}
+	    			if(data.returnmsg=="SUCCESS") {
+						//alert(data.echoMessage);
+						$("#alert").css("display", "block");
+						$("#alert_title").text(data.returnmsg);
+						$("#alert_text").text(data.returnmemo);
+					} else {
+	                    $("#alert").css("display", "block");
+						$("#alert_title").text(data.returnmsg);
+						$("#alert_text").text(data.returnmemo);
+	                }
 	    		}
 	    	});
 		});
@@ -508,6 +531,7 @@
 			if(!confirm("是否确定关闭客户端（注：此次关闭所有客户端）")) {
 				return ;
 			}
+			modelwindow();
 			var profile = $(this).attr("value2");
 			$.ajax({
 				type: "get",
@@ -516,11 +540,16 @@
 				},
 				dataType:"json",
 				success: function(data) {
-					if(data=="SUCCESS") {
-						alert("success");
+					if(data.returnmsg=="SUCCESS") {
+						//alert(data.echoMessage);
+						$("#alert").css("display", "block");
+						$("#alert_title").text(data.returnmsg);
+						$("#alert_text").text(data.returnmemo);
 					} else {
-						alert("failed");
-					}
+	                    $("#alert").css("display", "block");
+						$("#alert_title").text(data.returnmsg);
+						$("#alert_text").text(data.returnmemo);
+	                }
 				}
 			});
 		});
@@ -530,6 +559,7 @@
 			if(!confirm("是否确定打开客户端（注：此次打开所有客户端）")) {
 				return ;
 			}
+			modelwindow();
 			var profile = $(this).attr("value2");
 			$.ajax({
 				type: "get",
@@ -538,11 +568,16 @@
 				},
 				dataType: "json",
 				success: function(data) {
-					if(data=="SUCCESS") {
-						alert("success");
+					if(data.returnmsg=="SUCCESS") {
+						//alert(data.echoMessage);
+						$("#alert").css("display", "block");
+						$("#alert_title").text(data.returnmsg);
+						$("#alert_text").text(data.returnmemo);
 					} else {
-						alert("failed");
-					}
+	                    $("#alert").css("display", "block");
+						$("#alert_title").text(data.returnmsg);
+						$("#alert_text").text(data.returnmemo);
+	                }
 				}
 			});
 		});
@@ -552,6 +587,7 @@
 			if(!confirm("是否确定关闭tomcat（注：此次关闭所有tomcat）")) {
 				return ;
 			}
+			modelwindow();
 			var profile = $(this).attr("value2");
 			$.ajax({
 				type: "get",
@@ -560,11 +596,16 @@
 				},
 				dataType:"json",
 				success: function(data) {
-					if(data=="SUCCESS") {
-						alert("success");
+					if(data.returnmsg=="SUCCESS") {
+						//alert(data.echoMessage);
+						$("#alert").css("display", "block");
+						$("#alert_title").text(data.returnmsg);
+						$("#alert_text").text(data.returnmemo);
 					} else {
-						alert("failed");
-					}
+	                    $("#alert").css("display", "block");
+						$("#alert_title").text(data.returnmsg);
+						$("#alert_text").text(data.returnmemo);
+	                }
 				}
 			});
 		});
@@ -574,6 +615,7 @@
 			if(!confirm("是否确定打开tomcat（注：此次打开所有tomcat）")) {
 				return ;
 			}
+			modelwindow();
 			var profile = $(this).attr("value2");
 			$.ajax({
 				type: "get",
@@ -582,11 +624,16 @@
 				},
 				dataType: "json",
 				success: function(data) {
-					if(data=="SUCCESS") {
-						alert("success");
+					if(data.returnmsg=="SUCCESS") {
+						//alert(data.echoMessage);
+						$("#alert").css("display", "block");
+						$("#alert_title").text(data.returnmsg);
+						$("#alert_text").text(data.returnmemo);
 					} else {
-						alert("failed");
-					}
+	                    $("#alert").css("display", "block");
+						$("#alert_title").text(data.returnmsg);
+						$("#alert_text").text(data.returnmemo);
+	                }
 				}
 			});
 		});
@@ -596,6 +643,7 @@
 	    	if (!confirm("是否确定重新启动"))  {  
 	    		return ;
 	    	}
+	    	modelwindow();
 	        var profile = $(this).attr("value2");
 	        $.ajax({
 	            type: "GET",
@@ -604,10 +652,15 @@
 	            },
 	            dataType: "json",
 	            success: function(data) {
-					if (data == "SUCCESS") {
-	                    alert("success");
-	                } else {
-	                    alert("failed");
+					if(data.returnmsg=="SUCCESS") {
+						//alert(data.echoMessage);
+						$("#alert").css("display", "block");
+						$("#alert_title").text(data.returnmsg);
+						$("#alert_text").text(data.returnmemo);
+					} else {
+	                    $("#alert").css("display", "block");
+						$("#alert_title").text(data.returnmsg);
+						$("#alert_text").text(data.returnmemo);
 	                }
 				}
 	        });
@@ -654,11 +707,17 @@
 	    			id: branchId,
 	    		},
 	    		success: function(data) {
-	    			if(data=="SUCCESS") {
-	    				window.location.href = '/${basePath}/project/${sid}/${projectCode}/${profile}/projectConfig.do';
-	    			} else {
-	    				alert("failed");
-	    			}
+	    			//	window.location.href = '/${basePath}/project/${sid}/${projectCode}/${profile}/projectConfig.do';
+	    			if(data.returnmsg=="SUCCESS") {
+						//alert(data.echoMessage);
+						$("#alert").css("display", "block");
+						$("#alert_title").text(data.returnmsg);
+						$("#alert_text").text(data.returnmemo);
+					} else {
+	                    $("#alert").css("display", "block");
+						$("#alert_title").text(data.returnmsg);
+						$("#alert_text").text(data.returnmemo);
+	                }
 	    		}
     		});
     	});
@@ -685,10 +744,16 @@
 	                branchUrl: branchUrl,
 	            },
 	            success: function(data) {
-	                if (data == "SUCCESS") {
-	                    window.location.href = '/${basePath}/project/${sid}/${projectCode}/${profile}/projectConfig.do';
-	                } else {
-	                    alert("failed");
+	                    //window.location.href = '/${basePath}/project/${sid}/${projectCode}/${profile}/projectConfig.do';
+	                if(data.returnmsg=="SUCCESS") {
+						//alert(data.echoMessage);
+						$("#alert").css("display", "block");
+						$("#alert_title").text(data.returnmsg);
+						$("#alert_text").text(data.returnmemo);
+					} else {
+	                    $("#alert").css("display", "block");
+						$("#alert_title").text(data.returnmsg);
+						$("#alert_text").text(data.returnmemo);
 	                }
 	            }
 	        });
@@ -711,6 +776,7 @@
 	            },
 	            success: function(data) {
 	                if (data == "SUCCESS") {
+	                    alert("success");
 	                    window.location.href = '/${basePath}/project/${sid}/${projectCode}/${profile}/projectConfig.do';
 	                } else {
 	                    alert("failed");
@@ -731,7 +797,8 @@
 	                branchUrl: branchUrl,
 	            },
 	            success: function(data) {
-	                if (data == "SUCCESS") {
+	               if (data == "SUCCESS") {
+	                    alert("success");
 	                    window.location.href = '/${basePath}/project/${sid}/${projectCode}/${profile}/projectConfig.do';
 	                } else {
 	                    alert("failed");
@@ -742,15 +809,21 @@
 	
 	    // svn 查看状态
 	    $(".show").on("click", function() {
+	    	modelwindow();
 	        $.ajax({
 	            type: "GET",
 	            url: "/${basePath}/svn/${sid}/${projectCode}/${profile}/status.do",
 	            dataType: "json",
 	            success: function(data) {
-					if(data.returncode=="200000") {
-						alert(data.echoMessage);
+					if(data.returnmsg=="SUCCESS") {
+						//alert(data.echoMessage);
+						$("#alert").css("display", "block");
+						$("#alert_title").text(data.returnmsg);
+						$("#alert_text").text(data.returnmemo);
 					} else {
-	                    alert("failed");
+	                    $("#alert").css("display", "block");
+						$("#alert_title").text(data.returnmsg);
+						$("#alert_text").text(data.returnmemo);
 	                }
 				}
 	        });
@@ -760,15 +833,21 @@
 	    	if (!confirm("是否确定合并分支"))  {  
 	    		return ;
 	    	}
+	    	modelwindow();
 	        $.ajax({
 	            type: "GET",
 	            url: "/${basePath}/svn/${sid}/${projectCode}/${profile}/merge.do",
 	            dataType: "json",
 	            success: function(data) {
-					if (data == "SUCCESS") {
-						alert("succes");
-	                } else {
-	                    alert("failed");
+					if(data.returnmsg=="SUCCESS") {
+						//alert(data.echoMessage);
+						$("#alert").css("display", "block");
+						$("#alert_title").text(data.returnmsg);
+						$("#alert_text").text(data.returnmemo);
+					} else {
+	                    $("#alert").css("display", "block");
+						$("#alert_title").text(data.returnmsg);
+						$("#alert_text").text(data.returnmemo);
 	                }
 				}
 	        });
@@ -778,16 +857,22 @@
 	    	if (!confirm("是否确定提交主干"))  {  
 	    		return ;
 	    	}
+	    	modelwindow();
 	        $.ajax({
 	            type: "GET",
 	            url: "/${basePath}/svn/${sid}/${projectCode}/${profile}/commit.do",
 	            dataType: "json",
 	            success: function(data) {
-					if (data == "SUCCESS") {
-						alert("succes");
-						window.location.href = '/${basePath}/project/${sid}/${projectCode}/${profile}/projectConfig.do';
-	                } else {
-	                    alert("failed");
+						//window.location.href = '/${basePath}/project/${sid}/${projectCode}/${profile}/projectConfig.do';
+	                if(data.returnmsg=="SUCCESS") {
+						//alert(data.echoMessage);
+						$("#alert").css("display", "block");
+						$("#alert_title").text(data.returnmsg);
+						$("#alert_text").text(data.returnmemo);
+					} else {
+	                    $("#alert").css("display", "block");
+						$("#alert_title").text(data.returnmsg);
+						$("#alert_text").text(data.returnmemo);
 	                }
 				}
 	        });
@@ -798,7 +883,49 @@
 			window.location.href = '/${basePath}/user/logout/${sid}.do';
 		});
 	
+		//alert 弹出框关闭
+		$("#alert_close").on("click", function() {
+			$("#alert").css("display", "none");
+			//释放 整个界面
+	        releasewindow();
+		});
 	});
 	</script>
+	
+	<div id="alert" class="shadow_con" style="display:none">
+
+
+				<style>
+			.alert_wrap {
+				overflow: hidden;
+			}
+			
+			.alert_wrap span, .alert_wrap p {
+				<!--float: left;-->
+				display: block;
+				text-align: left;
+				font-size: 14px;
+			}
+			
+			.alert_wrap span {
+				<!--text-align: left;-->
+				height: 32px;
+				width: 100px;
+			}
+			
+			.alert_wrap p {
+				height: auto;
+				width: 340px;
+			}
+			#alert{position:absolute;left:50%;top:50%;padding:20px 10px; z-index:999;width:380px;margin-left:-200px;height:auto;min-height:180px;background:#fff;border:2px solid #ddd;}
+			</style>
+			
+				<div class="alert_wrap">
+					<span id="alert_title"></span>
+					<p id="alert_text"></p>
+				</div>
+			
+				<input id="alert_close" type="button" class="shadow_btn mar150_l" value="确定">
+			</div>
 </body>
 </html>

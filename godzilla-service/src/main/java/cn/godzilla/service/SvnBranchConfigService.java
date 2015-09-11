@@ -42,6 +42,14 @@ public interface SvnBranchConfigService {
 	 */
 	boolean refreshBranchesVersion(List<SvnBranchConfig> svnBranchConfigs);
 
+	/**
+	 * 
+	 * @param projectCode
+	 * @param profile
+	 * @param id
+	 * @return ReturnCodeEnum
+	 * 			OK_DELETEBRANCH, NO_DELETEBRANCH
+	 */
 	ReturnCodeEnum deleteBranch(String projectCode, String profile, String id);
 
 	

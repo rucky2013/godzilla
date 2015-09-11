@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import cn.godzilla.common.ReturnCodeEnum;
 import cn.godzilla.common.StringUtil;
+import cn.godzilla.common.response.ResponseBodyJson;
 import cn.godzilla.service.ClientConfigService;
 import cn.godzilla.service.MvnService;
 import cn.godzilla.service.OperateLogService;
@@ -47,9 +48,11 @@ public class MvnController extends GodzillaApplication{
 		logger.debug("*****MvnController.deploy*****");
 		String srcUrl = StringUtil.getReqPrameter(request, "srcUrl");
 		String parentVersion = StringUtil.getReqPrameter(request, "parentVersion", "");
+		String parentVersionSuffix = StringUtil.getReqPrameter(request, "parentVersionSuffix", "");
+		
 		String pencentkey = sid + "-" + projectCode + "-" + profile;
 		processPercent.put(pencentkey, "0");
-		ReturnCodeEnum deployReturn = mvnService.doDeploy(srcUrl, projectCode, profile, parentVersion);
+		ReturnCodeEnum deployReturn = mvnService.doDeploy(srcUrl, projectCode, profile, parentVersion+parentVersionSuffix);
 		
 		if(deployReturn == ReturnCodeEnum.OK_MVNDEPLOY) {
 			operateLogService.addOperateLog(super.getUser().getUserName(), projectCode, profile, DEPLOY, SUCCESS, ReturnCodeEnum.OK_MVNDEPLOY.getReturnMsg());
@@ -77,11 +80,7 @@ public class MvnController extends GodzillaApplication{
 			String pencentkey = sid + "-" + projectCode + "-" + profile;
 			super.processPercent.put(pencentkey, "0");
 		}
-		Map<String, Object> resultMap = new HashMap<String, Object>();
-		resultMap.put("returncode", OK_AJAX);
-		resultMap.put("returnmsg", SUCCESS);
-		resultMap.put("processPercent", processPercent);		
-		return resultMap;
+		return ResponseBodyJson.custom().setAll(OK_AJAX, SUCCESS, processPercent).build();
 	}
 	
 }
