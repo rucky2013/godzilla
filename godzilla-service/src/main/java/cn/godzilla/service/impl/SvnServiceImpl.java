@@ -141,7 +141,7 @@ public class SvnServiceImpl extends GodzillaApplication implements SvnService {
 		
 		String branches = "";
 		for(SvnBranchConfig sbc: svnBranchConfigs) {
-			branches = sbc.getBranchUrl() + ",";
+			branches += sbc.getBranchUrl() + ",";
 		}
 		if("".equals(branches)) {
 			branches = EMPTY_BRANCH;

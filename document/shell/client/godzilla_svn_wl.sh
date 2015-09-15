@@ -123,7 +123,9 @@ function common() {
 		if [ "$SVN_BRANCHES" = "empty" ];then 
 			continue
 		fi; 
+		echo "$element  to merge"
 	    svn merge $element $svnuser --non-interactive   
+	    #tail -20 /home/godzilla/gzl/work/cupid/cupid-web/src/main/webapp/index.jsp
 	    svn st|grep '^[ ]*C'
 		if [ $? == 0 ] ;then
 			echo "Error: some conflicts still found! Please resolve all of them. " $element 
