@@ -95,7 +95,7 @@ public class MvnServiceImpl extends GodzillaApplication implements MvnService {
 			e.printStackTrace();
 			return ReturnCodeEnum.getByReturnCode(NO_RPCFACTORY);
 		}
-		processPercent.put(pencentkey, "30");
+		processPercent.put(pencentkey, "15");
 		/*
 		 * 1.替换pom文件 配置变量   
 		 * 20150908 parentVersion 改为由 mvn命令更改
@@ -113,7 +113,7 @@ public class MvnServiceImpl extends GodzillaApplication implements MvnService {
 		if(!flag1){
 			return ReturnCodeEnum.getByReturnCode(NO_CHANGEPOM);
 		}
-		processPercent.put(pencentkey, "50");
+		processPercent.put(pencentkey, "30");
 		
 		final String processKey1 = sid + "-" + projectCode + "-" + profile;
 		Thread t1 = new Thread(new Runnable() {
@@ -124,7 +124,7 @@ public class MvnServiceImpl extends GodzillaApplication implements MvnService {
 						Thread.currentThread().sleep(1000);
 						String processValue = GodzillaApplication.processPercent.get(processKey1);
 						int prVal = Integer.parseInt(processValue);
-						if(prVal>=95) break;
+						if(prVal>=75) break;
 						GodzillaApplication.processPercent.put(processKey1, ++prVal+"");
 					} catch (InterruptedException e) {
 						e.printStackTrace();
@@ -153,7 +153,7 @@ public class MvnServiceImpl extends GodzillaApplication implements MvnService {
 		}
 		
 		t1.interrupt();
-		processPercent.put(pencentkey, "100");
+		processPercent.put(pencentkey, "85");
 		if(flag1&&flag2) {
 			
 			/*
@@ -163,10 +163,23 @@ public class MvnServiceImpl extends GodzillaApplication implements MvnService {
 			//boolean flag3 = this.updateDeployVersion(projectCode, profile);
 			
 			/*
-			 * 3. httpclient 访问  ip:8080/war_name/index   查找 是否存在 <!--<h5>godzilla</h5>--> 字符串 判断 tomcat是否启动成功
+			 * 3. 测试环境 ：httpclient 访问  ip:8080/war_name/index   查找 是否存在 <!--<h5>godzilla</h5>--> 字符串 判断 tomcat是否启动成功
 			 */
 			String warName = project.getWarName();
-			boolean flag4 = super.ifSuccessStartTomcat(IP, warName);
+			boolean flag4 = false;
+			/*if(projectCode.equals("godzilla")) {
+				flag4 = true;
+			} else {
+				if(TEST_PROFILE.equals(profile)) {
+					flag4 = super.ifSuccessStartTomcat(IP, warName);
+				} else {
+					flag4 = true;
+				}
+			}*/
+			// bug:tomcat hot deploy cannot success for netty-project
+			//workaround: restart for test,project start success.
+			flag4 = this.restartTomcat(projectCode, profile);
+			
 			if(flag4) {
 				return ReturnCodeEnum.getByReturnCode(OK_MVNDEPLOY);
 			} else {
@@ -376,6 +389,52 @@ public class MvnServiceImpl extends GodzillaApplication implements MvnService {
 			return false;
 		}
 		
+	}
+	
+	public boolean restartTomcat(String projectCode, String profile) {
+		boolean flag;
+		ClientConfig clientConfig = clientConfigService.queryDetail(projectCode, profile) ;
+		String clientIp = clientConfig.getRemoteIp();
+		// 暂时先不考虑权限
+
+		BaseShellCommand command = new BaseShellCommand();
+
+		/*String str = PropertiesUtil.getProperties().get("server.shell.restart.path") +" " + clientIp + " "
+				+ PropertiesUtil.getProperties().get("client.tomcat.home.path");*/
+		String tomcatHome = "";
+		if("godzilla".equals(projectCode)) {
+			clientIp = "10.100.142.65";
+			tomcatHome = "/home/godzilla/tomcat-godzilla";
+		} else {
+			tomcatHome = "/app/tomcat";
+		}
+		String str = "sh /home/godzilla/gzl/shell/server/restart_server.sh " + clientIp + " " + tomcatHome;
+		
+		if("godzilla".equals(projectCode)) {
+			flag = true;
+		} else {
+			flag = command.execute(str, super.getUser().getUserName(), projectCode);
+		}
+		
+		/*
+		 * 3. httpclient 访问  ip:8080/war_name/index.jsp   查找 是否存在 <!--<h5>godzilla</h5>--> 字符串 判断 tomcat是否启动成功
+		 */
+		Project project = projectService.qureyByProCode(projectCode);
+		String warName = project.getWarName();
+		String IP = clientIp;
+		
+		
+		if(projectCode.equals("godzilla")) {
+			flag = flag&&true;
+		} else {
+			if(TEST_PROFILE.equals("TEST")) {
+				flag = flag&&super.ifSuccessStartTomcat(IP, warName);
+			} else {
+				flag = flag&&true;
+			}
+			
+		}
+		return flag;
 	}
 	
 }

@@ -13,3 +13,5 @@ XX/pom.xml 中properties 添加 parent.version
 2.启动客户端: java -jar /home/godzilla/gzl/rpc/godzilla-rpc-provider.jar &
 3.登录系统，进入项目，初始化各环境配置信息
 4.zookeeper统一使用10.100.142.78:2181
+
+5.注:hera,lark,message-center,nuggest,zues,xuanyuan,cupid 

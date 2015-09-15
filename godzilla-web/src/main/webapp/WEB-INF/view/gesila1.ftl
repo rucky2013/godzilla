@@ -917,7 +917,7 @@
 				height: auto;
 				width: 340px;
 			}
-			#alert{position:absolute;left:50%;top:50%;padding:20px 10px; z-index:999;width:380px;margin-left:-200px;height:auto;min-height:180px;background:#fff;border:2px solid #ddd;}
+			#alert{position:absolute;left:50%;top:50%;padding:20px 10px; z-index:999;width:380px;margin-left:-200px;height:auto;min-height:92px;background:#fff;border:2px solid #ddd;}
 			</style>
 			
 				<div class="alert_wrap">

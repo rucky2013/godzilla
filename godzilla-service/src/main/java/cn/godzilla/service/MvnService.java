@@ -32,4 +32,5 @@ public interface MvnService extends Constant{
 
 	ReturnCodeEnum downLoadWar(HttpServletResponse response, String projectCode, String profile);
 	
+	public boolean restartTomcat(String projectCode, String profile) ;
 }

@@ -49,7 +49,9 @@ public class IndexController extends GodzillaApplication{
 	}
 	
 	/**
-	 * 跳到登录页
+	 * 目前gesilla 不需要判断是否热部署
+	 * 跳到index页
+	 * 用途：判断热部署是否成功
 	 * 
 	 * @param request
 	 * @param response
@@ -61,6 +63,6 @@ public class IndexController extends GodzillaApplication{
 		logger.debug("*****IndexController.loginPage2*****");
 		
 		request.setAttribute("basePath", BASE_PATH);
-		return "/index1";
+		return "/login";
 	}
 }

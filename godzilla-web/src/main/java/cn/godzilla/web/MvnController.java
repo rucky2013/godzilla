@@ -54,6 +54,7 @@ public class MvnController extends GodzillaApplication{
 		processPercent.put(pencentkey, "0");
 		ReturnCodeEnum deployReturn = mvnService.doDeploy(srcUrl, projectCode, profile, parentVersion+parentVersionSuffix);
 		
+		processPercent.put(pencentkey, "100");
 		if(deployReturn == ReturnCodeEnum.OK_MVNDEPLOY) {
 			operateLogService.addOperateLog(super.getUser().getUserName(), projectCode, profile, DEPLOY, SUCCESS, ReturnCodeEnum.OK_MVNDEPLOY.getReturnMsg());
 			return SUCCESS;

@@ -156,8 +156,19 @@ public abstract class GodzillaApplication extends Application implements Constan
 		String branchUrl = "http://10.100.142.37:9090/svn/fso/godzilla/branch/godzilla-bug2/";
 		System.out.println(getBranchNameByBranchUrl(branchUrl));
 	}*/
-	
+	/**
+	 * 测试环境  通过访问 index.jsp 判断 是否 项目启动成功
+	 * 其他环境暂不需要
+	 * @param IP
+	 * @param war_name
+	 * @return
+	 */
 	protected boolean ifSuccessStartTomcat(String IP, String war_name) {
+		try {
+			Thread.currentThread().sleep(2000);
+		} catch (InterruptedException e2) {
+			e2.printStackTrace();
+		}
 		int timeout = DEFAULT_TIMEOUT * 2;
 		int i = 0;
 		while (true) {
