@@ -1,14 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>cn.godzilla</groupId>
 	<artifactId>godzilla-parent</artifactId>
-	<version>${parent.version}</version>
+	<version>1.0.1.RC1-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>${project.artifactId}</name>
 	<description>The parent project of godzilla</description>
+
+	<scm>
+		<url>https://github.com/ZeroHelp/godzilla</url>
+		<connection>scm:git:git://github.com/ZeroHelp/godzilla.git</connection>
+		<developerConnection>scm:git:ssh://git@github.com/ZeroHelp/godzilla.git</developerConnection>
+		<tag>HEAD</tag>
+	</scm>
+  
 	<modules>
 		<module>godzilla-common</module>
 		<module>godzilla-dao</module>
@@ -23,7 +30,7 @@
 		<module>godzilla-web</module>
 	</modules>
 	<properties>
-		<parent.version>0.0.1-SNAPSHOT</parent.version>
+		<parent.version>1.0.0.RC1-SNAPSHOT</parent.version>
 		<JDK.version>1.7</JDK.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<spring.version>4.1.6.RELEASE</spring.version>
@@ -117,6 +124,18 @@
 				<version>2.17</version>
 				<configuration>
 					<skip>true</skip>
+				</configuration>
+			</plugin>
+			<plugin>
+				<!-- 发布插件 -->
+				<artifactId>maven-release-plugin</artifactId>
+				<version>2.5.2</version>
+				<configuration>
+					<!-- <useReleaseProfile>false</useReleaseProfile>
+					<arguments>-P release,sonatype-oss-release,full,no-osgi</arguments>
+					<autoVersionSubmodules>true</autoVersionSubmodules>
+					<allowTimestampedSnapshots>false</allowTimestampedSnapshots> -->
+					<tagNameFormat>godzilla-@{project.version}</tagNameFormat>
 				</configuration>
 			</plugin>
 		</plugins>
@@ -255,17 +274,5 @@
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
-	<!-- 将JAR包上传到本地Maven库 -->
-	<distributionManagement>
-		<!-- 发布版本地址（线上） -->
-    	<repository>
-			<id>nexus-releases</id>
-			<url>http://10.100.142.37:8080/nexus/content/repositories/releases/</url>
-		</repository>
-		<!-- 快照版本地址（开发） -->
-		<snapshotRepository>
-			<id>nexus-snapshots</id>
-			<url>http://10.100.142.37:8080/nexus/content/repositories/snapshots/</url>
-		</snapshotRepository>
-    </distributionManagement>
+	
 </project>
