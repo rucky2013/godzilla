@@ -10,8 +10,8 @@
 	<description>The parent project of godzilla</description>
 
 	<scm>
-		<url>https://github.com/ZeroHelp/godzilla</url>
-		<connection>scm:git:git://github.com/ZeroHelp/godzilla.git</connection>
+		<!-- <url>https://github.com/ZeroHelp/godzilla</url>
+		<connection>scm:git:git://github.com/ZeroHelp/godzilla.git</connection> -->
 		<developerConnection>scm:git:ssh://git@github.com/ZeroHelp/godzilla.git</developerConnection>
 		<tag>HEAD</tag>
 	</scm>
