@@ -14,3 +14,5 @@ target/
 logs/
 .svn
 META-INF/
+
+pom.xml.releaseBackup
