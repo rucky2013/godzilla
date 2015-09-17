@@ -24,7 +24,6 @@ import cn.godzilla.dao.ClientConfigMapper;
 import cn.godzilla.service.FunRightService;
 import cn.godzilla.service.UserService;
 import cn.godzilla.web.GodzillaApplication;
-import cn.godzilla.web.WebsocketController;
 
 /**
  * 身份验证

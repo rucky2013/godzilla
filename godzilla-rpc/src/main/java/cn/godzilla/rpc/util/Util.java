@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
-import cn.godzilla.common.Constant;
 import cn.godzilla.rpc.api.RpcFactory;
 
 /**
@@ -13,6 +12,7 @@ import cn.godzilla.rpc.api.RpcFactory;
  */
 public class Util {
 
+	public static int RPC_DEFAULT_PORT = 8855;
 
     public static final String RPC_PROPERTIES = "rpc.properties";
 

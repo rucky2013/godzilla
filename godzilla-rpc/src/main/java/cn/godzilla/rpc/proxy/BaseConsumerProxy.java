@@ -6,13 +6,13 @@ import java.util.concurrent.atomic.AtomicLong;
 
 import org.jboss.netty.channel.ChannelFuture;
 
-import cn.godzilla.common.Constant;
 import cn.godzilla.rpc.api.RpcException;
 import cn.godzilla.rpc.client.ClientFactory;
 import cn.godzilla.rpc.common.Parameters;
 import cn.godzilla.rpc.common.Result;
 import cn.godzilla.rpc.serialize.SerializeException;
 import cn.godzilla.rpc.serialize.Serializer;
+import cn.godzilla.rpc.util.Util;
 
 public abstract class BaseConsumerProxy {
 	
@@ -44,7 +44,7 @@ public abstract class BaseConsumerProxy {
 			
 			protected ChannelFuture initialValue() {
 				return ClientFactory.getClient().getConnection(remoteAddress,
-						Constant.RPC_DEFAULT_PORT);
+						Util.RPC_DEFAULT_PORT);
 			}
 		};
 	}

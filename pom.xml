@@ -11,8 +11,9 @@
 
 	<scm>
 		<!-- <url>https://github.com/ZeroHelp/godzilla</url>
-		<connection>scm:git:git://github.com/ZeroHelp/godzilla.git</connection> -->
-		<developerConnection>scm:git:ssh://git@github.com/ZeroHelp/godzilla.git</developerConnection>
+		<connection>scm:git:git://github.com/ZeroHelp/godzilla.git</connection> 
+		<developerConnection>scm:git:ssh://git@github.com/ZeroHelp/godzilla.git</developerConnection>-->
+		<developerConnection>scm:git:git://git@github.com/ZeroHelp/godzilla.git</developerConnection>
 		<tag>HEAD</tag>
 	</scm>
   
@@ -20,12 +21,8 @@
 		<module>godzilla-common</module>
 		<module>godzilla-dao</module>
 		<module>godzilla-service</module>
-		<module>godzilla-mvn</module>
-		<module>godzilla-svn</module>
 		<module>godzilla-model</module>
-		<module>godzilla-echo</module>
 		<module>godzilla-rpc</module>
-		<module>godzilla-rpc-consumer</module>
 		<module>godzilla-rpc-provider</module>
 		<module>godzilla-web</module>
 	</modules>
