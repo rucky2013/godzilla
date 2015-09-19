@@ -11,6 +11,4 @@
 	<bean id="mvnProviderService" class="cn.godzilla.service.impl.MvnProviderServiceImpl">
 	</bean>
 	
-	<!-- mq producer start 将shell输出 存入mq -->
-	<bean id="mainClass" class="cn.godzilla.echo.main.MainClass"></bean>
 </beans>
