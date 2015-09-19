@@ -15,3 +15,4 @@ XX/pom.xml 中properties 添加 parent.version
 4.zookeeper统一使用10.100.142.78:2181
 
 5.注:hera,lark,message-center,nuggest,zues,xuanyuan,cupid 
+svn中文文档地址:http://www.subversion.org.cn/svnbook/1.4/index.html
