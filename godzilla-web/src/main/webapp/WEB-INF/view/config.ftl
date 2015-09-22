@@ -9,7 +9,7 @@
 		<div class="main">
 		<div class="head  clearfix">
         	<h1><a class="logo" href="/${basePath}/user/${sid}/home.do" title="回到首页">哥斯拉</a></h1>
-            <div class="r">你好，${user.userName}！<a id="logout" href="#" title="退出系统" class="btn1">退出</a></div>
+            <div class="r">你好，${user.userName}！<a id="logout" href="javascript:void(0);" title="退出系统" class="btn1">退出</a></div>
         </div>
         <div class="mainCon clearfix">
         	<div class="mainConL l">
@@ -56,7 +56,7 @@
               		</select>
               		
               		<input type="submit" name="submit" value="查询" />
-                	<!-- <a href="javascript:;" class="search">查询</a>-->
+                	<!-- <a href="javascript:void(0);" class="search">查询</a>-->
                   </fieldset>
               		
               </form>
@@ -104,7 +104,7 @@
 						</td>
 	                    <td class="operation">
 	                    	<#if prop.status == 0>
-		                    	<a class="verify_btn" href="javascript:;" 
+		                    	<a class="verify_btn" href="javascript:void(0);" 
 		                    	value1="/${basePath}/prop/${sid}/${prop.projectCode}/${prop.createBy}/${prop.profile}/verifyProp.do">审核</a>
 							<#elseif prop.status == 1>
 							<#elseif prop.status == 2>
@@ -115,7 +115,7 @@
                   </tbody>
                 </table>
                 </div>
-                <!--<h4><a  href="#" class="btn2" title="更多信息">更多信息</a></h4>-->
+                <!--<h4><a  href="javascript:void(0);" class="btn2" title="更多信息">更多信息</a></h4>-->
             </div>
         </div>
         <div class="footerWrap">

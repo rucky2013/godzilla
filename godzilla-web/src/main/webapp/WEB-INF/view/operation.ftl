@@ -7,7 +7,7 @@
 		<div class="main">
 		<div class="head  clearfix">
         	<h1><a class="logo" href="/${basePath}/user/${sid}/home.do" title="回到首页">哥斯拉</a></h1>
-            <div class="r">你好，${user.userName}！<a id="logout" href="#" title="退出系统" class="btn1">退出</a></div>
+            <div class="r">你好，${user.userName}！<a id="logout" href="javascript:void(0);" title="退出系统" class="btn1">退出</a></div>
         </div>
         <div class="mainCon clearfix">
         	<div class="mainConL l">
@@ -61,14 +61,14 @@
                     	${pro.projectCode},
                     </#list>
                     </td>
-                    <td class="sp" width="8%"><a class="add_btn" href="javascript:;" ><span class="edit">添加用户</span></a></td>
+                    <td class="sp" width="8%"><a class="add_btn" href="javascript:void(0);" ><span class="edit">添加用户</span></a></td>
                     <td class="sp02" width="8%"><a href="/${basePath}/user/${sid}/editWorkDesk.do?editUsername=${uas.username}" ><span class="edit">编辑工作台</span></a></td>
                   </tr>
                   </#list>
                   </tbody>
                 </table>
                 </div>
-                <!--<h4><a  href="#" class="btn2" title="更多信息">更多信息</a></h4>-->
+                <!--<h4><a  href="javascript:void(0);" class="btn2" title="更多信息">更多信息</a></h4>-->
             </div>
             
             <div id="shadow" class="shadow" style="display: none"></div>

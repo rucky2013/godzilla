@@ -12,7 +12,7 @@
 		<div class="main">
 		<div class="head  clearfix">
         	<h1><a class="logo" href="/${basePath}/user/${sid}/home.do" title="回到首页">哥斯拉</a></h1>
-            <div class="r">你好，${user.userName}！<a id="logout" href="#" title="退出系统" class="btn1">退出</a></div>
+            <div class="r">你好，${user.userName}！<a id="logout" href="javascript:void(0);" title="退出系统" class="btn1">退出</a></div>
         </div>
         <div class="mainCon clearfix">
         	<div class="mainConL l">

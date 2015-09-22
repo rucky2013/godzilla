@@ -7,7 +7,7 @@
 		<div class="main">
 		<div class="head  clearfix">
         	<h1><a class="logo" href="/${basePath}/user/${sid}/home.do" title="回到首页">哥斯拉</a></h1>
-            <div class="r">你好，${user.userName}！<a id="logout" href="#" title="退出系统" class="btn1">退出</a></div>
+            <div class="r">你好，${user.userName}！<a id="logout" href="javascript:void(0);" title="退出系统" class="btn1">退出</a></div>
         </div>
         <div class="mainCon clearfix">
         	<div class="mainConL l">
@@ -85,9 +85,9 @@
                    </div>
                    
                 <ul id="tab2" class="clearfix">
-                	  <li class="current" style="border-left:0"><a href="jvascript:void(0)" class="current" title="测试环境">测试环境</a></li>
-                    <li><a href="jvascript:void(0)" title="预发标准环境">预发标准环境</a></li>
-                    <li><a href="jvascript:void(0)" title="生产标准环境">生产标准环境</a></li>
+                	  <li class="current" style="border-left:0"><a href="javascript:void(0);" class="current" title="测试环境">测试环境</a></li>
+                    <li><a href="javascript:void(0);" title="预发标准环境">预发标准环境</a></li>
+                    <li><a href="javascript:void(0);" title="生产标准环境">生产标准环境</a></li>
                  </ul>
                  <ul id="tabCon2">
                     <li style="display:block">
@@ -105,7 +105,7 @@
 					</li>
                  </ul>
                 
-                <h4 style="text-align:center; margin-top: 30px;"><a id="btn_submit" href="#" class="btn2" title="提交审核">提交审核</a></h4>
+                <h4 style="text-align:center; margin-top: 30px;"><a id="btn_submit" href="javascript:void(0);" class="btn2" title="提交审核">提交审核</a></h4>
 </div>
             </div>
         </div>

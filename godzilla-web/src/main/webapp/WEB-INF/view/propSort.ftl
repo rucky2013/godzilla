@@ -30,7 +30,7 @@ $( "#sortable" ).disableSelection();
 		<div class="main">
 		<div class="head  clearfix">
         	<h1><a class="logo" href="/${basePath}/user/${sid}/home.do" title="回到首页">哥斯拉</a></h1>
-            <div class="r">你好，${user.userName}！<a id="logout" href="#" title="退出系统" class="btn1">退出</a></div>
+            <div class="r">你好，${user.userName}！<a id="logout" href="javascript:void(0);" title="退出系统" class="btn1">退出</a></div>
         </div>
         <div class="mainCon clearfix">
         	<div class="mainConL l">
@@ -81,7 +81,7 @@ $( "#sortable" ).disableSelection();
               		</select>
               		
               		<input type="submit" name="submit" value="查询" />
-                	<!-- <a href="javascript:;" class="search">查询</a>-->
+                	<!-- <a href="javascript:void(0);" class="search">查询</a>-->
                   </fieldset>
               		
               </form>
@@ -133,7 +133,7 @@ $( "#sortable" ).disableSelection();
 	                 	</#list>
 	                 </ul>
                 </div>
-                <!--<h4><a  href="#" class="btn2" title="更多信息">更多信息</a></h4>-->
+                <!--<h4><a  href="javascript:void(0);" class="btn2" title="更多信息">更多信息</a></h4>-->
                 
                 <div class="checkBtn"><button id="sortBtn" class="checkPass verify_btn" value1="1">提交排序</button></div>
             </div>

@@ -9,7 +9,7 @@
 	<div class="main">
 		<div class="head  clearfix">
         	<h1><a class="logo" href="/${basePath}/user/${sid}/home.do" title="回到首页">哥斯拉</a></h1>
-            <div class="r">你好，${user.userName}！<a id="logout" href="#" title="退出系统" class="btn1">退出</a></div>
+            <div class="r">你好，${user.userName}！<a id="logout" href="javascript:void(0);" title="退出系统" class="btn1">退出</a></div>
         </div>
         <div class="mainCon clearfix">
         	<div class="mainConL l">
@@ -76,35 +76,35 @@
 									<tr>
 										<td width="80" class="paddingR0">部署操作：</td>
 										<td class="bg1">
-											<span class="spanArrange"><a class="deploy" href="javacript:;" value1="${project.checkoutPath}" value2="TEST" title="部署">部署</a></span>
-											<span class="spanUseAgain"><a href="#" class="restart" value2="TEST" title="重新启动">重新启动</a></span>
-											<span class="spanUseAgain"><a href="#" class="download" value2="TEST" title="下载war包">下载war包</a></span>
+											<span class="spanArrange"><a class="deploy" href="javascript:void(0);" value1="${project.checkoutPath}" value2="TEST" title="部署">部署</a></span>
+											<span class="spanUseAgain"><a href="javascript:void(0);" class="restart" value2="TEST" title="重新启动">重新启动</a></span>
+											<span class="spanUseAgain"><a href="javascript:void(0);" class="download" value2="TEST" title="下载war包">下载war包</a></span>
 										</td>
 									</tr>
-									<#if user.isAdmin=1>
+									<#if user.userName='admin'>
 									<tr>
 										<td width="80" class="paddingR0">客端维护：</td>
 										<td class="bg1">
-												<span class="spanUseAgain"><a href="#" class="upgrade" value2="TEST" title="升级客户端">升级</a></span>
-												<span class="spanUseAgain"><a href="#" class="stopclients" value2="TEST" title="关闭客户端">关闭</a></span>
-												<span class="spanUseAgain"><a href="#" class="startclients" value2="TEST" title="打开客户端">打开</a></span>
+												<span class="spanUseAgain"><a href="javascript:void(0);" class="upgrade" value2="TEST" title="升级客户端">升级</a></span>
+												<span class="spanUseAgain"><a href="javascript:void(0);" class="stopclients" value2="TEST" title="关闭客户端">关闭</a></span>
+												<span class="spanUseAgain"><a href="javascript:void(0);" class="startclients" value2="TEST" title="打开客户端">打开</a></span>
 										</td>
 									</tr>
 									<tr>
 										<td width="80" class="paddingR0">童木维护：</td>
 										<td class="bg1">
-												<span class="spanUseAgain"><a href="#" class="stoptomcats" value2="TEST" title="关闭tomcats">关闭</a></span>
-												<span class="spanUseAgain"><a href="#" class="starttomcats" value2="TEST" title="打开tomcats">打开</a></span>
+												<span class="spanUseAgain"><a href="javascript:void(0);" class="stoptomcats" value2="TEST" title="关闭tomcats">关闭</a></span>
+												<span class="spanUseAgain"><a href="javascript:void(0);" class="starttomcats" value2="TEST" title="打开tomcats">打开</a></span>
 										</td>
 									</tr>
 									</#if>
 									<tr>
 										<td class="paddingR0">SVN操作：</td>
-										<td class="bg1"><span class="spanViewState"><a class="show" href="javacript:;" title="查看状态">查看状态</a></span> <span class="spanMerge"><a class="merge" href="javacript:;" title="合并代码">合并代码</a></span> <span class="spnSubmit"><a class="commit" href="javacript:;" title="提交主干">提交主干</a></span></td>
+										<td class="bg1"><span class="spanViewState"><a class="show" href="javascript:void(0);" title="查看状态">查看状态</a></span> <span class="spanMerge"><a class="merge" href="javascript:void(0);" title="合并代码">合并代码</a></span> <span class="spnSubmit"><a class="commit" href="javascript:void(0);" title="提交主干">提交主干</a></span></td>
 									</tr>
 									<tr>
 										<td class="paddingR0">设置操作：</td>
-										<td class="bg1"><span class="spanSoureCode"><a class="src_a" href="javacript:;" title="源代码设置">源代码设置</a></span> <span class="spanBranch"><a class="branch_a" href="javacript:;" title="分之设置">分支设置</a></span></td>
+										<td class="bg1"><span class="spanSoureCode"><a class="src_a" href="javascript:void(0);" title="源代码设置">源代码设置</a></span> <span class="spanBranch"><a class="branch_a" href="javascript:void(0);" title="分之设置">分支设置</a></span></td>
 									</tr>
 									<tr>
 										<td class="paddingR0">配置管理：</td>
@@ -137,8 +137,8 @@
 									<tr>
 										<td width="80" class="paddingR0">部署操作：</td>
 										<td class="bg1">
-											<span class="spanArrange"><a class="deploy" href="javacript:;" value1="${project.checkoutPath}" value2="QUASIPRODUCT" title="打包">打包</a></span>
-											<span class="spanUseAgain"><a href="#" class="download" value2="QUASIPRODUCT" title="下载war包">下载war包</a></span>
+											<span class="spanArrange"><a class="deploy" href="javascript:void(0);" value1="${project.checkoutPath}" value2="QUASIPRODUCT" title="打包">打包</a></span>
+											<span class="spanUseAgain"><a href="javascript:void(0);" class="download" value2="QUASIPRODUCT" title="下载war包">下载war包</a></span>
 										</td>
 									</tr>
 								</tbody>
@@ -161,8 +161,8 @@
 									<tr>
 										<td width="80" class="paddingR0">部署操作：</td>
 										<td class="bg1">
-											<span class="spanArrange"><a class="deploy" href="javacript:;" value1="${project.checkoutPath}" value2="PRODUCT" title="打包">打包</a></span>
-											<span class="spanUseAgain"><a href="#" class="download" value2="PRODUCT" title="下载war包">下载war包</a></span>
+											<span class="spanArrange"><a class="deploy" href="javascript:void(0);" value1="${project.checkoutPath}" value2="PRODUCT" title="打包">打包</a></span>
+											<span class="spanUseAgain"><a href="javascript:void(0);" class="download" value2="PRODUCT" title="下载war包">下载war包</a></span>
 										</td>
 									</tr>
 								</tbody>
@@ -231,7 +231,7 @@
 						<span class="progress"><strong id="process" style="width: 0px"></strong></span>
 						<span id="processText">0%
 						</span></li>
-						<li class="r sp02"><a href="javascript:;" class="r tools1"><span class="edit">比较部署包信息</span></a><a href="javascript:;" class="r tools2"><span class="edit">比较部署包信息</span></a><a href="javascript:;" class="r tools3"><span class="edit">比较部署包信息</span></a></li>
+						<li class="r sp02"><a href="javascript:void(0);" class="r tools1"><span class="edit">比较部署包信息</span></a><a href="javascript:void(0);" class="r tools2"><span class="edit">比较部署包信息</span></a><a href="javascript:void(0);" class="r tools3"><span class="edit">比较部署包信息</span></a></li>
 					</ul>
 					<table width="100%" border="0" class="table2">
 						<thead>
@@ -257,7 +257,7 @@
 					</table>
 				</div>
 				<h4>
-					<!--<h4><a  href="#" class="btn2" title="更多信息">更多信息</a></h4>-->
+					<!--<h4><a  href="javascript:void(0);" class="btn2" title="更多信息">更多信息</a></h4>-->
 				</h4>
 			</div>
 

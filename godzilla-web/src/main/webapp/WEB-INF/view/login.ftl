@@ -21,7 +21,7 @@
 							<input id="password" type="password" class="inputBox UserpassWord" maxlength="16" placeholder="密码"/>
 						</div>
 						<div class="resetWrap_psd item-div">
-							<!--<a href="#" target="_blank" class="resetPassword">密码重置</a>-->
+							<!--<a href="javascript:void(0);" target="_blank" class="resetPassword">密码重置</a>-->
 						</div>
 						<div class="submitFieldset item-div">
 							<input id="login" type="button" class="btn" value="登 录"/>
