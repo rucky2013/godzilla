@@ -18,6 +18,8 @@ public interface MvnService extends Constant{
 	 * @param srcUrl
 	 * @param projectCode
 	 * @param profile
+	 * 
+	 * @return OK_MVNDEPLOY, NO_MVNDEPLOY, NO_CHANGEPOM, 
 	 */
 	ReturnCodeEnum doDeploy(String srcUrl, String projectCode, String profile, String parentVersion);
 	

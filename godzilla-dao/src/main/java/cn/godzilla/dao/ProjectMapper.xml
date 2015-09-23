@@ -14,6 +14,8 @@
     <result column="web_path" jdbcType="VARCHAR" property="webPath" />
     <result column="war_name" jdbcType="VARCHAR" property="warName" />
     <result column="version" jdbcType="VARCHAR" property="version" />
+    <result column="svn_username" jdbcType="VARCHAR" property="svnUsername" />
+    <result column="svn_password" jdbcType="VARCHAR" property="svnPassword" />
   </resultMap>
   
   <insert id="insert" parameterType="cn.godzilla.model.Project" >
@@ -25,6 +27,8 @@
     values (#{id,jdbcType=BIGINT}, #{projectCode,jdbcType=VARCHAR}, #{projectName,jdbcType=VARCHAR}, 
       #{repositoryUrl,jdbcType=VARCHAR}, #{createBy,jdbcType=VARCHAR}, #{manager,jdbcType=VARCHAR}, 
       #{status,jdbcType=INTEGER}, #{checkoutPath,jdbcType=VARCHAR},#{webPath,jdbcType=VARCHAR},#{warName,jdbcType=VARCHAR}, #{version,jdbcType=VARCHAR})
+      , #{svnUsername,jdbcType=VARCHAR})
+      , #{svnPassword,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="cn.godzilla.model.Project" >
     
@@ -63,6 +67,12 @@
       <if test="version != null">
         version,
       </if>
+      <if test="svnUsername != null">
+        svnUsername,
+      </if>
+      <if test="svnPassword != null">
+        svnPassword,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -98,17 +108,23 @@
       <if test="version != null">
         #{version,jdbcType=VARCHAR},
       </if>
+      <if test="svnUsername != null">
+        #{svnUsername,jdbcType=VARCHAR},
+      </if>
+      <if test="svnPassword != null">
+        #{svnPassword,jdbcType=VARCHAR},
+      </if>
     </trim>
   </insert>
   
   <select id="queryProjectsByUsername" parameterType="string" resultMap="BaseResultMap">
   	select p.id, p.project_code, p.project_name, 
       p.repository_url, p.create_by, p.manager,  p.status, p.checkout_path, p.web_path,p.war_name,
-    p.version
+    p.version , p.svn_username, p.svn_password
      from t_g_project p
      left join t_g_function_right r on p.project_code = r.project_code
      
-     where r.user_name = #{username} and r.status = 1
+     where r.user_name = #{username} and r.status = 1 and p.status = 1
   </select>
   
   <update id="updateByProCode" parameterType="cn.godzilla.model.Project">
@@ -145,6 +161,12 @@
       <if test="version != null">
         version = #{version,jdbcType=VARCHAR},
       </if>
+      <if test="svnUsername != null">
+        svn_username = #{svn_username,jdbcType=VARCHAR},
+      </if>
+      <if test="svnPassword != null">
+        svn_password = #{svn_password,jdbcType=VARCHAR},
+      </if>
 	</trim>
 	where project_code = #{projectCode}
 </update>
@@ -152,12 +174,12 @@
 <sql id="query">
 	id, project_code as projectCode, project_name as projectName, 
     repository_url as repositoryUrl, create_by as createBy, manager, status, checkout_path as checkoutPath, web_path as webPath,war_name as warName,
-    version
+    version, svn_username as svnUsername, svn_password as svnPassword
 </sql>
 <select id="qureyByProCode" resultType="cn.godzilla.model.Project" parameterType="String">
 	select 
 	<include refid="query"/>
-	from t_g_project where project_code = #{projectCode}
+	from t_g_project where project_code = #{projectCode} and status = 1
 </select>
 
 <select id="queryAll" resultType="cn.godzilla.model.Project" parameterType="String">
@@ -183,6 +205,15 @@
       </if>
       <if test="version != null">
         version = #{version,jdbcType=VARCHAR},
+      </if>
+      <if test="version != null">
+        version = #{version,jdbcType=VARCHAR},
+      </if>
+      <if test="svnUsername != null">
+        svn_username = #{svnUsername,jdbcType=VARCHAR},
+      </if>
+      <if test="svnPassword != null">
+        svn_password = #{svnPassword,jdbcType=VARCHAR},
       </if>
 	</trim>
 	where id = #{srcId} 

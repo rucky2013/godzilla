@@ -25,6 +25,8 @@ import cn.godzilla.common.Application;
 import cn.godzilla.common.BusinessException;
 import cn.godzilla.common.Constant;
 import cn.godzilla.common.ReturnCodeEnum;
+import cn.godzilla.common.StringUtil;
+import cn.godzilla.model.ClientConfig;
 import cn.godzilla.model.FunRight;
 import cn.godzilla.model.User;
 import cn.godzilla.service.FunRightService;
@@ -210,6 +212,35 @@ public abstract class GodzillaApplication extends Application implements Constan
 	        if(i>=timeout) {
 	        	return false;
 	        }
+		}
+	}
+	protected void isEmpty(Object o) {
+		if(o == null) 
+			throw new BusinessException("数据为null->" + o.getClass().getName());
+		if(o instanceof String) {
+			if(StringUtil.isEmpty((String)o)) {
+				throw new BusinessException("字符串为空");
+			}
+		}
+	}
+	
+	protected void isEmpty(Object o, String errorMsg) {
+		if(o == null) 
+			throw new BusinessException(errorMsg);
+		if(o instanceof String) {
+			if(StringUtil.isEmpty((String)o)) {
+				throw new BusinessException(errorMsg);
+			}
+		}
+	}
+	
+	protected void isEmpty(Object o, String errorCode, String errorMsg) {
+		if(o == null) 
+			throw new BusinessException(errorCode, errorMsg);
+		if(o instanceof String) {
+			if(StringUtil.isEmpty((String)o)) {
+				throw new BusinessException(errorCode, errorMsg);
+			}
 		}
 	}
 }

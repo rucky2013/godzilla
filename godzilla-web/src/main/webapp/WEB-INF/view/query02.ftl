@@ -1,6 +1,6 @@
 <!DOCTYPE html><html><head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>配置查询02-哥斯拉</title>
+<title>配置查看页面-哥斯拉</title>
 <link type="text/css" href="/${basePath}/css/meta.css" rel="stylesheet"/>
 
 
@@ -42,7 +42,7 @@
 					<#if user.isAdmin = 1>
 					<a href="/${basePath}/user/${sid}/userAuthList.do" class="a2" title="管理权限">管理权限</a>
 					<#else>
-					<a href="javascript:void(0);" class="a2" title="管理权限">管理权限</a>
+					<!-- <a href="javascript:void(0);" class="a2" title="管理权限">管理权限</a> -->
 					</#if>
 				</h2>
 				 <a class="backindex" href="/${basePath}/project/${sid}/${projectCode}/TEST/projectConfig.do" title="${projectCode}"><h3 class="location">当前应用：${projectCode}</h3></a>
@@ -54,8 +54,13 @@
                 	<select name="selectedProfile">
                 		<option value="" selected="selected">All</option>
                 		<#list profileList?keys as key>
-							<option value="${profileList[key]}">${key}</option>
+							<#if profileList[key] = selectedProfile>
+            					<option value="${profileList[key]}" selected="selected">${key}</option>
+	            			<#else>
+	            				<option value="${profileList[key]}">${key}</option>
+	            			</#if>
                     	</#list>
+                    	
               		</select>
               		
               		<input type="submit" name="submit" value="查询" />

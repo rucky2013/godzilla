@@ -71,7 +71,7 @@ function doUpdate(map, dbMap, key, value, obj, showId) {
  
 function showAddorUpdate(map, key, obj) {
 	if(map.contains(key)) {
-		$(obj).parent().parent().find("input:eq(1)").remove("span");
+		$(obj).parent().parent().find("span").remove();
 		$(obj).parent().parent().find("input:eq(1)").after('<span class="data_odd">原来：'+map.get(key)+'</span>');
 	}
 }
@@ -83,6 +83,6 @@ function reDrawShow(map, showId) {
 	showDiv.empty();
 	//重绘
 	for(var i = 0;i < a.length; i++) {
-		showDiv.append('<p class="query_con">' +a[i]+ '='+ map.get(a[i]) +'</p>');
+		showDiv.append('<p class="query_con">' +a[i]+ '='+ map.get(a[i]).replace(new RegExp(/(<)/g),'&lt;').replace(new RegExp(/(>)/g),'&gt;') +'</p>');
 	}
 }

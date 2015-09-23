@@ -1,5 +1,6 @@
 package cn.godzilla.common.response;
 
+import cn.godzilla.common.BusinessException;
 import cn.godzilla.common.ReturnCodeEnum;
 
 public class ResponseBodyJson implements ResponseBody {
@@ -49,6 +50,14 @@ public class ResponseBodyJson implements ResponseBody {
 		public ResponseBodyJson.Builder setReturnmemo(String returnmemo) {
 			this.returnmemo = returnmemo;
 			return this;
+		}
+		
+		public ResponseBodyJson.Builder setAll(BusinessException e) {
+			this.returncode = e.getErrorCode();
+			this.returnmsg = e.getStatus();
+			this.returnmemo = e.getErrorMsg();
+			return this;
+			
 		}
 		
 		public ResponseBodyJson.Builder setAll(ReturnCodeEnum returnEnum) {

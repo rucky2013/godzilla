@@ -55,19 +55,9 @@ public class MvnController extends GodzillaApplication{
 		ReturnCodeEnum deployReturn = mvnService.doDeploy(srcUrl, projectCode, profile, parentVersion+parentVersionSuffix);
 		
 		processPercent.put(pencentkey, "100");
-		if(deployReturn == ReturnCodeEnum.OK_MVNDEPLOY) {
-			operateLogService.addOperateLog(super.getUser().getUserName(), projectCode, profile, DEPLOY, SUCCESS, ReturnCodeEnum.OK_MVNDEPLOY.getReturnMsg());
-			return SUCCESS;
-		} else if(deployReturn == ReturnCodeEnum.NO_MVNDEPLOY) {
-			operateLogService.addOperateLog(super.getUser().getUserName(), projectCode, profile, DEPLOY, FAILURE, ReturnCodeEnum.NO_MVNDEPLOY.getReturnMsg());
-			return FAILURE;
-		} else if(deployReturn == ReturnCodeEnum.NO_CHANGEPOM) {
-			operateLogService.addOperateLog(super.getUser().getUserName(), projectCode, profile, DEPLOY, FAILURE, ReturnCodeEnum.NO_CHANGEPOM.getReturnMsg());
-			return FAILURE;
-		} else {
-			operateLogService.addOperateLog(super.getUser().getUserName(), projectCode, profile, DEPLOY, FAILURE, FAILURE);
-			return FAILURE;
-		}
+		
+		operateLogService.addOperateLog(super.getUser().getUserName(), projectCode, profile, DEPLOY, FAILURE, ReturnCodeEnum.NO_CHANGEPOM.getReturnMsg());
+		return ResponseBodyJson.custom().setAll(deployReturn).build();
 	}
 	
 	@RequestMapping(value="/{sid}/{projectCode}/{profile}/process", method=RequestMethod.POST)

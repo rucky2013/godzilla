@@ -34,9 +34,14 @@ public class SvnServiceImpl extends GodzillaApplication implements SvnService {
 	private SvnCmdLogService svnCmdLogService;
 	@Autowired
 	private OperateLogService operateLogService;
+	@Autowired
+	private BaseShellCommand command;
 	@Override
 	public ReturnCodeEnum getVersion(String trunkPath, String projectCode) {
 		ClientConfig clientConfig = clientConfigService.queryDetail(projectCode, TEST_PROFILE) ;
+		Project project = projectService.qureyByProCode(projectCode);
+		super.isEmpty(clientConfig, projectCode+"项目的clientconfig 未初始化") ;
+		
 		String clientIp = clientConfig.getRemoteIp();
 		String branches = EMPTY_BRANCH;
 		boolean flag = false;
@@ -45,9 +50,8 @@ public class SvnServiceImpl extends GodzillaApplication implements SvnService {
 		String operator = super.getUser().getUserName();
 		String str = "";
 		try {
-			BaseShellCommand command = new BaseShellCommand();
 			str ="sh /home/godzilla/gzl/shell/server/svn_server_wl.sh version "+trunkPath+" '"+branches+"' "+" "+callbackUrl+" "+projectCode+" "+ operator +" "+clientIp ;
-			flag = command.execute(str, super.getUser().getUserName(), projectCode);
+			flag = command.execute(str, super.getUser().getUserName(), projectCode, project.getSvnUsername(), project.getSvnPassword());
 		} catch (Exception e) {
 			logger.error(e);
 			e.printStackTrace();
@@ -91,8 +95,7 @@ public class SvnServiceImpl extends GodzillaApplication implements SvnService {
 		String str="";
 		try {
 			str = "sh /home/godzilla/gzl/shell/server/svn_server_wl.sh commit "+trunkPath+" '"+branches+"' "+" "+callbackUrl+" "+projectCode+" "+ operator +" "+clientIp ;
-			BaseShellCommand command = new BaseShellCommand();
-			flag = command.execute(str, super.getUser().getUserName(), projectCode);
+			flag = command.execute(str, super.getUser().getUserName(), projectCode, project.getSvnUsername(), project.getSvnPassword());
 			
 		} catch (Exception e) {
 			logger.error(e);
@@ -154,9 +157,8 @@ public class SvnServiceImpl extends GodzillaApplication implements SvnService {
 		String operator = super.getUser().getUserName();
 		String str= "";
 		try {
-			BaseShellCommand command = new BaseShellCommand();
 			str = "sh /home/godzilla/gzl/shell/server/svn_server_wl.sh merge "+trunkPath+" '"+branches+"' "+" "+callbackUrl+" "+projectCode+" "+ operator +" "+clientIp ;
-			flag = command.execute(str, super.getUser().getUserName(), projectCode);
+			flag = command.execute(str, super.getUser().getUserName(), projectCode, project.getSvnUsername(), project.getSvnPassword());
 		} catch (Exception e) {
 			logger.error(e);
 			e.printStackTrace();

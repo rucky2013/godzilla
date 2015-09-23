@@ -25,7 +25,26 @@ public class Project implements Serializable{
     private String warName;
     private String version;
     
-    public String getWarName() {
+    private String svnUsername;
+    private String svnPassword;
+    
+    public String getSvnUsername() {
+		return svnUsername;
+	}
+
+	public void setSvnUsername(String svnUsername) {
+		this.svnUsername = svnUsername;
+	}
+
+	public String getSvnPassword() {
+		return svnPassword;
+	}
+
+	public void setSvnPassword(String svnPassword) {
+		this.svnPassword = svnPassword;
+	}
+
+	public String getWarName() {
 		return warName;
 	}
 

@@ -1,6 +1,6 @@
 <!DOCTYPE html><html><head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>首页-哥斯拉</title>
+<title>工作台-哥斯拉</title>
 <link type="text/css" href="/${basePath}/css/meta.css" rel="stylesheet"/>
 </head>
 <body id="index" class="index">
@@ -37,7 +37,7 @@
 					<#if user.isAdmin = 1>
 					<a href="/${basePath}/user/${sid}/userAuthList.do" class="a2" title="管理权限">管理权限</a>
 					<#else>
-					<a href="javascript:void(0);" class="a2" title="管理权限">管理权限</a>
+					<!-- <a href="javascript:void(0);" class="a2" title="管理权限">管理权限</a> -->
 					</#if>
 				</h2>
 
@@ -71,7 +71,11 @@
                         <td>${log.executeTime?string("yyyy-MM-dd HH:mm:ss")}</td>
                         <td>${log.projectCode}</td>
                         <td>${log.operation}</td>
-                        <td class="fail">${log.executeResult}</td>
+                        <#if log.executeResult == 1>
+							<td class="fail">成功</td>
+						<#elseif log.executeResult == -2>
+							<td class="fail">失败</td>
+						</#if>
                         <td>${log.resultInfo}</td>
                       </tr>
                      </#list>

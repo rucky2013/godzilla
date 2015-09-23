@@ -25,6 +25,9 @@ public class ProjectServiceImpl extends GodzillaApplication implements ProjectSe
 	private ProjectMapper dao;
 	@Autowired
 	private SvnService svnService;
+	@Autowired
+	private BaseShellCommand command;
+	
 	@Override
 	public int insert(Project project) {
 		
@@ -119,12 +122,10 @@ public class ProjectServiceImpl extends GodzillaApplication implements ProjectSe
 
 	@Override
 	public ReturnCodeEnum godzillaCommand(String actiion) {
-		BaseShellCommand command = new BaseShellCommand();
 		
 		String str = "sh /home/godzilla/gzl/shell/server/godzilla.sh " + actiion;
 		boolean flag = false;
-		
-		flag = command.execute(str, super.getUser().getUserName(), "");
+		flag = command.execute(str, super.getUser().getUserName(), "", "", "");
 		
 		if(flag) {
 			operateLogService.addOperateLog(super.getUser().getUserName(), "godzilla", "TEST", actiion, SUCCESS, actiion+" godzilla clients success");

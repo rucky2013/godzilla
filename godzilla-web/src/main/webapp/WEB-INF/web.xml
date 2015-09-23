@@ -33,6 +33,15 @@
 		<filter-name>authorization</filter-name>
 		<url-pattern>*.do</url-pattern>
 	</filter-mapping> 
+	<!-- 异常处理-->
+	<filter>
+		<filter-name>exception</filter-name>
+		<filter-class>cn.godzilla.filter.BusinessExceptionFilter</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>exception</filter-name>
+		<url-pattern>*.do</url-pattern>
+	</filter-mapping> 
 	<!-- filter end -->
 	<servlet>
 		<servlet-name>springmvc</servlet-name>

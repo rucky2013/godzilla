@@ -53,6 +53,8 @@ public class SvnController extends GodzillaApplication implements Constant{
 	private OperateLogService operateLogService;
 	@Autowired
 	private SvnCmdLogService svnCmdLogService;
+	@Autowired
+	private BaseShellCommand command;
 	/**
 	 * 状态查看
 	 * @param sid
@@ -91,9 +93,8 @@ public class SvnController extends GodzillaApplication implements Constant{
 		String operator = super.getUser().getUserName();
 		String str = "";
 		try {
-			BaseShellCommand command = new BaseShellCommand();
 			str ="sh /home/godzilla/gzl/shell/server/svn_server_wl.sh status "+trunkPath+" '"+branches+"' "+" "+callbackUrl+" "+projectCode+" "+ operator +" "+clientIp ;
-			flag = command.execute(str, super.getUser().getUserName(), projectCode);
+			flag = command.execute(str, super.getUser().getUserName(), projectCode, project.getSvnUsername(), project.getSvnPassword());
 		} catch (Exception e) {
 			logger.error(e);
 			e.printStackTrace();

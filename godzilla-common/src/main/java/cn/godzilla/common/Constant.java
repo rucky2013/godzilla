@@ -108,6 +108,8 @@ public interface Constant {
 	public final static String NO_DELETEBRANCH = "100030";
 	public final static String NO_SVNMERGE = "100031";
 	public final static String NO_MVNBUILD = "100032";
+	public final static String NO_COMMON = "100033";
+	
 	
 	public final static String OK_AJAX = "200000";
 	public final static String OK_CHECKUSER = "200001";

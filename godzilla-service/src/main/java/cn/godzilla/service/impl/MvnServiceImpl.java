@@ -52,6 +52,8 @@ public class MvnServiceImpl extends GodzillaApplication implements MvnService {
 	private SvnService svnService;
 	@Autowired
 	private MvnCmdLogService mvnCmdLogService;
+	@Autowired
+	private BaseShellCommand command;
 	
 	private Map<String, PropConfigProviderService> propConfigProviderServices = 
 				new HashMap<String, PropConfigProviderService>();
@@ -356,8 +358,7 @@ public class MvnServiceImpl extends GodzillaApplication implements MvnService {
 	private boolean copyWar(String projectCode, String profile) {
 		ClientConfig clientConfig = clientConfigService.queryDetail(projectCode, profile);
 		String clientIp = clientConfig.getRemoteIp();
-		
-		BaseShellCommand command = new BaseShellCommand();
+		Project project = projectService.qureyByProCode(projectCode);
 		
 		String tomcatHome = "";
 		
@@ -379,7 +380,7 @@ public class MvnServiceImpl extends GodzillaApplication implements MvnService {
 		tomcatHome += "/webapps/*.war";
 		String str = "sh /home/godzilla/gzl/shell/server/copywar_server.sh " + clientIp + " " + tomcatHome + " " + SAVE_WAR_PATH;;
 		boolean flag = false;
-		flag = command.execute(str, super.getUser().getUserName(), projectCode);
+		flag = command.execute(str, super.getUser().getUserName(), projectCode, project.getSvnUsername(), project.getSvnPassword());
 		
 		if(flag) {
 			operateLogService.addOperateLog(super.getUser().getUserName(), projectCode, profile, COPYWAR, SUCCESS, "copy war success");
@@ -396,8 +397,7 @@ public class MvnServiceImpl extends GodzillaApplication implements MvnService {
 		ClientConfig clientConfig = clientConfigService.queryDetail(projectCode, profile) ;
 		String clientIp = clientConfig.getRemoteIp();
 		// 暂时先不考虑权限
-
-		BaseShellCommand command = new BaseShellCommand();
+		Project project = projectService.qureyByProCode(projectCode);
 
 		/*String str = PropertiesUtil.getProperties().get("server.shell.restart.path") +" " + clientIp + " "
 				+ PropertiesUtil.getProperties().get("client.tomcat.home.path");*/
@@ -413,13 +413,12 @@ public class MvnServiceImpl extends GodzillaApplication implements MvnService {
 		if("godzilla".equals(projectCode)) {
 			flag = true;
 		} else {
-			flag = command.execute(str, super.getUser().getUserName(), projectCode);
+			flag = command.execute(str, super.getUser().getUserName(), projectCode, project.getSvnUsername(), project.getSvnPassword());
 		}
 		
 		/*
 		 * 3. httpclient 访问  ip:8080/war_name/index.jsp   查找 是否存在 <!--<h5>godzilla</h5>--> 字符串 判断 tomcat是否启动成功
 		 */
-		Project project = projectService.qureyByProCode(projectCode);
 		String warName = project.getWarName();
 		String IP = clientIp;
 		

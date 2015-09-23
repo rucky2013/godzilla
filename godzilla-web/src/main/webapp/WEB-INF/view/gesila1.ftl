@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>哥斯拉</title>
+<title>项目主操作页-哥斯拉</title>
 <link type="text/css" href="/${basePath}/css/meta.css" rel="stylesheet" />
 </head>
 <body id="gesila1">
@@ -39,7 +39,7 @@
 					<#if user.isAdmin = 1>
 					<a href="/${basePath}/user/${sid}/userAuthList.do" class="a2" title="管理权限">管理权限</a>
 					<#else>
-					<a href="javascript:void(0);" class="a2" title="管理权限">管理权限</a>
+					<!-- <a href="javascript:void(0);" class="a2" title="管理权限">管理权限</a> -->
 					</#if>
 				</h2>
 				<a class="backindex" href="/${basePath}/project/${sid}/${projectCode}/TEST/projectConfig.do" title="${projectCode}"><h3 class="location">当前应用：${projectCode}</h3></a>
@@ -69,7 +69,11 @@
 							<table width="100%" border="0">
 								<thead>
 									<tr>
-										<th colspan="2" align="left">${projectCode}@${clientConfig.remoteIp}</th>
+										<#if clientConfig?exists>
+											<th colspan="2" align="left">${projectCode}@${clientConfig.remoteIp!'error:没有配置clientConfig.remoteIp'}</th>
+										<#else>
+											<th colspan="2" align="left">${projectCode}@'error:没有配置clientConfig.remoteIp'</th>
+										</#if>
 									</tr>
 								</thead>
 								<tbody>
@@ -130,7 +134,11 @@
 							<table width="100%" border="0">
 								<thead>
 									<tr>
-										<th colspan="2" align="left">${projectCode}@${clientConfig.remoteIp}</th>
+										<#if clientConfig?exists>
+											<th colspan="2" align="left">${projectCode}@${clientConfig.remoteIp!'error:没有配置clientConfig.remoteIp'}</th>
+										<#else>
+											<th colspan="2" align="left">${projectCode}@'error:没有配置clientConfig.remoteIp'</th>
+										</#if>
 									</tr>
 								</thead>
 								<tbody>
@@ -154,14 +162,18 @@
 							<table width="100%" border="0">
 								<thead>
 									<tr>
-										<th colspan="2" align="left">${projectCode}@${clientConfig.remoteIp}</th>
+										<#if clientConfig?exists>
+											<th colspan="2" align="left">${projectCode}@${clientConfig.remoteIp!'error:没有配置clientConfig.remoteIp'}</th>
+										<#else>
+											<th colspan="2" align="left">${projectCode}@'error:没有配置clientConfig.remoteIp'</th>
+										</#if>
 									</tr>
 								</thead>
 								<tbody>
 									<tr>
 										<td width="80" class="paddingR0">部署操作：</td>
 										<td class="bg1">
-											<span class="spanArrange"><a class="deploy" href="javascript:void(0);" value1="${project.checkoutPath}" value2="PRODUCT" title="打包">打包</a></span>
+											<span class="spanArrange"><a class="deploy" href="javascript:void(0);" value1="${project.checkoutPath}!''" value2="PRODUCT" title="打包">打包</a></span>
 											<span class="spanUseAgain"><a href="javascript:void(0);" class="download" value2="PRODUCT" title="下载war包">下载war包</a></span>
 										</td>
 									</tr>
@@ -193,7 +205,7 @@
 							<td width="216"><small>${project.repositoryUrl!''}</small></td>
 							<td width="216"><small>${project.checkoutPath!''}</small></td>
 							<td>${project.version!''}</td>
-							<!--<td>${clientConfig.deployVersion!''}</td>-->
+							<!--<td>$/{clientConfig.deployVersion!''}</td>-->
 						</tr>
 						</#if>
 
@@ -214,7 +226,7 @@
 					<tbody>
 						<#list svnBranchConfigs as branch>
 						<tr>
-							<td width="310">${branch.branchUrl}</td>
+							<td width="310">${branch.branchUrl!'error:branch.branchUrl不可为空值'}</td>
 							<td>${branch.createBy!''}</td>
 							<td>${branch.currentVersion!''}</td>
 							<td>${branch.createTime?string("yyyy-MM-dd HH:mm:ss")}</td>
@@ -249,7 +261,11 @@
 								<td>${log.executeTime?string("yyyy-MM-dd HH:mm:ss")}</td>
 								<td>${log.userName}</td>
 								<td>${log.operation}</td>
-								<td class="fail">${log.executeResult}</td>
+								<#if log.executeResult == 1>
+									<td class="fail">成功</td>
+								<#elseif log.executeResult == -2>
+									<td class="fail">失败</td>
+								</#if>
 								<td>${log.resultInfo}</td>
 							</tr>
 							</#list>
@@ -286,10 +302,10 @@
 				<div class="shadow_con">
 
 					<div class="user_con clearfix">
-						<label>源代码svn路径：</label> <input id="repositoryUrl" type="text" name="repositoryUrl" value="${project.repositoryUrl!''}" />
+						<label>源代码svn路径：</label> <input id="repositoryUrl" type="text" name="repositoryUrl" value="${project.repositoryUrl!''}" /><label id="errormsg1"></label>
 					</div>
 					<div class="user_con clearfix">
-						<label>源代码存放路径：</label> <input id="checkoutPath" type="text" name="checkoutPath" value="${project.checkoutPath!''}" />
+						<label>源代码存放路径：</label> <input id="checkoutPath" type="text" name="checkoutPath" value="${project.checkoutPath!''}" /><label id="errormsg2"></label>
 					</div>
 					<input id="editSrcBtn" type="button" class="shadow_btn mar150_l" value="修改" />
 				</div>
@@ -301,7 +317,7 @@
 				</h5>
 				<div class="shadow_con">
 					<div class="user_con clearfix">
-						<label>分支路径：</label> <input id="branchUrl" type="text" name="branchUrl" />
+						<label>分支路径：</label> <input id="branchUrl" type="text" name="branchUrl" /><label id="errormsg3"></label>
 					</div>
 					<input id="addBranchBtn" type="button" class="shadow_btn mar150_l" value="添加" />
 				</div>
@@ -454,13 +470,20 @@
 					$("#processText").text("100%");
 					timeout = false;
 					if (data == "SUCCESS") {
-	                    alert("success");
-	                    $("#process").width(0);
+						$("#process").width(0);
 						$("#processText").text("0%");
-	                    window.location.href = '/${basePath}/project/${sid}/${projectCode}/${profile}/projectConfig.do';
+						
+	                    $("#alert").css("display", "block");
+						$("#alert_title").text(data.returnmsg);
+						$("#alert_text").text(data.returnmemo);
 	                } else {
-	                    alert("failed");
+	                    $("#alert").css("display", "block");
+						$("#alert_title").text(data.returnmsg);
+						$("#alert_text").text(data.returnmemo);
 	                }
+	                $("#process").width(0);
+					$("#processText").text("0%");
+	                //window.location.href = '/${basePath}/project/${sid}/${projectCode}/${profile}/projectConfig.do';
 				}
 	        });
 	        //模态化 整个界面
@@ -764,7 +787,16 @@
 	        var srcId = $("#srcId").val();
 	        var repositoryUrl = $("#repositoryUrl").val();
 	        var checkoutPath = $("#checkoutPath").val();
-	
+		
+			if(repositoryUrl == "") {
+				$("#errormsg1").val("源码svn路径不能为空！");
+				return;
+			}
+			if(checkoutPath == "") {
+				$("#errormsg2").val("源代码存放路径不能为空!");
+				return ;
+			}
+			$("#editSrcBtn").attr("disabled", "true");
 	        $.ajax({
 	            type: "GET",
 	            url: "/${basePath}/project/${sid}/${projectCode}/${profile}/srcEdit.do",
@@ -777,10 +809,11 @@
 	            success: function(data) {
 	                if (data == "SUCCESS") {
 	                    alert("success");
-	                    window.location.href = '/${basePath}/project/${sid}/${projectCode}/${profile}/projectConfig.do';
 	                } else {
 	                    alert("failed");
 	                }
+	                $("#editSrcBtn").removeAttr("disabled");
+	                window.location.href = '/${basePath}/project/${sid}/${projectCode}/${profile}/projectConfig.do';
 	            }
 	        });
 	    });
@@ -788,7 +821,12 @@
 	    $("#addBranchBtn").on("click", function() {
 	
 	        var branchUrl = $("#branchUrl").val();
-	
+			if(branchUrl == "") {
+				$("#errormsg3").val("分支地址不能为空!");
+				return ;
+			}
+			
+			$("#addBranchBtn").attr("disabled", "true");
 	        $.ajax({
 	            type: "GET",
 	            url: "/${basePath}/svnbranch/${sid}/${projectCode}/${profile}/add.do",
@@ -799,10 +837,11 @@
 	            success: function(data) {
 	               if (data == "SUCCESS") {
 	                    alert("success");
-	                    window.location.href = '/${basePath}/project/${sid}/${projectCode}/${profile}/projectConfig.do';
 	                } else {
 	                    alert("failed");
 	                }
+	                $("#addBranchBtn").attr("disabled");
+	                window.location.href = '/${basePath}/project/${sid}/${projectCode}/${profile}/projectConfig.do';
 	            }
 	        });
 	    });
@@ -888,6 +927,7 @@
 			$("#alert").css("display", "none");
 			//释放 整个界面
 	        releasewindow();
+	        window.location.href = '/${basePath}/project/${sid}/${projectCode}/${profile}/projectConfig.do';
 		});
 	});
 	</script>

@@ -60,7 +60,7 @@ $( "#sortable" ).disableSelection();
 					<#if user.isAdmin = 1>
 					<a href="/${basePath}/user/${sid}/userAuthList.do" class="a2" title="管理权限">管理权限</a>
 					<#else>
-					<a href="javascript:void(0);" class="a2" title="管理权限">管理权限</a>
+					<!-- <a href="javascript:void(0);" class="a2" title="管理权限">管理权限</a> -->
 					</#if>
 				</h2>
 				 <a class="backindex" href="/${basePath}/project/${sid}/${projectCode}/TEST/projectConfig.do" title="${projectCode}"><h3 class="location">当前应用：${projectCode}</h3></a>
@@ -105,7 +105,7 @@ $( "#sortable" ).disableSelection();
 	                	<#list propList as prop>
 	             		  <li class="ui-state-default">
 	             		  	<span value1="${prop.id}" class="prop_id" style="width:10%">
-	             		  	${prop.indexOrder}
+	             		  	${prop.indexOrder!'0'}
 	             		  	</span>
 	             		  	<span style="width:15%">
 	             		  	${prop.proKey}
