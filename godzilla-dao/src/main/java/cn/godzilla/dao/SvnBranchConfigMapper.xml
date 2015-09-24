@@ -95,7 +95,7 @@
   <select id="queryListByProjectCode" resultType="cn.godzilla.model.SvnBranchConfig" parameterType="java.lang.String">
   	select <include refid="queryColumns" /> from t_g_svn_branch_config 
   	where project_code = #{projectCode} and status = 1
-  	group by create_version
+  	order by create_version
   </select>
   
   <insert id="insertBranch" useGeneratedKeys="true" keyProperty="id" parameterType="java.util.Map" >

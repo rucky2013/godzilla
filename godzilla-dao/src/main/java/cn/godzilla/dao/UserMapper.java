@@ -29,5 +29,7 @@ public interface UserMapper {
 	List<User> queryAllUser();
 
 	void updateLogintimeByUsername(String username);
+
+	User queryUserByUserId(String id);
 	
 }

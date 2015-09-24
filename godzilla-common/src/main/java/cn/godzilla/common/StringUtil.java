@@ -1,6 +1,8 @@
 package cn.godzilla.common;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.Map;
 import java.util.UUID;
 
@@ -71,10 +73,31 @@ public class StringUtil {
 
 		String value = request.getParameter(key);
 		value = StringUtils.isEmpty(value) ? defaultValue : value;
+		
 		return value;
 
 	}
 	
+	/**
+	 * 获取 url &参数，进行utf8 解码
+	 * @param request
+	 * @param key
+	 * @param defaultValue
+	 * @return
+	 */
+	public static String getReqURIParameter(HttpServletRequest request, String key, String defaultValue) {
+		
+		String value = request.getParameter(key);
+		value = StringUtils.isEmpty(value) ? defaultValue : value;
+		
+		try {
+			value = URLDecoder.decode(value, "utf-8");
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+		
+		return value;
+	}
 	public static String getReqAttribute(HttpServletRequest request, String key) {
 
 		return getReqAttribute(request, key, "");

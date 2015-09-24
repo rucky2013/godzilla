@@ -69,7 +69,7 @@ public class ProjectController extends GodzillaApplication implements Constant{
 	 * @param request
 	 * @return
 	 */
-	@RequestMapping(value="/{sid}/{projectCode}/{profile}/srcEdit", method = RequestMethod.GET)
+	@RequestMapping(value="/{sid}/{projectCode}/{profile}/srcEdit", method = RequestMethod.POST)
 	@ResponseBody
 	public Object srcEdit(@PathVariable String sid, @PathVariable String projectCode, @PathVariable String profile, HttpServletRequest request) {
 		
@@ -132,63 +132,16 @@ public class ProjectController extends GodzillaApplication implements Constant{
 	}
 	
 	/**
-	 * 升级客户端
+	 * 执行命令
+	 * upgrade,startclients,stopclients,stoptomcats,starttomcats
 	 * @param response
 	 * @return 
 	 */
-	@RequestMapping(value="{sid}/{projectCode}/{profile}/upgrade", method=RequestMethod.GET) 
+	@RequestMapping(value="{sid}/{projectCode}/{profile}/{command}", method=RequestMethod.GET) 
 	@ResponseBody
-	public Object upgrade(HttpServletResponse response) {
+	public Object upgrade(HttpServletResponse response, @PathVariable String command) {
 		
-		ReturnCodeEnum returnEnum = projectService.godzillaCommand("upgrade");
-		return ResponseBodyJson.custom().setAll(returnEnum).build();
-	}
-	/**
-	 * 关闭客户端
-	 * @param response
-	 * @return 
-	 */
-	@RequestMapping(value="{sid}/{projectCode}/{profile}/stopclients", method=RequestMethod.GET)
-	@ResponseBody
-	public Object stopclients(HttpServletResponse response) {
-		
-		ReturnCodeEnum returnEnum = projectService.godzillaCommand("stopclients");
-		return ResponseBodyJson.custom().setAll(returnEnum).build();
-	}
-	/**
-	 * 打开客户端
-	 * @param response
-	 * @return 
-	 */
-	@RequestMapping(value="{sid}/{projectCode}/{profile}/startclients", method=RequestMethod.GET)
-	@ResponseBody
-	public Object startclients(HttpServletResponse response) {
-		
-		ReturnCodeEnum returnEnum = projectService.godzillaCommand("startclients");
-		return ResponseBodyJson.custom().setAll(returnEnum).build();
-	}
-	/**
-	 * 打开tomcat
-	 * @param response
-	 * @return 
-	 */
-	@RequestMapping(value="{sid}/{projectCode}/{profile}/starttomcats", method=RequestMethod.GET)
-	@ResponseBody
-	public Object starttomcats(HttpServletResponse response) {
-		
-		ReturnCodeEnum returnEnum = projectService.godzillaCommand("starttomcats");
-		return ResponseBodyJson.custom().setAll(returnEnum).build();
-	}
-	/**
-	 * 关闭tomcat
-	 * @param response
-	 * @return 
-	 */
-	@RequestMapping(value="{sid}/{projectCode}/{profile}/stoptomcats", method=RequestMethod.GET)
-	@ResponseBody
-	public Object stoptomcats(HttpServletResponse response) {
-		
-		ReturnCodeEnum returnEnum = projectService.godzillaCommand("stoptomcats");
+		ReturnCodeEnum returnEnum = projectService.godzillaCommand(command);
 		return ResponseBodyJson.custom().setAll(returnEnum).build();
 	}
 	

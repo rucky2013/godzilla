@@ -85,4 +85,6 @@ public interface UserService extends Constant{
 	 * @return
 	 */
 	public ReturnCodeEnum updateUserProjects(String editUsername, String selectProjects);
+
+	public User getUserById(String sid);
 }

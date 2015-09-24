@@ -53,7 +53,6 @@ public class Authentication extends GodzillaApplication implements Filter {
 		logger.info("authentication");
 		HttpServletResponse resp = (HttpServletResponse) response;
 		HttpServletRequest req = (HttpServletRequest)request;
-		
 		try {
 			if(!this.escapeUrl(request)) {
 				String sid = super.getSidFromUrl(request);

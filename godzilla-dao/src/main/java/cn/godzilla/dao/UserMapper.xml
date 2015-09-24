@@ -114,6 +114,12 @@
     from t_g_user 
     where user_name = #{username} and status = 1
   </select>
+  <select id="queryUserByUserId" parameterType="string" resultType="cn.godzilla.model.User">
+  	select 
+  		<include refid="userColumns" />
+  	from t_g_user
+  	where id=#{id} and status = 1
+  </select>
   <update id="updateLogintimeByUsername"  parameterType="string" >
   	update t_g_user set 
   	login_time = now(),

@@ -32,7 +32,7 @@
                 </table>
             </div>
 			<div class="mainConR r">
-				<h2 id="tab1" class="current">
+				<h2 id="tab1" class="clearfix">
 					<a href="/${basePath}/user/${sid}/home.do" class="a1" title="工作空间">工作空间</a>
 					<#if user.isAdmin = 1>
 					<a href="/${basePath}/user/${sid}/userAuthList.do" class="a2" title="管理权限">管理权限</a>
@@ -46,7 +46,7 @@
                 <thead>
                   <tr>
                     <th width="15%">编号</th>
-                    <th width="15%">用户</th>
+                    <th width="15%">用户名</th>
                     <th width="54%">工作台组</th>
                     <th width="16%" colspan="2">操作</th>
                   </tr>

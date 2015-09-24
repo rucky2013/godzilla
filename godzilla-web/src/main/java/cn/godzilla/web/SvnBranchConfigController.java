@@ -45,7 +45,7 @@ public class SvnBranchConfigController extends GodzillaApplication implements Co
 	 * @param response
 	 * @return
 	 */
-	@RequestMapping(value = "/{sid}/{projectCode}/{profile}/add", method = RequestMethod.GET)
+	@RequestMapping(value = "/{sid}/{projectCode}/{profile}/add", method = RequestMethod.POST)
 	@ResponseBody
 	public Object add(@PathVariable String sid, @PathVariable String projectCode, @PathVariable String profile, 
 			@RequestParam("branchUrl") String branchUrl,
@@ -79,7 +79,7 @@ public class SvnBranchConfigController extends GodzillaApplication implements Co
 	 * @param response
 	 * @return
 	 */
-	@RequestMapping(value = "/{sid}/{projectCode}/{profile}/edit", method = RequestMethod.GET)
+	@RequestMapping(value = "/{sid}/{projectCode}/{profile}/edit", method = RequestMethod.POST)
 	@ResponseBody
 	public Object edit(@PathVariable String sid, @PathVariable String projectCode, @PathVariable String profile, 
 			@RequestParam("id") String id,

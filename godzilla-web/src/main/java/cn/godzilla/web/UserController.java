@@ -1,8 +1,6 @@
 package cn.godzilla.web;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -20,6 +18,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import cn.godzilla.common.ReturnCodeEnum;
 import cn.godzilla.common.StringUtil;
+import cn.godzilla.common.response.ResponseBodyJson;
 import cn.godzilla.model.OperateLog;
 import cn.godzilla.model.Project;
 import cn.godzilla.model.User;
@@ -69,39 +68,24 @@ public class UserController extends GodzillaApplication{
 	 * @param request
 	 * @param response
 	 * @return sid
+	 * NULL_NAMEPASSWORD, NOTEXIST_USER, WRONG_PASSWORD
 	 */
-	@RequestMapping(value="/login/{username}/{password}", method=RequestMethod.GET)
-	public Object login(@PathVariable String username, @PathVariable String password, HttpServletRequest request, HttpServletResponse response) {
+	@RequestMapping(value="/login", method=RequestMethod.POST)
+	@ResponseBody
+	public Object login(HttpServletRequest request, HttpServletResponse response) {
 		logger.debug("*****UserController.login*****");
 		String newsid = StringUtil.getRandom(6);
 		logger.info("++|++|++>sid:" + newsid);
 		super.initContextBySid(newsid);
 		request.setAttribute("sid", newsid);
+		
+		String username = StringUtil.getReqPrameter(request, "username");
+		String password = StringUtil.getReqPrameter(request, "password");
+		
 		//do login 
 		ReturnCodeEnum loginReturn = userService.login(username, password, newsid);  
-		if(loginReturn == ReturnCodeEnum.NULL_NAMEPASSWORD) {
-			request.setAttribute("errorcode", ReturnCodeEnum.NULL_NAMEPASSWORD.getReturnCode());
-			request.setAttribute("errormsg", ReturnCodeEnum.NULL_NAMEPASSWORD.getReturnMsg());
-			request.setAttribute("basePath", BASE_PATH);
-			return "/login";
-		} else if(loginReturn == ReturnCodeEnum.NOTEXIST_USER) {
-			request.setAttribute("errorcode", ReturnCodeEnum.NOTEXIST_USER.getReturnCode());
-			request.setAttribute("errormsg", ReturnCodeEnum.NOTEXIST_USER.getReturnMsg());
-			request.setAttribute("basePath", BASE_PATH);
-			return "/login";
-		} else if(loginReturn == ReturnCodeEnum.WRONG_PASSWORD) {
-			request.setAttribute("errorcode", ReturnCodeEnum.WRONG_PASSWORD.getReturnCode());
-			request.setAttribute("errormsg", ReturnCodeEnum.WRONG_PASSWORD.getReturnMsg());
-			request.setAttribute("basePath", BASE_PATH);
-			return "/login";
-		} else if(loginReturn == ReturnCodeEnum.OK_LOGIN) {
-			return "forward:/user/" + newsid + "/home";
-		} else {
-			request.setAttribute("errorcode", ReturnCodeEnum.OK_LOGIN.getReturnCode());
-			request.setAttribute("errormsg", ReturnCodeEnum.OK_LOGIN.getReturnMsg());
-			request.setAttribute("basePath", BASE_PATH);
-			return "/login";
-		}
+		
+		return ResponseBodyJson.custom().setAll(loginReturn, newsid).build();
 	}
 	
 	/**
@@ -172,7 +156,7 @@ public class UserController extends GodzillaApplication{
 		return "/operation";
 	}
 	
-	@RequestMapping(value="/{sid}/addUser", method=RequestMethod.GET)
+	@RequestMapping(value="/{sid}/addUser", method=RequestMethod.POST)
 	@ResponseBody
 	public Object addUser(@PathVariable String sid, HttpServletRequest request) {
 		
@@ -216,16 +200,17 @@ public class UserController extends GodzillaApplication{
 		if(!"1".equals(user.getIsAdmin()+"")) {
 			return "forward:/user/" + sid + "/home";
 		}
-		String editUsername = StringUtil.getReqPrameter(request, "editUsername", "");
-		if(StringUtil.isEmpty(editUsername)) {
+		String id = StringUtil.getReqPrameter(request, "id", "");
+		if(StringUtil.isEmpty(id)) {
 			return "forward:/user/" + sid + "/home";
 		}
+		User edituser = userService.getUserById(id);
 		List<Map<String, Object>> userAuthList = userService.getUserAuthList();
-		List<Map<String, Object>> userProjects = userService.getUserProjects(editUsername);
+		List<Map<String, Object>> userProjects = userService.getUserProjects(edituser.getUserName());
 		
 		request.setAttribute("userAuthList", userAuthList);
 		request.setAttribute("userProjects", userProjects);
-		request.setAttribute("editUsername", editUsername);
+		request.setAttribute("editUsername", edituser.getUserName());
 		request.setAttribute("user", super.getUser());
 		request.setAttribute("basePath", BASE_PATH);
 		return "/operation02";

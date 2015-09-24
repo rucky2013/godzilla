@@ -145,6 +145,7 @@ public class UserServiceImpl extends GodzillaApplication implements UserService{
 			Map<String, Object> userAuthMap = new HashMap<String, Object>();
 			List<Project> projects = this.queryProjectsByUsername(u.getUserName());
 			userAuthMap.put("index", index++);
+			userAuthMap.put("id", u.getId());
 			userAuthMap.put("username", u.getUserName());
 			userAuthMap.put("projects", projects);
 			
@@ -217,6 +218,12 @@ public class UserServiceImpl extends GodzillaApplication implements UserService{
 			
 		}
 		return ReturnCodeEnum.getByReturnCode(OK_UPDATEFUNRIGHT);
+	}
+
+	@Override
+	public User getUserById(String id) {
+		User user = userMapper.queryUserByUserId(id);
+		return user;
 	}
 
 	

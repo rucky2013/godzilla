@@ -89,16 +89,16 @@
 									<tr>
 										<td width="80" class="paddingR0">客端维护：</td>
 										<td class="bg1">
-												<span class="spanUseAgain"><a href="javascript:void(0);" class="upgrade" value2="TEST" title="升级客户端">升级</a></span>
-												<span class="spanUseAgain"><a href="javascript:void(0);" class="stopclients" value2="TEST" title="关闭客户端">关闭</a></span>
-												<span class="spanUseAgain"><a href="javascript:void(0);" class="startclients" value2="TEST" title="打开客户端">打开</a></span>
+												<span class="spanUseAgain"><a href="javascript:void(0);" class="command" value3="upgrade" value2="TEST" title="升级客户端">升级</a></span>
+												<span class="spanUseAgain"><a href="javascript:void(0);" class="command" value3="stopclients" value2="TEST" title="关闭客户端">关闭</a></span>
+												<span class="spanUseAgain"><a href="javascript:void(0);" class="command" value3="startclients" value2="TEST" title="打开客户端">打开</a></span>
 										</td>
 									</tr>
 									<tr>
 										<td width="80" class="paddingR0">童木维护：</td>
 										<td class="bg1">
-												<span class="spanUseAgain"><a href="javascript:void(0);" class="stoptomcats" value2="TEST" title="关闭tomcats">关闭</a></span>
-												<span class="spanUseAgain"><a href="javascript:void(0);" class="starttomcats" value2="TEST" title="打开tomcats">打开</a></span>
+												<span class="spanUseAgain"><a href="javascript:void(0);" class="command" value3="stoptomcats" value2="TEST" title="关闭tomcats">关闭</a></span>
+												<span class="spanUseAgain"><a href="javascript:void(0);" class="command" value3="starttomcats" value2="TEST" title="打开tomcats">打开</a></span>
 										</td>
 									</tr>
 									</#if>
@@ -230,7 +230,7 @@
 							<td>${branch.createBy!''}</td>
 							<td>${branch.currentVersion!''}</td>
 							<td>${branch.createTime?string("yyyy-MM-dd HH:mm:ss")}</td>
-							<td><a class="edit_branch" value1="${branch.id}" href="javascript:viod(0);" title="编辑">编辑</a></td>
+							<td><a class="edit_branch" value1="${branch.id}" href="javascript:void(0);" title="编辑">编辑</a></td>
 						</tr>
 						</#list>
 					</tbody>
@@ -520,132 +520,20 @@
 	    	window.location.href = "/${basePath}/project/${sid}/${projectCode}/"+profile+"/download.do";
 		});
 		
-		//升级客户端
-		$(".upgrade").on("click", function() {
-			if (!confirm("是否确定升级客户端（注：此次升级所有客户端）"))  {  
-	    		return ;
-	    	}
-	    	
-			modelwindow();
-	    	var profile = $(this).attr("value2");
-	    	
-	    	$.ajax({
-	    		type: "get",
-	    		url: "/${basePath}/project/${sid}/${projectCode}/"+profile+"/upgrade.do",
-	    		data: {
-	    		},
-	    		dataType:"json",
-	    		success: function(data) {
-	    			if(data.returnmsg=="SUCCESS") {
-						//alert(data.echoMessage);
-						$("#alert").css("display", "block");
-						$("#alert_title").text(data.returnmsg);
-						$("#alert_text").text(data.returnmemo);
-					} else {
-	                    $("#alert").css("display", "block");
-						$("#alert_title").text(data.returnmsg);
-						$("#alert_text").text(data.returnmemo);
-	                }
-	    		}
-	    	});
-		});
-		//关闭客户端
-		$(".stopclients").on("click", function() {
-			if(!confirm("是否确定关闭客户端（注：此次关闭所有客户端）")) {
+		//执行命令 upgrade,startclients,stopclients,stoptomcats,starttomcats
+		$(".command").on("click", function() {
+			if(!confirm("是否确定操作客户端（注：此次操作所有客户端）")) {
 				return ;
 			}
 			modelwindow();
 			var profile = $(this).attr("value2");
+			var command = $(this).attr("value3");
 			$.ajax({
 				type: "get",
-				url: "/${basePath}/project/${sid}/${projectCode}/"+profile+"/stopclients.do",
+				url: "/${basePath}/project/${sid}/${projectCode}/"+profile+"/"+command+".do",
 				data:{
 				},
 				dataType:"json",
-				success: function(data) {
-					if(data.returnmsg=="SUCCESS") {
-						//alert(data.echoMessage);
-						$("#alert").css("display", "block");
-						$("#alert_title").text(data.returnmsg);
-						$("#alert_text").text(data.returnmemo);
-					} else {
-	                    $("#alert").css("display", "block");
-						$("#alert_title").text(data.returnmsg);
-						$("#alert_text").text(data.returnmemo);
-	                }
-				}
-			});
-		});
-		
-		//打开客户端
-		$(".startclients").on("click", function() {
-			if(!confirm("是否确定打开客户端（注：此次打开所有客户端）")) {
-				return ;
-			}
-			modelwindow();
-			var profile = $(this).attr("value2");
-			$.ajax({
-				type: "get",
-				url : "/${basePath}/project/${sid}/${projectCode}/"+profile+"/startclients.do", 
-				data: {
-				},
-				dataType: "json",
-				success: function(data) {
-					if(data.returnmsg=="SUCCESS") {
-						//alert(data.echoMessage);
-						$("#alert").css("display", "block");
-						$("#alert_title").text(data.returnmsg);
-						$("#alert_text").text(data.returnmemo);
-					} else {
-	                    $("#alert").css("display", "block");
-						$("#alert_title").text(data.returnmsg);
-						$("#alert_text").text(data.returnmemo);
-	                }
-				}
-			});
-		});
-		
-		//关闭tomcat
-		$(".stoptomcats").on("click", function() {
-			if(!confirm("是否确定关闭tomcat（注：此次关闭所有tomcat）")) {
-				return ;
-			}
-			modelwindow();
-			var profile = $(this).attr("value2");
-			$.ajax({
-				type: "get",
-				url: "/${basePath}/project/${sid}/${projectCode}/"+profile+"/stoptomcats.do",
-				data:{
-				},
-				dataType:"json",
-				success: function(data) {
-					if(data.returnmsg=="SUCCESS") {
-						//alert(data.echoMessage);
-						$("#alert").css("display", "block");
-						$("#alert_title").text(data.returnmsg);
-						$("#alert_text").text(data.returnmemo);
-					} else {
-	                    $("#alert").css("display", "block");
-						$("#alert_title").text(data.returnmsg);
-						$("#alert_text").text(data.returnmemo);
-	                }
-				}
-			});
-		});
-		
-		//打开tomcat
-		$(".starttomcats").on("click", function() {
-			if(!confirm("是否确定打开tomcat（注：此次打开所有tomcat）")) {
-				return ;
-			}
-			modelwindow();
-			var profile = $(this).attr("value2");
-			$.ajax({
-				type: "get",
-				url : "/${basePath}/project/${sid}/${projectCode}/"+profile+"/starttomcats.do", 
-				data: {
-				},
-				dataType: "json",
 				success: function(data) {
 					if(data.returnmsg=="SUCCESS") {
 						//alert(data.echoMessage);
@@ -709,8 +597,8 @@
 	            } else if (index == 2) {
 	            } else if (index == 3) {
 	            } else if (index == 4) {
-	                $(this).html('<a class="delete_branch" value1="' + branchId + '" href="javascript:viod(0);" title="删除">删除</a>'+
-	                '&nbsp;&nbsp;&nbsp;&nbsp;<a class="save_branch" value1="' + branchId + '" href="javascript:viod(0);" title="保存">保存</a>');
+	                $(this).html('<a class="delete_branch" value1="' + branchId + '" href="javascript:void(0);" title="删除">删除</a>'+
+	                '&nbsp;&nbsp;&nbsp;&nbsp;<a class="save_branch" value1="' + branchId + '" href="javascript:void(0);" title="保存">保存</a>');
 	            }
 	        });
 	    });
@@ -759,7 +647,7 @@
 	        });
 	
 	        $.ajax({
-	            type: "GET",
+	            type: "post",
 	            url: "/${basePath}/svnbranch/${sid}/${projectCode}/${profile}/edit.do",
 	            dataType: "json",
 	            data: {
@@ -783,22 +671,30 @@
 	    });
 	
 	    // 源代码设置-->添加或修改源代码设置
+	    $("#repositoryUrl").live("focus", function() {
+		    $("#errormsg2").text("");
+		    $("#errormsg1").text("");
+	    });
+	    $("#checkoutPath").live("focus", function() {
+		    $("#errormsg2").text("");
+		    $("#errormsg1").text("");
+	    });
 	    $("#editSrcBtn").on("click", function() {
 	        var srcId = $("#srcId").val();
 	        var repositoryUrl = $("#repositoryUrl").val();
 	        var checkoutPath = $("#checkoutPath").val();
 		
 			if(repositoryUrl == "") {
-				$("#errormsg1").val("源码svn路径不能为空！");
+				$("#errormsg1").text("源码svn路径不能为空！");
 				return;
 			}
 			if(checkoutPath == "") {
-				$("#errormsg2").val("源代码存放路径不能为空!");
+				$("#errormsg2").text("源代码存放路径不能为空!");
 				return ;
 			}
 			$("#editSrcBtn").attr("disabled", "true");
 	        $.ajax({
-	            type: "GET",
+	            type: "post",
 	            url: "/${basePath}/project/${sid}/${projectCode}/${profile}/srcEdit.do",
 	            dataType: "json",
 	            data: {
@@ -818,17 +714,20 @@
 	        });
 	    });
 	    // 分支设置-->添加分支
+	     $("#branchUrl").live("focus", function() {
+		    $("#errormsg3").text("");
+	    });
 	    $("#addBranchBtn").on("click", function() {
 	
 	        var branchUrl = $("#branchUrl").val();
 			if(branchUrl == "") {
-				$("#errormsg3").val("分支地址不能为空!");
+				$("#errormsg3").text("分支地址不能为空!");
 				return ;
 			}
 			
 			$("#addBranchBtn").attr("disabled", "true");
 	        $.ajax({
-	            type: "GET",
+	            type: "post",
 	            url: "/${basePath}/svnbranch/${sid}/${projectCode}/${profile}/add.do",
 	            dataType: "json",
 	            data: {
@@ -965,7 +864,7 @@
 					<p id="alert_text"></p>
 				</div>
 			
-				<input id="alert_close" type="button" class="shadow_btn mar150_l" value="确定">
+				<input id="alert_close" type="button" class="shadow_btn mar150_l" value="确定" />
 			</div>
 </body>
 </html>

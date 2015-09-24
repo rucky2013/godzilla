@@ -71,6 +71,11 @@ $(function(){
 	$("#login").on("click", function() {
 		dologin();
 	});
+	
+	//alert 弹出框关闭
+	$("#alert_close").on("click", function() {
+		$("#alert").css("display", "none");
+	});
 })
 
 function dologin() {
@@ -84,21 +89,29 @@ function dologin() {
 	} else {
 		password = hex_md5(password);
 		//alert(password);
-		window.location.href = '/${basePath}/user/login/' + username + '/' + password + '.do';
-		/*$.ajax({
-			type : "GET",
-			url : '/${basePath}/user/login/' + username + '/' + password + '.do',
-			dataType : "json",
-			data : {
+		//window.location.href = '/${basePath}/user/login/' + username + '/' + password + '.do'+"?n="+Math.random();
+		//window.location.href = '/${basePath}/user/login/' + encodeURI(username) + '/' + encodeURI(password) + '.do'+"?n="+Math.random();
+		
+		$.ajax({
+			type: "post",
+			url: '/${basePath}/user/login.do',
+			data: {
+				username: username,
+				password: password,
 			},
+			dataType:"json",
 			success : function(data) {
-				if (data == "SUCCESS") {
-
+				if(data.returnmsg=="SUCCESS") {
+					var sid = data.data;
+					window.location.href = '/${basePath}/user/'+ sid +'/home.do';
 				} else {
-					alert("failed");
-				}
-			}
-		});*/
+                    $("#alert").css("display", "block");
+					$("#alert_title").text(data.returnmsg);
+					$("#alert_text").text(data.returnmemo);
+                }
+            }
+       });
+            
 	}
 }
 function isEmpty(obj) {
@@ -137,4 +150,40 @@ function showlogin(){
 		})
 	})
 </script>
+
+<div id="alert" class="shadow_con" style="display:none">
+
+
+				<style>
+			.alert_wrap {
+				overflow: hidden;
+			}
+			
+			.alert_wrap span, .alert_wrap p {
+				<!--float: left;-->
+				display: block;
+				text-align: left;
+				font-size: 14px;
+			}
+			
+			.alert_wrap span {
+				<!--text-align: left;-->
+				height: 32px;
+				width: 100px;
+			}
+			
+			.alert_wrap p {
+				height: auto;
+				width: 340px;
+			}
+			#alert{position:absolute;left:50%;top:50%;padding:20px 10px; z-index:999;width:380px;margin-left:-200px;height:auto;min-height:92px;background:#fff;border:2px solid #ddd;}
+			</style>
+			
+				<div class="alert_wrap">
+					<span id="alert_title"></span>
+					<p id="alert_text"></p>
+				</div>
+			
+				<input id="alert_close" type="button" class="shadow_btn mar150_l" value="确定" />
+			</div>
 </html>

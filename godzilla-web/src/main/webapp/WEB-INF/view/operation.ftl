@@ -32,7 +32,7 @@
                 </table>
             </div>
 			<div class="mainConR r">
-				<h2 id="tab1" class="current">
+				<h2 id="tab1" class="clearfix">
 					<a href="/${basePath}/user/${sid}/home.do" class="a1" title="工作空间">工作空间</a>
 					<#if user.isAdmin = 1>
 					<a href="/${basePath}/user/${sid}/userAuthList.do" class="a2" title="管理权限">管理权限</a>
@@ -46,7 +46,7 @@
                 <thead>
                   <tr>
                     <th width="15%">编号</th>
-                    <th width="15%">用户</th>
+                    <th width="15%">用户名</th>
                     <th width="54%">工作台组</th>
                     <th width="16%" colspan="2">操作</th>
                   </tr>
@@ -62,7 +62,7 @@
                     </#list>
                     </td>
                     <td class="sp" width="8%"><a class="add_btn" href="javascript:void(0);" ><span class="edit">添加用户</span></a></td>
-                    <td class="sp02" width="8%"><a href="/${basePath}/user/${sid}/editWorkDesk.do?editUsername=${uas.username}" ><span class="edit">编辑工作台</span></a></td>
+                    <td class="sp02" width="8%"><a href="/${basePath}/user/${sid}/editWorkDesk.do?id=${uas.id}" ><span class="edit">编辑工作台</span></a></td>
                   </tr>
                   </#list>
                   </tbody>
@@ -77,16 +77,16 @@
                   <form action="" class="clearfix">
                   	<div class="shadow_con">
                     		<div class="user_con clearfix">
-                         		  <label>姓&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;名：</label>
-                         		  <input id="username" type="text" name="username" placeholder="输入内容" />        
+                         		  <label>用&nbsp;&nbsp;户&nbsp;&nbsp;名：</label>
+                         		  <input id="username" type="text" name="username" placeholder="输入用户名(1-12位)" />        
                          </div>
                          <div class="user_con clearfix">
                          		  <label>部&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;门：</label>
-                         		  <input id="departname" type="text" name="departname" placeholder="输入部门" />        
+                         		  <input id="departname" type="text" name="departname" placeholder="输入部门(1-30位)" />        
                          </div>
                          <div class="user_con clearfix">
                          		  <label>密&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;码：</label>
-                         		  <input id="password" type="text" name="password" placeholder="输入密码" />        
+                         		  <input id="password" type="text" name="password" placeholder="输入密码(6-12位英文数字)" />        
                          </div>
                          <div class="user_con clearfix">
                          		  <label>再次确认：</label>
@@ -123,20 +123,42 @@ $(document).ready(function() {
 	$(".add_btn").on("click", function() {
 		showWindow(2);
 	});
+	
+	
 	//提交 用户
 	$("#add_submit").on("click", function() {
 		var username = $("#username").val();
 		var password = $("#password").val();
 		var confirm = $("#confirm").val();
+		var departname = $("#departname").val();
+		
+		if(!isTrueName(username)) {
+			alert("用户名不符合规则");
+			return ;
+		}
+		
+		if(!isPasswd(password)) {
+			alert("密码不符合规则");
+			return ;
+		}
+		if(!isDepartName(departname)) {
+			alert("部门名不符合规则");
+			return ;
+		}
+		if(!(password==confirm))  {
+			alert("两次输入密码不一致");
+			return ;
+		}
 		password = hex_md5(password);
 		confirm = hex_md5(confirm);
 		$.ajax({
-	            type: "GET",
-	            url: "/${basePath}/user/${sid}/addUser.do",
+	            type: "POST",
+	            url: "/${basePath}/user/${sid}/addUser.do"+"?n="+Math.random(),
 	            data: {
 	                username: username,
 	                password: password,
 	                confirm: confirm,
+	                departname :departname,
 	            },
 	            dataType: "json",
 	            success: function(data) {
@@ -150,6 +172,24 @@ $(document).ready(function() {
 	});
 	
 });
+//验证用户名
+function isTrueName(s) {   
+	var patrn=/.{1,12}$/;   
+	if (!patrn.exec(s)) return false 
+	return true 
+}   
+//验证密码
+function isPasswd(s) {   
+	var patrn=/^(\w){6,12}$/;   
+	if (!patrn.exec(s)) return false 
+	return true 
+}   
+//验证部门名
+function isDepartName(s) {   
+	var patrn=/.{1,30}$/;   
+	if (!patrn.exec(s)) return false 
+	return true 
+} 
 </script>
 <script>
 function shadowClose(index) {
