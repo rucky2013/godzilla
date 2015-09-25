@@ -56,7 +56,7 @@ public class MvnController extends GodzillaApplication{
 		
 		processPercent.put(pencentkey, "100");
 		
-		operateLogService.addOperateLog(super.getUser().getUserName(), projectCode, profile, DEPLOY, FAILURE, ReturnCodeEnum.NO_CHANGEPOM.getReturnMsg());
+		operateLogService.addOperateLog(super.getUser().getUserName(), projectCode, profile, DEPLOY, FAILURE, deployReturn.getReturnMsg());
 		return ResponseBodyJson.custom().setAll(deployReturn).build();
 	}
 	

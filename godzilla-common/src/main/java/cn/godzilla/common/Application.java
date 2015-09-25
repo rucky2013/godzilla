@@ -1,6 +1,6 @@
 package cn.godzilla.common;
 
-public class Application {
+public class Application implements Constant{
 	protected boolean isEcho = false;
 	protected static ThreadLocal<String> echoMessageThreadLocal = 
 			new ThreadLocal<String>() {
@@ -23,7 +23,13 @@ public class Application {
 	protected static ThreadLocal<String> mvnBuildThreadLocal = 
 			new ThreadLocal<String>() {
 		protected String initialValue() {
-			return "";
+			return FAILURE;
+		};
+	};
+	protected static ThreadLocal<String> mvnERRORThreadLocal = 
+			new ThreadLocal<String>() {
+		protected String initialValue() {
+			return SUCCESS;
 		};
 	};
 }

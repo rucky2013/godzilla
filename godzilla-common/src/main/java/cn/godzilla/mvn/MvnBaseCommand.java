@@ -67,7 +67,9 @@ public class MvnBaseCommand extends Application implements Constant{
 						String mvnBuild = mvnBuildThreadLocal.get();
 						mvnBuildThreadLocal.set(FAILURE);
 					}
-					
+					if(line1.contains("[ERROR]")) {
+						mvnERRORThreadLocal.set(FAILURE);
+					}
 					logger.info("******MvnBaseCommand.execute-->InputStream******"+line1);
 					
 				}

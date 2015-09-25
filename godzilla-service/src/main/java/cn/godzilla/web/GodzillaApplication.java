@@ -196,6 +196,7 @@ public abstract class GodzillaApplication extends Application implements Constan
 	            	return false;
 	            }
 			} catch (IOException e1) {
+				System.out.println("---httpclient 报错啦=---");
 				e1.printStackTrace();
 			}
 	        if (rs.toString().indexOf("<!--<h5>godzilla</h5>-->") != -1) {

@@ -408,7 +408,7 @@ public class MvnServiceImpl extends GodzillaApplication implements MvnService {
 		} else {
 			tomcatHome = "/app/tomcat";
 		}
-		String str = "sh /home/godzilla/gzl/shell/server/restart_server.sh " + clientIp + " " + tomcatHome;
+		String str = "sh /home/godzilla/gzl/shell/server/restart_server.sh " + clientIp + " " + tomcatHome + " " + project.getWarName();
 		
 		if("godzilla".equals(projectCode)) {
 			flag = true;

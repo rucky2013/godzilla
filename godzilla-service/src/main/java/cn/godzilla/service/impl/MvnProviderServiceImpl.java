@@ -37,9 +37,11 @@ public class MvnProviderServiceImpl extends Application implements MvnProviderSe
 		MvnBaseCommand command = new MvnBaseCommand();
 		flag = command.execute(str, PROJECT_NAME, PROJECT_ENV, USER_NAME);
 		logger.info("mvnBuildThreadLocal:::"	+ mvnBuildThreadLocal.get());
-		String mvnBuild = mvnBuildThreadLocal.get();
+		logger.info("mvnERRORThreadLocal:::"	+ mvnERRORThreadLocal.get());
+		
 		boolean flag2 = mvnBuildThreadLocal.get().equals(SUCCESS)?true:false;
-		if(flag&&flag2) {
+		boolean flag3 = mvnERRORThreadLocal.get().equals(SUCCESS)?true:false;
+		if(flag&&flag2&&flag3) {
 			return RpcResult.create(SUCCESS);
 		} else if(flag){
 			return RpcResult.create(FAILURE);

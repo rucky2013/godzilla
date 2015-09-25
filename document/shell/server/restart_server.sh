@@ -3,6 +3,7 @@
 SHELL_NAME=$0
 IP=$1
 TOMCAT_HOME=$2
+WARDIR=$3
 REMOTE_BASH_PATH=/home/godzilla/gzl/shell/client/restart_client.sh
 PORT=2222
 USER=godzilla
@@ -18,7 +19,7 @@ fi
 echo "[INFO] IP:$IP" ;
 echo "[INFO] TOMCAT_HOME:$TOMCAT_HOME"
 
-ssh -p $PORT $USER@$IP "$REMOTE_BASH_PATH $TOMCAT_HOME"
+ssh -p $PORT $USER@$IP "$REMOTE_BASH_PATH $TOMCAT_HOME $WARDIR"
 
 exit ;
 

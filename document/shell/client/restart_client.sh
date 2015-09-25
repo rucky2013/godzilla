@@ -4,6 +4,7 @@
 
 SHELL_NAME=$0
 TOMCAT_HOME=$1
+WARDIR=$2
 TOMCAT_BIN=
 
 if [ "$TOMCAT_HOME" == "" ] ; then
@@ -42,6 +43,11 @@ else
   echo "[INFO] Stop Tomcat Success！"
 fi
 echo "[INFO] 启动TOMCAT......"
+echo "WARDIR: $WARDIR"
+DIR="./webapps/$WARDIR"
+echo "DIR: $DIR"
+cd $TOMCAT_HOME
+rm -rf $DIR
 cd $TOMCAT_BIN
 ./startup.sh ;
 
