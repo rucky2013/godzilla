@@ -22,6 +22,22 @@ java_env() {
 
 ## scp脚本工具到客户端
 scp_gzl() {
+	ssh -p 2222 godzilla@10.100.142.66 "rm -rf /home/godzilla/gzl"
+	ssh -p 2222 godzilla@10.100.142.71 "rm -rf /home/godzilla/gzl"
+	ssh -p 2222 godzilla@10.100.142.72 "rm -rf /home/godzilla/gzl"
+	ssh -p 2222 godzilla@10.100.142.73 "rm -rf /home/godzilla/gzl"
+	ssh -p 2222 godzilla@10.100.142.74 "rm -rf /home/godzilla/gzl"
+	ssh -p 2222 godzilla@10.100.142.75 "rm -rf /home/godzilla/gzl"
+	ssh -p 2222 godzilla@10.100.142.76 "rm -rf /home/godzilla/gzl"
+	ssh -p 2222 godzilla@10.100.142.77 "rm -rf /home/godzilla/gzl"
+	ssh -p 2222 godzilla@10.100.142.78 "rm -rf /home/godzilla/gzl"
+	ssh -p 2222 godzilla@10.100.142.79 "rm -rf /home/godzilla/gzl"
+	ssh -p 2222 godzilla@10.100.142.80 "rm -rf /home/godzilla/gzl"
+	ssh -p 2222 godzilla@10.100.142.81 "rm -rf /home/godzilla/gzl"
+	ssh -p 2222 godzilla@10.100.142.82 "rm -rf /home/godzilla/gzl"
+	ssh -p 2222 godzilla@10.100.142.83 "rm -rf /home/godzilla/gzl"
+	ssh -p 2222 godzilla@10.100.142.84 "rm -rf /home/godzilla/gzl"
+	
 	scp -P 2222 -r /home/godzilla/gzl/gzl godzilla@10.100.142.66:/home/godzilla/ 
 	scp -P 2222 -r /home/godzilla/gzl/gzl godzilla@10.100.142.71:/home/godzilla/ 
 	scp -P 2222 -r /home/godzilla/gzl/gzl godzilla@10.100.142.72:/home/godzilla/ 
@@ -37,6 +53,22 @@ scp_gzl() {
 	scp -P 2222 -r /home/godzilla/gzl/gzl godzilla@10.100.142.82:/home/godzilla/
 	scp -P 2222 -r /home/godzilla/gzl/gzl godzilla@10.100.142.83:/home/godzilla/
 	scp -P 2222 -r /home/godzilla/gzl/gzl godzilla@10.100.142.84:/home/godzilla/
+	
+	ssh -p 2222 godzilla@10.100.142.66 "chmod 755 -R /home/godzilla/gzl"
+	ssh -p 2222 godzilla@10.100.142.71 "chmod 755 -R /home/godzilla/gzl"
+	ssh -p 2222 godzilla@10.100.142.72 "chmod 755 -R /home/godzilla/gzl"
+	ssh -p 2222 godzilla@10.100.142.73 "chmod 755 -R /home/godzilla/gzl"
+	ssh -p 2222 godzilla@10.100.142.74 "chmod 755 -R /home/godzilla/gzl"
+	ssh -p 2222 godzilla@10.100.142.75 "chmod 755 -R /home/godzilla/gzl"
+	ssh -p 2222 godzilla@10.100.142.76 "chmod 755 -R /home/godzilla/gzl"
+	ssh -p 2222 godzilla@10.100.142.77 "chmod 755 -R /home/godzilla/gzl"
+	ssh -p 2222 godzilla@10.100.142.78 "chmod 755 -R /home/godzilla/gzl"
+	ssh -p 2222 godzilla@10.100.142.79 "chmod 755 -R /home/godzilla/gzl"
+	ssh -p 2222 godzilla@10.100.142.80 "chmod 755 -R /home/godzilla/gzl"
+	ssh -p 2222 godzilla@10.100.142.81 "chmod 755 -R /home/godzilla/gzl"
+	ssh -p 2222 godzilla@10.100.142.82 "chmod 755 -R /home/godzilla/gzl"
+	ssh -p 2222 godzilla@10.100.142.83 "chmod 755 -R /home/godzilla/gzl"
+	ssh -p 2222 godzilla@10.100.142.84 "chmod 755 -R /home/godzilla/gzl"
 }
 
 
@@ -145,7 +177,8 @@ case $1 in
 		java_env
 		scp_gzl
 		killclients
-		startclients
+		##startclients
+		startclientsdebug
 		exit_code=$?
 		exit $exit_code		
 	;;
@@ -158,7 +191,8 @@ case $1 in
 	startclients)
 		java_env
 		killclients
-		startclients
+		##startclients
+		startclientsdebug
 		exit_code=$?
 		exit $exit_code
 	;;

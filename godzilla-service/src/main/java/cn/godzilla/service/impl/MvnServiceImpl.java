@@ -180,7 +180,12 @@ public class MvnServiceImpl extends GodzillaApplication implements MvnService {
 			}*/
 			// bug:tomcat hot deploy cannot success for netty-project
 			//workaround: restart for test,project start success.
-			flag4 = this.restartTomcat(projectCode, profile);
+			if(TEST_PROFILE.equals(profile)) {
+				flag4 = this.restartTomcat(projectCode, profile);
+			} else {
+				flag4 = true;
+			}
+			
 			
 			if(flag4) {
 				return ReturnCodeEnum.getByReturnCode(OK_MVNDEPLOY);

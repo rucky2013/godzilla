@@ -82,6 +82,9 @@ function dologin() {
 	var username = $("#username").val();
 	var password = $("#password").val();
 	
+	username = username.replace(/(^\s*)|(\s*$)/g, "");
+	password = password.replace(/(^\s*)|(\s*$)/g, "");
+	
 	if(isEmpty(username)) {
 		$("#message").text("*用户名为空");
 	} else if(isEmpty(password)) {

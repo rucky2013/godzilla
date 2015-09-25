@@ -145,7 +145,7 @@
 									<tr>
 										<td width="80" class="paddingR0">部署操作：</td>
 										<td class="bg1">
-											<span class="spanArrange"><a class="deploy" href="javascript:void(0);" value1="${project.checkoutPath}" value2="QUASIPRODUCT" title="打包">打包</a></span>
+											<span class="spanArrange"><a class="deploy" href="javascript:void(0);" value1="${project.checkoutPath!''}" value2="QUASIPRODUCT" title="打包">打包</a></span>
 											<span class="spanUseAgain"><a href="javascript:void(0);" class="download" value2="QUASIPRODUCT" title="下载war包">下载war包</a></span>
 										</td>
 									</tr>
@@ -173,7 +173,7 @@
 									<tr>
 										<td width="80" class="paddingR0">部署操作：</td>
 										<td class="bg1">
-											<span class="spanArrange"><a class="deploy" href="javascript:void(0);" value1="${project.checkoutPath}!''" value2="PRODUCT" title="打包">打包</a></span>
+											<span class="spanArrange"><a class="deploy" href="javascript:void(0);" value1="${project.checkoutPath}" value2="PRODUCT" title="打包">打包</a></span>
 											<span class="spanUseAgain"><a href="javascript:void(0);" class="download" value2="PRODUCT" title="下载war包">下载war包</a></span>
 										</td>
 									</tr>
