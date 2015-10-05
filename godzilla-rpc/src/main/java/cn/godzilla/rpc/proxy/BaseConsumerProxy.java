@@ -17,6 +17,8 @@ import cn.godzilla.rpc.util.Util;
 public abstract class BaseConsumerProxy {
 	
 	private static final AtomicLong count = new AtomicLong(0);
+	private static final AtomicLong uniqueId = new AtomicLong(0);
+	public static Map<String, Map<String, ChannelFuture>> locks = new ConcurrentHashMap<String, Map<String, ChannelFuture>>();
 	
 	private ThreadLocal<ChannelFuture> channelFutureLocal;
 	private String className;
@@ -61,6 +63,7 @@ public abstract class BaseConsumerProxy {
 		parameters.setInterfaceName(interfaceName);
 		parameters.setParameterTypes(clazzs);
 		parameters.setParameters(params);
+		parameters.setId(uniqueId.getAndIncrement());
 		
 		int time = 0;
 		while(!channelFutureLocal.get().getChannel().isConnected()) {
@@ -81,8 +84,12 @@ public abstract class BaseConsumerProxy {
 			byte[] data = Serializer.serialize(parameters);
 			
 			channelFutureLocal.get().getChannel().write(data);
-			synchronized(channelFutureLocal.get().getChannel()) {
-				channelFutureLocal.get().getChannel().wait();
+			Map<String, ChannelFuture> lock = new HashMap<String, ChannelFuture>();
+			lock.put("ChannelFuture", channelFutureLocal.get())
+			locks.put(parameters.getId(), lock);
+			
+			synchronized(lock) {
+				lock.wait();
 			}
 			data = ClientFactory.getClient().getResult(
 					channelFutureLocal.get().getChannel());
