@@ -191,9 +191,10 @@
   </update>
   
   <update id="changeStatusByNewverify"  parameterType="java.util.Map" >
-update t_g_properties_config a INNER JOIN t_g_properties_config b on a.pro_key = b.pro_key and a.project_code = b.project_code and a.create_by = b.create_by and a.profile = b.profile
-set a.status = 3
-where b.project_code = #{project_code} and b.create_by = #{create_by} and b.status = 0 and b.profile = #{profile} and a.status = 1;
+update t_g_properties_config a 
+left JOIN t_g_properties_config b on a.pro_key = b.pro_key and a.project_code = b.project_code and a.profile = b.profile
+				set a.status = 3
+					where b.project_code = #{project_code}  and b.profile = #{profile} and a.status = 1 and b.create_by = #{create_by}  and b.status = 0;
   </update>
   
    <update id="updatePropLastValue"  parameterType="java.util.Map" >

@@ -3,8 +3,11 @@ package cn.godzilla.web;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.locks.ReentrantLock;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletRequest;
@@ -37,6 +40,13 @@ public abstract class GodzillaApplication extends Application implements Constan
 	protected static ServletContext context;
 	protected List<String> escapeUrls = new ArrayList<String>();
 	
+	/*
+	 * -2.限制并发　发布
+	 * 测试环境　每个项目　只允许　一个人发布（如果互相依赖项目　并发发布，还是会出现问题）
+	 * 准生产	　所有项目只允许一个人发布
+	 * 生产　　　所有项目只允许一个人发布
+	 */
+	protected static Map<String, ReentrantLock> deploy_lock = new HashMap<String, ReentrantLock>(); 
 	//部署进度百分比  <用户名-项目名-profile,百分比>
 	protected static ConcurrentHashMap<String, String> processPercent = new ConcurrentHashMap<String, String>(); 
 	

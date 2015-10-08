@@ -2,6 +2,8 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>显示编辑工作台页面-哥斯拉</title>
 <link type="text/css" href="/${basePath}/css/meta.css" rel="stylesheet"/>
+<link rel="shortcut icon" href="/${basePath}/img/gesilla.jpg">
+
 </head>
 <body id="operation" class="operation">
 		<div class="main">

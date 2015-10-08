@@ -4,6 +4,8 @@
 	<meta charset="UTF-8">
 	<title>哥斯拉后台开发系统</title>
 	<link rel="stylesheet" type="text/css" href="/${basePath}/css/meta.css">
+	<link rel="shortcut icon" href="/${basePath}/img/gesilla.jpg">
+	
 </head>
 <body>
 	<div class="login-win-body">

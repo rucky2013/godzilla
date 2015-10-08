@@ -65,47 +65,44 @@ public class ProxyFactory {
 		
 	public static Object getConsumerProxy(Class<?> clazz, String ip) {
 		Object obj = clazzMap.get(clazz.getName()+ip);
-		if(obj ==null) {
-			synchronized (clazz) {
-				if(clazzMap.contains(clazz.getName()+ip)) {
-					return clazzMap.get(clazz.getName()+ip);
-				} else {
-					Enhancer enhancer = new Enhancer();
-					enhancer.setSuperclass(BaseConsumerProxy.class);
-					enhancer.setInterfaces(new Class[] {clazz});
-					enhancer.setCallbacks(new Callback[] {
-							new MethodInterceptor() {
-								
-								public Object intercept(Object obj,
-										Method method, Object[] objs,
-										MethodProxy methodproxy)throws Throwable {
-									return ((BaseConsumerProxy)obj)
-											.doInterval(method.getDeclaringClass()
-													.getName()
-													+"." + method.getName(), 
-													objs);
-								}
-							}, NoOp.INSTANCE});
-					enhancer.setCallbackFilter(new CallbackFilter() {
-						
-						public int accept(Method obj) {
-							if(obj.getName().equals("doInterval")) {
-								return 1;
-							} else {
-								return 0;
-							}
-						}
-					});
-					
-					obj = enhancer.create(new Class[] {String.class, String.class},
-							new Object[] {clazz.getName(), ip});
-					clazzMap.put(clazz.getName()+ip, obj);
-					return obj;
-					
-				}
-			}
+		System.out.println("clazz.getName()：----"+clazz.getName());
+		if(clazzMap.contains(clazz.getName()+ip)) {
+			System.out.println("clazzMap.contains：----YES::"+clazz.getName()+ip);
+			return clazzMap.get(clazz.getName()+ip);
 		} else {
+			System.out.println("clazz.getName()：----NO::"+clazz.getName()+ip);
+			Enhancer enhancer = new Enhancer();
+			enhancer.setSuperclass(BaseConsumerProxy.class);
+			enhancer.setInterfaces(new Class[] {clazz});
+			enhancer.setCallbacks(new Callback[] {
+					new MethodInterceptor() {
+						
+						public Object intercept(Object obj,
+								Method method, Object[] objs,
+								MethodProxy methodproxy)throws Throwable {
+							return ((BaseConsumerProxy)obj)
+									.doInterval(method.getDeclaringClass()
+											.getName()
+											+"." + method.getName(), 
+											objs);
+						}
+					}, NoOp.INSTANCE});
+			enhancer.setCallbackFilter(new CallbackFilter() {
+				
+				public int accept(Method obj) {
+					if(obj.getName().equals("doInterval")) {
+						return 1;
+					} else {
+						return 0;
+					}
+				}
+			});
+			
+			obj = enhancer.create(new Class[] {String.class, String.class},
+					new Object[] {clazz.getName(), ip});
+			clazzMap.put(clazz.getName()+ip, obj);
 			return obj;
+			
 		}
 	} 
 	

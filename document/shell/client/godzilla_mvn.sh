@@ -1,5 +1,7 @@
 #!/bin/bash
-
+##errorcode
+##1.
+##4.过滤配置文件,有未替换配置项 如果含有${XX}退出
 HOME=$HOME
 
 SHELL_NAME=$0
@@ -59,17 +61,31 @@ deploy()
 	if [ -z $POM_PATH ] || [ -z $PROJECT_ENV ] ; then
 		echo "[ERROR!!!!]$BEGIN_STR"
 		echo "[ERROR!!!!] ARGS ERROR.........ERROR!......"
+		echo 1
+		echo 1
 		exit 1
 	fi 
 	echo $srcpath
 	cd $srcpath
 	echo $PROJECT_NAME
 	cd $PROJECT_NAME
+	
 	/app/maven/bin/mvn versions:set -DnewVersion=${PARENT_VERSION}
 	/app/maven/bin/mvn -N versions:update-child-modules
 	
+	/app/maven/bin/mvn clean package -f $POM_PATH -P$PROJECT_ENV
+	
+	#过滤配置文件,如果有未替换配置项 如果含有${XX}则退出
+	find . \( -name "*.properties" -o -name "*.xml" \) -type f|xargs grep -ri "\${.*}$" -l |grep -v "src/main" > props.log
+	if [ -s props.log ]; then
+		echo 4
+		echo 4
+		PROPS＝""
+		exit 4
+	fi
+	
 	#/app/maven/bin/mvn clean deploy -f $POM_PATH -P$PROJECT_ENV
-	/app/maven/bin/mvn clean install -f $POM_PATH -P$PROJECT_ENV
+	/app/maven/bin/mvn install -f $POM_PATH -P$PROJECT_ENV
 }
 deploy1()
 {
@@ -105,6 +121,8 @@ case $ACTION in
 	;;
 	*)
 		echo "ERROR !ARGS ERROR ,For Help  /bin/sh $SHELL_NAME -help "
+		echo 1
+		echo 1
 		exit 1
 	;;
 esac

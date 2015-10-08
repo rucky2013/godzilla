@@ -29,7 +29,16 @@ public class MvnBaseCommand extends Application implements Constant{
 			inThreadPrint1(p, username);
 			
 			p.waitFor();
+			try{
+				shellReturnThreadLocal.set(p.exitValue()+"");
+				logger.info("********Process.exitValue() is *******"+shellReturnThreadLocal.get());
+			} catch(IllegalThreadStateException e1) {
+				logger.info("IllegalThreadStateException");
+			}
+			
 			p.destroy();
+			shellReturnThreadLocal.set(p.exitValue()+"");
+			logger.info("********Process.exitValue() is *******"+shellReturnThreadLocal.get());
 			
 		} catch(Exception e) {
 			logger.info(e.getMessage()) ;

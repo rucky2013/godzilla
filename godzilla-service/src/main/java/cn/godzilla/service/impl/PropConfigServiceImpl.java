@@ -285,9 +285,10 @@ public class PropConfigServiceImpl implements PropConfigService {
 			}
 			/**
 			 * 测试语句   将 新审核的 配置  所对应的 旧配置的条目 设为 失效  status = 3
-			 * update t_g_properties_config a INNER JOIN t_g_properties_config b on a.pro_key = b.pro_key
-			 * set a.status = 3
-			 * where b.project_code = 'godzilla' and b.create_by = 'wanglin' and b.status = 0 and b.profile = 'TEST' and a.status = 1;
+			 * update t_g_properties_config a 
+		left JOIN t_g_properties_config b on a.pro_key = b.pro_key and a.project_code = b.project_code and a.profile = b.profile
+				set a.status = 3
+					where b.project_code = #{project_code}  and b.profile = #{profile} and a.status = 1 and b.create_by = #{create_by}  and b.status = 0;
 			 */
 			int dbReturn1 = dao.changeStatusByNewverify(parameterMap);
 			

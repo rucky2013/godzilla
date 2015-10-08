@@ -4,6 +4,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>项目主操作页-哥斯拉</title>
 <link type="text/css" href="/${basePath}/css/meta.css" rel="stylesheet" />
+<link rel="shortcut icon" href="/${basePath}/img/gesilla.jpg">
 </head>
 <body id="gesila1">
 	<div class="main">
@@ -80,7 +81,10 @@
 									<tr>
 										<td width="80" class="paddingR0">部署操作：</td>
 										<td class="bg1">
+										<#if projectCode = 'xuanyuan'>
+										<#else>
 											<span class="spanArrange"><a class="deploy" href="javascript:void(0);" value1="${project.checkoutPath}" value2="TEST" title="部署">部署</a></span>
+										</#if>
 											<span class="spanUseAgain"><a href="javascript:void(0);" class="restart" value2="TEST" title="重新启动">重新启动</a></span>
 											<span class="spanUseAgain"><a href="javascript:void(0);" class="download" value2="TEST" title="下载war包">下载war包</a></span>
 										</td>
@@ -145,8 +149,11 @@
 									<tr>
 										<td width="80" class="paddingR0">部署操作：</td>
 										<td class="bg1">
+										<#if projectCode = 'xuanyuan'>
+										<#else>
 											<span class="spanArrange"><a class="deploy" href="javascript:void(0);" value1="${project.checkoutPath!''}" value2="QUASIPRODUCT" title="打包">打包</a></span>
 											<span class="spanUseAgain"><a href="javascript:void(0);" class="download" value2="QUASIPRODUCT" title="下载war包">下载war包</a></span>
+										</#if>
 										</td>
 									</tr>
 								</tbody>
@@ -173,8 +180,11 @@
 									<tr>
 										<td width="80" class="paddingR0">部署操作：</td>
 										<td class="bg1">
-											<span class="spanArrange"><a class="deploy" href="javascript:void(0);" value1="${project.checkoutPath}" value2="PRODUCT" title="打包">打包</a></span>
-											<span class="spanUseAgain"><a href="javascript:void(0);" class="download" value2="PRODUCT" title="下载war包">下载war包</a></span>
+											<#if projectCode = 'xuanyuan'>
+											<#else>
+												<span class="spanArrange"><a class="deploy" href="javascript:void(0);" value1="${project.checkoutPath}" value2="PRODUCT" title="打包">打包</a></span>
+												<span class="spanUseAgain"><a href="javascript:void(0);" class="download" value2="PRODUCT" title="下载war包">下载war包</a></span>
+											</#if>
 										</td>
 									</tr>
 								</tbody>
@@ -338,7 +348,7 @@
 							<option value=".RELEASE">.RELEASE</option>
 	              		</select>
 					</div>
-					<input id="deployBtn" type="button" class="shadow_btn mar150_l" value="部署" />
+					<input id="deployBtn" type="button" class="shadow_btn mar150_l" value="部署(打包)" />
 				</div>
 			</div>
 			
@@ -454,6 +464,10 @@
 	        var profile =  $("#value22").val();
 			var parentVersion = $("#parentVersion").val();
 			var parentVersionSuffix = $("#parentVersionSuffix").val();
+			
+			$("#process").width(0);
+			$("#processText").text("0%");
+			
 	        $.ajax({
 	            type: "POST",
 	            url: "/${basePath}/mvn/${sid}/${projectCode}/" + profile + "/deploy.do",
@@ -470,6 +484,8 @@
 					$("#processText").text("100%");
 					timeout = false;
 					if (data == "SUCCESS") {
+						timeout = false;
+						
 						$("#process").width(0);
 						$("#processText").text("0%");
 						
@@ -477,6 +493,7 @@
 						$("#alert_title").text(data.returnmsg);
 						$("#alert_text").text(data.returnmemo);
 	                } else {
+	                	timeout = false;
 	                    $("#alert").css("display", "block");
 						$("#alert_title").text(data.returnmsg);
 						$("#alert_text").text(data.returnmemo);

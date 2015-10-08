@@ -21,6 +21,12 @@ public class MvnProviderServiceImpl extends Application implements MvnProviderSe
 		logger.info("mvnBuildThreadLocal:::"	+ mvnBuildThreadLocal.get());
 		logger.info("mvnERRORThreadLocal:::"	+ mvnERRORThreadLocal.get());
 		
+		//判断　是否含有${XX}未设置配置项
+		boolean flag4 = shellReturnThreadLocal.get().equals("4")?true:false;
+		if(flag4) {
+			return RpcResult.create(NOSETPROPS); 
+		}
+		
 		boolean flag2 = mvnBuildThreadLocal.get().equals(SUCCESS)?true:false;
 		boolean flag3 = mvnERRORThreadLocal.get().equals(SUCCESS)?true:false;
 		if(flag&&flag2&&flag3) {

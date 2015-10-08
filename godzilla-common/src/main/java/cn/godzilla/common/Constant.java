@@ -11,6 +11,7 @@ public interface Constant {
 	public final String SUCCESS = "SUCCESS";
 	public final String FAILURE = "FAILURE";
 	public final String BUILDFAILURE = "BUILDFAILURE";
+	public final String NOSETPROPS = "NOSETPROPS";
 	public final String AUDITOR_TEXT = "审核通过";
 	public final int DEFAULT_TIMEOUT = 50;//tomcat启动超时时间(second)
 	/**
@@ -109,7 +110,8 @@ public interface Constant {
 	public final static String NO_SVNMERGE = "100031";
 	public final static String NO_MVNBUILD = "100032";
 	public final static String NO_COMMON = "100033";
-	
+	public final static String NO_CONCURRENCEDEPLOY = "100034";
+	public final static String NO_MVNSETPROPS = "100035";
 	
 	public final static String OK_AJAX = "200000";
 	public final static String OK_CHECKUSER = "200001";

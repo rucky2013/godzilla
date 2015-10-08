@@ -1,7 +1,7 @@
 package cn.godzilla.web;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.Lock;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -35,7 +35,7 @@ public class MvnController extends GodzillaApplication{
 	@Autowired
 	private OperateLogService operateLogService;
 	/**
-	 * 部署
+	 * 部署(打包)
 	 * 源码路径/项目名/环境类型/
 	 * @param request
 	 * @param response
@@ -51,9 +51,9 @@ public class MvnController extends GodzillaApplication{
 		String parentVersionSuffix = StringUtil.getReqPrameter(request, "parentVersionSuffix", "");
 		
 		String pencentkey = sid + "-" + projectCode + "-" + profile;
+		
 		processPercent.put(pencentkey, "0");
 		ReturnCodeEnum deployReturn = mvnService.doDeploy(srcUrl, projectCode, profile, parentVersion+parentVersionSuffix);
-		
 		processPercent.put(pencentkey, "100");
 		
 		operateLogService.addOperateLog(super.getUser().getUserName(), projectCode, profile, DEPLOY, deployReturn.getStatus(), deployReturn.getReturnMsg());

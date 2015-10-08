@@ -8,6 +8,8 @@ import java.io.FilenameFilter;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.Lock;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -62,6 +64,30 @@ public class MvnServiceImpl extends GodzillaApplication implements MvnService {
 	
 	@Override
 	public ReturnCodeEnum doDeploy(String srcUrl, String projectCode, String profile, String parentVersion) {
+		
+		/*
+		 * -2.限制并发　发布
+		 * 测试环境　每个项目　只允许　一个人发布（如果互相依赖项目　并发发布，还是会出现问题）
+		 * 准生产	　所有项目只允许一个人发布
+		 * 生产　　　所有项目只允许一个人发布
+		 */
+		Lock lock = null;
+		boolean hasAC = false;
+		try {
+			if(profile.equals(TEST_PROFILE)) {
+				lock = super.deploy_lock.get(projectCode);
+				hasAC = lock.tryLock(5, TimeUnit.SECONDS);
+				if(!hasAC) 
+					return ReturnCodeEnum.getByReturnCode(NO_CONCURRENCEDEPLOY);
+			} else {
+				lock = super.deploy_lock.get(profile);
+				hasAC = lock.tryLock(5, TimeUnit.SECONDS);
+				if(!hasAC) 
+					return ReturnCodeEnum.getByReturnCode(NO_CONCURRENCEDEPLOY);
+			}
+			
+		
+		
 		String sid = super.getSid();
 		String pencentkey = sid + "-" + projectCode + "-" + profile;
 		
@@ -71,7 +97,7 @@ public class MvnServiceImpl extends GodzillaApplication implements MvnService {
 		ClientConfig clientconfig = clientConfigService.queryDetail(projectCode, profile);
 		String IP = clientconfig.getRemoteIp();
 		/*
-		 * -1.svn合并  
+		 * -1.svn合并  只有测试环境需要branches 线上直接使用trunk版本
 		 * depresed-1.svn合并提交主干  
 		 *  不应该提交  20150820
 		 * if svn commit success or svn no changecommit
@@ -193,11 +219,27 @@ public class MvnServiceImpl extends GodzillaApplication implements MvnService {
 				return ReturnCodeEnum.getByReturnCode(NO_MVNDEPLOY);
 			}
 			
-		} else if(flag1) {
-		} else if(flag2) {
-			if(result.equals(BUILDFAILURE)) {
+		} else if(!flag1) {
+		} else if(!flag2) {
+			if(result.getRpcMsg().equals(BUILDFAILURE)) {
 				return ReturnCodeEnum.getByReturnCode(NO_MVNBUILD);
+			} else if(result.getRpcMsg().equals(NOSETPROPS)){
+				return ReturnCodeEnum.getByReturnCode(NO_MVNSETPROPS);
 			}
+			
+		} 
+		
+		
+		} catch(InterruptedException e) {
+			e.printStackTrace();
+			return ReturnCodeEnum.getByReturnCode(NO_CONCURRENCEDEPLOY);
+		} finally {
+			try {
+				lock.unlock();
+			} catch(IllegalMonitorStateException e1) {
+				return ReturnCodeEnum.getByReturnCode(NO_CONCURRENCEDEPLOY);
+			}
+			
 		}
 		return ReturnCodeEnum.getByReturnCode(NO_MVNDEPLOY);
 	}
@@ -228,6 +270,8 @@ public class MvnServiceImpl extends GodzillaApplication implements MvnService {
 		}
 		if(flag2) {
 			mvnCmdLogService.addMvnCmdLog(username, projectCode, profile, commands, "mvn deploy 执行成功");
+		} else if(NOSETPROPS.equals(result.getRpcMsg())) {
+			mvnCmdLogService.addMvnCmdLog(username, projectCode, profile, commands, "mvn deploy 执行失败, 含有${XX}未设置配置项");
 		} else {
 			mvnCmdLogService.addMvnCmdLog(username, projectCode, profile, commands, "mvn deploy 执行失败");
 		}

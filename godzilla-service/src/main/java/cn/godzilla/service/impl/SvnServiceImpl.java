@@ -151,6 +151,10 @@ public class SvnServiceImpl extends GodzillaApplication implements SvnService {
 		} else {
 			branches = branches.substring(0, branches.length()-1);
 		}
+		//准生产 与生产环境  直接使用trunk 版本
+		if(!profile.equals("TEST")) {
+			branches = EMPTY_BRANCH;
+		}
 		
 		String callbackUrl = "http://localhost:8080/process-callback.do";
 		

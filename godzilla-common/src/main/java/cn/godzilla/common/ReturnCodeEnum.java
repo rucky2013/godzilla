@@ -39,6 +39,10 @@ public enum ReturnCodeEnum {
 	NO_DELETEBRANCH("100030", "删除分支失败"),
 	NO_SVNMERGE("100031", "合并分支失败"),
 	NO_MVNBUILD("100032", "mvn build 失败"),
+	NO_COMMON("100033", "公共异常:后台错误(异常处日志未处理)"),
+	NO_CONCURRENCEDEPLOY("100034", "其他人正在发布，请等待一会重试"),
+	NO_MVNSETPROPS("100035", "mvn build 失败:xml,properties中含有${xx}未设置配置项"),
+	
 	OK_SUCCESS("200000", "SUCCESS"),
 	//user模块
 	OK_CHECKUSER("200001","验证用户成功"),

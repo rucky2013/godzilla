@@ -19,13 +19,13 @@ import cn.godzilla.rpc.util.Util;
 
 public abstract class BaseConsumerProxy {
 	
-	private static final AtomicLong count = new AtomicLong(0);
-	private static final AtomicLong uniqueId = new AtomicLong(0);
+	protected static final AtomicLong count = new AtomicLong(0);
+	protected static final AtomicLong uniqueId = new AtomicLong(0);
 	public static Map<String, Map<String, Object>> locks = new ConcurrentHashMap<String, Map<String, Object>>();
 	
-	private ThreadLocal<ChannelFuture> channelFutureLocal;
-	private String className;
-	private String ip;
+	protected ThreadLocal<ChannelFuture> channelFutureLocal;
+	protected String className;
+	protected String ip;
 	static {
 		Thread thread = new Thread(new Runnable() {
 			
@@ -77,8 +77,9 @@ public abstract class BaseConsumerProxy {
 				e1.printStackTrace();
 			}
 			if(time++>10) {
-				ProxyFactory.clazzMap.remove(className + ip);
+				Object rm = ProxyFactory.clazzMap.remove(className + ip);
 				System.out.println("channelFutureLocal.get().getChannel().isConnected() 连接失败 className:"+className  + "--ip:"+ip);
+				System.out.println("channelFutureLocal.get().getChannel().isConnected() 连接失败 rm:---|"+rm);
 				throw new RpcException("channelFutureLocal.get().getChannel().isConnected() 连接失败  beyond 10 time try is connected");
 			}
 		}

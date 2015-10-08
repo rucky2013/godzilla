@@ -22,7 +22,6 @@ public interface MvnService extends Constant{
 	 * @return OK_MVNDEPLOY, NO_MVNDEPLOY, NO_CHANGEPOM, 
 	 */
 	ReturnCodeEnum doDeploy(String srcUrl, String projectCode, String profile, String parentVersion);
-	
 	/**
 	 * 部署项目进行进度百分比
 	 * @param sid
@@ -35,4 +34,6 @@ public interface MvnService extends Constant{
 	ReturnCodeEnum downLoadWar(HttpServletResponse response, String projectCode, String profile);
 	
 	public boolean restartTomcat(String projectCode, String profile) ;
+
+	
 }
