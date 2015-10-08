@@ -44,7 +44,7 @@ fi
 BEGIN_STR="..................................."
 
 source $HOME/.bash_profile
-
+/app/maven/bin/mvn --version
 info()
 {
 	echo "SHELL_NAME $SHELL_NAME"

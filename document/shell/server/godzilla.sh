@@ -177,8 +177,8 @@ case $1 in
 		java_env
 		scp_gzl
 		killclients
-		##startclients
-		startclientsdebug
+		startclients
+		##startclientsdebug
 		exit_code=$?
 		exit $exit_code		
 	;;
@@ -191,8 +191,8 @@ case $1 in
 	startclients)
 		java_env
 		killclients
-		##startclients
-		startclientsdebug
+		startclients
+		##startclientsdebug
 		exit_code=$?
 		exit $exit_code
 	;;

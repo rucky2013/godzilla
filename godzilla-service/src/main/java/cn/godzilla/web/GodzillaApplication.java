@@ -5,8 +5,6 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletRequest;
@@ -26,7 +24,6 @@ import cn.godzilla.common.BusinessException;
 import cn.godzilla.common.Constant;
 import cn.godzilla.common.ReturnCodeEnum;
 import cn.godzilla.common.StringUtil;
-import cn.godzilla.model.ClientConfig;
 import cn.godzilla.model.FunRight;
 import cn.godzilla.model.User;
 import cn.godzilla.service.FunRightService;
@@ -43,6 +40,12 @@ public abstract class GodzillaApplication extends Application implements Constan
 	//部署进度百分比  <用户名-项目名-profile,百分比>
 	protected static ConcurrentHashMap<String, String> processPercent = new ConcurrentHashMap<String, String>(); 
 	
+	/*protected static ThreadLocal<ConcurrentHashMap<String, String>> processPercent = new ThreadLocal<ConcurrentHashMap<String, String>> () {
+		protected ConcurrentHashMap<String, String> initialValue() {
+			return new ConcurrentHashMap<String, String>();
+		};
+	}; //不使用原因：前台进度条 无法获得进度，不是一个线程
+	*/
 	private static ThreadLocal<String> sidThreadLocal = new ThreadLocal<String> () {
 		protected String initialValue() {
 			return "";

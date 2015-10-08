@@ -1,7 +1,10 @@
 package cn.godzilla.rpc.proxy;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 
 import org.jboss.netty.channel.ChannelFuture;
@@ -18,7 +21,7 @@ public abstract class BaseConsumerProxy {
 	
 	private static final AtomicLong count = new AtomicLong(0);
 	private static final AtomicLong uniqueId = new AtomicLong(0);
-	public static Map<String, Map<String, ChannelFuture>> locks = new ConcurrentHashMap<String, Map<String, ChannelFuture>>();
+	public static Map<String, Map<String, Object>> locks = new ConcurrentHashMap<String, Map<String, Object>>();
 	
 	private ThreadLocal<ChannelFuture> channelFutureLocal;
 	private String className;
@@ -63,7 +66,7 @@ public abstract class BaseConsumerProxy {
 		parameters.setInterfaceName(interfaceName);
 		parameters.setParameterTypes(clazzs);
 		parameters.setParameters(params);
-		parameters.setId(uniqueId.getAndIncrement());
+		parameters.setId(uniqueId.getAndIncrement()+"");
 		
 		int time = 0;
 		while(!channelFutureLocal.get().getChannel().isConnected()) {
@@ -84,16 +87,16 @@ public abstract class BaseConsumerProxy {
 			byte[] data = Serializer.serialize(parameters);
 			
 			channelFutureLocal.get().getChannel().write(data);
-			Map<String, ChannelFuture> lock = new HashMap<String, ChannelFuture>();
-			lock.put("ChannelFuture", channelFutureLocal.get())
+			Map<String, Object> lock = new HashMap<String, Object>();
+			lock.put("ChannelFuture", channelFutureLocal.get());
 			locks.put(parameters.getId(), lock);
 			
 			synchronized(lock) {
 				lock.wait();
 			}
-			data = ClientFactory.getClient().getResult(
-					channelFutureLocal.get().getChannel());
-			Result result = Serializer.deserializer(data, Result.class);
+			/*data = ClientFactory.getClient().getResult(
+					channelFutureLocal.get().getChannel());*/
+			Result result = (Result)lock.get("result");
 			
 			if(!result.isSuccess()) {
 				System.out.println("出错啦");

@@ -1,6 +1,7 @@
 package cn.godzilla.rpc.client;
 
 import java.net.InetSocketAddress;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.Executors;
@@ -15,9 +16,12 @@ import org.jboss.netty.channel.Channels;
 import org.jboss.netty.channel.socket.nio.NioClientSocketChannelFactory;
 import org.jboss.netty.channel.socket.oio.OioClientSocketChannelFactory;
 
+import cn.godzilla.rpc.common.Result;
 import cn.godzilla.rpc.network.handler.Decoder;
 import cn.godzilla.rpc.network.handler.Encoder;
 import cn.godzilla.rpc.network.handler.ResultHandler;
+import cn.godzilla.rpc.proxy.BaseConsumerProxy;
+import cn.godzilla.rpc.serialize.Serializer;
 
 public class Client {
 
@@ -74,23 +78,15 @@ public class Client {
 
 	public void putResult(Channel channel, byte[] result) {
 		if (isStart) {
-			resultMap.put(channel, result);
+			
 			
 			Result result_ = Serializer.deserializer(result, Result.class);
-			Map<String, ChannelFuture> lock = BaseConsumerProxy.locks.get(result_.getId());
+			String responseId = result_.getId();
+			Map<String, Object> lock = BaseConsumerProxy.locks.get(responseId);
+			lock.put("result", result_);
 			synchronized (lock){
 				lock.notify();
 			}
-		} else {
-			throw new ClientStopException();
-		}
-	}
-
-	public byte[] getResult(Channel channel) {
-		if (isStart) {
-			byte[] result = resultMap.get(channel);
-			resultMap.remove(channel);
-			return result;
 		} else {
 			throw new ClientStopException();
 		}

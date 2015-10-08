@@ -12,6 +12,11 @@ public class HelloServiceImpl implements HelloService {
     }
     @Override
     public String helloWorld(String in) {
-        return in;
+    	try {
+			Thread.sleep(5000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+        return in+":"+System.currentTimeMillis();
     }
 }

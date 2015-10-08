@@ -29,8 +29,8 @@ public class ClientMain {
     		System.out.println("weak");
     		Person person = genPerson();
     		//Person ret = reference.helloPerson(person);
-    		String ret = reference.helloWorld("111");
-    		System.out.println("invoke ok ret" + ret);
+    		String ret = reference.helloWorld("--"+System.currentTimeMillis());
+    		System.out.println("invoke ok ret :" + ret);
     	//}
     	// block main thread to prevent process exit.
     }
