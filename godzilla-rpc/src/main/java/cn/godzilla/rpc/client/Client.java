@@ -75,8 +75,11 @@ public class Client {
 	public void putResult(Channel channel, byte[] result) {
 		if (isStart) {
 			resultMap.put(channel, result);
-			synchronized (channel) {
-				channel.notify();
+			
+			Result result_ = Serializer.deserializer(result, Result.class);
+			Map<String, ChannelFuture> lock = BaseConsumerProxy.locks.get(result_.getId());
+			synchronized (lock){
+				lock.notify();
 			}
 		} else {
 			throw new ClientStopException();

@@ -125,7 +125,7 @@ public class Server {
 						.toArray());
 				
 				entry.getRow().write(
-						Serializer.serialize(Result.success(result, null)));
+						Serializer.serialize(Result.success(result, parameters.getId())));
 			} catch(Exception e) {
 				e.printStackTrace();
 				entry.getRow().write(failure);
