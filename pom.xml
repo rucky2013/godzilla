@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>cn.godzilla</groupId>
 	<artifactId>godzilla-parent</artifactId>
-	<version>1.0.1.RC4</version>
+	<version>1.0.1.RELEASE-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>${project.artifactId}</name>
 	<description>The parent project of godzilla</description>
