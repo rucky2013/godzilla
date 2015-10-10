@@ -29,7 +29,7 @@
       #{proKey,jdbcType=VARCHAR}, #{proValue,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, 
       #{createBy,jdbcType=VARCHAR}, now(), #{updateTime,jdbcType=TIMESTAMP}, 
       #{lastValue,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER}, #{auditor,jdbcType=VARCHAR}, 
-      #{auditorText,jdbcType=VARCHAR}, 0)
+      #{auditorText,jdbcType=VARCHAR}, #{indexOrder,jdbcType=INTEGER})
   </insert>
   <insert id="insertSelective" useGeneratedKeys="true" keyProperty="id" parameterType="cn.godzilla.model.PropConfig" >
    
@@ -240,7 +240,7 @@ left JOIN t_g_properties_config b on a.pro_key = b.pro_key and a.project_code = 
       <if test="create_by != '' and create_by != null" >
         and create_by = #{create_by} 
       </if>
-      order by index_order , id desc
+      order by index_order , id
   </select>
   
   <select id="queryByProjectcodeAndCreatebyAndProfileGroupBy" parameterType="java.util.Map" resultType="cn.godzilla.model.PropConfig">

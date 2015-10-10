@@ -1,0 +1,9 @@
+1.初始化godzilla数据库
+	project表添加一条记录
+	client_config表添加三条记录
+	
+2.重启godzilla更新 静态资源变量（lock锁）
+
+3.PropertiesImportUtil.java 导入properties
+
+4.在 index.jsp添加 哥斯拉 验证启动标识

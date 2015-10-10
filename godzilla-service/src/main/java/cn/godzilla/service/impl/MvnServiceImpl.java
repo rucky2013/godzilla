@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FilenameFilter;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -71,7 +72,7 @@ public class MvnServiceImpl extends GodzillaApplication implements MvnService {
 		 * 准生产	　所有项目只允许一个人发布
 		 * 生产　　　所有项目只允许一个人发布
 		 */
-		Lock lock = null;
+		Lock lock = PUBLIC_LOCK;
 		boolean hasAC = false;
 		try {
 			if(profile.equals(TEST_PROFILE)) {
@@ -236,9 +237,11 @@ public class MvnServiceImpl extends GodzillaApplication implements MvnService {
 		} finally {
 			try {
 				lock.unlock();
-			} catch(IllegalMonitorStateException e1) {
+			} /*catch(InvocationTargetException e2) {
+				return ReturnCodeEnum.getByReturnCode(NO_HASKEYDEPLOY);
+			} */catch(IllegalMonitorStateException e1) {
 				return ReturnCodeEnum.getByReturnCode(NO_CONCURRENCEDEPLOY);
-			}
+			} 
 			
 		}
 		return ReturnCodeEnum.getByReturnCode(NO_MVNDEPLOY);

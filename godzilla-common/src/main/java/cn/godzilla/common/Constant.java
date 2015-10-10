@@ -112,6 +112,7 @@ public interface Constant {
 	public final static String NO_COMMON = "100033";
 	public final static String NO_CONCURRENCEDEPLOY = "100034";
 	public final static String NO_MVNSETPROPS = "100035";
+	public final static String NO_HASKEYDEPLOY = "100036";
 	
 	public final static String OK_AJAX = "200000";
 	public final static String OK_CHECKUSER = "200001";

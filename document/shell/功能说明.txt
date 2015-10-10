@@ -1,7 +1,0 @@
-1.部署流程：清除work目录->检出主干代码->合并各个分支 if not found confilict->mvn deploy -Pdev
-									                        -> exit(5)
-2.合并代码:清除work目录->检出主干代码->合并各个分支 if not found confilict-> success
-														    -> exit(5)
-3.提交主干：清除work目录->检出主干代码->合并各个分支 if not found confilict-> 提交主干 ->删除分支
-														    -> exit(5)
-

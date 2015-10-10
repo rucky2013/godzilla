@@ -162,6 +162,7 @@ public class PropConfigServiceImpl implements PropConfigService {
 			prop.setStatus(status);//0未审核 
 			prop.setAuditor("");
 			prop.setAuditorText("");
+			prop.setIndexOrder(0);
 			
 			dao.insert(prop);
 		}

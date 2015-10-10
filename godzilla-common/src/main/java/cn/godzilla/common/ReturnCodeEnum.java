@@ -42,6 +42,7 @@ public enum ReturnCodeEnum {
 	NO_COMMON("100033", "公共异常:后台错误(异常处日志未处理)"),
 	NO_CONCURRENCEDEPLOY("100034", "其他人正在发布，请等待一会重试"),
 	NO_MVNSETPROPS("100035", "mvn build 失败:xml,properties中含有${xx}未设置配置项"),
+	NO_HASKEYDEPLOY("100036", "没有设置 公平锁为此项目"),
 	
 	OK_SUCCESS("200000", "SUCCESS"),
 	//user模块
