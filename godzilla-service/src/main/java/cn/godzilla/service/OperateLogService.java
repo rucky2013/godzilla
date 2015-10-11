@@ -19,4 +19,8 @@ public interface OperateLogService extends Constant {
 
 	int addOperateLog(String username, String projectCode, String profile, String operation);
 
+	public void addSvnCommandLog(String username, String trunkPath, String str, String username2);
+
+	public void addMvnCmdLog(String username, String projectCode, String profile, String commands, String string);
+
 }

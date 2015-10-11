@@ -15,7 +15,6 @@ import cn.godzilla.service.ClientConfigService;
 import cn.godzilla.service.OperateLogService;
 import cn.godzilla.service.ProjectService;
 import cn.godzilla.service.SvnBranchConfigService;
-import cn.godzilla.service.SvnCmdLogService;
 import cn.godzilla.service.SvnService;
 import cn.godzilla.svn.BaseShellCommand;
 import cn.godzilla.web.GodzillaApplication;
@@ -30,8 +29,6 @@ public class SvnServiceImpl extends GodzillaApplication implements SvnService {
 	private SvnBranchConfigService svnBranchConfigService;
 	@Autowired
 	private ClientConfigService clientConfigService;
-	@Autowired
-	private SvnCmdLogService svnCmdLogService;
 	@Autowired
 	private OperateLogService operateLogService;
 	@Autowired
@@ -57,7 +54,7 @@ public class SvnServiceImpl extends GodzillaApplication implements SvnService {
 			e.printStackTrace();
 		}
 		String username = super.getUser().getUserName();
-		svnCmdLogService.addSvnCommandLog(username, trunkPath, str, username);
+		operateLogService.addSvnCommandLog(username, trunkPath, str, username);
 		//shell返回值 ：通过shell 最后一行 echo 
 		String shellReturn = shellReturnThreadLocal.get();
 		//如果合并成功  1.shell执行返回true 2.shell返回值为 0 
@@ -106,7 +103,7 @@ public class SvnServiceImpl extends GodzillaApplication implements SvnService {
 		//如果合并成功  1.shell执行返回true 2.shell返回值为 0 
 		
 		String username = super.getUser().getUserName();
-		svnCmdLogService.addSvnCommandLog(username, trunkPath, str, username);
+		operateLogService.addSvnCommandLog(username, trunkPath, str, username);
 		
 		if(flag&&"0".equals(shellReturn)){
 			//成功则 1.删除  当前分支
@@ -170,12 +167,12 @@ public class SvnServiceImpl extends GodzillaApplication implements SvnService {
 		
 		if(flag){
 			String username = super.getUser().getUserName();
-			svnCmdLogService.addSvnCommandLog(username, trunkPath, str, username);
+			operateLogService.addSvnCommandLog(username, trunkPath, str, username);
 			operateLogService.addOperateLog(super.getUser().getUserName(), projectCode, profile, SVNMERGE, SUCCESS, "代码合并SUCCESS");
 			logger.info("************代码合并End**************");
 		}else{
 			String username = super.getUser().getUserName();
-			svnCmdLogService.addSvnCommandLog(username, trunkPath, str, username);
+			operateLogService.addSvnCommandLog(username, trunkPath, str, username);
 			operateLogService.addOperateLog(super.getUser().getUserName(), projectCode, profile, SVNMERGE, FAILURE, "代码合并FAILURE");
 			logger.error("************代码合并Error**************");
 		}

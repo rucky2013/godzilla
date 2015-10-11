@@ -10,6 +10,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -22,14 +23,12 @@ import cn.godzilla.service.ClientConfigService;
 import cn.godzilla.service.MvnService;
 import cn.godzilla.service.OperateLogService;
 
-@Component
+@Controller
 @RequestMapping("/mvn")
 public class MvnController extends GodzillaApplication{
 	
 	private final Logger logger = LogManager.getLogger(MvnController.class);
 	
-	@Autowired
-	private ClientConfigService clientConfigService;
 	@Autowired
 	private MvnService mvnService;
 	@Autowired
@@ -45,7 +44,6 @@ public class MvnController extends GodzillaApplication{
 	@ResponseBody
 	public Object deploy(@PathVariable String sid,@PathVariable String projectCode,@PathVariable String profile,HttpServletRequest request, HttpServletResponse response) {
 
-		logger.debug("*****MvnController.deploy*****");
 		String srcUrl = StringUtil.getReqPrameter(request, "srcUrl");
 		String parentVersion = StringUtil.getReqPrameter(request, "parentVersion", "");
 		String parentVersionSuffix = StringUtil.getReqPrameter(request, "parentVersionSuffix", "");
@@ -63,8 +61,6 @@ public class MvnController extends GodzillaApplication{
 	@RequestMapping(value="/{sid}/{projectCode}/{profile}/process", method=RequestMethod.POST)
 	@ResponseBody
 	public Object process(@PathVariable String sid, @PathVariable String projectCode, @PathVariable String profile, HttpServletRequest request, HttpServletResponse response) {
-		
-		logger.debug("*****MvnController.process*****");
 		
 		String processPercent = mvnService.getProcessPercent(sid, projectCode, profile);
 		if(processPercent.equals("100")) {

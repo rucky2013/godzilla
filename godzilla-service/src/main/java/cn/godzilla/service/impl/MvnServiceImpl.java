@@ -6,18 +6,13 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FilenameFilter;
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpServletResponse;
-import javax.swing.filechooser.FileFilter;
 
-import org.apache.http.client.fluent.Request;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +26,6 @@ import cn.godzilla.rpc.api.RpcException;
 import cn.godzilla.rpc.api.RpcFactory;
 import cn.godzilla.rpc.main.Util;
 import cn.godzilla.service.ClientConfigService;
-import cn.godzilla.service.MvnCmdLogService;
 import cn.godzilla.service.MvnProviderService;
 import cn.godzilla.service.MvnService;
 import cn.godzilla.service.OperateLogService;
@@ -53,8 +47,6 @@ public class MvnServiceImpl extends GodzillaApplication implements MvnService {
 	private ProjectService projectService;
 	@Autowired
 	private SvnService svnService;
-	@Autowired
-	private MvnCmdLogService mvnCmdLogService;
 	@Autowired
 	private BaseShellCommand command;
 	
@@ -272,11 +264,11 @@ public class MvnServiceImpl extends GodzillaApplication implements MvnService {
 			return RpcResult.create(FAILURE);
 		}
 		if(flag2) {
-			mvnCmdLogService.addMvnCmdLog(username, projectCode, profile, commands, "mvn deploy 执行成功");
+			operateLogService.addMvnCmdLog(username, projectCode, profile, commands, "mvn deploy 执行成功");
 		} else if(NOSETPROPS.equals(result.getRpcMsg())) {
-			mvnCmdLogService.addMvnCmdLog(username, projectCode, profile, commands, "mvn deploy 执行失败, 含有${XX}未设置配置项");
+			operateLogService.addMvnCmdLog(username, projectCode, profile, commands, "mvn deploy 执行失败, 含有${XX}未设置配置项");
 		} else {
-			mvnCmdLogService.addMvnCmdLog(username, projectCode, profile, commands, "mvn deploy 执行失败");
+			operateLogService.addMvnCmdLog(username, projectCode, profile, commands, "mvn deploy 执行失败");
 		}
 		return result;
 	}

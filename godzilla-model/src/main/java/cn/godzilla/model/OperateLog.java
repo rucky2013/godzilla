@@ -19,6 +19,12 @@ public class OperateLog implements Serializable{
 
     private String profile;
     
+    private String clientIp;
+    
+    private String sort;
+    
+    private String commands;
+    
     private String operation;
 
     private Integer operateCode;
@@ -29,7 +35,32 @@ public class OperateLog implements Serializable{
 
     private String resultInfo;
 
-    public String getOperation() {
+    
+    public String getClientIp() {
+		return clientIp;
+	}
+
+    public void setClientIp(String clientIp) {
+		this.clientIp = clientIp;
+	}
+
+	public String getSort() {
+		return sort;
+	}
+
+	public void setSort(String sort) {
+		this.sort = sort;
+	}
+
+	public String getCommands() {
+		return commands;
+	}
+
+	public void setCommands(String commands) {
+		this.commands = commands;
+	}
+
+	public String getOperation() {
 		return operation;
 	}
 

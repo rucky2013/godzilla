@@ -13,6 +13,8 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -33,6 +35,8 @@ import cn.godzilla.service.FunRightService;
 import cn.godzilla.service.UserService;
 
 public abstract class GodzillaApplication extends Application implements Constant{
+	
+	public static Logger logger = LogManager.getLogger(GodzillaApplication.class);
 	
 	protected ApplicationContext applicationContext;
 	protected static UserService userService;
@@ -66,8 +70,9 @@ public abstract class GodzillaApplication extends Application implements Constan
 	 * 登录用户 设置其 sid 存到 当前线程 threadlocal
 	 * @param sid
 	 */
-	protected void initContextBySid(String sid) {
-		sidThreadLocal.set(sid);
+	protected void initContextBySid(String newsid) {
+		logger.info("++|++|++>sid:" + newsid);
+		sidThreadLocal.set(newsid);
 	}
 	/**
 	 * 根据sid判断用户 是否登录态

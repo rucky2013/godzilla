@@ -30,6 +30,7 @@ public class InitFilter extends GodzillaApplication implements Filter {
 	private ProjectService projectService;
 	@Override
 	public void init(FilterConfig filterConfig) throws ServletException {
+		logger.info("InitFilter init部署锁");
 		context = filterConfig.getServletContext();
 		applicationContext = WebApplicationContextUtils.getWebApplicationContext(context);
 		projectService = (ProjectService)applicationContext.getBean("projectService");
@@ -39,7 +40,7 @@ public class InitFilter extends GodzillaApplication implements Filter {
 		}
 		deploy_lock.put(QUASIPRODUCT_PROFILE, new ReentrantLock(true));
 		deploy_lock.put(PRODUCT_PROFILE, new ReentrantLock(true));
-		logger.info("finish initFilter init()初始化");
+		
 	}
 	
 	@Override

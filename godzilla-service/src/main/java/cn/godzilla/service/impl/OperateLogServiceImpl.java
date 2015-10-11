@@ -37,6 +37,7 @@ public class OperateLogServiceImpl extends GodzillaApplication implements Operat
 		record.setUserName(username);
 		record.setProjectCode(projectCode);
 		record.setProfile(profile);
+		record.setSort("operate");
 		record.setOperation(operation);
 		try {
 			record.setExecuteResult(Integer.parseInt(executeResult));
@@ -82,6 +83,38 @@ public class OperateLogServiceImpl extends GodzillaApplication implements Operat
 		map.put("id", id) ;
 		map.put("username", username) ;
 		return dao.queryAll(map) ;
+	}
+
+	@Override
+	public void addSvnCommandLog(String username, String trunkPath, String commands, String username2) {
+		OperateLog record = new OperateLog();
+		record.setUserName(username);
+		record.setProjectCode("");
+		record.setProfile("");
+		record.setSort("svn");
+		record.setOperation("");
+		record.setCommands(commands);
+		
+		record.setResultInfo("");
+		record.setExecuteTime(new Date());
+		dao.insertSelective(record);
+		return ;
+	}
+
+	@Override
+	public void addMvnCmdLog(String username, String projectCode, String profile, String commands, String resultInfo) {
+		OperateLog record = new OperateLog();
+		record.setUserName(username);
+		record.setProjectCode(projectCode);
+		record.setProfile(profile);
+		record.setSort("mvn");
+		record.setOperation("");
+		record.setCommands(commands);
+		
+		record.setResultInfo(resultInfo);
+		record.setExecuteTime(new Date());
+		dao.insertSelective(record);
+		return ;
 	}
 
 }

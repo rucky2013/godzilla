@@ -20,7 +20,7 @@
   </resultMap>
   <insert id="insert" parameterType="cn.godzilla.model.PropConfig" >
     
-    insert into t_g_properties_config (id, project_code, profile, 
+    insert into properties_config (id, project_code, profile, 
       pro_key, pro_value, remark, 
       create_by, create_time, update_time, 
       last_value, status, auditor, 
@@ -33,7 +33,7 @@
   </insert>
   <insert id="insertSelective" useGeneratedKeys="true" keyProperty="id" parameterType="cn.godzilla.model.PropConfig" >
    
-    insert into t_g_properties_config
+    insert into properties_config
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="projectCode != null" >
         project_code,
@@ -123,15 +123,15 @@
       max(last_value) as lastValue, max(status) as status, max(auditor) as auditor, 
       max(auditor_text) as auditorText, max(index_order) as indexOrder</sql>
   <select id="queryDetailById" parameterType="long" resultType="cn.godzilla.model.PropConfig">
-  	select <include refid="queryColumns" /> from t_g_properties_config where id = #{id} 
+  	select <include refid="queryColumns" /> from properties_config where id = #{id} 
 	order by index_order , id 
   </select>
   <select id="queryDetailByKey" parameterType="java.util.Map" resultType="cn.godzilla.model.PropConfig">
-  	select <include refid="queryColumns" /> from t_g_properties_config where project_code = #{projectCode} and profile = #{profile} and pro_key = #{proKey}
+  	select <include refid="queryColumns" /> from properties_config where project_code = #{projectCode} and profile = #{profile} and pro_key = #{proKey}
   	order by index_order , id 
   </select>
   <select id="queryList" parameterType="java.util.Map" resultType="cn.godzilla.model.PropConfig">
-  	select <include refid="queryColumns" /> from t_g_properties_config where project_code = #{projectCode} and profile = #{profile}
+  	select <include refid="queryColumns" /> from properties_config where project_code = #{projectCode} and profile = #{profile}
   	
   	  <if test="status != null" >
         and status = #{status,jdbcType=VARCHAR}
@@ -144,7 +144,7 @@
   </select>
   
   <select id="queryListByProjectcodeAndProfile" parameterType="java.util.Map" resultType="cn.godzilla.model.PropConfig">
-  	select <include refid="queryColumns" /> from t_g_properties_config 
+  	select <include refid="queryColumns" /> from properties_config 
   	where project_code = #{projectCode} and profile = #{profile}
   	and status = 1
   	order by index_order , id 
@@ -152,7 +152,7 @@
   </select>
   
   <update id="update">
-  	update t_g_properties_config set 
+  	update properties_config set 
   	<trim suffixOverrides="," >
       <if test="proValue != null" >
         pro_value = #{proValue,jdbcType=VARCHAR},
@@ -178,7 +178,7 @@
   </update>
   
   <update id="updatePropByProkey"  parameterType="java.util.Map" >
-  	update t_g_properties_config set 
+  	update properties_config set 
   	
   	pro_value = #{pro_value},
   	last_value = #{pro_value_old},
@@ -191,14 +191,14 @@
   </update>
   
   <update id="changeStatusByNewverify"  parameterType="java.util.Map" >
-update t_g_properties_config a 
-left JOIN t_g_properties_config b on a.pro_key = b.pro_key and a.project_code = b.project_code and a.profile = b.profile
+update properties_config a 
+left JOIN properties_config b on a.pro_key = b.pro_key and a.project_code = b.project_code and a.profile = b.profile
 				set a.status = 3
 					where b.project_code = #{project_code}  and b.profile = #{profile} and a.status = 1 and b.create_by = #{create_by}  and b.status = 0;
   </update>
   
    <update id="updatePropLastValue"  parameterType="java.util.Map" >
-  	update t_g_properties_config set 
+  	update properties_config set 
   	
   	last_value = #{last_value},
   	update_time = now()
@@ -207,14 +207,14 @@ left JOIN t_g_properties_config b on a.pro_key = b.pro_key and a.project_code = 
   </update>
   
   <update id="updatePropIndex" parameterType="java.util.Map" >
-  	update t_g_properties_config set 
+  	update properties_config set 
   		index_order = #{index_order},
   		update_time = now()
   		
   	where id = #{id}
   </update>
    <update id="verifyOKProp"  parameterType="java.util.Map" >
-  	update t_g_properties_config set 
+  	update properties_config set 
   	
   	auditor = #{auditor},
   	auditor_text = #{auditor_text},
@@ -229,7 +229,7 @@ left JOIN t_g_properties_config b on a.pro_key = b.pro_key and a.project_code = 
   </update>
   
   <select id="queryByProjectcodeAndCreatebyAndProfile" parameterType="java.util.Map" resultType="cn.godzilla.model.PropConfig">
-  	select <include refid="queryColumns" /> from t_g_properties_config 
+  	select <include refid="queryColumns" /> from properties_config 
   	where status = #{status} 
   	<if test="project_code != ''" >
         and project_code = #{project_code} 
@@ -244,7 +244,7 @@ left JOIN t_g_properties_config b on a.pro_key = b.pro_key and a.project_code = 
   </select>
   
   <select id="queryByProjectcodeAndCreatebyAndProfileGroupBy" parameterType="java.util.Map" resultType="cn.godzilla.model.PropConfig">
-  	select <include refid="queryMaxColumns" /> from t_g_properties_config 
+  	select <include refid="queryMaxColumns" /> from properties_config 
   	where status = #{status} 
   	<if test="project_code != ''" >
         and project_code = #{project_code} 

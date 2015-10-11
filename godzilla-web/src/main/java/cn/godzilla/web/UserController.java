@@ -32,9 +32,6 @@ import cn.godzilla.service.UserService;
 @RequestMapping("/user")
 public class UserController extends GodzillaApplication{
 	
-	public UserController() {
-		super();
-	}
 	private final Logger logger = LogManager.getLogger(UserController.class);
 	@Autowired
 	UserService userService;
@@ -54,11 +51,9 @@ public class UserController extends GodzillaApplication{
 	 */
 	@RequestMapping(value="/welcome", method=RequestMethod.GET)
 	public Object loginPage(HttpServletRequest request, HttpServletResponse response) {
-		logger.debug("*****UserController.welcome*****");
 		request.setAttribute("basePath", BASE_PATH);
 		return "/login";
 	}
-	
 
 	/**
 	 * 登录
@@ -73,18 +68,14 @@ public class UserController extends GodzillaApplication{
 	@RequestMapping(value="/login", method=RequestMethod.POST)
 	@ResponseBody
 	public Object login(HttpServletRequest request, HttpServletResponse response) {
-		logger.debug("*****UserController.login*****");
 		String newsid = StringUtil.getRandom(6);
-		logger.info("++|++|++>sid:" + newsid);
 		super.initContextBySid(newsid);
-		request.setAttribute("sid", newsid);
-		
 		String username = StringUtil.getReqPrameter(request, "username");
 		String password = StringUtil.getReqPrameter(request, "password");
-		
-		//do login 
+
 		ReturnCodeEnum loginReturn = userService.login(username, password, newsid);  
 		
+		request.setAttribute("sid", newsid);
 		return ResponseBodyJson.custom().setAll(loginReturn, newsid).build();
 	}
 	
