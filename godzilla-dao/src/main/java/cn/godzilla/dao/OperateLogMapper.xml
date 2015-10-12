@@ -115,7 +115,7 @@
       <select id="queryList" resultType="cn.godzilla.model.OperateLog" parameterType="java.util.Map">
       	select 
       		<include refid="queryColumns" /> 
-      		from operate_logs where project_code = #{projectCode} and profile = #{profile} and user_name = #{username} order by id desc limit 20
+      		from operate_logs where project_code = #{projectCode} and profile = #{profile} and user_name = #{username} and sort = 'operate' order by id desc limit 20
       </select>
       
       <select id="queryAll" resultType="cn.godzilla.model.OperateLog" parameterType="java.util.Map">

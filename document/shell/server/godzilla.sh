@@ -22,7 +22,6 @@ java_env() {
 
 ## scp脚本工具到客户端
 scp_gzl() {
-	ssh -p 2222 godzilla@10.100.142.66 "rm -rf /home/godzilla/gzl"
 	ssh -p 2222 godzilla@10.100.142.71 "rm -rf /home/godzilla/gzl"
 	ssh -p 2222 godzilla@10.100.142.72 "rm -rf /home/godzilla/gzl"
 	ssh -p 2222 godzilla@10.100.142.73 "rm -rf /home/godzilla/gzl"
@@ -38,7 +37,6 @@ scp_gzl() {
 	ssh -p 2222 godzilla@10.100.142.83 "rm -rf /home/godzilla/gzl"
 	ssh -p 2222 godzilla@10.100.142.84 "rm -rf /home/godzilla/gzl"
 	
-	scp -P 2222 -r /home/godzilla/gzl/gzl godzilla@10.100.142.66:/home/godzilla/ 
 	scp -P 2222 -r /home/godzilla/gzl/gzl godzilla@10.100.142.71:/home/godzilla/ 
 	scp -P 2222 -r /home/godzilla/gzl/gzl godzilla@10.100.142.72:/home/godzilla/ 
 	scp -P 2222 -r /home/godzilla/gzl/gzl godzilla@10.100.142.73:/home/godzilla/ 
@@ -54,7 +52,6 @@ scp_gzl() {
 	scp -P 2222 -r /home/godzilla/gzl/gzl godzilla@10.100.142.83:/home/godzilla/
 	scp -P 2222 -r /home/godzilla/gzl/gzl godzilla@10.100.142.84:/home/godzilla/
 	
-	ssh -p 2222 godzilla@10.100.142.66 "chmod 755 -R /home/godzilla/gzl"
 	ssh -p 2222 godzilla@10.100.142.71 "chmod 755 -R /home/godzilla/gzl"
 	ssh -p 2222 godzilla@10.100.142.72 "chmod 755 -R /home/godzilla/gzl"
 	ssh -p 2222 godzilla@10.100.142.73 "chmod 755 -R /home/godzilla/gzl"
@@ -74,7 +71,6 @@ scp_gzl() {
 
 ## 杀掉客户端线程
 killclients() {
-	ssh -p 2222 godzilla@10.100.142.66 "ps -ef|grep godzilla-rpc-provider.jar |grep -v "grep"| awk '{print $2}'|xargs kill -9"
 	ssh -p 2222 godzilla@10.100.142.71 "ps -ef|grep godzilla-rpc-provider.jar |grep -v "grep"| awk '{print $2}'|xargs kill -9"
 	ssh -p 2222 godzilla@10.100.142.72 "ps -ef|grep godzilla-rpc-provider.jar |grep -v "grep"| awk '{print $2}'|xargs kill -9"
 	ssh -p 2222 godzilla@10.100.142.73 "ps -ef|grep godzilla-rpc-provider.jar |grep -v "grep"| awk '{print $2}'|xargs kill -9"
@@ -93,7 +89,6 @@ killclients() {
 
 ## debug开启客户端线程
 startclientsdebug() {
-	ssh -p 2222 godzilla@10.100.142.66 "/opt/jdk1.7.0_71/bin/java -Xdebug -Xrunjdwp:transport=dt_socket,address=7070,server=y,suspend=y -jar /home/godzilla/gzl/rpc/godzilla-rpc-provider.jar  >/home/godzilla/gzl/rpc/log.txt 2>&1 &" 
 	ssh -p 2222 godzilla@10.100.142.71 "/opt/jdk1.7.0_71/bin/java -Xdebug -Xrunjdwp:transport=dt_socket,address=7070,server=y,suspend=y -jar /home/godzilla/gzl/rpc/godzilla-rpc-provider.jar  >/home/godzilla/gzl/rpc/log.txt 2>&1 &"
 	ssh -p 2222 godzilla@10.100.142.72 "/opt/jdk1.7.0_71/bin/java -Xdebug -Xrunjdwp:transport=dt_socket,address=7070,server=y,suspend=y -jar /home/godzilla/gzl/rpc/godzilla-rpc-provider.jar  >/home/godzilla/gzl/rpc/log.txt 2>&1 &"
 	ssh -p 2222 godzilla@10.100.142.73 "/opt/jdk1.7.0_71/bin/java -Xdebug -Xrunjdwp:transport=dt_socket,address=7070,server=y,suspend=y -jar /home/godzilla/gzl/rpc/godzilla-rpc-provider.jar  >/home/godzilla/gzl/rpc/log.txt 2>&1 &"
@@ -112,7 +107,6 @@ startclientsdebug() {
 
 ## 开启客户端线程
 startclients() {
-	ssh -p 2222 godzilla@10.100.142.66 "/opt/jdk1.7.0_71/bin/java -jar /home/godzilla/gzl/rpc/godzilla-rpc-provider.jar  >/home/godzilla/gzl/rpc/log.txt 2>&1 &" 
 	ssh -p 2222 godzilla@10.100.142.71 "/opt/jdk1.7.0_71/bin/java -jar /home/godzilla/gzl/rpc/godzilla-rpc-provider.jar  >/home/godzilla/gzl/rpc/log.txt 2>&1 &"
 	ssh -p 2222 godzilla@10.100.142.72 "/opt/jdk1.7.0_71/bin/java -jar /home/godzilla/gzl/rpc/godzilla-rpc-provider.jar  >/home/godzilla/gzl/rpc/log.txt 2>&1 &"
 	ssh -p 2222 godzilla@10.100.142.73 "/opt/jdk1.7.0_71/bin/java -jar /home/godzilla/gzl/rpc/godzilla-rpc-provider.jar  >/home/godzilla/gzl/rpc/log.txt 2>&1 &"

@@ -144,7 +144,7 @@ CREATE TABLE `operate_logs` (
   `project_code` varchar(30) DEFAULT NULL,
   `profile` varchar(30) DEFAULT NULL,
   `client_ip` varchar(50) DEFAULT NULL,
-  `sort` varchar(3) DEFAULT NULL,
+  `sort` varchar(30) DEFAULT NULL,
   `commands` varchar(3000) DEFAULT NULL,
   `operation` varchar(50) DEFAULT NULL,
   `operate_code` int(11) DEFAULT NULL,

@@ -38,6 +38,7 @@ public class Authentication extends GodzillaApplication implements Filter {
 		logger.info("Authentication init身份验证");
 		escapeUrls.add("/user/welcome");
 		escapeUrls.add("/user/login");
+		escapeUrls.add("/process");
 		
 		context = filterConfig.getServletContext();  
 		applicationContext = WebApplicationContextUtils.getWebApplicationContext(context); 
