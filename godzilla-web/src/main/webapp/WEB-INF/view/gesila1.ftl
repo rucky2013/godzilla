@@ -344,8 +344,8 @@
 						<label>版本号：</label> <input id="parentVersion" type="text" name="parentVersion" value="1.0.0" />
 						<label>&nbsp;</label>
 						<select id="parentVersionSuffix" name="parentVersionSuffix">
-	                		<option value=".SNAPSHOT" selected="selected">.SNAPSHOT</option>
-							<option value=".RELEASE">.RELEASE</option>
+	                		<option value="-SNAPSHOT" selected="selected">-SNAPSHOT</option>
+							<option value="-RELEASE">-RELEASE</option>
 	              		</select>
 					</div>
 					<input id="deployBtn" type="button" class="shadow_btn mar150_l" value="部署(打包)" />
