@@ -4,7 +4,7 @@
   <parent>
     <groupId>cn.godzilla</groupId>
     <artifactId>godzilla-parent</artifactId>
-    <version>1.0.2.RELEASE-SNAPSHOT</version>
+    <version>1.0.2.RELEASE</version>
   </parent>
   <artifactId>godzilla-model</artifactId>
   <name>${project.artifactId}</name>
