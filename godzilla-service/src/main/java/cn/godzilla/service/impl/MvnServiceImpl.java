@@ -174,7 +174,7 @@ public class MvnServiceImpl extends GodzillaApplication implements MvnService {
 			try {
 				MvnProviderService mvnProviderService = mvnProviderServices.get(IP);
 				String username = GodzillaApplication.getUser().getUserName();
-				result = this.deployProject(mvnProviderService, username, srcUrl, projectCode, profile, IP, parentVersion);
+				result = this.deployProject(mvnProviderService, username, webPath, projectCode, profile, IP, parentVersion);
 				flag2 = result.getRpcCode().equals("0")?true:false;
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -248,12 +248,12 @@ public class MvnServiceImpl extends GodzillaApplication implements MvnService {
 	}
 	
 	
-	public RpcResult deployProject(MvnProviderService mvnProviderService, String username, String srUrl, String projectCode, String profile, String IP, String parentVersion) {
+	public RpcResult deployProject(MvnProviderService mvnProviderService, String username, String webPath, String projectCode, String profile, String IP, String parentVersion) {
 		boolean flag2 = false;
 		RpcResult result = null;
 		String commands = "";
 		try {
-			String POM_PATH = srUrl + "/pom.xml";
+			String POM_PATH = webPath + "/pom.xml";
 			String USER_NAME = username;
 			String PROJECT_NAME = projectCode;
 			

@@ -184,7 +184,7 @@ public abstract class GodzillaApplication extends Application implements Constan
 		} catch (InterruptedException e2) {
 			e2.printStackTrace();
 		}
-		int timeout = DEFAULT_TIMEOUT * 2;
+		int timeout = DEFAULT_TIMEOUT ;
 		int i = 0;
 		while (true) {
 			String test_url = "http://" + IP + ":8080/" + war_name + "/index.jsp";
@@ -202,12 +202,15 @@ public abstract class GodzillaApplication extends Application implements Constan
 	                    rs.append((char) respInt);
 	                    respInt = insr.read();
 	                }
-	            } else if(HttpStatus.SC_NOT_FOUND == response.getStatusLine().getStatusCode()){
-	            	//如果信息码 为 4xx 或者 5xx 则退出
-	            	return false;
-	            } else if(HttpStatus.SC_INTERNAL_SERVER_ERROR == response.getStatusLine().getStatusCode()) {
-	            	return false;
-	            }
+	            } 
+	            //if(i>10) {
+	            	if(HttpStatus.SC_NOT_FOUND == response.getStatusLine().getStatusCode()){
+		            	//如果信息码 为 4xx 或者 5xx 则退出
+		            	return false;
+		            } else if(HttpStatus.SC_INTERNAL_SERVER_ERROR == response.getStatusLine().getStatusCode()) {
+		            	return false;
+		            }
+	           //}
 			} catch (IOException e1) {
 				System.out.println("---httpclient 报错啦=---");
 				e1.printStackTrace();
@@ -216,7 +219,7 @@ public abstract class GodzillaApplication extends Application implements Constan
 	            	return true;
 	        } else {
 	        	try {
-					Thread.sleep(500);
+					Thread.sleep(1000);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}

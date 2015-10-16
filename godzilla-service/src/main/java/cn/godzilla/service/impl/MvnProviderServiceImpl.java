@@ -29,6 +29,8 @@ public class MvnProviderServiceImpl extends Application implements MvnProviderSe
 		
 		boolean flag2 = mvnBuildThreadLocal.get().equals(SUCCESS)?true:false;
 		boolean flag3 = mvnERRORThreadLocal.get().equals(SUCCESS)?true:false;
+		mvnBuildThreadLocal.set("FAILURE");
+		mvnERRORThreadLocal.set("SUCCESS");
 		if(flag&&flag2&&flag3) {
 			return RpcResult.create(SUCCESS);
 		} else if(flag){

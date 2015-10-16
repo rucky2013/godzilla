@@ -82,6 +82,7 @@
 										<td width="80" class="paddingR0">部署操作：</td>
 										<td class="bg1">
 										<#if projectCode = 'xuanyuan'>
+											<span class="spanArrange"><a class="deploy" href="javascript:void(0);" value1="${project.checkoutPath}" value2="TEST" title="部署">部署</a></span>
 										<#else>
 											<span class="spanArrange"><a class="deploy" href="javascript:void(0);" value1="${project.checkoutPath}" value2="TEST" title="部署">部署</a></span>
 										</#if>

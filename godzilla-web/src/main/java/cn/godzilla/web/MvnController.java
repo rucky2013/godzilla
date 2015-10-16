@@ -50,7 +50,7 @@ public class MvnController extends GodzillaApplication{
 		String parentVersion = StringUtil.getReqPrameter(request, "parentVersion", "");
 		String parentVersionSuffix = StringUtil.getReqPrameter(request, "parentVersionSuffix", "");
 		
-		String pencentkey = sid + "-" + projectCode + "-" + profile;
+		final String pencentkey = sid + "-" + projectCode + "-" + profile;
 		
 		processPercent.put(pencentkey, "0");
 		ReturnCodeEnum deployReturn = mvnService.doDeploy(srcUrl, projectCode, profile, parentVersion+parentVersionSuffix);
@@ -60,6 +60,17 @@ public class MvnController extends GodzillaApplication{
 			processPercent.put(pencentkey, "0");
 		}
 		
+		new Thread() {
+			public void run() {
+				try {
+					Thread.sleep(5000);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				processPercent.put(pencentkey, "0");
+			}
+		}.start();
+		
 		operateLogService.addOperateLog(super.getUser().getUserName(), projectCode, profile, DEPLOY, deployReturn.getStatus(), deployReturn.getReturnMsg());
 		return ResponseBodyJson.custom().setAll(deployReturn).build();
 	}
@@ -67,8 +78,6 @@ public class MvnController extends GodzillaApplication{
 	@RequestMapping(value="/{sid}/{projectCode}/{profile}/process", method=RequestMethod.POST)
 	@ResponseBody
 	public Object process(@PathVariable String sid, @PathVariable String projectCode, @PathVariable String profile, HttpServletRequest request, HttpServletResponse response) {
-		
-		logger.debug("*****MvnController.process*****");
 		
 		String processPercent = mvnService.getProcessPercent(sid, projectCode, profile);
 		if(processPercent.equals("100")) {

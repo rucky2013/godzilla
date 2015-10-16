@@ -24,17 +24,19 @@ public class PropertiesImportUtil {
 		
 		PropConfigService propConfigService = (PropConfigService) context.getBean("propConfigService");
 		
-		Map<String, List<PropConfig>> proplistMap = parse("F:\\yixin_fso_app\\fso_newmanager_trunk\\pom.xml", "new-manager");
+		Map<String, List<PropConfig>> proplistMap = parse("F:\\yixin_fso_app\\fso-java\\va\\trunk\\va\\va-schedule\\pom.xml", "va-schedule");
 		
 		for(PropConfig prop: proplistMap.get("test")) {
 			propConfigService.insert(prop);
 		}
+		
 		for(PropConfig prop: proplistMap.get("pre-online")) {
 			propConfigService.insert(prop);
 		}
 		for(PropConfig prop: proplistMap.get("online")) {
 			propConfigService.insert(prop);
 		}
+		/* */
 		
 	}
 	
