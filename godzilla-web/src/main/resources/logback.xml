@@ -2,7 +2,7 @@
 <!-- <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/2002/xmlspec/dtd/2.10/xmlspec.dtd"> -->
 <configuration>
 
-	<property name="LOG_HOME" value="D:\\logs\\godzilla\\" />
+	<property name="LOG_HOME" value="~/tomcat-godzilla/logs" />
 
 	<property name="LOG_LEVEL" value="DEBUG" />
 

@@ -108,7 +108,7 @@ public class PropController extends GodzillaApplication implements Constant{
 		
 		//String selectedProjectCode = StringUtil.getReqPrameter(request, "selectedProjectCode", "godzilla");
 		String createBy = StringUtil.getReqPrameter(request, "createBy", "");
-		String selectedProfile = StringUtil.getReqPrameter(request, "selectedProfile", "");
+		String selectedProfile = StringUtil.getReqPrameter(request, "selectedProfile", TEST_PROFILE);
 		
 		List<Project> projectList = projectService.queryAll();
 		Map<String, String> profileList = propConfigService.queryAllProfile();

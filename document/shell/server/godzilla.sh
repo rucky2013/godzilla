@@ -22,6 +22,7 @@ java_env() {
 
 ## scp脚本工具到客户端
 scp_gzl() {
+	ssh -p 2222 godzilla@10.100.142.66 "rm -rf /home/godzilla/gzl"
 	ssh -p 2222 godzilla@10.100.142.69 "rm -rf /home/godzilla/gzl"
 	ssh -p 2222 godzilla@10.100.142.70 "rm -rf /home/godzilla/gzl"
 	ssh -p 2222 godzilla@10.100.142.71 "rm -rf /home/godzilla/gzl"
@@ -42,6 +43,7 @@ scp_gzl() {
 	ssh -p 2222 godzilla@10.100.142.86 "rm -rf /home/godzilla/gzl"
 	ssh -p 2222 godzilla@10.100.142.88 "rm -rf /home/godzilla/gzl"
 	
+	scp -P 2222 -r /home/godzilla/gzl/gzl godzilla@10.100.142.66:/home/godzilla/ 
 	scp -P 2222 -r /home/godzilla/gzl/gzl godzilla@10.100.142.69:/home/godzilla/ 
 	scp -P 2222 -r /home/godzilla/gzl/gzl godzilla@10.100.142.70:/home/godzilla/ 
 	scp -P 2222 -r /home/godzilla/gzl/gzl godzilla@10.100.142.71:/home/godzilla/ 
@@ -62,6 +64,7 @@ scp_gzl() {
 	scp -P 2222 -r /home/godzilla/gzl/gzl godzilla@10.100.142.86:/home/godzilla/
 	scp -P 2222 -r /home/godzilla/gzl/gzl godzilla@10.100.142.88:/home/godzilla/
 	
+	ssh -p 2222 godzilla@10.100.142.66 "chmod 755 -R /home/godzilla/gzl"
 	ssh -p 2222 godzilla@10.100.142.69 "chmod 755 -R /home/godzilla/gzl"
 	ssh -p 2222 godzilla@10.100.142.70 "chmod 755 -R /home/godzilla/gzl"
 	ssh -p 2222 godzilla@10.100.142.71 "chmod 755 -R /home/godzilla/gzl"
@@ -86,6 +89,7 @@ scp_gzl() {
 
 ## 杀掉客户端线程
 killclients() {
+	ssh -p 2222 godzilla@10.100.142.66 "ps -ef|grep godzilla-rpc-provider.jar |grep -v "grep"| awk '{print $2}'|xargs kill -9"
 	ssh -p 2222 godzilla@10.100.142.69 "ps -ef|grep godzilla-rpc-provider.jar |grep -v "grep"| awk '{print $2}'|xargs kill -9"
 	ssh -p 2222 godzilla@10.100.142.70 "ps -ef|grep godzilla-rpc-provider.jar |grep -v "grep"| awk '{print $2}'|xargs kill -9"
 	ssh -p 2222 godzilla@10.100.142.71 "ps -ef|grep godzilla-rpc-provider.jar |grep -v "grep"| awk '{print $2}'|xargs kill -9"
@@ -110,6 +114,7 @@ killclients() {
 
 ## debug开启客户端线程
 startclientsdebug() {
+	ssh -p 2222 godzilla@10.100.142.66 "/opt/jdk1.7.0_71/bin/java -Xdebug -Xrunjdwp:transport=dt_socket,address=7070,server=y,suspend=y -jar /home/godzilla/gzl/rpc/godzilla-rpc-provider.jar  >/home/godzilla/gzl/rpc/log.txt 2>&1 &"
 	ssh -p 2222 godzilla@10.100.142.69 "/opt/jdk1.7.0_71/bin/java -Xdebug -Xrunjdwp:transport=dt_socket,address=7070,server=y,suspend=y -jar /home/godzilla/gzl/rpc/godzilla-rpc-provider.jar  >/home/godzilla/gzl/rpc/log.txt 2>&1 &"
 	ssh -p 2222 godzilla@10.100.142.70 "/opt/jdk1.7.0_71/bin/java -Xdebug -Xrunjdwp:transport=dt_socket,address=7070,server=y,suspend=y -jar /home/godzilla/gzl/rpc/godzilla-rpc-provider.jar  >/home/godzilla/gzl/rpc/log.txt 2>&1 &"
 	ssh -p 2222 godzilla@10.100.142.71 "/opt/jdk1.7.0_71/bin/java -Xdebug -Xrunjdwp:transport=dt_socket,address=7070,server=y,suspend=y -jar /home/godzilla/gzl/rpc/godzilla-rpc-provider.jar  >/home/godzilla/gzl/rpc/log.txt 2>&1 &"
@@ -134,6 +139,7 @@ startclientsdebug() {
 
 ## 开启客户端线程
 startclients() {
+	ssh -p 2222 godzilla@10.100.142.66 "/opt/jdk1.7.0_71/bin/java -jar /home/godzilla/gzl/rpc/godzilla-rpc-provider.jar  >/home/godzilla/gzl/rpc/log.txt 2>&1 &"
 	ssh -p 2222 godzilla@10.100.142.69 "/opt/jdk1.7.0_71/bin/java -jar /home/godzilla/gzl/rpc/godzilla-rpc-provider.jar  >/home/godzilla/gzl/rpc/log.txt 2>&1 &"
 	ssh -p 2222 godzilla@10.100.142.70 "/opt/jdk1.7.0_71/bin/java -jar /home/godzilla/gzl/rpc/godzilla-rpc-provider.jar  >/home/godzilla/gzl/rpc/log.txt 2>&1 &"
 	ssh -p 2222 godzilla@10.100.142.71 "/opt/jdk1.7.0_71/bin/java -jar /home/godzilla/gzl/rpc/godzilla-rpc-provider.jar  >/home/godzilla/gzl/rpc/log.txt 2>&1 &"
@@ -161,6 +167,7 @@ TOMCAT_BIN=/app/tomcat/bin
 
 ## 关闭tomcat
 stoptomcats() {
+	ssh -p 2222 godzilla@10.100.142.66 "ps -ef|grep '$TOMCAT_BIN'|grep -v 'grep'|awk '{print $2}'|xargs kill -9"
 	ssh -p 2222 godzilla@10.100.142.69 "ps -ef|grep '$TOMCAT_BIN'|grep -v 'grep'|awk '{print $2}'|xargs kill -9"
 	ssh -p 2222 godzilla@10.100.142.70 "ps -ef|grep '$TOMCAT_BIN'|grep -v 'grep'|awk '{print $2}'|xargs kill -9"
 	ssh -p 2222 godzilla@10.100.142.71 "ps -ef|grep '$TOMCAT_BIN'|grep -v 'grep'|awk '{print $2}'|xargs kill -9"
@@ -184,6 +191,7 @@ stoptomcats() {
 
 ## 开启tomcat
 starttomcats() {
+	ssh -p 2222 godzilla@10.100.142.66 "source $HOME/.bash_profile;cd $TOMCAT_BIN;./startup.sh ;"
 	ssh -p 2222 godzilla@10.100.142.69 "source $HOME/.bash_profile;cd $TOMCAT_BIN;./startup.sh ;"
 	ssh -p 2222 godzilla@10.100.142.70 "source $HOME/.bash_profile;cd $TOMCAT_BIN;./startup.sh ;"
 	ssh -p 2222 godzilla@10.100.142.71 "source $HOME/.bash_profile;cd $TOMCAT_BIN;./startup.sh ;"

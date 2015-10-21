@@ -43,6 +43,7 @@ public enum ReturnCodeEnum {
 	NO_CONCURRENCEDEPLOY("100034", "其他人正在发布，请等待一会重试"),
 	NO_MVNSETPROPS("100035", "mvn build 失败:xml,properties中含有${xx}未设置配置项"),
 	NO_HASKEYDEPLOY("100036", "没有设置 公平锁为此项目"),
+	NO_EXISTUSER("100037", "用户名已存在"),
 	
 	OK_SUCCESS("200000", "SUCCESS"),
 	//user模块

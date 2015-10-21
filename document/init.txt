@@ -18,6 +18,9 @@
 1.group add godzilla
   useradd godzilla -g godzilla
   passwd 
+  
+  useradd log
+  passwd 
 2.复制 tomcat: 修改tomcat-user.xml 加入哥斯拉账户
 <role rolename="manager-gui"/>
 <role rolename="manager-script"/>
@@ -27,7 +30,7 @@
 yum install openssh-server openssh-clients SSH
 scp -r -P 2222 godzilla@10.100.142.69:/app/maven /app/
 chown -R godzilla:godzilla /app/maven
-
+scp -r -P 2222 /app/maven/conf/settings.xml godzilla@10.100.142.78:/app/maven/conf/
 
 4.复制jdk1.7 
 ln -sf  /opt/jdk1.7.0_71/bin/java /usr/bin/java

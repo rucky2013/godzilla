@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration status="off">
     <Appenders>
-        <File name="file" fileName="${sys:user.home}/godzilla/logs.log">
+        <File name="file" fileName="~/tomcat-godzilla/logs/logs.log">
             <PatternLayout>
                 <Pattern>%d %p %c{1.} [%t] %m %ex%n</Pattern>
             </PatternLayout>

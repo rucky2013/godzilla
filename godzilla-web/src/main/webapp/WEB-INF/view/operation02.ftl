@@ -48,9 +48,10 @@
                 <thead>
                   <tr>
                     <th width="15%">编号</th>
-                    <th width="15%">用户名</th>
-                    <th width="54%">工作台组</th>
-                    <th width="16%" colspan="2">操作</th>
+                    <th width="10%">用户名</th>
+                    <th width="10%">姓名</th>
+                    <th width="55%">工作台组</th>
+                    <th width="10%" colspan="2">操作</th>
                   </tr>
                  </thead>
                  <tbody>
@@ -58,6 +59,7 @@
                   <tr>
                     <td>${uas.index}</td>
                     <td>${uas.username}</td>
+                    <td>${uas.realname}</td>
                     <td width="55%" style="text-align:left;">
                     <#list uas.projects as pro>
                     	${pro.projectCode},

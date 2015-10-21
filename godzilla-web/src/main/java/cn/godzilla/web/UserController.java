@@ -182,7 +182,7 @@ public class UserController extends GodzillaApplication{
 		} else if(returnEnum.equals(ReturnCodeEnum.getByReturnCode(OK_ADDUSER))){
 			return SUCCESS;
 		} else {
-			return SUCCESS;
+			return FAILURE;
 		}
 	}
 	

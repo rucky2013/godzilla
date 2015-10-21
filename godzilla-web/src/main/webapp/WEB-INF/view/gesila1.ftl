@@ -150,11 +150,8 @@
 									<tr>
 										<td width="80" class="paddingR0">部署操作：</td>
 										<td class="bg1">
-										<#if projectCode = 'xuanyuan'>
-										<#else>
 											<span class="spanArrange"><a class="deploy" href="javascript:void(0);" value1="${project.checkoutPath!''}" value2="QUASIPRODUCT" title="打包">打包</a></span>
 											<span class="spanUseAgain"><a href="javascript:void(0);" class="download" value2="QUASIPRODUCT" title="下载war包">下载war包</a></span>
-										</#if>
 										</td>
 									</tr>
 								</tbody>
@@ -181,11 +178,8 @@
 									<tr>
 										<td width="80" class="paddingR0">部署操作：</td>
 										<td class="bg1">
-											<#if projectCode = 'xuanyuan'>
-											<#else>
 												<span class="spanArrange"><a class="deploy" href="javascript:void(0);" value1="${project.checkoutPath}" value2="PRODUCT" title="打包">打包</a></span>
 												<span class="spanUseAgain"><a href="javascript:void(0);" class="download" value2="PRODUCT" title="下载war包">下载war包</a></span>
-											</#if>
 										</td>
 									</tr>
 								</tbody>
@@ -345,8 +339,8 @@
 						<label>版本号：</label> <input id="parentVersion" type="text" name="parentVersion" value="1.0.0" />
 						<label>&nbsp;</label>
 						<select id="parentVersionSuffix" name="parentVersionSuffix">
-	                		<option value="-SNAPSHOT" selected="selected">-SNAPSHOT</option>
-							<option value="-RELEASE">-RELEASE</option>
+	                		<option id="option1" value="-SNAPSHOT" selected="selected">-SNAPSHOT</option>
+							<option id="option2" value="-RELEASE">-RELEASE</option>
 	              		</select>
 					</div>
 					<input id="deployBtn" type="button" class="shadow_btn mar150_l" value="部署(打包)" />
@@ -477,6 +471,7 @@
 	                parentVersion: parentVersion,
 	                parentVersionSuffix : parentVersionSuffix,
 	            },
+	            timeout: 600000,
 	            dataType: "json",
 	            success: function(data) {
 	            	//释放 整个界面
