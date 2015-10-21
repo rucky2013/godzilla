@@ -101,7 +101,10 @@
       	select 
       		<include refid="queryColumns" /> 
       		from t_g_operate_logs
-      				where id &lt; #{id} and user_name = #{username}
+      				where id &lt; #{id} 
+      				<if test="user_name != null" >
+      				and  user_name = #{username}
+      				</if>
       		  order by id desc limit 20
       </select>
   

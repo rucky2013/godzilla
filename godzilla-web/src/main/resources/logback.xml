@@ -37,6 +37,7 @@
 	<!-- 日志输出模块划分 -->
 	<logger name="cn.godzilla" level="${LOG_LEVEL}">
 		<appender-ref ref="godzillalog" />
+		<appender-ref ref="stdout" />
 	</logger>
 
 	<logger name="java.sql" level="${LOG_LEVEL}">

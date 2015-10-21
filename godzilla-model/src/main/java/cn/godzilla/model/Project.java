@@ -27,8 +27,18 @@ public class Project implements Serializable{
     
     private String svnUsername;
     private String svnPassword;
+    //DTO
+    private String state;
     
-    public String getSvnUsername() {
+    public String getState() {
+		return state;
+	}
+
+    public void setState(String state) {
+		this.state = state;
+	}
+
+	public String getSvnUsername() {
 		return svnUsername;
 	}
 

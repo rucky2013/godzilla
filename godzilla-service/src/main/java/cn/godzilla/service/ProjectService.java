@@ -50,4 +50,19 @@ public interface ProjectService{
 	 * 			OK_GODZILLA  , NO_GODZILLA
 	 */
 	public ReturnCodeEnum godzillaCommand(String string);
+
+	/**
+	 * 更新项目启动状态
+	 * 1.已启动
+	 * 0.未知
+	 * @param project
+	 */
+	public void refreshProjectState(Project project);
+	/**
+	 * 更新项目启动状态
+	 * 1.已启动
+	 * 0.未知
+	 * @param project
+	 */
+	public void refreshProjectState(List<Project> projects);
 }

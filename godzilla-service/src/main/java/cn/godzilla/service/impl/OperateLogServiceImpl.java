@@ -80,7 +80,7 @@ public class OperateLogServiceImpl extends GodzillaApplication implements Operat
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		map.put("id", id) ;
-		map.put("username", username) ;
+		//map.put("username", username) ;
 		return dao.queryAll(map) ;
 	}
 

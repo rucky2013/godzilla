@@ -102,13 +102,20 @@ public class ProjectController extends GodzillaApplication implements Constant{
 	@RequestMapping(value="/{sid}/{projectCode}/{profile}/projectConfig", method = RequestMethod.GET)
 	public Object projectConfig(@PathVariable String sid, @PathVariable String projectCode, @PathVariable String profile, HttpServletRequest request) {
 		
-		//权限验证??
 		ClientConfig clientConfig = clientConfigService.queryDetail(projectCode, profile) ;
 		Project project = projectService.qureyByProCode(projectCode);
-		//刷新项目 版本
+		//太卡先不启用
+		/**
+		 * <#if project.state == '1'>
+				<th colspan="2" align="left">已启动&nbsp;&nbsp;&nbsp;&nbsp;${projectCode}@${clientConfig.remoteIp!'error:没有配置clientConfig.remoteIp'}</th>
+			<#else>
+				<th colspan="2" align="left">未知状态&nbsp;&nbsp;&nbsp;&nbsp;${projectCode}@${clientConfig.remoteIp!'error:没有配置clientConfig.remoteIp'}</th>
+			</#if>
+		 */
+		//projectService.refreshProjectState(project);
+		
 		projectService.refreshProjectVersion(projectCode, profile);
-		project = projectService.qureyByProCode(projectCode);
-		//刷新分支 版本
+		
 		List<SvnBranchConfig> svnBranchConfigs = svnBranchConfigService.queryListByProjectCode(projectCode);
 		svnBranchConfigService.refreshBranchesVersion(svnBranchConfigs);
 		svnBranchConfigs = svnBranchConfigService.queryListByProjectCode(projectCode);

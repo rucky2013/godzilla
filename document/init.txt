@@ -45,8 +45,7 @@ store-plaintext-passwords = no
 chmod 700 .ssh/authorized_keys
 
 6.时间同步
-yum install -y rdate 
-rdate -s time.nist.gov
+yum install -y rdate && rdate -s time.nist.gov
 -----
 项目依赖关系
 

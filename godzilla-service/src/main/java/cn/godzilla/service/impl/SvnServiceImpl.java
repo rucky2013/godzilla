@@ -163,6 +163,8 @@ public class SvnServiceImpl extends GodzillaApplication implements SvnService {
 		try {
 			str = "sh /home/godzilla/gzl/shell/server/svn_server_wl.sh merge "+trunkPath+" '"+branches+"' "+" "+callbackUrl+" "+projectCode+" "+ operator +" "+clientIp ;
 			flag = command.execute(str, super.getUser().getUserName(), projectCode, project.getSvnUsername(), project.getSvnPassword());
+			boolean flag4 = shellReturnThreadLocal.get().equals("0")?true:false;
+			flag = flag && flag4;
 		} catch (Exception e) {
 			logger.error(e);
 			e.printStackTrace();
@@ -176,8 +178,13 @@ public class SvnServiceImpl extends GodzillaApplication implements SvnService {
 		}else{
 			String username = super.getUser().getUserName();
 			svnCmdLogService.addSvnCommandLog(username, trunkPath, str, username);
-			operateLogService.addOperateLog(super.getUser().getUserName(), projectCode, profile, SVNMERGE, FAILURE, "代码合并FAILURE");
-			logger.error("************代码合并Error**************");
+			
+			if(shellReturnThreadLocal.get().equals("2")) {
+				operateLogService.addOperateLog(super.getUser().getUserName(), projectCode, profile, SVNMERGE, FAILURE, "代码合并FAILURE请先解决冲突");
+			} else {
+				operateLogService.addOperateLog(super.getUser().getUserName(), projectCode, profile, SVNMERGE, FAILURE, "代码合并FAILURE");
+			}
+			logger.error("************代码合并Error shellReturnThreadLocal:"+shellReturnThreadLocal.get()+"**************");
 		}
 		return flag;
 	}

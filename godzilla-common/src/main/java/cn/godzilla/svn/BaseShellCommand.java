@@ -53,7 +53,6 @@ public class BaseShellCommand extends Application{
 			p.waitFor();
 			p.destroy();
 			
-			logger.debug("********BaseShellCommand.execute Success*******");
 			
 			return true;
 		} catch (Exception e) {
@@ -150,9 +149,8 @@ public class BaseShellCommand extends Application{
 			String line1 = null;
 			while ((line1 = br1.readLine()) != null) {
 				if (line1 != null) {
-					logger.info("******BaseShellCommand.execute-->InputStream******"+line1);
-					String message = shellReturnThreadLocal.get();
 					shellReturnThreadLocal.set(line1);
+					logger.info("******BaseShellCommand.execute-->InputStream******"+line1);
 				}
 			}
 		} catch (Exception e) {
