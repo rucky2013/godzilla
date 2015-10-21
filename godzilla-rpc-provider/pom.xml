@@ -3,7 +3,7 @@
 	<parent>
 		<groupId>cn.godzilla</groupId>
 		<artifactId>godzilla-parent</artifactId>
-		<version>1.0.4.RELEASE</version>
+		<version>1.0.5.RELEASE-SNAPSHOT</version>
 	</parent>
 
 	<artifactId>godzilla-rpc-provider</artifactId>
