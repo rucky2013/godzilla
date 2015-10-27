@@ -58,11 +58,11 @@ public class SvnBranchConfigController extends GodzillaApplication implements Co
 		boolean flag = svnBranchConfigService.addNewBranch(projectCode, profile, branchUrl);
 		
 		if(flag){
-			operateLogService.addOperateLog(super.getUser().getUserName(), projectCode, profile, BRANCHADD, SUCCESS, "添加分支设置SUCCESS");
+			operateLogService.addOperateLog(super.getUser().getUserName(), super.getUser().getRealName(), projectCode, profile, BRANCHADD, SUCCESS, "添加分支设置SUCCESS");
 			logger.info("************添加分支设置End**************");
 			return SUCCESS;
 		}else{
-			operateLogService.addOperateLog(super.getUser().getUserName(), projectCode, profile, BRANCHADD, FAILURE, "添加分支设置FAILURE");
+			operateLogService.addOperateLog(super.getUser().getUserName(), super.getUser().getRealName(), projectCode, profile, BRANCHADD, FAILURE, "添加分支设置FAILURE");
 			logger.error("************添加分支设置Error**************");
 			return FAILURE;
 		}
@@ -93,11 +93,11 @@ public class SvnBranchConfigController extends GodzillaApplication implements Co
 		boolean flag = svnBranchConfigService.editBranch(projectCode, profile, id, branchUrl);
 		
 		if(flag){
-			operateLogService.addOperateLog(super.getUser().getUserName(), projectCode, profile, BRANCHEDIT, SUCCESS, "分支编辑 保存SUCCESS");
+			operateLogService.addOperateLog(super.getUser().getUserName(), super.getUser().getRealName(), projectCode, profile, BRANCHEDIT, SUCCESS, "分支编辑 保存SUCCESS");
 			logger.info("************分支编辑 保存End**************");
 			return ResponseBodyJson.custom().setAll(OK_AJAX, SUCCESS, "").build();
 		}else{
-			operateLogService.addOperateLog(super.getUser().getUserName(), projectCode, profile, BRANCHEDIT, FAILURE, "分支编辑 保存FAILURE");
+			operateLogService.addOperateLog(super.getUser().getUserName(), super.getUser().getRealName(), projectCode, profile, BRANCHEDIT, FAILURE, "分支编辑 保存FAILURE");
 			logger.error("************分支编辑 保存Error**************");
 			return ResponseBodyJson.custom().setAll(NO_AJAX, FAILURE, "").build();
 		}

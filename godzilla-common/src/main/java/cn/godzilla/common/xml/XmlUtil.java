@@ -212,6 +212,7 @@ public class XmlUtil {
 	 */
 	public static Document parse(String xmlFile) throws DocumentException, FileNotFoundException {
 		SAXReader reader = new SAXReader();
+		reader.setStripWhitespaceText(true);
 		Document doc = reader.read(new File(xmlFile));
 		return doc;
 	}

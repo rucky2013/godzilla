@@ -264,7 +264,7 @@
 							<#list operateLogs as log>
 							<tr>
 								<td>${log.executeTime?string("yyyy-MM-dd HH:mm:ss")}</td>
-								<td>${log.userName}</td>
+								<td>${log.realName}</td>
 								<td>${log.operation}</td>
 								<#if log.executeResult == 1>
 									<td class="fail">成功</td>

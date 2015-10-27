@@ -131,10 +131,10 @@ public class ProjectServiceImpl extends GodzillaApplication implements ProjectSe
 		flag = command.execute(str, super.getUser().getUserName(), "", "", "");
 		
 		if(flag) {
-			operateLogService.addOperateLog(super.getUser().getUserName(), "godzilla", "TEST", actiion, SUCCESS, actiion+" godzilla clients success");
+			operateLogService.addOperateLog(super.getUser().getUserName(),super.getUser().getRealName(), "godzilla", "TEST", actiion, SUCCESS, actiion+" godzilla clients success");
 			return ReturnCodeEnum.getByReturnCode(OK_GODZILLA);
 		} else {
-			operateLogService.addOperateLog(super.getUser().getUserName(), "godzilla", "TEST", actiion, FAILURE, actiion+" godzilla clients failure");
+			operateLogService.addOperateLog(super.getUser().getUserName(), super.getUser().getRealName(),"godzilla", "TEST", actiion, FAILURE, actiion+" godzilla clients failure");
 			return ReturnCodeEnum.getByReturnCode(NO_GODZILLA);
 		}
 	}

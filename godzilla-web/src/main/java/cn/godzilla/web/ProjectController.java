@@ -81,11 +81,11 @@ public class ProjectController extends GodzillaApplication implements Constant{
 		boolean flag = projectService.srcEdit(srcId, repositoryUrl, checkoutPath, projectCode, profile);
 		
 		if(flag){
-			operateLogService.addOperateLog(super.getUser().getUserName(), projectCode, profile, SRCEDIT, SUCCESS, "源代码设置SUCCESS");
+			operateLogService.addOperateLog(super.getUser().getUserName(), super.getUser().getRealName(), projectCode, profile, SRCEDIT, SUCCESS, "源代码设置SUCCESS");
 			logger.info("************源代码设置End**************");
 			return SUCCESS;
 		}else{
-			operateLogService.addOperateLog(super.getUser().getUserName(), projectCode, profile, SRCEDIT, FAILURE, "源代码设置FAILURE");
+			operateLogService.addOperateLog(super.getUser().getUserName(), super.getUser().getRealName(), projectCode, profile, SRCEDIT, FAILURE, "源代码设置FAILURE");
 			logger.error("************源代码设置Error**************");
 			return FAILURE;
 		}

@@ -437,10 +437,10 @@ public class MvnServiceImpl extends GodzillaApplication implements MvnService {
 		flag = command.execute(str, super.getUser().getUserName(), projectCode, project.getSvnUsername(), project.getSvnPassword());
 		
 		if(flag) {
-			operateLogService.addOperateLog(super.getUser().getUserName(), projectCode, profile, COPYWAR, SUCCESS, "copy war success");
+			operateLogService.addOperateLog(super.getUser().getUserName(), super.getUser().getRealName(), projectCode, profile, COPYWAR, SUCCESS, "copy war success");
 			return true;
 		} else {
-			operateLogService.addOperateLog(super.getUser().getUserName(), projectCode, profile, COPYWAR, FAILURE, "copy war failure");
+			operateLogService.addOperateLog(super.getUser().getUserName(), super.getUser().getRealName(),projectCode, profile, COPYWAR, FAILURE, "copy war failure");
 			return false;
 		}
 		

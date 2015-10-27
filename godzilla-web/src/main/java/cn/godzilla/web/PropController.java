@@ -88,10 +88,10 @@ public class PropController extends GodzillaApplication implements Constant{
 		ReturnCodeEnum updateReturn = propConfigService.addNotVerifyProp(projectCode, propTest, propQuasiProduct, propProduct); 
 		
 		if(updateReturn == ReturnCodeEnum.OK_ADDUPDATEPROP) {
-			operateLogService.addOperateLog(super.getUser().getUserName(), projectCode, "", UPDATEPROP, SUCCESS, ReturnCodeEnum.OK_ADDUPDATEPROP.getReturnMsg());
+			operateLogService.addOperateLog(super.getUser().getUserName(), super.getUser().getRealName(), projectCode, "", UPDATEPROP, SUCCESS, ReturnCodeEnum.OK_ADDUPDATEPROP.getReturnMsg());
 			return SUCCESS;
 		}  else if(updateReturn == ReturnCodeEnum.NO_ADDUPDATEPROP) {
-			operateLogService.addOperateLog(super.getUser().getUserName(), projectCode, "", UPDATEPROP, FAILURE, ReturnCodeEnum.NO_ADDUPDATEPROP.getReturnMsg());
+			operateLogService.addOperateLog(super.getUser().getUserName(), super.getUser().getRealName(), projectCode, "", UPDATEPROP, FAILURE, ReturnCodeEnum.NO_ADDUPDATEPROP.getReturnMsg());
 			return FAILURE;
 		}
 		return FAILURE;
@@ -293,13 +293,13 @@ public class PropController extends GodzillaApplication implements Constant{
 		
 		ReturnCodeEnum updateReturn = propConfigService.verifyPropByCreatebyAndProjectcodeAndProfile(createBy, projectCode, profile, status, auditor_text); 
 		if(updateReturn == ReturnCodeEnum.OK_VERIFYPROP) {
-			operateLogService.addOperateLog(super.getUser().getUserName(), projectCode, profile, VERIFYPROP, SUCCESS, ReturnCodeEnum.OK_VERIFYPROP.getReturnMsg());
+			operateLogService.addOperateLog(super.getUser().getUserName(), super.getUser().getRealName(), projectCode, profile, VERIFYPROP, SUCCESS, ReturnCodeEnum.OK_VERIFYPROP.getReturnMsg());
 			return SUCCESS;
 		} else if(updateReturn == ReturnCodeEnum.NO_VERIFYPROP){
-			operateLogService.addOperateLog(super.getUser().getUserName(), projectCode, profile, VERIFYPROP, FAILURE, ReturnCodeEnum.NO_VERIFYPROP.getReturnMsg());
+			operateLogService.addOperateLog(super.getUser().getUserName(), super.getUser().getRealName(), projectCode, profile, VERIFYPROP, FAILURE, ReturnCodeEnum.NO_VERIFYPROP.getReturnMsg());
 			return FAILURE;
 		}
-		operateLogService.addOperateLog(super.getUser().getUserName(), projectCode, profile, VERIFYPROP, FAILURE, FAILURE);
+		operateLogService.addOperateLog(super.getUser().getUserName(), super.getUser().getRealName(), projectCode, profile, VERIFYPROP, FAILURE, FAILURE);
 		return FAILURE;	
 		
 	}

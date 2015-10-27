@@ -42,10 +42,10 @@ public class TomcatController extends GodzillaApplication{
 		flag = mvnService.restartTomcat(projectCode, profile);
 		
 		if(flag) {
-			operateLogService.addOperateLog(super.getUser().getUserName(), projectCode, profile, TOMCATRESTART, SUCCESS, "tomcat重启SUCCESS");
+			operateLogService.addOperateLog(super.getUser().getUserName(), super.getUser().getRealName(), projectCode, profile, TOMCATRESTART, SUCCESS, "tomcat重启SUCCESS");
 			return ResponseBodyJson.custom().setAll(OK_AJAX, SUCCESS, "").build();
 		} else {
-			operateLogService.addOperateLog(super.getUser().getUserName(), projectCode, profile, TOMCATRESTART, FAILURE, "tomcat重启FAILURE");
+			operateLogService.addOperateLog(super.getUser().getUserName(), super.getUser().getRealName(), projectCode, profile, TOMCATRESTART, FAILURE, "tomcat重启FAILURE");
 			return ResponseBodyJson.custom().setAll(NO_AJAX, FAILURE, "").build();
 		}
 	}
