@@ -5,6 +5,7 @@
 
     <result column="id" property="id" jdbcType="DECIMAL" />
     <result column="user_name" property="userName" jdbcType="VARCHAR" />
+    <result column="real_name" property="realName" jdbcType="VARCHAR" />
     <result column="project_code" property="projectCode" jdbcType="VARCHAR" />
     <result column="profile" property="profile" jdbcType="VARCHAR" />
     <result column="client_ip" property="clientIp" jdbcType="VARCHAR" />
@@ -24,10 +25,10 @@
   </sql>
   <insert id="insert" parameterType="cn.godzilla.model.OperateLog" >
     
-    insert into operate_logs (id, user_name, project_code, 
+    insert into operate_logs (id, user_name, real_name, project_code, 
       profile, client_ip, sort, commands, operation, operate_code, execute_time, 
       execute_result, result_info)
-    values (#{id,jdbcType=DECIMAL}, #{userName,jdbcType=VARCHAR}, #{projectCode,jdbcType=VARCHAR}, 
+    values (#{id,jdbcType=DECIMAL}, #{userName,jdbcType=VARCHAR}, #{realName,jdbcType=VARCHAR}, #{projectCode,jdbcType=VARCHAR}, 
       #{profile,jdbcType=VARCHAR},  #{clientIp,jdbcType=VARCHAR},#{sort,jdbcType=VARCHAR},#{commands,jdbcType=VARCHAR},#{operation,jdbcType=VARCHAR},#{operateCode,jdbcType=INTEGER}, now(), 
       #{executeResult,jdbcType=INTEGER}, #{resultInfo,jdbcType=LONGVARCHAR})
   </insert>
@@ -39,6 +40,9 @@
       </if>
       <if test="userName != null" >
         user_name,
+      </if>
+      <if test="realName != null" >
+        real_name,
       </if>
       <if test="projectCode != null" >
         project_code,
@@ -76,6 +80,9 @@
       <if test="userName != null" >
         #{userName,jdbcType=VARCHAR},
       </if>
+      <if test="realName != null" >
+        #{realName,jdbcType=VARCHAR},
+      </if>
       <if test="projectCode != null" >
         #{projectCode,jdbcType=VARCHAR},
       </if>
@@ -107,7 +114,7 @@
     </trim>
   </insert>
   
-  <sql id="queryColumns">id, user_name as userName, project_code as projectCode, 
+  <sql id="queryColumns">id, user_name as userName, real_name as realName, project_code as projectCode, 
       profile, operation,client_ip as clientIp, sort, commands, operate_code as operateCode, execute_time executeTime, 
       execute_result executeResult, result_info resultInfo
       </sql>
@@ -115,14 +122,24 @@
       <select id="queryList" resultType="cn.godzilla.model.OperateLog" parameterType="java.util.Map">
       	select 
       		<include refid="queryColumns" /> 
-      		from operate_logs where project_code = #{projectCode} and profile = #{profile} and user_name = #{username} and sort = 'operate' order by id desc limit 20
+      		from operate_logs where project_code = #{projectCode} and profile = #{profile} 
+
+			<if test="username != null" >
+      		and user_name = #{username} 
+      		</if>
+			and sort = 'operate' order by id desc limit 20
       </select>
       
       <select id="queryAll" resultType="cn.godzilla.model.OperateLog" parameterType="java.util.Map">
       	select 
       		<include refid="queryColumns" /> 
       		from operate_logs
-      				where id &lt; #{id} and user_name = #{username} and sort = 'operate' 
+      				where id &lt; #{id} 
+      				<if test="user_name != null" >
+      				and  user_name = #{username}
+      				</if>
+
+ 			and sort = 'operate' 
       		  order by id desc limit 20
       </select>
   

@@ -100,14 +100,14 @@ public class SvnController extends GodzillaApplication implements Constant{
 		if(flag){
 			String username = super.getUser().getUserName();
 			operateLogService.addSvnCommandLog(username, trunkPath, str, username);
-			operateLogService.addOperateLog(username, projectCode, profile, SVNSTATUS, SUCCESS, "状态查看SUCCESS");
+			operateLogService.addOperateLog(username, super.getUser().getRealName(), projectCode, profile, SVNSTATUS, SUCCESS, "状态查看SUCCESS");
 			logger.info("************状态查看End**************");
 			String echoMessage = echoMessageThreadLocal.get();
 			return ResponseBodyJson.custom().setAll(OK_AJAX, SUCCESS, echoMessage).build();
 		}else{
 			String username = super.getUser().getUserName();
 			operateLogService.addSvnCommandLog(username, trunkPath, str, username);
-			operateLogService.addOperateLog(username, projectCode, profile, SVNSTATUS, FAILURE, "状态查看FAILURE");
+			operateLogService.addOperateLog(username, super.getUser().getRealName(), projectCode, profile, SVNSTATUS, FAILURE, "状态查看FAILURE");
 			logger.error("************状态查看Error**************");
 			return ResponseBodyJson.custom().setAll(NO_AJAX, FAILURE, "").build();
 		}
@@ -171,7 +171,7 @@ public class SvnController extends GodzillaApplication implements Constant{
 		logger.info("************提交主干Begin***********");
 		
 		ReturnCodeEnum returnEnum = svnService.svnCommit(projectCode, profile);
-		operateLogService.addOperateLog(super.getUser().getUserName(), projectCode, profile, SVNCOMMIT, returnEnum.getStatus(), returnEnum.getReturnMsg());
+		operateLogService.addOperateLog(super.getUser().getUserName(), super.getUser().getRealName(), projectCode, profile, SVNCOMMIT, returnEnum.getStatus(), returnEnum.getReturnMsg());
 		logger.info("************提交主干End "+returnEnum.getStatus()+":"+returnEnum.getReturnMsg()+"**************");
 		return ResponseBodyJson.custom().setAll(returnEnum).build();
 	}
@@ -200,11 +200,11 @@ public class SvnController extends GodzillaApplication implements Constant{
 		boolean flag = svnBranchConfigService.addNewBranch(projectCode, profile, branchUrl);
 		
 		if(flag){
-			operateLogService.addOperateLog(super.getUser().getUserName(), projectCode, profile, BRANCHADD, SUCCESS, "添加分支设置SUCCESS");
+			operateLogService.addOperateLog(super.getUser().getUserName(), super.getUser().getRealName(), projectCode, profile, BRANCHADD, SUCCESS, "添加分支设置SUCCESS");
 			logger.info("************添加分支设置End**************");
 			return SUCCESS;
 		}else{
-			operateLogService.addOperateLog(super.getUser().getUserName(), projectCode, profile, BRANCHADD, FAILURE, "添加分支设置FAILURE");
+			operateLogService.addOperateLog(super.getUser().getUserName(), super.getUser().getRealName(), projectCode, profile, BRANCHADD, FAILURE, "添加分支设置FAILURE");
 			logger.error("************添加分支设置Error**************");
 			return FAILURE;
 		}
@@ -235,11 +235,11 @@ public class SvnController extends GodzillaApplication implements Constant{
 		boolean flag = svnBranchConfigService.editBranch(projectCode, profile, id, branchUrl);
 		
 		if(flag){
-			operateLogService.addOperateLog(super.getUser().getUserName(), projectCode, profile, BRANCHEDIT, SUCCESS, "分支编辑 保存SUCCESS");
+			operateLogService.addOperateLog(super.getUser().getUserName(), super.getUser().getRealName(), projectCode, profile, BRANCHEDIT, SUCCESS, "分支编辑 保存SUCCESS");
 			logger.info("************分支编辑 保存End**************");
 			return ResponseBodyJson.custom().setAll(OK_AJAX, SUCCESS, "").build();
 		}else{
-			operateLogService.addOperateLog(super.getUser().getUserName(), projectCode, profile, BRANCHEDIT, FAILURE, "分支编辑 保存FAILURE");
+			operateLogService.addOperateLog(super.getUser().getUserName(), super.getUser().getRealName(), projectCode, profile, BRANCHEDIT, FAILURE, "分支编辑 保存FAILURE");
 			logger.error("************分支编辑 保存Error**************");
 			return ResponseBodyJson.custom().setAll(NO_AJAX, FAILURE, "").build();
 		}

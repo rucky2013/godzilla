@@ -139,7 +139,7 @@
 			</build>
 			<properties>
 				<jdbc.driver>com.mysql.jdbc.Driver</jdbc.driver>
-				<jdbc.url>jdbc:mysql://10.100.142.11:3306/godzilla_db?characterEncoding=utf8</jdbc.url>
+				<jdbc.url>jdbc:mysql://10.100.142.11:3306/godzilla2?characterEncoding=utf8</jdbc.url>
 				<jdbc.username>root</jdbc.username>
 				<jdbc.password>root</jdbc.password>
 

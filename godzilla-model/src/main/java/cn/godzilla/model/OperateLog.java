@@ -14,6 +14,8 @@ public class OperateLog implements Serializable{
 	private Long id;
 
     private String userName;
+    
+    private String realName;
 
     private String projectCode;
 
@@ -35,7 +37,6 @@ public class OperateLog implements Serializable{
 
     private String resultInfo;
 
-    
     public String getClientIp() {
 		return clientIp;
 	}
@@ -58,6 +59,14 @@ public class OperateLog implements Serializable{
 
 	public void setCommands(String commands) {
 		this.commands = commands;
+	}
+	
+    public String getRealName() {
+		return realName;
+	}
+
+    public void setRealName(String realName) {
+		this.realName = realName;
 	}
 
 	public String getOperation() {

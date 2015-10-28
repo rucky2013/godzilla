@@ -32,9 +32,10 @@ public class OperateLogServiceImpl extends GodzillaApplication implements Operat
 	}
 	
 	@Override
-	public int addOperateLog(String username, String projectCode, String profile, String operation, String executeResult, String resultInfo) {
+	public int addOperateLog(String username, String realname,String projectCode, String profile, String operation, String executeResult, String resultInfo) {
 		OperateLog record = new OperateLog();
 		record.setUserName(username);
+		record.setRealName(realname);
 		record.setProjectCode(projectCode);
 		record.setProfile(profile);
 		record.setSort("operate");
@@ -56,17 +57,18 @@ public class OperateLogServiceImpl extends GodzillaApplication implements Operat
 		return dao.insertSelective(record);
 	}
 	@Override
-	public int addOperateLog(String username, String projectCode, String profile, String operation) {
-		return addOperateLog(username, projectCode, profile, operation, "1", "执行成功");
+	public int addOperateLog(String username, String realname, String projectCode, String profile, String operation) {
+		return addOperateLog(username, realname, projectCode, profile, operation, "1", "执行成功");
 	}
 
+	//201027 所有用户都能看到 各个项目  所有人的操作
 	@Override
 	public List<OperateLog> queryList(String projectCode,String profile) {
 		String username = super.getUser().getUserName();
 		Map<String, String> map = new HashMap<String, String>();
 		map.put("projectCode", projectCode);
 		map.put("profile", profile);
-		map.put("username", username) ;
+		//map.put("username", username) ;
 		return dao.queryList(map);
 	}
 
@@ -81,7 +83,7 @@ public class OperateLogServiceImpl extends GodzillaApplication implements Operat
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		map.put("id", id) ;
-		map.put("username", username) ;
+		//map.put("username", username) ;
 		return dao.queryAll(map) ;
 	}
 

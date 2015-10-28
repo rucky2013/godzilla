@@ -90,6 +90,15 @@ public class UserController extends GodzillaApplication{
 	public Object home(@PathVariable String sid, HttpServletRequest request, HttpServletResponse response) {
 		
 		List<Project> projects = projectService.queryProjectsByUsername(super.getUser().getUserName());
+		//太卡先不启用
+		/*
+		<#if item.state == '1'>
+		已启动
+		<br/>
+		<#else>
+		</#if>
+		*/
+		//projectService.refreshProjectState(projects);
 		List<OperateLog> logs = operateLogService.queryAll(Long.MAX_VALUE);
 		if(logs.size()==0){
 			super.getUser().setLastOperation(null);
@@ -173,7 +182,7 @@ public class UserController extends GodzillaApplication{
 		} else if(returnEnum.equals(ReturnCodeEnum.getByReturnCode(OK_ADDUSER))){
 			return SUCCESS;
 		} else {
-			return SUCCESS;
+			return FAILURE;
 		}
 	}
 	

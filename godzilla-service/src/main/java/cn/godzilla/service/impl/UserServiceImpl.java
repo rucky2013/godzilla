@@ -147,6 +147,7 @@ public class UserServiceImpl extends GodzillaApplication implements UserService{
 			userAuthMap.put("index", index++);
 			userAuthMap.put("id", u.getId());
 			userAuthMap.put("username", u.getUserName());
+			userAuthMap.put("realname", u.getRealName());
 			userAuthMap.put("projects", projects);
 			
 			userAuthList.add(userAuthMap);
@@ -171,6 +172,10 @@ public class UserServiceImpl extends GodzillaApplication implements UserService{
 		user.setCreateBy(super.getUser().getUserName());
 		user.setStatus(1);
 		user.setDepartName(departname);
+		User dbuser = userMapper.queryUserByUsername(username);
+		if(dbuser!=null) {
+			return ReturnCodeEnum.getByReturnCode(NO_EXISTUSER);
+		}
 		int insert = userMapper.insertUser(user);
 		return ReturnCodeEnum.getByReturnCode(OK_ADDUSER);
 	}

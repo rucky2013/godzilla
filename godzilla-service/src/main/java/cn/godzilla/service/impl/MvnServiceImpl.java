@@ -87,6 +87,7 @@ public class MvnServiceImpl extends GodzillaApplication implements MvnService {
 		Project project = projectService.qureyByProCode(projectCode);
 		
 		String webPath = project.getWebPath();
+		String parentPomPath = project.getCheckoutPath();
 		ClientConfig clientconfig = clientConfigService.queryDetail(projectCode, profile);
 		String IP = clientconfig.getRemoteIp();
 		/*
@@ -166,7 +167,7 @@ public class MvnServiceImpl extends GodzillaApplication implements MvnService {
 			try {
 				MvnProviderService mvnProviderService = mvnProviderServices.get(IP);
 				String username = GodzillaApplication.getUser().getUserName();
-				result = this.deployProject(mvnProviderService, username, srcUrl, projectCode, profile, IP, parentVersion);
+				result = this.deployProject(mvnProviderService, username, webPath, projectCode, profile, IP, parentVersion, parentPomPath);
 				flag2 = result.getRpcCode().equals("0")?true:false;
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -240,12 +241,13 @@ public class MvnServiceImpl extends GodzillaApplication implements MvnService {
 	}
 	
 	
-	public RpcResult deployProject(MvnProviderService mvnProviderService, String username, String srUrl, String projectCode, String profile, String IP, String parentVersion) {
+	public RpcResult deployProject(MvnProviderService mvnProviderService, String username, String webPath, String projectCode, String profile, String IP, String parentVersion, String parentPomPath) {
 		boolean flag2 = false;
 		RpcResult result = null;
 		String commands = "";
 		try {
-			String POM_PATH = srUrl + "/pom.xml";
+			String POM_PATH = webPath + "/pom.xml";
+			String PARENTPOM_PATH = parentPomPath + "/pom.xml";
 			String USER_NAME = username;
 			String PROJECT_NAME = projectCode;
 			
@@ -253,7 +255,7 @@ public class MvnServiceImpl extends GodzillaApplication implements MvnService {
 			String shell = SHELL_CLIENT_PATH.endsWith("/")
 							?(SHELL_CLIENT_PATH+ "godzilla_mvn.sh")
 									:(SHELL_CLIENT_PATH+"/" +"godzilla_mvn.sh");
-			String str = "sh "+shell+" deploy "+POM_PATH+" "+USER_NAME+" "+PROJECT_NAME+" "+ PROJECT_ENV +" " +parentVersion;
+			String str = "sh "+shell+" deploy "+POM_PATH+" "+USER_NAME+" "+PROJECT_NAME+" "+ PROJECT_ENV +" " +parentVersion + " " + PARENTPOM_PATH;
 			
 			result = mvnProviderService.mvnDeploy(str, PROJECT_NAME, PROJECT_ENV, USER_NAME);
 			commands = str;
@@ -427,10 +429,10 @@ public class MvnServiceImpl extends GodzillaApplication implements MvnService {
 		flag = command.execute(str, super.getUser().getUserName(), projectCode, project.getSvnUsername(), project.getSvnPassword());
 		
 		if(flag) {
-			operateLogService.addOperateLog(super.getUser().getUserName(), projectCode, profile, COPYWAR, SUCCESS, "copy war success");
+			operateLogService.addOperateLog(super.getUser().getUserName(), super.getUser().getRealName(), projectCode, profile, COPYWAR, SUCCESS, "copy war success");
 			return true;
 		} else {
-			operateLogService.addOperateLog(super.getUser().getUserName(), projectCode, profile, COPYWAR, FAILURE, "copy war failure");
+			operateLogService.addOperateLog(super.getUser().getUserName(), super.getUser().getRealName(),projectCode, profile, COPYWAR, FAILURE, "copy war failure");
 			return false;
 		}
 		

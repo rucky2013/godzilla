@@ -52,7 +52,7 @@
                   	<label>提交人：</label><input type="text" name="createBy" placeholder="输入内容" value="${createBy}" />
                 	<label>环境：</label>
                 	<select name="selectedProfile">
-                		<option value="" selected="selected">All</option>
+                		<!--<option value="" selected="selected">All</option>-->
                 		<#list profileList?keys as key>
 							<#if profileList[key] = selectedProfile>
             					<option value="${profileList[key]}" selected="selected">${key}</option>

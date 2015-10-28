@@ -9,7 +9,9 @@ import org.springframework.stereotype.Service;
 
 import cn.godzilla.common.ReturnCodeEnum;
 import cn.godzilla.dao.ProjectMapper;
+import cn.godzilla.model.ClientConfig;
 import cn.godzilla.model.Project;
+import cn.godzilla.service.ClientConfigService;
 import cn.godzilla.service.OperateLogService;
 import cn.godzilla.service.ProjectService;
 import cn.godzilla.service.SvnService;
@@ -27,7 +29,8 @@ public class ProjectServiceImpl extends GodzillaApplication implements ProjectSe
 	private SvnService svnService;
 	@Autowired
 	private BaseShellCommand command;
-	
+	@Autowired
+	private ClientConfigService clientConfigService;
 	@Override
 	public int insert(Project project) {
 		
@@ -128,14 +131,33 @@ public class ProjectServiceImpl extends GodzillaApplication implements ProjectSe
 		flag = command.execute(str, super.getUser().getUserName(), "", "", "");
 		
 		if(flag) {
-			operateLogService.addOperateLog(super.getUser().getUserName(), "godzilla", "TEST", actiion, SUCCESS, actiion+" godzilla clients success");
+			operateLogService.addOperateLog(super.getUser().getUserName(),super.getUser().getRealName(), "godzilla", "TEST", actiion, SUCCESS, actiion+" godzilla clients success");
 			return ReturnCodeEnum.getByReturnCode(OK_GODZILLA);
 		} else {
-			operateLogService.addOperateLog(super.getUser().getUserName(), "godzilla", "TEST", actiion, FAILURE, actiion+" godzilla clients failure");
+			operateLogService.addOperateLog(super.getUser().getUserName(), super.getUser().getRealName(),"godzilla", "TEST", actiion, FAILURE, actiion+" godzilla clients failure");
 			return ReturnCodeEnum.getByReturnCode(NO_GODZILLA);
 		}
 	}
 
-	
+	@Override
+	public void refreshProjectState(Project project) {
+		
+		ClientConfig client = clientConfigService.queryDetail(project.getProjectCode(), TEST_PROFILE);
+		project.setState(0+"");
+		if(super.ifSuccessStartProject(client.getRemoteIp(), project.getWarName())) {
+			project.setState(1+"");
+		}
+	}
+
+	@Override
+	public void refreshProjectState(List<Project> projects) {
+		for(Project project: projects) {
+			ClientConfig client = clientConfigService.queryDetail(project.getProjectCode(), TEST_PROFILE);
+			project.setState(0+"");
+			if(super.ifSuccessStartProject(client.getRemoteIp(), project.getWarName())) {
+				project.setState(1+"");
+			}
+		}
+	}
 	
 }

@@ -46,11 +46,13 @@
                   		<tr>
 	                    <#list projects as item>
 	                    	<#if (item_index+1) % 4 == 0>
-		                    		<td><a href="/${basePath}/project/${sid}/${item.projectCode}/TEST/projectConfig.do" title="${item.projectCode}"><span></span>${item.projectName}</a></td>
+		                    		<td><a href="/${basePath}/project/${sid}/${item.projectCode}/TEST/projectConfig.do" title="${item.projectCode}"><span></span>
+									${item.projectName}</a></td>
 	                    			</tr><tr>
-	                    	<#else>
-	                    			<td><a href="/${basePath}/project/${sid}/${item.projectCode}/TEST/projectConfig.do" title="${item.projectCode}"><span></span>${item.projectName}</a></td>
-	                    	</#if>
+	                  		<#else>
+	                    			<td><a href="/${basePath}/project/${sid}/${item.projectCode}/TEST/projectConfig.do" title="${item.projectCode}"><span></span>
+									${item.projectName}</a></td>
+	                  		</#if>
 	                    </#list>
                 		</tr>
                 </table>

@@ -29,7 +29,9 @@ import cn.godzilla.common.BusinessException;
 import cn.godzilla.common.Constant;
 import cn.godzilla.common.ReturnCodeEnum;
 import cn.godzilla.common.StringUtil;
+import cn.godzilla.model.ClientConfig;
 import cn.godzilla.model.FunRight;
+import cn.godzilla.model.Project;
 import cn.godzilla.model.User;
 import cn.godzilla.service.FunRightService;
 import cn.godzilla.service.UserService;
@@ -189,7 +191,7 @@ public abstract class GodzillaApplication extends Application implements Constan
 		} catch (InterruptedException e2) {
 			e2.printStackTrace();
 		}
-		int timeout = DEFAULT_TIMEOUT * 2;
+		int timeout = DEFAULT_TIMEOUT ;
 		int i = 0;
 		while (true) {
 			String test_url = "http://" + IP + ":8080/" + war_name + "/index.jsp";
@@ -207,12 +209,15 @@ public abstract class GodzillaApplication extends Application implements Constan
 	                    rs.append((char) respInt);
 	                    respInt = insr.read();
 	                }
-	            } else if(HttpStatus.SC_NOT_FOUND == response.getStatusLine().getStatusCode()){
-	            	//如果信息码 为 4xx 或者 5xx 则退出
-	            	return false;
-	            } else if(HttpStatus.SC_INTERNAL_SERVER_ERROR == response.getStatusLine().getStatusCode()) {
-	            	return false;
-	            }
+	            } 
+	            //if(i>10) {
+	            	if(HttpStatus.SC_NOT_FOUND == response.getStatusLine().getStatusCode()){
+		            	//如果信息码 为 4xx 或者 5xx 则退出
+		            	return false;
+		            } else if(HttpStatus.SC_INTERNAL_SERVER_ERROR == response.getStatusLine().getStatusCode()) {
+		            	return false;
+		            }
+	           //}
 			} catch (IOException e1) {
 				System.out.println("---httpclient 报错啦=---");
 				e1.printStackTrace();
@@ -221,7 +226,7 @@ public abstract class GodzillaApplication extends Application implements Constan
 	            	return true;
 	        } else {
 	        	try {
-					Thread.sleep(500);
+					Thread.sleep(1000);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
@@ -233,6 +238,59 @@ public abstract class GodzillaApplication extends Application implements Constan
 	        }
 		}
 	}
+	
+	/**
+	 * 
+	 * |快速判断|首页展示启动与否使用|
+	 * 测试环境  通过访问 index.jsp 判断 是否 项目启动成功
+	 * 其他环境暂不需要
+	 * project.state
+	 * 1.已启动
+	 * 0.未知
+	 * @param IP
+	 * @param war_name
+	 * @return
+	 */
+	protected boolean ifSuccessStartProject(String IP, String war_name) {
+		
+		try {
+			Thread.currentThread().sleep(2000);
+		} catch (InterruptedException e2) {
+			e2.printStackTrace();
+		}
+		String test_url = "http://" + IP + ":8080/" + war_name + "/index.jsp";
+		StringBuilder rs = new StringBuilder();
+		try {
+			RequestConfig config = RequestConfig.custom().setSocketTimeout(100).setConnectionRequestTimeout(100).setConnectTimeout(1000).build();
+			CloseableHttpClient client = HttpClients.custom().setDefaultRequestConfig(config).build();
+			HttpResponse response = client.execute(new HttpGet(test_url));
+		
+            if (HttpStatus.SC_OK == response.getStatusLine().getStatusCode()) {
+                HttpEntity entity = response.getEntity();
+                InputStreamReader insr = new InputStreamReader(entity.getContent());
+                int respInt = insr.read();
+                while (respInt != -1) {
+                    rs.append((char) respInt);
+                    respInt = insr.read();
+                }
+            } 
+        	if(HttpStatus.SC_NOT_FOUND == response.getStatusLine().getStatusCode()){
+            	//如果信息码 为 4xx 或者 5xx 则退出
+            	return false;
+            } else if(HttpStatus.SC_INTERNAL_SERVER_ERROR == response.getStatusLine().getStatusCode()) {
+            	return false;
+            }
+		} catch (IOException e1) {
+			System.out.println("---httpclient 报错啦=---");
+			e1.printStackTrace();
+		}
+        if (rs.toString().indexOf("<!--<h5>godzilla</h5>-->") != -1) {
+            return true;
+        } else {
+        	return false;
+        }
+	}
+	
 	protected void isEmpty(Object o) {
 		if(o == null) 
 			throw new BusinessException("数据为null->" + o.getClass().getName());
@@ -262,4 +320,5 @@ public abstract class GodzillaApplication extends Application implements Constan
 			}
 		}
 	}
+	
 }

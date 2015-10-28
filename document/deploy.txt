@@ -1,0 +1,8 @@
+部署流程
+
+0.点击合并代码将代码下载到日常机器
+1./app/maven/bin/mvn versions:set -DnewVersion=2.0.5-SNAPSHOT
+2./app/maven/bin/mvn -N versions:update-child-modules
+3.vi pom.xml 将 web项目从model中去掉
+4./app/maven/bin/mvn clean deploy   -Dmaven.test.skip=true
+5.进入哥斯拉，点击部署按钮

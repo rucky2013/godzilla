@@ -24,17 +24,19 @@ public class PropertiesImportUtil {
 		
 		PropConfigService propConfigService = (PropConfigService) context.getBean("propConfigService");
 		
-		Map<String, List<PropConfig>> proplistMap = parse("F:\\yixin_fso_app\\fso_newmanager_trunk\\pom.xml", "new-manager");
+		Map<String, List<PropConfig>> proplistMap = parse("D:\\pom.xml", "zeus-server");
 		
 		for(PropConfig prop: proplistMap.get("test")) {
 			propConfigService.insert(prop);
 		}
+		
 		for(PropConfig prop: proplistMap.get("pre-online")) {
 			propConfigService.insert(prop);
-		}
+		}/**/
 		for(PropConfig prop: proplistMap.get("online")) {
 			propConfigService.insert(prop);
 		}
+		/* */
 		
 	}
 	
@@ -59,7 +61,7 @@ public class PropertiesImportUtil {
 				String key = property.getName();
 				String value = property.getText();
 				
-				if(value.contains("\\")||value.contains("=")){
+				if(value.contains("\\")||value.contains("=") && !value.contains("CDATA")){
 					value = "<![CDATA["+value+"]]>";
 				}
 				

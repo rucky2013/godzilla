@@ -126,13 +126,20 @@ function common() {
 		echo "$element  to merge"
 	    svn merge $element $svnuser --non-interactive   
 	    #tail -20 /home/godzilla/gzl/work/cupid/cupid-web/src/main/webapp/index.jsp
-	    svn st|grep '^[ ]*C'
-		if [ $? == 0 ] ;then
-			echo "Error: some conflicts still found! Please resolve all of them. " $element 
+	    #svn st|grep '^[ ]*C' 
+		#if [ $? == 0 ] ;then
+		#	echo "Error: some conflicts still found! Please resolve all of them. " $element 
+		#	echo 2
+		#	echo 2
+		#	exit 2
+		#fi;
+		#过滤配置文件,如果有未替换配置项 如果含有${XX}则退出
+		svn st|grep '^[ ]*C'  > conflict.log
+		if [ -s conflict.log ]; then
 			echo 2
 			echo 2
 			exit 2
-		fi;
+		fi
 	done  ;
 	echo "合并分支:"$element" finished! no conflict"
 }
