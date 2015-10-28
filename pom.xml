@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>cn.godzilla</groupId>
 	<artifactId>godzilla-parent</artifactId>
-	<version>1.0.6.Final</version>
+	<version>1.0.7.Final-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>${project.artifactId}</name>
 	<description>The parent project of godzilla</description>
@@ -14,7 +14,7 @@
 		<connection>scm:git:git://github.com/ZeroHelp/godzilla.git</connection> 
 		<developerConnection>scm:git:ssh://git@github.com/ZeroHelp/godzilla.git</developerConnection>-->
 		<developerConnection>scm:git:ssh://git@github.com/ZeroHelp/godzilla.git</developerConnection>
-	  <tag>godzilla-1.0.6.Final</tag>
+	  <tag>HEAD</tag>
   </scm>
   
 	<modules>
