@@ -15,13 +15,13 @@ import cn.godzilla.service.FunRightService;
 public class FunRightServiceImpl implements FunRightService {
 
 	@Autowired
-	private FunRightMapper dao;
+	private FunRightMapper funRightMapper;
 
 	@Override
 	public List<FunRight> findFunRightsByUsername(String username) {
 		Map<String, Object> parameterMap = new HashMap<String, Object>();
 		parameterMap.put("username", username);
-		List<FunRight> funRightList = dao.queryRightsByUsername(parameterMap);
+		List<FunRight> funRightList = funRightMapper.queryRightsByUsername(parameterMap);
 		return funRightList;
 	}
 

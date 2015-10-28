@@ -40,10 +40,14 @@ public enum ReturnCodeEnum {
 	NO_SVNMERGE("100031", "合并分支失败"),
 	NO_MVNBUILD("100032", "mvn build 失败"),
 	NO_COMMON("100033", "公共异常:后台错误(异常处日志未处理)"),
-	NO_CONCURRENCEDEPLOY("100034", "其他人正在发布，请等待一会重试"),
+	NO_CONCURRENCEDEPLOY("100034", "其他人正在使用此项目功能，请等待一会重试"),
 	NO_MVNSETPROPS("100035", "mvn build 失败:xml,properties中含有${xx}未设置配置项"),
 	NO_HASKEYDEPLOY("100036", "没有设置 公平锁为此项目"),
 	NO_EXISTUSER("100037", "用户名已存在"),
+	NO_STARTTOMCAT("100038", "tomcat启动失败"),
+	NO_SRCEDIT("100039", "源代码设置失败"),
+	NO_BRANCHADD("100040", "分支添加失败"),
+	NO_SVNSTATUS("100041", "svn status信息获取失败"),
 	
 	OK_SUCCESS("200000", "SUCCESS"),
 	//user模块
@@ -65,6 +69,10 @@ public enum ReturnCodeEnum {
 	OK_GODZILLA("200029","godzilla 客户端操作成功"),
 	OK_DELETEBRANCH("200030", "删除分支成功"),
 	OK_SVNMERGE("200031", "合并分支成功"),
+	OK_STARTTOMCAT("200038", "tomcat启动成功"),
+	OK_SRCEDIT("200039", "源代码设置成功"),
+	OK_BRANCHADD("200040", "分支添加成功"),
+	OK_SVNSTATUS("200041", "svn status信息获取成功"),
 	;
 	
 	public String returnCode;

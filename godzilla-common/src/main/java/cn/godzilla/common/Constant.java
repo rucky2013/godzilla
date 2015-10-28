@@ -25,12 +25,16 @@ public interface Constant {
 	public final String VERIFYPROP = "verifyProp";
 	public final String BRANCHADD = "branchadd";
 	public final String BRANCHEDIT = "branchedit";
+	public final String BRANCHDELETE = "branchdelete";
 	public final String SVNSTATUS = "svnstatus";
 	public final String SVNMERGE = "svnmerge";
 	public final String SVNCOMMIT = "svncommit";
 	public final String TOMCATRESTART = "tomcatrestart";
-	public final String COPYWAR= "sshcopywar";
-	
+	public final String WARDOWNLOAD= "wardownload";
+	public final String GODZILLAEX= "godzillaex";
+	public final String ADMINOPERATOR= "adminoperator";
+	public final String EDITWORKDESK = "editworkdesk";
+	public final String ADDUSER = "adduser";
 	
 	public final String NOTYET_VERIFY_STATUS = "0";//未审核
 	public final String OK_VERIFY_STATUS = "1";//审核通过
@@ -113,6 +117,11 @@ public interface Constant {
 	public final static String NO_CONCURRENCEDEPLOY = "100034";
 	public final static String NO_MVNSETPROPS = "100035";
 	public final static String NO_HASKEYDEPLOY = "100036";
+	public final static String NO_EXISTUSER = "100037";
+	public final static String NO_STARTTOMCAT = "100038";
+	public final static String NO_SRCEDIT = "100039";
+	public final static String NO_BRANCHADD = "100040";
+	public final static String NO_SVNSTATUS = "100041";
 	
 	public final static String OK_AJAX = "200000";
 	public final static String OK_CHECKUSER = "200001";
@@ -129,4 +138,8 @@ public interface Constant {
 	public final static String OK_GODZILLA = "200029";
 	public final static String OK_DELETEBRANCH = "200030";
 	public final static String OK_SVNMERGE = "200031";
+	public final static String OK_STARTTOMCAT = "200038";
+	public final static String OK_SRCEDIT = "200039";
+	public final static String OK_BRANCHADD = "200040";
+	public final static String OK_SVNSTATUS = "200041";
 }

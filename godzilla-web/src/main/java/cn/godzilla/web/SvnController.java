@@ -1,7 +1,5 @@
 package cn.godzilla.web;
 
-import java.util.List;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -18,9 +16,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import cn.godzilla.common.Constant;
 import cn.godzilla.common.ReturnCodeEnum;
 import cn.godzilla.common.response.ResponseBodyJson;
-import cn.godzilla.model.ClientConfig;
-import cn.godzilla.model.Project;
-import cn.godzilla.model.SvnBranchConfig;
 import cn.godzilla.service.ClientConfigService;
 import cn.godzilla.service.OperateLogService;
 import cn.godzilla.service.ProjectService;
@@ -64,54 +59,9 @@ public class SvnController extends GodzillaApplication implements Constant{
 	@ResponseBody
 	public Object doStatus(@PathVariable String sid, @PathVariable String projectCode,@PathVariable String profile, HttpServletRequest request, HttpServletResponse response) {
 		
-		logger.info("************状态查看Begin***********");
+		ReturnCodeEnum returnenum = svnService.getStatus(projectCode, profile);
 		
-		ClientConfig clientConfig = clientConfigService.queryDetail(projectCode, profile) ;
-		String clientIp = clientConfig.getRemoteIp();
-		List<SvnBranchConfig> svnBranchConfigs = svnBranchConfigService.queryListByProjectCode(projectCode);
-		Project project = projectService.qureyByProCode(projectCode);
-		String trunkPath = project.getRepositoryUrl();
-		String localPath=project.getCheckoutPath(); 
-		
-		boolean flag = false;
-		
-		String branches = "";
-		for(SvnBranchConfig sbc: svnBranchConfigs) {
-			branches = sbc.getBranchUrl() + ",";
-		}
-		if("".equals(branches)) {
-			branches = EMPTY_BRANCH;
-		} else {
-			branches = branches.substring(0, branches.length()-1);
-		}
-		String callbackUrl = "http://localhost:8080/process-callback.do";
-		
-		String operator = super.getUser().getUserName();
-		String str = "";
-		try {
-			str ="sh /home/godzilla/gzl/shell/server/svn_server_wl.sh status "+trunkPath+" '"+branches+"' "+" "+callbackUrl+" "+projectCode+" "+ operator +" "+clientIp ;
-			flag = command.execute(str, super.getUser().getUserName(), projectCode, project.getSvnUsername(), project.getSvnPassword());
-		} catch (Exception e) {
-			logger.error(e);
-			e.printStackTrace();
-		}
-		
-		//如果有回显的话  将后台信息输出到 mq
-		if(flag){
-			String username = super.getUser().getUserName();
-			operateLogService.addSvnCommandLog(username, trunkPath, str, username);
-			operateLogService.addOperateLog(username, super.getUser().getRealName(), projectCode, profile, SVNSTATUS, SUCCESS, "状态查看SUCCESS");
-			logger.info("************状态查看End**************");
-			String echoMessage = echoMessageThreadLocal.get();
-			return ResponseBodyJson.custom().setAll(OK_AJAX, SUCCESS, echoMessage).build();
-		}else{
-			String username = super.getUser().getUserName();
-			operateLogService.addSvnCommandLog(username, trunkPath, str, username);
-			operateLogService.addOperateLog(username, super.getUser().getRealName(), projectCode, profile, SVNSTATUS, FAILURE, "状态查看FAILURE");
-			logger.error("************状态查看Error**************");
-			return ResponseBodyJson.custom().setAll(NO_AJAX, FAILURE, "").build();
-		}
-		
+		return ResponseBodyJson.custom().setAll(returnenum.getReturnCode(), returnenum.getReturnMsg(), echoMessageThreadLocal.get(), SVNSTATUS).build();
 	}
 	
 	/**
@@ -134,14 +84,8 @@ public class SvnController extends GodzillaApplication implements Constant{
 	@ResponseBody
 	public Object doMerge(@PathVariable String sid, @PathVariable String projectCode,@PathVariable String profile, HttpServletRequest request, HttpServletResponse response) {
 		
-		boolean flag = svnService.svnMerge(projectCode, profile);
-		if(flag){
-			logger.info("************代码合并End**************");
-			return ResponseBodyJson.custom().setAll(OK_AJAX, SUCCESS, "").build();
-		}else{
-			logger.error("************代码合并Error**************");
-			return ResponseBodyJson.custom().setAll(NO_AJAX, FAILURE, "").build();
-		}
+		ReturnCodeEnum returnEnum = svnService.svnMerge(projectCode, profile);
+		return ResponseBodyJson.custom().setAll(returnEnum, SVNMERGE).build();
 	}
 	/**
 	 * 提交主干
@@ -168,12 +112,8 @@ public class SvnController extends GodzillaApplication implements Constant{
 	@ResponseBody
 	public Object commit(@PathVariable String sid, @PathVariable String projectCode,@PathVariable String profile, HttpServletRequest request, HttpServletResponse response) {
 		
-		logger.info("************提交主干Begin***********");
-		
 		ReturnCodeEnum returnEnum = svnService.svnCommit(projectCode, profile);
-		operateLogService.addOperateLog(super.getUser().getUserName(), super.getUser().getRealName(), projectCode, profile, SVNCOMMIT, returnEnum.getStatus(), returnEnum.getReturnMsg());
-		logger.info("************提交主干End "+returnEnum.getStatus()+":"+returnEnum.getReturnMsg()+"**************");
-		return ResponseBodyJson.custom().setAll(returnEnum).build();
+		return ResponseBodyJson.custom().setAll(returnEnum, SVNCOMMIT).build();
 	}
 	
 	/**
@@ -193,21 +133,8 @@ public class SvnController extends GodzillaApplication implements Constant{
 			@RequestParam("branchUrl") String branchUrl,
 			HttpServletRequest request, HttpServletResponse response) {
 
-		
-		logger.info("**************添加分支设置***********projectCode:" + projectCode
-				+ ",branchUrl:" + branchUrl);
-
-		boolean flag = svnBranchConfigService.addNewBranch(projectCode, profile, branchUrl);
-		
-		if(flag){
-			operateLogService.addOperateLog(super.getUser().getUserName(), super.getUser().getRealName(), projectCode, profile, BRANCHADD, SUCCESS, "添加分支设置SUCCESS");
-			logger.info("************添加分支设置End**************");
-			return SUCCESS;
-		}else{
-			operateLogService.addOperateLog(super.getUser().getUserName(), super.getUser().getRealName(), projectCode, profile, BRANCHADD, FAILURE, "添加分支设置FAILURE");
-			logger.error("************添加分支设置Error**************");
-			return FAILURE;
-		}
+		ReturnCodeEnum returnEnum = svnBranchConfigService.addNewBranch(projectCode, profile, branchUrl);
+		return ResponseBodyJson.custom().setAll(returnEnum, BRANCHADD).build();
 	}
 	
 	/**
@@ -229,20 +156,8 @@ public class SvnController extends GodzillaApplication implements Constant{
 			HttpServletRequest request, HttpServletResponse response) {
 
 		
-		logger.info("**************分支编辑 保存***********projectCode:" + projectCode
-				+ ",branchUrl:" + branchUrl);
-
-		boolean flag = svnBranchConfigService.editBranch(projectCode, profile, id, branchUrl);
-		
-		if(flag){
-			operateLogService.addOperateLog(super.getUser().getUserName(), super.getUser().getRealName(), projectCode, profile, BRANCHEDIT, SUCCESS, "分支编辑 保存SUCCESS");
-			logger.info("************分支编辑 保存End**************");
-			return ResponseBodyJson.custom().setAll(OK_AJAX, SUCCESS, "").build();
-		}else{
-			operateLogService.addOperateLog(super.getUser().getUserName(), super.getUser().getRealName(), projectCode, profile, BRANCHEDIT, FAILURE, "分支编辑 保存FAILURE");
-			logger.error("************分支编辑 保存Error**************");
-			return ResponseBodyJson.custom().setAll(NO_AJAX, FAILURE, "").build();
-		}
+		ReturnCodeEnum returnEnum = svnBranchConfigService.editBranch(projectCode, profile, id, branchUrl);
+		return ResponseBodyJson.custom().setAll(returnEnum, BRANCHEDIT).build();
 	}
 	
 	@RequestMapping(value="/svnbranch/{sid}/{projectCode}/{profile}/delete", method=RequestMethod.GET) 
@@ -251,8 +166,7 @@ public class SvnController extends GodzillaApplication implements Constant{
 			@RequestParam("id") String id,
 			HttpServletRequest request, HttpServletResponse response) {
 		
-		logger.info("************分支编辑　删除×××××××××××××××××××***" ) ;
-		ReturnCodeEnum returnEnum = svnBranchConfigService.deleteBranch(projectCode, profile, id);
-		return ResponseBodyJson.custom().setAll(returnEnum).build();
+		ReturnCodeEnum returnEnum = svnBranchConfigService.deletebranchesByProjectCode(projectCode);
+		return ResponseBodyJson.custom().setAll(returnEnum, BRANCHDELETE).build();
 	}
 }

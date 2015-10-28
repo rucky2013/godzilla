@@ -7,18 +7,11 @@ import cn.godzilla.model.Project;
 
 public interface ProjectService{
 	
-	public int insert(Project project);
-
-    public int insertSelective(Project project);
-    
-    public boolean updateByProCode(Project project);
     
     public Project qureyByProCode(String projectCode);
     
     public List<Project> queryAll();
     
-    public Project save(Project project);
-
     /**
 	 * 源代码设置-->添加或修改源代码设置
 	 * @param projectCode
@@ -31,7 +24,7 @@ public interface ProjectService{
 	 * @param deployVersion2 
 	 * @return
 	 */
-	boolean srcEdit(String srcId, String repositoryUrl, String checkoutPath, String projectCode, String profile);
+    ReturnCodeEnum srcEdit(String srcId, String repositoryUrl, String checkoutPath, String projectCode, String profile);
 
 	/**
 	 * 更新  项目 版本号
@@ -51,18 +44,4 @@ public interface ProjectService{
 	 */
 	public ReturnCodeEnum godzillaCommand(String string);
 
-	/**
-	 * 更新项目启动状态
-	 * 1.已启动
-	 * 0.未知
-	 * @param project
-	 */
-	public void refreshProjectState(Project project);
-	/**
-	 * 更新项目启动状态
-	 * 1.已启动
-	 * 0.未知
-	 * @param project
-	 */
-	public void refreshProjectState(List<Project> projects);
 }

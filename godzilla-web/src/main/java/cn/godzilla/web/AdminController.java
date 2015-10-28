@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import cn.godzilla.common.ReturnCodeEnum;
 import cn.godzilla.common.response.ResponseBodyJson;
 import cn.godzilla.model.Project;
 import cn.godzilla.service.MvnService;
@@ -56,9 +57,9 @@ public class AdminController extends GodzillaApplication{
 		for(Project project: projects) {
 			if(list1.contains(project.getProjectCode())) {
 				//---fork join
-				boolean flag = mvnService.restartTomcat(project.getProjectCode(), TEST_PROFILE);
-				if(!flag) {
-					return ResponseBodyJson.custom().setAll(NO_AJAX, FAILURE, project.getProjectCode()+"：启动失败").build();
+				ReturnCodeEnum returnenum = mvnService.restartTomcat(project.getProjectCode(), TEST_PROFILE);
+				if(!returnenum.equals(ReturnCodeEnum.getByReturnCode(OK_STARTTOMCAT))) {
+					return ResponseBodyJson.custom().setAll(NO_AJAX, FAILURE, project.getProjectCode()+"：启动失败", ADMINOPERATOR).build();
 				}
 			}
 		}
@@ -113,6 +114,20 @@ public class AdminController extends GodzillaApplication{
 		
 		
 		return null;
+	}
+	
+	/**
+	 * 执行命令
+	 * upgrade,startclients,stopclients,stoptomcats,starttomcats
+	 * @param response
+	 * @return 
+	 */
+	@RequestMapping(value="/{sid}/{projectCode}/{profile}/{command}", method=RequestMethod.GET) 
+	@ResponseBody
+	public Object upgrade(HttpServletResponse response, @PathVariable String command) {
+		
+		ReturnCodeEnum returnEnum = projectService.godzillaCommand(command);
+		return ResponseBodyJson.custom().setAll(returnEnum, ADMINOPERATOR).build();
 	}
 	
 }

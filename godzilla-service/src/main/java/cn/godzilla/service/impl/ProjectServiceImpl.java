@@ -24,65 +24,36 @@ public class ProjectServiceImpl extends GodzillaApplication implements ProjectSe
 	@Autowired
 	private OperateLogService operateLogService;
 	@Autowired
-	private ProjectMapper dao;
+	private ProjectMapper projectMapper;
 	@Autowired
 	private SvnService svnService;
 	@Autowired
 	private BaseShellCommand command;
 	@Autowired
 	private ClientConfigService clientConfigService;
-	@Override
-	public int insert(Project project) {
-		
-		return dao.insert(project);
-	}
 
-	@Override
-	public int insertSelective(Project project) {
-		
-		return dao.insertSelective(project);
-	}
 
-	@Override
-	public boolean updateByProCode(Project project) {
-		
-		return dao.updateByProCode(project);
-	}
 
 	@Override
 	public Project qureyByProCode(String projectCode) {
 		
-		return dao.qureyByProCode(projectCode);
+		return projectMapper.qureyByProCode(projectCode);
 	}
 
 	@Override
 	public List<Project> queryAll() {
 		
-		return dao.queryAll();
+		return projectMapper.queryAll();
 	}
 
 	@Override
-	public Project save(Project project) {
-		
-		Project result = dao.qureyByProCode(project.getProjectCode());
-		
-		if(result != null && result.getId() > 0){
-			
-			dao.updateByProCode(project);
-			
-		}else{
-			dao.insertSelective(project);
-		}
-		return dao.qureyByProCode(project.getProjectCode());
-	}
-	@Override
-	public boolean srcEdit(String srcId, String repositoryUrl, String checkoutPath, String projectCode, String profile) {
+	public ReturnCodeEnum srcEdit(String srcId, String repositoryUrl, String checkoutPath, String projectCode, String profile) {
 		/**
 		 * 1.update trunk version
 		 */
 		ReturnCodeEnum versionreturn = svnService.getVersion(repositoryUrl, projectCode);
 		if(!versionreturn.equals(ReturnCodeEnum.getByReturnCode(OK_SVNVERSION))) {
-			return false;
+			return versionreturn;
 		}
 		String version = svnVersionThreadLocal.get();
 		Map<String, String> parameterMap = new HashMap<String, String>();
@@ -92,11 +63,16 @@ public class ProjectServiceImpl extends GodzillaApplication implements ProjectSe
 		parameterMap.put("checkoutPath", checkoutPath);
 		parameterMap.put("version", version);
 		
-		int index = dao.updateProjectById(parameterMap);
+		int index = projectMapper.updateProjectById(parameterMap);
 		/**
 		 * 2.update branches version
 		 */
-		return index>0;
+		
+		if(index>0) {
+			return ReturnCodeEnum.getByReturnCode(NO_SRCEDIT);
+		} else {
+			return ReturnCodeEnum.getByReturnCode(OK_SRCEDIT);
+		}
 	}
 	
 	public boolean refreshProjectVersion(String projectCode, String profile) {
@@ -112,14 +88,14 @@ public class ProjectServiceImpl extends GodzillaApplication implements ProjectSe
 		Map<String, String> parameterMap = new HashMap<String, String>();
 		parameterMap.put("project_code", projectCode);
 		parameterMap.put("version", version);
-		int index = dao.updateVersionByProjectcode(parameterMap);
+		int index = projectMapper.updateVersionByProjectcode(parameterMap);
 		
 		return index>0;
 	}
 
 	@Override
 	public List<Project> queryProjectsByUsername(String username) {
-		List<Project> projects = dao.queryProjectsByUsername(username);
+		List<Project> projects = projectMapper.queryProjectsByUsername(username);
 		return projects;
 	}
 
@@ -131,33 +107,10 @@ public class ProjectServiceImpl extends GodzillaApplication implements ProjectSe
 		flag = command.execute(str, super.getUser().getUserName(), "", "", "");
 		
 		if(flag) {
-			operateLogService.addOperateLog(super.getUser().getUserName(),super.getUser().getRealName(), "godzilla", "TEST", actiion, SUCCESS, actiion+" godzilla clients success");
 			return ReturnCodeEnum.getByReturnCode(OK_GODZILLA);
 		} else {
-			operateLogService.addOperateLog(super.getUser().getUserName(), super.getUser().getRealName(),"godzilla", "TEST", actiion, FAILURE, actiion+" godzilla clients failure");
 			return ReturnCodeEnum.getByReturnCode(NO_GODZILLA);
 		}
 	}
 
-	@Override
-	public void refreshProjectState(Project project) {
-		
-		ClientConfig client = clientConfigService.queryDetail(project.getProjectCode(), TEST_PROFILE);
-		project.setState(0+"");
-		if(super.ifSuccessStartProject(client.getRemoteIp(), project.getWarName())) {
-			project.setState(1+"");
-		}
-	}
-
-	@Override
-	public void refreshProjectState(List<Project> projects) {
-		for(Project project: projects) {
-			ClientConfig client = clientConfigService.queryDetail(project.getProjectCode(), TEST_PROFILE);
-			project.setState(0+"");
-			if(super.ifSuccessStartProject(client.getRemoteIp(), project.getWarName())) {
-				project.setState(1+"");
-			}
-		}
-	}
-	
 }

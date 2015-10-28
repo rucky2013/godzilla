@@ -86,17 +86,9 @@ public class IndexController extends GodzillaApplication{
 		String repositoryUrl = StringUtil.getReqPrameter(request, "repositoryUrl");
 		String checkoutPath = StringUtil.getReqPrameter(request, "checkoutPath");
 		
-		boolean flag = projectService.srcEdit(srcId, repositoryUrl, checkoutPath, projectCode, profile);
+		ReturnCodeEnum returnEnum = projectService.srcEdit(srcId, repositoryUrl, checkoutPath, projectCode, profile);
 		
-		if(flag){
-			operateLogService.addOperateLog(super.getUser().getUserName(), super.getUser().getRealName(), projectCode, profile, SRCEDIT, SUCCESS, "源代码设置SUCCESS");
-			logger.info("************源代码设置End**************");
-			return SUCCESS;
-		}else{
-			operateLogService.addOperateLog(super.getUser().getUserName(), super.getUser().getRealName(), projectCode, profile, SRCEDIT, FAILURE, "源代码设置FAILURE");
-			logger.error("************源代码设置Error**************");
-			return FAILURE;
-		}
+		return ResponseBodyJson.custom().setAll(returnEnum, SRCEDIT).build();
 	}
 	
 	/**
@@ -122,7 +114,7 @@ public class IndexController extends GodzillaApplication{
 		svnBranchConfigs = svnBranchConfigService.queryListByProjectCode(projectCode);
 		List<OperateLog> operateLogs = operateLogService.queryList(projectCode, profile);
 		
-		request.setAttribute("username", this.getUser().getUserName());
+		request.setAttribute("username", GodzillaApplication.getUser().getUserName());
 		request.setAttribute("clientConfig", clientConfig);
 		request.setAttribute("svnBranchConfigs", svnBranchConfigs);
 		request.setAttribute("operateLogs", operateLogs);
@@ -136,38 +128,20 @@ public class IndexController extends GodzillaApplication{
 	public Object download(@PathVariable("sid") String sid, @PathVariable String projectCode, @PathVariable String profile, HttpServletResponse response) {
 		
 		ReturnCodeEnum returnEnum = mvnService.downLoadWar(response, projectCode, profile);
+		
+		ResponseBodyJson.custom().setAll(returnEnum, WARDOWNLOAD).build();
+		
 		return null;
 	}
 	
-	/**
-	 * 执行命令
-	 * upgrade,startclients,stopclients,stoptomcats,starttomcats
-	 * @param response
-	 * @return 
-	 */
-	@RequestMapping(value="/project/{sid}/{projectCode}/{profile}/{command}", method=RequestMethod.GET) 
-	@ResponseBody
-	public Object upgrade(HttpServletResponse response, @PathVariable String command) {
-		
-		ReturnCodeEnum returnEnum = projectService.godzillaCommand(command);
-		return ResponseBodyJson.custom().setAll(returnEnum).build();
-	}
+	
 	
 	@RequestMapping(value = "/tomcat/{sid}/{projectCode}/{profile}/restart", method = RequestMethod.GET)
 	@ResponseBody
 	public Object restart(@PathVariable String sid, @PathVariable String projectCode,@PathVariable String profile, HttpServletRequest request, HttpServletResponse response) {
 	
-		logger.info("*******TomcatController.restart*******");
-		boolean flag = false;
+		ReturnCodeEnum returnEnum = mvnService.restartTomcat(projectCode, profile);
 		
-		flag = mvnService.restartTomcat(projectCode, profile);
-		
-		if(flag) {
-			operateLogService.addOperateLog(super.getUser().getUserName(), super.getUser().getRealName(), projectCode, profile, TOMCATRESTART, SUCCESS, "tomcat重启SUCCESS");
-			return ResponseBodyJson.custom().setAll(OK_AJAX, SUCCESS, "").build();
-		} else {
-			operateLogService.addOperateLog(super.getUser().getUserName(), super.getUser().getRealName(), projectCode, profile, TOMCATRESTART, FAILURE, "tomcat重启FAILURE");
-			return ResponseBodyJson.custom().setAll(NO_AJAX, FAILURE, "").build();
-		}
+		return ResponseBodyJson.custom().setAll(returnEnum, TOMCATRESTART).build();
 	}
 }

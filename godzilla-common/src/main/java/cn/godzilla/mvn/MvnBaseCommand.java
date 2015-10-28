@@ -4,6 +4,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -79,8 +81,16 @@ public class MvnBaseCommand extends Application implements Constant{
 					if(line1.contains("[ERROR]")) {
 						mvnERRORThreadLocal.set(FAILURE);
 					}
-					logger.info("******MvnBaseCommand.execute-->InputStream******"+line1);
-					
+					/**
+					 * 不显示 上传war包 日志
+					 */
+					Pattern pattern = Pattern.compile("^[0-9]+");
+					Matcher matcher = pattern.matcher(line1);
+					if(matcher.matches()) {
+						continue;
+					} else {
+						logger.info("******MvnBaseCommand.execute-->InputStream******"+line1);
+					}
 				}
 			}
 		} catch(Exception e) {

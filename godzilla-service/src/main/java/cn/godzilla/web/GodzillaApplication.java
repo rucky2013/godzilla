@@ -101,6 +101,16 @@ public abstract class GodzillaApplication extends Application implements Constan
 		
 		return ReturnCodeEnum.getByReturnCode(NO_AUTHORIZATION);
 	}
+	/**
+	 * 初始化 projectcode and profile threadlocal 
+	 * 
+	 * @param projectcode
+	 * @param profile
+	 */
+	protected void initProjectThreadLocal(String projectcode, String profile) {
+		projectcodeThreadLocal.set(projectcode);
+		profileThreadLocal.set(profile);
+	}
 	
 	/**
 	 * 初始化 当前jvm缓存  
@@ -124,6 +134,8 @@ public abstract class GodzillaApplication extends Application implements Constan
 		sidThreadLocal.set(null);
 		echoMessageThreadLocal.set("");
 		shellReturnThreadLocal.set("");
+		projectcodeThreadLocal.set("");
+		profileThreadLocal.set("");
 	}
 	
 	protected static List<FunRight> getFunRights() {

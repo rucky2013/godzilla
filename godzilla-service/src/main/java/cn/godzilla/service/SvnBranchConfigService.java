@@ -7,9 +7,6 @@ import cn.godzilla.model.SvnBranchConfig;
 
 public interface SvnBranchConfigService {
 	
-	int insert(SvnBranchConfig svnBranchConfig);
-	
-	int update(SvnBranchConfig svnBranchConfig);
 	
 	List<SvnBranchConfig> queryListByProjectCode(String projectCode);
 
@@ -20,7 +17,7 @@ public interface SvnBranchConfigService {
 	 * @param branchUrl
 	 * @return
 	 */
-	boolean addNewBranch(String projectCode, String profile, String branchUrl);
+	ReturnCodeEnum addNewBranch(String projectCode, String profile, String branchUrl);
 
 	/**
 	 * 分支编辑  保存  
@@ -29,28 +26,18 @@ public interface SvnBranchConfigService {
 	 * @param currentVersion
 	 * @return
 	 */
-	boolean editBranch(String projectCode, String profile, String id, String branchUrl);
+	ReturnCodeEnum editBranch(String projectCode, String profile, String id, String branchUrl);
 	/**
 	 * 删除已提交分支
 	 * @param projectCode
 	 * @return
 	 */
-	int deletebranchesByProjectCode(String projectCode);
+	ReturnCodeEnum deletebranchesByProjectCode(String projectCode);
 	/**
 	 * 刷新分支版本
 	 * @param svnBranchConfigs
 	 */
-	boolean refreshBranchesVersion(List<SvnBranchConfig> svnBranchConfigs);
-
-	/**
-	 * 
-	 * @param projectCode
-	 * @param profile
-	 * @param id
-	 * @return ReturnCodeEnum
-	 * 			OK_DELETEBRANCH, NO_DELETEBRANCH
-	 */
-	ReturnCodeEnum deleteBranch(String projectCode, String profile, String id);
+	ReturnCodeEnum refreshBranchesVersion(List<SvnBranchConfig> svnBranchConfigs);
 
 	
 }

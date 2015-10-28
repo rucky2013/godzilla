@@ -35,6 +35,11 @@ public class SvnServiceImpl extends GodzillaApplication implements SvnService {
 	private BaseShellCommand command;
 	@Override
 	public ReturnCodeEnum getVersion(String trunkPath, String projectCode) {
+		ReturnCodeEnum re = getVersion1(trunkPath, projectCode);
+		return re;
+	}
+	
+	private ReturnCodeEnum getVersion1(String trunkPath, String projectCode) {
 		ClientConfig clientConfig = clientConfigService.queryDetail(projectCode, TEST_PROFILE) ;
 		Project project = projectService.qureyByProCode(projectCode);
 		super.isEmpty(clientConfig, projectCode+"项目的clientconfig 未初始化") ;
@@ -54,7 +59,6 @@ public class SvnServiceImpl extends GodzillaApplication implements SvnService {
 			e.printStackTrace();
 		}
 		String username = super.getUser().getUserName();
-		operateLogService.addSvnCommandLog(username, trunkPath, str, username);
 		//shell返回值 ：通过shell 最后一行 echo 
 		String shellReturn = shellReturnThreadLocal.get();
 		//如果合并成功  1.shell执行返回true 2.shell返回值为 0 
@@ -69,6 +73,11 @@ public class SvnServiceImpl extends GodzillaApplication implements SvnService {
 	
 	@Override
 	public ReturnCodeEnum svnCommit(String projectCode, String profile) {
+		ReturnCodeEnum re = this.svnCommit1(projectCode, profile);
+		return re;
+	}
+	
+	private ReturnCodeEnum svnCommit1(String projectCode, String profile) {
 		ClientConfig clientConfig = clientConfigService.queryDetail(projectCode, profile) ;
 		String clientIp = clientConfig.getRemoteIp();
 		List<SvnBranchConfig> svnBranchConfigs = svnBranchConfigService.queryListByProjectCode(projectCode);
@@ -103,11 +112,10 @@ public class SvnServiceImpl extends GodzillaApplication implements SvnService {
 		//如果合并成功  1.shell执行返回true 2.shell返回值为 0 
 		
 		String username = super.getUser().getUserName();
-		operateLogService.addSvnCommandLog(username, trunkPath, str, username);
 		
 		if(flag&&"0".equals(shellReturn)){
 			//成功则 1.删除  当前分支
-			int re = svnBranchConfigService.deletebranchesByProjectCode(projectCode);
+			ReturnCodeEnum re = svnBranchConfigService.deletebranchesByProjectCode(projectCode);
 			// 2.更新 项目 project版本号
 			boolean flag1 = projectService.refreshProjectVersion(projectCode, profile);
 			return ReturnCodeEnum.getByReturnCode(OK_SVNCOMMIT);
@@ -127,15 +135,17 @@ public class SvnServiceImpl extends GodzillaApplication implements SvnService {
 	}
 
 	@Override
-	public boolean svnMerge(String projectCode, String profile) {
-		logger.info("************代码合并Begin***********");
+	public ReturnCodeEnum svnMerge(String projectCode, String profile) {
+		ReturnCodeEnum re = svnMerge1(projectCode, profile);
+		return re;
+	}
+	private ReturnCodeEnum svnMerge1(String projectCode, String profile) {
 		
 		ClientConfig clientConfig = clientConfigService.queryDetail(projectCode, profile) ;
 		String clientIp = clientConfig.getRemoteIp();
 		List<SvnBranchConfig> svnBranchConfigs = svnBranchConfigService.queryListByProjectCode(projectCode);
 		Project project = projectService.qureyByProCode(projectCode);
 		String trunkPath = project.getRepositoryUrl();
-		String localPath=project.getCheckoutPath(); 
 		
 		boolean flag = false;
 		
@@ -168,21 +178,50 @@ public class SvnServiceImpl extends GodzillaApplication implements SvnService {
 		}
 		
 		if(flag){
-			String username = super.getUser().getUserName();
-			operateLogService.addSvnCommandLog(username, trunkPath, str, username);
-			operateLogService.addOperateLog(super.getUser().getUserName(), super.getUser().getRealName(), projectCode, profile, SVNMERGE, SUCCESS, "代码合并SUCCESS");
-			logger.info("************代码合并End**************");
+			return ReturnCodeEnum.getByReturnCode(OK_SVNMERGE);
 		}else{
-			String username = super.getUser().getUserName();
-			operateLogService.addSvnCommandLog(username, trunkPath, str, username);
-			
 			if(shellReturnThreadLocal.get().equals("2")) {
-				operateLogService.addOperateLog(super.getUser().getUserName(), super.getUser().getRealName(), projectCode, profile, SVNMERGE, FAILURE, "代码合并FAILURE请先解决冲突");
+				return ReturnCodeEnum.getByReturnCode(NO_FOUNDCONFLICT); //合并分支冲突
 			} else {
-				operateLogService.addOperateLog(super.getUser().getUserName(), super.getUser().getRealName(), projectCode, profile, SVNMERGE, FAILURE, "代码合并FAILURE");
+				return ReturnCodeEnum.getByReturnCode(NO_SVNMERGE);
 			}
-			logger.error("************代码合并Error shellReturnThreadLocal:"+shellReturnThreadLocal.get()+"**************");
 		}
-		return flag;
+	}
+	
+	public ReturnCodeEnum getStatus(String projectCode, String profile) {
+		ClientConfig clientConfig = clientConfigService.queryDetail(projectCode, profile) ;
+		String clientIp = clientConfig.getRemoteIp();
+		List<SvnBranchConfig> svnBranchConfigs = svnBranchConfigService.queryListByProjectCode(projectCode);
+		Project project = projectService.qureyByProCode(projectCode);
+		String trunkPath = project.getRepositoryUrl();
+		String localPath=project.getCheckoutPath(); 
+		
+		boolean flag = false;
+		
+		String branches = "";
+		for(SvnBranchConfig sbc: svnBranchConfigs) {
+			branches = sbc.getBranchUrl() + ",";
+		}
+		if("".equals(branches)) {
+			branches = EMPTY_BRANCH;
+		} else {
+			branches = branches.substring(0, branches.length()-1);
+		}
+		String callbackUrl = "http://localhost:8080/process-callback.do";
+		
+		String operator = super.getUser().getUserName();
+		String str = "";
+		try {
+			str ="sh /home/godzilla/gzl/shell/server/svn_server_wl.sh status "+trunkPath+" '"+branches+"' "+" "+callbackUrl+" "+projectCode+" "+ operator +" "+clientIp ;
+			flag = command.execute(str, super.getUser().getUserName(), projectCode, project.getSvnUsername(), project.getSvnPassword());
+		} catch (Exception e) {
+			logger.error(e);
+			e.printStackTrace();
+		}
+		
+		if(flag) {
+			return ReturnCodeEnum.getByReturnCode(OK_SVNSTATUS);
+		}
+		return ReturnCodeEnum.getByReturnCode(NO_SVNSTATUS);
 	}
 }

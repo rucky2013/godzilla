@@ -8,6 +8,4 @@ public interface ClientConfigService {
 	
 	ClientConfig queryDetail(String projectCode,String profile);
 
-	int updateDeployVersionByCodeAndProfile(Map<String, String> parameterMap);
-
 }

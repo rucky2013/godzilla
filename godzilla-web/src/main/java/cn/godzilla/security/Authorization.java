@@ -62,6 +62,9 @@ public class Authorization extends GodzillaApplication implements Filter {
 				} else if(projectStatus == ReturnCodeEnum.OK_AUTHORIZATION) {
 					
 				}
+				//init projectcode and profile threadlocal
+				String profile = this.getProfileFromUrl(request);
+				super.initProjectThreadLocal(projectcode, profile);
 			} 
 		} catch(BusinessException e1) {
 			logger.error(e1.getMessage());
@@ -78,6 +81,29 @@ public class Authorization extends GodzillaApplication implements Filter {
 		
 	}
 	
+	private String getProfileFromUrl(ServletRequest request) {
+		String pathInfo = ((HttpServletRequest)request).getRequestURI();
+		
+		int start = pathInfo.indexOf("/", 1);
+		if(start <0) 
+			throw new BusinessException("url is wrong");
+		int second = pathInfo.indexOf("/", start+1);
+		if(second <0) 
+			throw new BusinessException("url is wrong");
+		int third = pathInfo.indexOf("/", second+1);
+		if(third <0) 
+			throw new BusinessException("url is wrong");
+		int four = pathInfo.indexOf("/", third+1);
+		if(four<0) 
+			throw new BusinessException("url is wrong");
+		int five = pathInfo.indexOf("/", four+1);
+		if(five<0) 
+			throw new BusinessException("url is wrong");
+		String profile = pathInfo.substring(four+1, five);
+		logger.info(">>>|>>request profile : " + profile);
+		return profile;
+	}
+
 	
 	/**
 	 * url 的 第3个字符为 projectcode   例如 请求为   /godzilla-web/usr/${sid}/${projectcode}/getUser.do?XX

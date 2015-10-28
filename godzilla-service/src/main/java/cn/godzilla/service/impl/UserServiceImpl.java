@@ -31,8 +31,6 @@ import com.alibaba.fastjson.JSON;
 @Service("userService")
 public class UserServiceImpl extends GodzillaApplication implements UserService{
 	
-	private final Logger logger = LogManager.getLogger(UserServiceImpl.class);
-	
 	@Autowired
 	private UserMapper userMapper;
 	@Autowired
@@ -48,18 +46,15 @@ public class UserServiceImpl extends GodzillaApplication implements UserService{
 	private String checkUser(String username, String password){
 		
 		if(StringUtils.isEmpty(username)||StringUtils.isEmpty(password)) {
-			logger.info("*****用户名或密码为空！*****");
 			return NULL_NAMEPASSWORD;
 		}
 		
 		User user = userMapper.queryUserByUsername(username);
 		
 		if(user == null) {
-			logger.info("*****用户名不存在！*****");
 			return NOTEXIST_USER;
 		}
 		if(!password.equals(user.getPassword())) {
-			logger.info("*****密码错误！*****");
 			return WRONG_PASSWORD;
 		}
 		

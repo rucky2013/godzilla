@@ -66,17 +66,9 @@ public class ProjectController extends GodzillaApplication implements Constant{
 		String repositoryUrl = StringUtil.getReqPrameter(request, "repositoryUrl");
 		String checkoutPath = StringUtil.getReqPrameter(request, "checkoutPath");
 		
-		boolean flag = projectService.srcEdit(srcId, repositoryUrl, checkoutPath, projectCode, profile);
+		ReturnCodeEnum returnenum = projectService.srcEdit(srcId, repositoryUrl, checkoutPath, projectCode, profile);
 		
-		if(flag){
-			operateLogService.addOperateLog(super.getUser().getUserName(), super.getUser().getRealName(), projectCode, profile, SRCEDIT, SUCCESS, "源代码设置SUCCESS");
-			logger.info("************源代码设置End**************");
-			return SUCCESS;
-		}else{
-			operateLogService.addOperateLog(super.getUser().getUserName(), super.getUser().getRealName(), projectCode, profile, SRCEDIT, FAILURE, "源代码设置FAILURE");
-			logger.error("************源代码设置Error**************");
-			return FAILURE;
-		}
+		return ResponseBodyJson.custom().setAll(returnenum, SRCEDIT).build();
 	}
 	
 	/**

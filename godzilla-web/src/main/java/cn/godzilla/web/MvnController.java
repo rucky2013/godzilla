@@ -69,8 +69,7 @@ public class MvnController extends GodzillaApplication{
 			}
 		}.start();
 		
-		operateLogService.addOperateLog(super.getUser().getUserName(), super.getUser().getRealName(), projectCode, profile, DEPLOY, deployReturn.getStatus(), deployReturn.getReturnMsg());
-		return ResponseBodyJson.custom().setAll(deployReturn).build();
+		return ResponseBodyJson.custom().setAll(deployReturn, DEPLOY).build();
 	}
 	
 	@RequestMapping(value="/{sid}/{projectCode}/{profile}/process", method=RequestMethod.POST)
@@ -82,7 +81,7 @@ public class MvnController extends GodzillaApplication{
 			String pencentkey = sid + "-" + projectCode + "-" + profile;
 			super.processPercent.put(pencentkey, "0");
 		}
-		return ResponseBodyJson.custom().setAll(OK_AJAX, SUCCESS, processPercent).build();
+		return ResponseBodyJson.custom().setAll(OK_AJAX, SUCCESS, processPercent, "").build();
 	}
 	
 }

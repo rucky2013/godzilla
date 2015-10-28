@@ -543,7 +543,7 @@
 			var command = $(this).attr("value3");
 			$.ajax({
 				type: "get",
-				url: "/${basePath}/project/${sid}/${projectCode}/"+profile+"/"+command+".do",
+				url: "/${basePath}/admin/${sid}/${projectCode}/"+profile+"/"+command+".do",
 				data:{
 				},
 				dataType:"json",

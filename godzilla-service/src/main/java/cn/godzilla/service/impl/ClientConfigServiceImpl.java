@@ -14,7 +14,7 @@ import cn.godzilla.service.ClientConfigService;
 public class ClientConfigServiceImpl implements ClientConfigService {
 
 	@Autowired
-	private ClientConfigMapper dao;
+	private ClientConfigMapper clientConfigMapper;
 	
 	@Override
 	public ClientConfig queryDetail(String projectCode, String profile) {
@@ -24,15 +24,7 @@ public class ClientConfigServiceImpl implements ClientConfigService {
 		map.put("projectCode", projectCode);
 		map.put("profile", profile);
 		
-		return dao.queryDetail(map);
+		return clientConfigMapper.queryDetail(map);
 	}
-
-	@Override
-	public int updateDeployVersionByCodeAndProfile(Map<String, String> parameterMap) {
-		
-		return dao.updateDeployversion(parameterMap);
-	}
-	
-	
 
 }

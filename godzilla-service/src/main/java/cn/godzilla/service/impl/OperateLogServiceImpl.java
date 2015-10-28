@@ -8,6 +8,8 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import cn.godzilla.common.Application;
+import cn.godzilla.common.response.ResponseBodyJson;
 import cn.godzilla.dao.OperateLogMapper;
 import cn.godzilla.model.OperateLog;
 import cn.godzilla.service.OperateLogService;
@@ -17,22 +19,44 @@ import cn.godzilla.web.GodzillaApplication;
 public class OperateLogServiceImpl extends GodzillaApplication implements OperateLogService {
 
 	@Autowired
-	private OperateLogMapper dao ;
+	private OperateLogMapper operateLogMapper ;
+	
+	//201027 所有用户都能看到 各个项目  所有人的操作
+	@Override
+	public List<OperateLog> queryList(String projectCode,String profile) {
+		String username = super.getUser().getUserName();
+		Map<String, String> map = new HashMap<String, String>();
+		map.put("projectCode", projectCode);
+		map.put("profile", profile);
+		//map.put("username", username) ;
+		return operateLogMapper.queryList(map);
+	}
 	
 	@Override
-	public int insert(OperateLog record) {
+	public List<OperateLog> queryAll(Long id) {
 		
-		return dao.insert(record);
-	}
-
-	@Override
-	public int insertSelective(OperateLog record) {
+		String username = super.getUser().getUserName();
+		if(id <= 0 ){
+			id = Long.MAX_VALUE ;
+		}
 		
-		return dao.insertSelective(record);
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("id", id) ;
+		//map.put("username", username) ;
+		return operateLogMapper.queryAll(map) ;
 	}
 	
 	@Override
-	public int addOperateLog(String username, String realname,String projectCode, String profile, String operation, String executeResult, String resultInfo) {
+	public ResponseBodyJson logThenReturn(ResponseBodyJson response) {
+		String operation = response.getOperator();
+		
+		this.addOperateLog(super.getUser().getUserName(), super.getUser().getRealName(), Application.projectcodeThreadLocal.get(), Application.profileThreadLocal.get(), operation, response.getReturncode(), response.getReturnmsg(), response.getReturnmemo());
+		
+		return response;
+	}
+	
+	private int addOperateLog(String username, String realname,String projectCode, String profile, String operation, String operateCode, String executeResult, String resultInfo) {
 		OperateLog record = new OperateLog();
 		record.setUserName(username);
 		record.setRealName(realname);
@@ -51,44 +75,15 @@ public class OperateLogServiceImpl extends GodzillaApplication implements Operat
 				record.setExecuteResult(-3);
 			}
 		}
-		
+		record.setOperateCode(Integer.parseInt(operateCode));
 		record.setResultInfo(resultInfo);
 		record.setExecuteTime(new Date());
-		return dao.insertSelective(record);
-	}
-	@Override
-	public int addOperateLog(String username, String realname, String projectCode, String profile, String operation) {
-		return addOperateLog(username, realname, projectCode, profile, operation, "1", "执行成功");
+		return operateLogMapper.insertSelective(record);
 	}
 
-	//201027 所有用户都能看到 各个项目  所有人的操作
-	@Override
-	public List<OperateLog> queryList(String projectCode,String profile) {
-		String username = super.getUser().getUserName();
-		Map<String, String> map = new HashMap<String, String>();
-		map.put("projectCode", projectCode);
-		map.put("profile", profile);
-		//map.put("username", username) ;
-		return dao.queryList(map);
-	}
 
-	@Override
-	public List<OperateLog> queryAll(Long id) {
-		
-		String username = super.getUser().getUserName();
-		if(id <= 0 ){
-			id = Long.MAX_VALUE ;
-		}
-		
-		Map<String, Object> map = new HashMap<String, Object>();
-		
-		map.put("id", id) ;
-		//map.put("username", username) ;
-		return dao.queryAll(map) ;
-	}
 
-	@Override
-	public void addSvnCommandLog(String username, String trunkPath, String commands, String username2) {
+	private void addSvnCommandLog(String username, String trunkPath, String commands, String username2) {
 		OperateLog record = new OperateLog();
 		record.setUserName(username);
 		record.setProjectCode("");
@@ -99,12 +94,11 @@ public class OperateLogServiceImpl extends GodzillaApplication implements Operat
 		
 		record.setResultInfo("");
 		record.setExecuteTime(new Date());
-		dao.insertSelective(record);
+		operateLogMapper.insertSelective(record);
 		return ;
 	}
 
-	@Override
-	public void addMvnCmdLog(String username, String projectCode, String profile, String commands, String resultInfo) {
+	private void addMvnCmdLog(String username, String projectCode, String profile, String commands, String resultInfo) {
 		OperateLog record = new OperateLog();
 		record.setUserName(username);
 		record.setProjectCode(projectCode);
@@ -115,8 +109,10 @@ public class OperateLogServiceImpl extends GodzillaApplication implements Operat
 		
 		record.setResultInfo(resultInfo);
 		record.setExecuteTime(new Date());
-		dao.insertSelective(record);
+		operateLogMapper.insertSelective(record);
 		return ;
 	}
+
+	
 
 }

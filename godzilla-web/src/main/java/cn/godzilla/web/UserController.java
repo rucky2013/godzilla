@@ -126,7 +126,6 @@ public class UserController extends GodzillaApplication{
 	 */
 	@RequestMapping(value="/{sid}/logout", method=RequestMethod.GET)
 	public Object logout(@PathVariable String sid, HttpServletRequest request, HttpServletResponse response) {
-		logger.debug("*****UserController.logout*****");
 		userService.logout(sid);//del redis sid-username 
 		request.setAttribute("basePath", BASE_PATH);
 		return "/login";
@@ -143,7 +142,6 @@ public class UserController extends GodzillaApplication{
 	@RequestMapping(value="/{sid}/userAuthList", method=RequestMethod.GET)
 	public Object authPage(@PathVariable String sid, HttpServletRequest request) {
 		
-		logger.debug("*****UserController.authPage*****");
 		User user = super.getUser();
 		if(!"1".equals(user.getIsAdmin()+"")) {
 			return "forward:/user/" + sid + "/home";
@@ -160,7 +158,6 @@ public class UserController extends GodzillaApplication{
 	@ResponseBody
 	public Object addUser(@PathVariable String sid, HttpServletRequest request) {
 		
-		logger.debug("*****UserController.addUser*****");
 		User user = super.getUser();
 		if(!"1".equals(user.getIsAdmin()+"")) {
 			return FAILURE;
@@ -173,17 +170,7 @@ public class UserController extends GodzillaApplication{
 		//password is md5 
 		ReturnCodeEnum returnEnum = userService.addUser(username, password, confirm, departname);
 		
-		if(returnEnum.equals(ReturnCodeEnum.getByReturnCode(NULL_NAMEPASSWORD))) {
-			return FAILURE;
-		} else if(returnEnum.equals(ReturnCodeEnum.getByReturnCode(NO_ADDUSER))){
-			return FAILURE;
-		} else if(returnEnum.equals(ReturnCodeEnum.getByReturnCode(NO_SAMEPASSWORD))){
-			return FAILURE;
-		} else if(returnEnum.equals(ReturnCodeEnum.getByReturnCode(OK_ADDUSER))){
-			return SUCCESS;
-		} else {
-			return FAILURE;
-		}
+		return ResponseBodyJson.custom().setAll(returnEnum, ADDUSER).build();
 	}
 	
 	/**
@@ -195,7 +182,6 @@ public class UserController extends GodzillaApplication{
 	@RequestMapping(value="/{sid}/editWorkDesk", method=RequestMethod.GET)
 	public Object editWorkDeskPage(@PathVariable String sid, HttpServletRequest request) {
 		
-		logger.debug("*****UserController.editWorkDeskPage*****");
 		User user = super.getUser();
 		if(!"1".equals(user.getIsAdmin()+"")) {
 			return "forward:/user/" + sid + "/home";
@@ -226,7 +212,6 @@ public class UserController extends GodzillaApplication{
 	@ResponseBody
 	public Object editWorkDesk(@PathVariable String sid, HttpServletRequest request) {
 		
-		logger.debug("*****UserController.editWorkDesk*****");
 		User user = super.getUser();
 		if(!"1".equals(user.getIsAdmin()+"")) {
 			return FAILURE;
@@ -236,12 +221,6 @@ public class UserController extends GodzillaApplication{
 		String editUsername = StringUtil.getReqPrameter(request, "editUsername", "");
 		ReturnCodeEnum returnEnum = userService.updateUserProjects(editUsername, selectProjects);
 		
-		if(returnEnum.equals(ReturnCodeEnum.getByReturnCode(NO_UPDATEFUNRIGHT))) {
-			return FAILURE;
-		} else if(returnEnum.equals(ReturnCodeEnum.getByReturnCode(OK_UPDATEFUNRIGHT))){
-			return SUCCESS;
-		} else {
-			return FAILURE;
-		}
+		return ResponseBodyJson.custom().setAll(returnEnum, EDITWORKDESK).build();
 	}
 }

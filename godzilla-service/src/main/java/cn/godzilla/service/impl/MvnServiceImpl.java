@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import cn.godzilla.common.ReturnCodeEnum;
+import cn.godzilla.common.response.ResponseBodyJson;
 import cn.godzilla.model.ClientConfig;
 import cn.godzilla.model.Project;
 import cn.godzilla.model.RpcResult;
@@ -57,7 +58,6 @@ public class MvnServiceImpl extends GodzillaApplication implements MvnService {
 	
 	@Override
 	public ReturnCodeEnum doDeploy(String srcUrl, String projectCode, String profile, String parentVersion) {
-		
 		/*
 		 * -2.限制并发　发布
 		 * 测试环境　每个项目　只允许　一个人发布（如果互相依赖项目　并发发布，还是会出现问题）
@@ -74,12 +74,28 @@ public class MvnServiceImpl extends GodzillaApplication implements MvnService {
 					return ReturnCodeEnum.getByReturnCode(NO_CONCURRENCEDEPLOY);
 			} else {
 				lock = super.deploy_lock.get(profile);
-				hasAC = lock.tryLock(5, TimeUnit.SECONDS);
+				hasAC = lock.tryLock(1, TimeUnit.SECONDS);
 				if(!hasAC) 
 					return ReturnCodeEnum.getByReturnCode(NO_CONCURRENCEDEPLOY);
 			}
+			this.doDeploy1(srcUrl, projectCode, profile, parentVersion);
+		} catch(InterruptedException e) {
+			e.printStackTrace();
+			return ReturnCodeEnum.getByReturnCode(NO_CONCURRENCEDEPLOY);
+		} finally {
+			try {
+				lock.unlock();
+			} /*catch(InvocationTargetException e2) {
+				return ReturnCodeEnum.getByReturnCode(NO_HASKEYDEPLOY);
+			} */catch(IllegalMonitorStateException e1) {
+				return ReturnCodeEnum.getByReturnCode(NO_CONCURRENCEDEPLOY);
+			} 
 			
+		}
+		return ReturnCodeEnum.getByReturnCode(NO_MVNDEPLOY);
 		
+	}
+	public ReturnCodeEnum doDeploy1(String srcUrl, String projectCode, String profile, String parentVersion) {
 		
 		String sid = super.getSid();
 		String pencentkey = sid + "-" + projectCode + "-" + profile;
@@ -99,13 +115,11 @@ public class MvnServiceImpl extends GodzillaApplication implements MvnService {
 		 * else 
 		 * 		break
 		 */
-		boolean flag = svnService.svnMerge(projectCode, profile);
+		ReturnCodeEnum renum1 = svnService.svnMerge(projectCode, profile);
 		
-		if(flag){
-			logger.info("************svn合并   成功**************");
+		if(renum1.equals(ReturnCodeEnum.getByReturnCode(OK_SVNMERGE))){
 		} else {
-			logger.error("************mvn部署 第-1步:svn合并   失败**************");
-			return ReturnCodeEnum.getByReturnCode(NO_SVNMERGE);
+			return renum1;
 		} 
 		/*
 		 * 0.get RpcFactory and init rpcservice
@@ -201,11 +215,10 @@ public class MvnServiceImpl extends GodzillaApplication implements MvnService {
 			// bug:tomcat hot deploy cannot success for netty-project
 			//workaround: restart for test,project start success.
 			if(TEST_PROFILE.equals(profile)) {
-				flag4 = this.restartTomcat(projectCode, profile);
+				flag4 = this.restartTomcat(projectCode, profile).equals(ReturnCodeEnum.getByReturnCode(OK_STARTTOMCAT));
 			} else {
 				flag4 = true;
 			}
-			
 			
 			if(flag4) {
 				return ReturnCodeEnum.getByReturnCode(OK_MVNDEPLOY);
@@ -223,20 +236,6 @@ public class MvnServiceImpl extends GodzillaApplication implements MvnService {
 			
 		} 
 		
-		
-		} catch(InterruptedException e) {
-			e.printStackTrace();
-			return ReturnCodeEnum.getByReturnCode(NO_CONCURRENCEDEPLOY);
-		} finally {
-			try {
-				lock.unlock();
-			} /*catch(InvocationTargetException e2) {
-				return ReturnCodeEnum.getByReturnCode(NO_HASKEYDEPLOY);
-			} */catch(IllegalMonitorStateException e1) {
-				return ReturnCodeEnum.getByReturnCode(NO_CONCURRENCEDEPLOY);
-			} 
-			
-		}
 		return ReturnCodeEnum.getByReturnCode(NO_MVNDEPLOY);
 	}
 	
@@ -266,37 +265,15 @@ public class MvnServiceImpl extends GodzillaApplication implements MvnService {
 			return RpcResult.create(FAILURE);
 		}
 		if(flag2) {
-			operateLogService.addMvnCmdLog(username, projectCode, profile, commands, "mvn deploy 执行成功");
+			//mvn deploy 执行成功
 		} else if(NOSETPROPS.equals(result.getRpcMsg())) {
-			operateLogService.addMvnCmdLog(username, projectCode, profile, commands, "mvn deploy 执行失败, 含有${XX}未设置配置项");
+			//mvn deploy 执行失败, 含有${XX}未设置配置项
 		} else {
-			operateLogService.addMvnCmdLog(username, projectCode, profile, commands, "mvn deploy 执行失败");
+			//mvn deploy 执行失败
 		}
 		return result;
 	}
 	
-	private boolean updateDeployVersion(String projectCode, String profile) {
-		Project project = projectService.qureyByProCode(projectCode);
-		String trunkPath = project.getRepositoryUrl();
-		
-		/*ReturnCodeEnum versionreturn = svnService.getVersion(trunkPath, projectCode);
-		if(!versionreturn.equals(ReturnCodeEnum.getByReturnCode(OK_SVNVERSION))) {
-			return false;
-		}*/
-		
-		String deployVersion = svnVersionThreadLocal.get();
-		
-		Map<String, String> parameterMap = new HashMap<String, String>();
-		
-		parameterMap.put("deploy_version", deployVersion);
-		parameterMap.put("project_code", projectCode);
-		parameterMap.put("profile", profile);
-		
-		int update = clientConfigService.updateDeployVersionByCodeAndProfile(parameterMap);
-		
-		return update>0;
-	}
-
 	private void initRpc(String linuxIp) throws ClassNotFoundException, IllegalAccessException, InstantiationException, IOException {
 		
 		while(true) {
@@ -409,7 +386,6 @@ public class MvnServiceImpl extends GodzillaApplication implements MvnService {
 		String tomcatHome = "";
 		
 		if("TEST".equals(profile)) {
-			clientIp = clientIp;
 			tomcatHome = "/app/tomcat";
 		} else if("QUASIPRODUCT".equals(profile)) {
 			clientIp = QUASIPRODUCT_WAR_IP;
@@ -429,17 +405,18 @@ public class MvnServiceImpl extends GodzillaApplication implements MvnService {
 		flag = command.execute(str, super.getUser().getUserName(), projectCode, project.getSvnUsername(), project.getSvnPassword());
 		
 		if(flag) {
-			operateLogService.addOperateLog(super.getUser().getUserName(), super.getUser().getRealName(), projectCode, profile, COPYWAR, SUCCESS, "copy war success");
 			return true;
 		} else {
-			operateLogService.addOperateLog(super.getUser().getUserName(), super.getUser().getRealName(),projectCode, profile, COPYWAR, FAILURE, "copy war failure");
 			return false;
 		}
 		
 	}
-	
-	public boolean restartTomcat(String projectCode, String profile) {
-		boolean flag;
+	public ReturnCodeEnum restartTomcat(String projectCode, String profile) {
+		ReturnCodeEnum renum = this.restartTomcat1(projectCode, profile);
+		return renum;
+	}
+	private ReturnCodeEnum restartTomcat1(String projectCode, String profile) {
+		boolean flag =false;
 		ClientConfig clientConfig = clientConfigService.queryDetail(projectCode, profile) ;
 		String clientIp = clientConfig.getRemoteIp();
 		// 暂时先不考虑权限
@@ -479,7 +456,12 @@ public class MvnServiceImpl extends GodzillaApplication implements MvnService {
 			}
 			
 		}
-		return flag;
+		
+		if(flag) {
+			return ReturnCodeEnum.getByReturnCode(NO_STARTTOMCAT);
+		} else {
+			return ReturnCodeEnum.getByReturnCode(OK_STARTTOMCAT);
+		}
 	}
 	
 }
