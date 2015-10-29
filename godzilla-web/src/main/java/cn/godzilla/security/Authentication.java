@@ -18,6 +18,7 @@ import org.springframework.web.context.support.WebApplicationContextUtils;
 import cn.godzilla.common.BusinessException;
 import cn.godzilla.common.ReturnCodeEnum;
 import cn.godzilla.service.FunRightService;
+import cn.godzilla.service.OperateLogService;
 import cn.godzilla.service.UserService;
 import cn.godzilla.web.GodzillaApplication;
 
@@ -44,7 +45,8 @@ public class Authentication extends GodzillaApplication implements Filter {
 		applicationContext = WebApplicationContextUtils.getWebApplicationContext(context); 
 		userService = (UserService)applicationContext.getBean("userService");
 		funRightService = (FunRightService)applicationContext.getBean("funRightService");
-        //两种获取方式都报错  
+		operateLogService = (OperateLogService)applicationContext.getBean("operateLogService");
+		//两种获取方式都报错  
        /* ApplicationContext ac = new FileSystemXmlApplicationContext("classpath:applicationContext.xml");
         userService = (UserService)ac.getBean("userService"); */
 	}

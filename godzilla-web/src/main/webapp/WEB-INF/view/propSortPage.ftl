@@ -66,7 +66,7 @@ $( "#sortable" ).disableSelection();
 				</h2>
 				 <a class="backindex" href="/${basePath}/project/${sid}/${projectCode}/TEST/projectConfig.do" title="${projectCode}"><h3 class="location">当前应用：${projectCode}</h3></a>
 
-              <form id="search_form" action="/${basePath}/prop/${sid}/${projectCode}/propSort.do" method="GET">
+              <form id="search_form" action="/${basePath}/prop/${sid}/${projectCode}/ALL/propSort.do" method="GET">
               		<fieldset>
                   	<label>提交人：</label><input type="text" name="createBy" placeholder="输入内容" value="${createBy}" />
                 	<label>环境：</label>
@@ -163,14 +163,14 @@ $(document).ready(function(){
 		
 		$.ajax({
 			type: 'post',
-			url: '/${basePath}/prop/${sid}/${projectCode}/propSort.do',
+			url: '/${basePath}/prop/${sid}/${projectCode}/ALL/propSort.do',
 			data: {
 				sortJson: sortJson,
 			},
 			success: function(data) {
 				if(data=='SUCCESS') {
 					alert("SUCCESS");
-					window.location.href = "/${basePath}/prop/${sid}/${projectCode}/propSort.do?selectedProfile="+"${selectedProfile}"+"&createBy=" + "${createBy}";
+					window.location.href = "/${basePath}/prop/${sid}/${projectCode}/ALL/propSort.do?selectedProfile="+"${selectedProfile}"+"&createBy=" + "${createBy}";
 				} else {
 					alert("FAILURE");
 				}

@@ -23,6 +23,7 @@ public interface Constant {
 	public final String SRCEDIT = "srcEdit";
 	public final String UPDATEPROP = "updateProp";
 	public final String VERIFYPROP = "verifyProp";
+	public final String SORTPROP = "sortprop";
 	public final String BRANCHADD = "branchadd";
 	public final String BRANCHEDIT = "branchedit";
 	public final String BRANCHDELETE = "branchdelete";
@@ -35,6 +36,7 @@ public interface Constant {
 	public final String ADMINOPERATOR= "adminoperator";
 	public final String EDITWORKDESK = "editworkdesk";
 	public final String ADDUSER = "adduser";
+	public final String LOGIN = "login";
 	
 	public final String NOTYET_VERIFY_STATUS = "0";//未审核
 	public final String OK_VERIFY_STATUS = "1";//审核通过

@@ -170,7 +170,7 @@ $(document).ready(function() {
 		
 		$.ajax({ 
 		 	type: 'POST', 
-			url: '/${basePath}/prop/' + sid + '/' + projectCode +　'/' + createBy + '/' + profile + '/' + 'verifyProp.do',
+			url: '/${basePath}/prop/' + sid + '/' + projectCode +　'/' +  profile + '/' + createBy + '/' + 'verifyProp.do',
 			data: {
 				auditor_text :auditor_text,
 				status :status,

@@ -1,14 +1,11 @@
 <!DOCTYPE html><html><head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>配置查看页面-哥斯拉</title>
+<title>配置审核-哥斯拉</title>
 <link type="text/css" href="/${basePath}/css/meta.css" rel="stylesheet"/>
 <link rel="shortcut icon" href="/${basePath}/img/gesilla.jpg">
 
 </head>
-<body id="query" class="query">
-<input type="hidden" name="projectCode" id="projectCode" value="${projectCode}" />
-<input type="hidden" name="sid" id="sid" value="${sid}" />
-
+<body id="config" class="config">
 		<div class="main">
 		<div class="head  clearfix">
         	<h1><a class="logo" href="/${basePath}/user/${sid}/home.do" title="回到首页">哥斯拉</a></h1>
@@ -47,12 +44,12 @@
 				</h2>
 				 <a class="backindex" href="/${basePath}/project/${sid}/${projectCode}/TEST/projectConfig.do" title="${projectCode}"><h3 class="location">当前应用：${projectCode}</h3></a>
 
-              <form id="search_form" action="/${basePath}/prop/${sid}/${projectCode}/queryProp.do" method="POST">
+              <form id="search_form" action="/${basePath}/prop/${sid}/${projectCode}/ALL/verifyProp.do" method="GET">
               		<fieldset>
-                  	<label>提交人：</label><input type="text" name="createBy" placeholder="输入内容" value="${createBy}" />
+                  	<label>提交人：</label><input type="text" name="createBy" placeholder="输入内容" />
                 	<label>环境：</label>
                 	<select name="selectedProfile">
-                		<!--<option value="" selected="selected">All</option>-->
+                		<option value="" selected="selected">All</option>
                 		<#list profileList?keys as key>
 							<#if profileList[key] = selectedProfile>
             					<option value="${profileList[key]}" selected="selected">${key}</option>
@@ -60,7 +57,6 @@
 	            				<option value="${profileList[key]}">${key}</option>
 	            			</#if>
                     	</#list>
-                    	
               		</select>
               		
               		<input type="submit" name="submit" value="查询" />
@@ -69,53 +65,86 @@
               		
               </form>
               
+              <table class="table_con" width="100%">
+              		<tr>
+                  	<td>待审核列表</td>  
+                  </tr>
+              </table>
               <div class="table2">
                 <table width="100%">
                 <thead>
                   <tr>
-                    <th width="20%">配置项名称</th>
-                    <th width="40%">配置值</th>
-                    <th width="10%">提交人</th>
-                    <th width="15%">应用名称</th>
+                    <th width="20%">待审核工单</th>
+                    <th width="15%">提交人</th>
+                    <th width="20%">应用名称</th>
                     <th width="15%">环境</th>
+                    <th width="15%">状态</th>
+                    <th width="15%">操作</th>
                   </tr>
                  </thead>
                  <tbody>
-                 	<#list propList as prop>
-             		  <tr>
-	                    <td>${prop.proKey}</td>
-	                    <td>${prop.proValue}</td>
+                 <#list propList as prop>
+	                 <tr>
+	                    <td>${prop.id}</td>
 	                    <td>${prop.createBy}</td>
 	                    <td>${prop.projectCode}</td>
 	                    <td>
-	                    <#if prop.profile == 'TEST'>
-	                    	测试环境
-						<#elseif prop.profile == 'PRODUCT'>
-							生产环境
-						<#elseif prop.profile == 'QUASIPRODUCT'>
-							 准生产环境
-						</#if>  
+							<#if prop.profile == 'TEST'>
+		                    	测试环境
+							<#elseif prop.profile == 'PRODUCT'>
+								生产环境
+							<#elseif prop.profile == 'QUASIPRODUCT'>
+								 准生产环境
+							</#if>  
+						</td>
+	                    <td>
+							<#if prop.status == 0>
+		                    	未审核
+							<#elseif prop.status == 1>
+								通过
+							<#elseif prop.status == 2>
+								未通过
+							</#if>  
+						</td>
+	                    <td class="operation">
+	                    	<#if prop.status == 0>
+		                    	<a class="verify_btn" href="javascript:void(0);" 
+		                    	value1="/${basePath}/prop/${sid}/${prop.projectCode}/${prop.profile}/${prop.createBy}/verifyProp.do">审核</a>
+							<#elseif prop.status == 1>
+							<#elseif prop.status == 2>
+							</#if>  
 	                    </td>
 	                  </tr>
-                 	</#list>
-                  
+	                  </#list>
                   </tbody>
                 </table>
                 </div>
                 <!--<h4><a  href="javascript:void(0);" class="btn2" title="更多信息">更多信息</a></h4>-->
             </div>
         </div>
+        <div class="footerWrap">
+            <div class="footer">
+                <p>
+                   </span>
+                </p>
+            </div>
+        </div>
 	</div>
 <script src="/${basePath}/js/jquery-1.8.2.min.js"></script>
 <script src="/${basePath}/js/common.js"></script>
-
 <script>
-$(document).ready(function(){
-	// 退出
-    $("#logout").on("click", function() {
-		window.location.href = '/${basePath}/user/logout/${sid}.do';
+
+$(document).ready(function() {
+	
+	$(".verify_btn").on("click", function() {
+		var varifyDetailPageUrl = $(this).attr("value1");
+		
+		//进入审核页面
+		window.location.href = varifyDetailPageUrl;
 	});
+	
 })
+
 </script>
 </body>
 </html>

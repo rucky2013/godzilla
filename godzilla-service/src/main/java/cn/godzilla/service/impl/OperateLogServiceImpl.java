@@ -21,6 +21,7 @@ public class OperateLogServiceImpl extends GodzillaApplication implements Operat
 	@Autowired
 	private OperateLogMapper operateLogMapper ;
 	
+	
 	//201027 所有用户都能看到 各个项目  所有人的操作
 	@Override
 	public List<OperateLog> queryList(String projectCode,String profile) {
@@ -47,16 +48,15 @@ public class OperateLogServiceImpl extends GodzillaApplication implements Operat
 		return operateLogMapper.queryAll(map) ;
 	}
 	
-	@Override
-	public ResponseBodyJson logThenReturn(ResponseBodyJson response) {
+	public static ResponseBodyJson logThenReturn(ResponseBodyJson response) {
 		String operation = response.getOperator();
 		
-		this.addOperateLog(super.getUser().getUserName(), super.getUser().getRealName(), Application.projectcodeThreadLocal.get(), Application.profileThreadLocal.get(), operation, response.getReturncode(), response.getReturnmsg(), response.getReturnmemo());
+		GodzillaApplication.operateLogService.addOperateLog(GodzillaApplication.getUser().getUserName(), GodzillaApplication.getUser().getRealName(), Application.projectcodeThreadLocal.get(), Application.profileThreadLocal.get(), operation, response.getReturncode(), response.getReturnmsg(), response.getReturnmemo());
 		
 		return response;
 	}
 	
-	private int addOperateLog(String username, String realname,String projectCode, String profile, String operation, String operateCode, String executeResult, String resultInfo) {
+	public int addOperateLog(String username, String realname,String projectCode, String profile, String operation, String operateCode, String executeResult, String resultInfo) {
 		OperateLog record = new OperateLog();
 		record.setUserName(username);
 		record.setRealName(realname);

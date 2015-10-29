@@ -1,6 +1,10 @@
 package cn.godzilla.common.response;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+
 import cn.godzilla.common.BusinessException;
+import cn.godzilla.common.Loader;
 import cn.godzilla.common.ReturnCodeEnum;
 
 public class ResponseBodyJson implements ResponseBody {
@@ -128,6 +132,24 @@ public class ResponseBodyJson implements ResponseBody {
 	
 	public Object getData() {
 		return data;
+	}
+	
+	public ResponseBodyJson log() {
+		Class logClass = null;
+		try {
+			logClass = Loader.getClass("cn.godzilla.service.impl.OperateLogServiceImpl");
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+			return this;
+		}
+		Method dologmethod;
+		try {
+			dologmethod = logClass.getMethod("logThenReturn", ResponseBodyJson.class);
+			dologmethod.invoke(logClass, this);
+		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException |NoSuchMethodException | SecurityException e) {
+			e.printStackTrace();
+		}
+		return this;
 	}
 	
 }

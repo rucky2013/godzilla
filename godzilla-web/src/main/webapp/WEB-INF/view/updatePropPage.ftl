@@ -201,7 +201,7 @@ $(function(){
 		//alert(encodeURI(p1Json));
 		$.ajax({ 
 		 	type: 'POST', 
-			url: '/${basePath}/prop/${sid}/${projectCode}/updateProp.do',
+			url: '/${basePath}/prop/${sid}/${projectCode}/ALL/updateProp.do',
 			data: {
 				p1:p1json,
 				p2:p2json,

@@ -104,10 +104,10 @@ public class IndexController extends GodzillaApplication{
 		
 		//权限验证??
 		ClientConfig clientConfig = clientConfigService.queryDetail(projectCode, profile) ;
-		Project project = projectService.qureyByProCode(projectCode);
+		
 		//刷新项目 版本
 		projectService.refreshProjectVersion(projectCode, profile);
-		project = projectService.qureyByProCode(projectCode);
+		Project project = projectService.qureyByProCode(projectCode);
 		//刷新分支 版本
 		List<SvnBranchConfig> svnBranchConfigs = svnBranchConfigService.queryListByProjectCode(projectCode);
 		svnBranchConfigService.refreshBranchesVersion(svnBranchConfigs);

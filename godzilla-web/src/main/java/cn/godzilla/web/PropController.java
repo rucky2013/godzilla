@@ -50,7 +50,7 @@ public class PropController extends GodzillaApplication implements Constant{
 	 * @param response
 	 * @return
 	 */
-	@RequestMapping(value="/{sid}/{projectCode}/updateProp", method=RequestMethod.GET)
+	@RequestMapping(value="/{sid}/{projectCode}/{profile}/updateProp", method=RequestMethod.GET)
 	public Object updatePropPage(@PathVariable String sid, @PathVariable String projectCode,HttpServletRequest request) {
 
 		logger.debug("*****PropController.updatePropPage*****");
@@ -66,7 +66,7 @@ public class PropController extends GodzillaApplication implements Constant{
 		request.setAttribute("propQuasiProduct", this.replaceHtml(propQuasiProduct.toString()));
 		request.setAttribute("propProduct", this.replaceHtml(propProduct.toString()));
 		request.setAttribute("basePath", BASE_PATH);
-		return "/query";
+		return "/updatePropPage";
 	}
 	
 	/**
@@ -76,7 +76,7 @@ public class PropController extends GodzillaApplication implements Constant{
 	 * @param request
 	 * @return
 	 */
-	@RequestMapping(value="/{sid}/{projectCode}/updateProp", method=RequestMethod.POST)
+	@RequestMapping(value="/{sid}/{projectCode}/{profile}/updateProp", method=RequestMethod.POST)
 	@ResponseBody
 	public Object updateProp(@PathVariable String sid, @PathVariable String projectCode,HttpServletRequest request) {
 		
@@ -88,7 +88,7 @@ public class PropController extends GodzillaApplication implements Constant{
 		
 		ReturnCodeEnum updateReturn = propConfigService.addNotVerifyProp(projectCode, propTest, propQuasiProduct, propProduct); 
 		
-		return ResponseBodyJson.custom().setAll(updateReturn, UPDATEPROP).build();
+		return ResponseBodyJson.custom().setAll(updateReturn, UPDATEPROP).build().log();
 	}
 	/**
 	 * 查看  配置 页面
@@ -97,7 +97,7 @@ public class PropController extends GodzillaApplication implements Constant{
 	 * @param request
 	 * @return
 	 */
-	@RequestMapping(value="/{sid}/{projectCode}/queryProp")
+	@RequestMapping(value="/{sid}/{projectCode}/{profile}/queryProp")
 	public Object queryPropPage(@PathVariable String sid, @PathVariable String projectCode, HttpServletRequest request) {
 		
 		//String selectedProjectCode = StringUtil.getReqPrameter(request, "selectedProjectCode", "godzilla");
@@ -117,7 +117,7 @@ public class PropController extends GodzillaApplication implements Constant{
 		request.setAttribute("propList", this.replaceHtml(propList));
 		request.setAttribute("user", this.getUser());
 		request.setAttribute("basePath", BASE_PATH);
-		return "query02";
+		return "queryPropPage";
 	}
 	
 	/**
@@ -127,7 +127,7 @@ public class PropController extends GodzillaApplication implements Constant{
 	 * @param request
 	 * @return
 	 */
-	@RequestMapping(value="/{sid}/{projectCode}/propSort", method=RequestMethod.GET)
+	@RequestMapping(value="/{sid}/{projectCode}/{profile}/propSort", method=RequestMethod.GET)
 	public Object propSortPage(@PathVariable String sid, @PathVariable String projectCode, HttpServletRequest request) {
 		
 		//String selectedProjectCode = StringUtil.getReqPrameter(request, "selectedProjectCode", "godzilla");
@@ -147,7 +147,7 @@ public class PropController extends GodzillaApplication implements Constant{
 		request.setAttribute("propList", this.replaceHtml(propList));
 		request.setAttribute("user", this.getUser());
 		request.setAttribute("basePath", BASE_PATH);
-		return "propSort";
+		return "propSortPage";
 	}
 	
 	/**
@@ -157,7 +157,7 @@ public class PropController extends GodzillaApplication implements Constant{
 	 * @param request
 	 * @return
 	 */
-	@RequestMapping(value="/{sid}/{projectCode}/propSort", method=RequestMethod.POST)
+	@RequestMapping(value="/{sid}/{projectCode}/{profile}/propSort", method=RequestMethod.POST)
 	@ResponseBody
 	public Object propSort(@PathVariable String sid, @PathVariable String projectCode, HttpServletRequest request) {
 		
@@ -166,11 +166,7 @@ public class PropController extends GodzillaApplication implements Constant{
 		
 		ReturnCodeEnum returnenum = propConfigService.resortPropById(sortJson);
 		
-		if(returnenum == ReturnCodeEnum.OK_SORTPROP){
-			return SUCCESS;
-		} else {
-			return FAILURE;
-		}
+		return ResponseBodyJson.custom().setAll(returnenum, SORTPROP).build();
 	}
 	
 	/**
@@ -197,7 +193,7 @@ public class PropController extends GodzillaApplication implements Constant{
 	 * @param request
 	 * @return
 	 */
-	@RequestMapping(value="/{sid}/{projectCode}/verifyProp" , method=RequestMethod.GET) 
+	@RequestMapping(value="/{sid}/{projectCode}/{profile}/verifyProp" , method=RequestMethod.GET) 
 	public Object verifyPropListPage(@PathVariable String sid, @PathVariable String projectCode, HttpServletRequest request) {
 		
 		//String selectedProjectCode = StringUtil.getReqPrameter(request, "selectedProjectCode", "godzilla");
@@ -218,7 +214,7 @@ public class PropController extends GodzillaApplication implements Constant{
 		request.setAttribute("user", this.getUser());
 		request.setAttribute("basePath", BASE_PATH);
 		
-		return "config";
+		return "verifyPropListPage";
 	}
 	
 	/**
@@ -231,7 +227,7 @@ public class PropController extends GodzillaApplication implements Constant{
 	 * @param request
 	 * @return
 	 */
-	@RequestMapping(value="/{sid}/{projectCode}/{createBy}/{profile}/verifyProp" , method=RequestMethod.GET) 
+	@RequestMapping(value="/{sid}/{projectCode}/{profile}/{createBy}/verifyProp" , method=RequestMethod.GET) 
 	public Object verifyPropDetailPage(@PathVariable String sid, @PathVariable String createBy, @PathVariable String projectCode, @PathVariable String profile, HttpServletRequest request) {
 		
 		/*List<PropConfig> propTestList = propConfigService.getPropConfigsByProjectcodeAndProfile(projectCode, TEST_PROFILE);
@@ -279,7 +275,7 @@ public class PropController extends GodzillaApplication implements Constant{
 	 * @param request
 	 * @return
 	 */
-	@RequestMapping(value="/{sid}/{projectCode}/{createBy}/{profile}/verifyProp" , method=RequestMethod.POST) 
+	@RequestMapping(value="/{sid}/{projectCode}/{profile}/{createBy}/verifyProp" , method=RequestMethod.POST) 
 	@ResponseBody
 	public Object verifyProp(@PathVariable String sid, @PathVariable String createBy, @PathVariable String projectCode, @PathVariable String profile, HttpServletRequest request) {
 		String status = StringUtil.getReqPrameter(request, "status", "0");

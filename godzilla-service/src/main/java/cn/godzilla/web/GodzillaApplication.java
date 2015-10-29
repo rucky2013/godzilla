@@ -13,8 +13,6 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -22,6 +20,8 @@ import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.context.ApplicationContext;
 
 import cn.godzilla.common.Application;
@@ -29,11 +29,10 @@ import cn.godzilla.common.BusinessException;
 import cn.godzilla.common.Constant;
 import cn.godzilla.common.ReturnCodeEnum;
 import cn.godzilla.common.StringUtil;
-import cn.godzilla.model.ClientConfig;
 import cn.godzilla.model.FunRight;
-import cn.godzilla.model.Project;
 import cn.godzilla.model.User;
 import cn.godzilla.service.FunRightService;
+import cn.godzilla.service.OperateLogService;
 import cn.godzilla.service.UserService;
 
 public abstract class GodzillaApplication extends Application implements Constant{
@@ -43,6 +42,7 @@ public abstract class GodzillaApplication extends Application implements Constan
 	protected ApplicationContext applicationContext;
 	protected static UserService userService;
 	protected static FunRightService funRightService;
+	protected static OperateLogService operateLogService;
 	protected static ServletContext context;
 	protected List<String> escapeUrls = new ArrayList<String>();
 	protected ReentrantLock PUBLIC_LOCK = new ReentrantLock(true);

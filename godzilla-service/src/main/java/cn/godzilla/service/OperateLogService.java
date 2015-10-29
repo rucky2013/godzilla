@@ -12,5 +12,8 @@ public interface OperateLogService extends Constant {
 	
 	public List<OperateLog> queryAll(Long id);
 
-	public ResponseBodyJson logThenReturn(ResponseBodyJson response);
+	public int addOperateLog(String userName, String realName, String string,
+			String string2, String operation, String returncode,
+			String returnmsg, String returnmemo);
+
 }
