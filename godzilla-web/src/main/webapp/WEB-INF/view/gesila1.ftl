@@ -81,10 +81,9 @@
 									<tr>
 										<td width="80" class="paddingR0">部署操作：</td>
 										<td class="bg1">
-										<#if projectCode = 'xuanyuan'>
-											<span class="spanArrange"><a class="deploy" href="javascript:void(0);" value1="${project.checkoutPath}" value2="TEST" title="部署">部署</a></span>
+										<#if projectCode = 'gardener'>
 										<#else>
-											<span class="spanArrange"><a class="deploy" href="javascript:void(0);" value1="${project.checkoutPath}" value2="TEST" title="部署">部署</a></span>
+											<span class="spanArrange"><a class="deploy" href="javascript:void(0);" title="部署">部署</a></span>
 										</#if>
 											<span class="spanUseAgain"><a href="javascript:void(0);" class="restart" value2="TEST" title="重新启动">重新启动</a></span>
 											<span class="spanUseAgain"><a href="javascript:void(0);" class="download" value2="TEST" title="下载war包">下载war包</a></span>
@@ -109,11 +108,18 @@
 									</#if>
 									<tr>
 										<td class="paddingR0">SVN操作：</td>
-										<td class="bg1"><span class="spanViewState"><a class="show" href="javascript:void(0);" title="查看状态">查看状态</a></span> <span class="spanMerge"><a class="merge" href="javascript:void(0);" title="合并代码">合并代码</a></span> <span class="spnSubmit"><a class="commit" href="javascript:void(0);" title="提交主干">提交主干</a></span></td>
+										<td class="bg1">
+											<span class="spanViewState"><a class="show" href="javascript:void(0);" title="查看状态">查看状态</a></span>
+											<span class="spanMerge"><a class="merge" href="javascript:void(0);" title="合并代码">合并代码</a></span>
+											<span class="spnSubmit"><a class="commit" href="javascript:void(0);" title="提交主干">提交主干</a></span>
+										</td>
 									</tr>
 									<tr>
 										<td class="paddingR0">设置操作：</td>
-										<td class="bg1"><span class="spanSoureCode"><a class="src_a" href="javascript:void(0);" title="源代码设置">源代码设置</a></span> <span class="spanBranch"><a class="branch_a" href="javascript:void(0);" title="分之设置">分支设置</a></span></td>
+										<td class="bg1">
+											<span class="spanSoureCode"><a class="src_a" href="javascript:void(0);" title="源代码设置">源代码设置</a></span>
+											<span class="spanBranch"><a class="branch_a" href="javascript:void(0);" title="分之设置">分支设置</a></span>
+										</td>
 									</tr>
 									<tr>
 										<td class="paddingR0">配置管理：</td>
@@ -150,8 +156,11 @@
 									<tr>
 										<td width="80" class="paddingR0">部署操作：</td>
 										<td class="bg1">
-											<span class="spanArrange"><a class="deploy" href="javascript:void(0);" value1="${project.checkoutPath!''}" value2="QUASIPRODUCT" title="打包">打包</a></span>
-											<span class="spanUseAgain"><a href="javascript:void(0);" class="download" value2="QUASIPRODUCT" title="下载war包">下载war包</a></span>
+											<#if projectCode = 'gardener'>
+											<#else>
+												<span class="spanArrange"><a class="deploy" href="javascript:void(0);" title="打包">打包</a></span>
+												<span class="spanUseAgain"><a href="javascript:void(0);" class="download" title="下载war包">下载war包</a></span>
+											</#if>
 										</td>
 									</tr>
 								</tbody>
@@ -178,8 +187,11 @@
 									<tr>
 										<td width="80" class="paddingR0">部署操作：</td>
 										<td class="bg1">
-												<span class="spanArrange"><a class="deploy" href="javascript:void(0);" value1="${project.checkoutPath}" value2="PRODUCT" title="打包">打包</a></span>
-												<span class="spanUseAgain"><a href="javascript:void(0);" class="download" value2="PRODUCT" title="下载war包">下载war包</a></span>
+											<#if projectCode = 'gardener'>
+											<#else>
+												<span class="spanArrange"><a class="deploy" href="javascript:void(0);" title="打包">打包</a></span>
+												<span class="spanUseAgain"><a href="javascript:void(0);" class="download" title="下载war包">下载war包</a></span>
+											</#if>
 										</td>
 									</tr>
 								</tbody>
@@ -245,12 +257,16 @@
 				<div id="recordTolls">
 					<ul>
 						<li class="l"><span>部署状态：</span>
-						<span class="progress"><strong id="process" style="width: 0px"></strong></span>
-						<span id="processText">0%
-						</span></li>
-						<li class="r sp02"><a href="javascript:void(0);" class="r tools1"><span class="edit">比较部署包信息</span></a><a href="javascript:void(0);" class="r tools2"><span class="edit">比较部署包信息</span></a><a href="javascript:void(0);" class="r tools3"><span class="edit">比较部署包信息</span></a></li>
+							<span class="progress"><strong id="process" style="width: 0px"></strong></span>
+							<span id="processText">0%</span>
+						</li>
+						<li class="r sp02">
+							<a href="javascript:void(0);" class="r tools1 showwarInfo"><span class="edit">查看部署包信息</span></a>
+							<a href="javascript:void(0);" class="r tools2 showdeployLog"><span class="edit">查看部署日志信息</span></a>
+							<a href="javascript:void(0);" class="r tools3 updateProcess"><span class="edit">刷新部署进度</span></a>
+						</li>
 					</ul>
-					<table width="100%" border="0" class="table2">
+					<table id="logtable" width="100%" border="0" class="table2">
 						<thead>
 							<tr>
 								<th width="180">部署时间</th>
@@ -262,17 +278,32 @@
 						</thead>
 						<tbody>
 							<#list operateLogs as log>
-							<tr>
-								<td>${log.executeTime?string("yyyy-MM-dd HH:mm:ss")}</td>
-								<td>${log.realName}</td>
-								<td>${log.operation}</td>
-								<#if log.executeResult == 1>
-									<td class="fail">成功</td>
-								<#elseif log.executeResult == -2>
-									<td class="fail">失败</td>
+								
+								<#if log.operation == '部署'>
+									<tr class="deploy_tr" value1="${log.id}">
+										<td>${log.executeTime?string("yyyy-MM-dd HH:mm:ss")}</td>
+										<td>${log.realName}</td>
+										<td>${log.operation}</td>
+										<#if log.executeResult == 1>
+											<td class="fail">成功</td>
+										<#elseif log.executeResult == -2>
+											<td class="fail">失败</td>
+										</#if>
+										<td>${log.resultInfo}</td>
+									</tr>
+								<#else>
+									<tr>
+										<td>${log.executeTime?string("yyyy-MM-dd HH:mm:ss")}</td>
+										<td>${log.realName}</td>
+										<td>${log.operation}</td>
+										<#if log.executeResult == 1>
+											<td class="fail">成功</td>
+										<#elseif log.executeResult == -2>
+											<td class="fail">失败</td>
+										</#if>
+										<td>${log.resultInfo}</td>
+									</tr>
 								</#if>
-								<td>${log.resultInfo}</td>
-							</tr>
 							</#list>
 						</tbody>
 					</table>
@@ -333,8 +364,6 @@
 					部署版本号设置-><span id="close4" class="close">关闭</span>
 				</h5>
 				<div class="shadow_con">
-					<input type="hidden" id="value11" name="value11" value="" />
-					<input type="hidden" id="value22" name="value22" value="" />
 					<div class="user_con clearfix">
 						<label>版本号：</label> <input id="parentVersion" type="text" name="parentVersion" value="1.0.0" />
 						<label>&nbsp;</label>
@@ -351,20 +380,15 @@
 
 	</div>
 
-	<input type="hidden" name="projectCode" id="projectCode" value="${projectCode}" />
-	<input type="hidden" name="profile" id="profile" value="${profile}" />
-	<input type="hidden" id="srcId" name="srcId" value="${project.id}" />
-
 	<script src="/${basePath}/js/jquery-1.8.2.min.js"></script>
 	<script src="/${basePath}/js/common.js"></script>
 	<script src="/${basePath}/js/websocket.js"></script>
+    
 	<script>
 		function shadowClose(index) {
 			var oClose = document.getElementById('close' + index);
-			var oShadow = document.getElementById('shadow');
 			var oShadowBox = document.getElementById('shadow_box' + index);
 			oClose.onclick = function() {
-				oShadow.style.display = 'none';
 				oShadowBox.style.display = 'none';
 			}
 		}
@@ -379,26 +403,16 @@
 			document.getElementById('close' + '3').click();
 			document.getElementById('close' + '4').click();
 		}
+		
 		function showWindow(index) {
-			var oShadow = document.getElementById('shadow');
 			var oShadowBox = document.getElementById('shadow_box' + index);
-			oShadow.style.display = '';
 			oShadowBox.style.display = '';
 		}
-		function modelwindow() {
-			var oShadow = document.getElementById('shadow');
-			oShadow.style.display = '';
-		}
-		function releasewindow() {
-			var oShadow = document.getElementById('shadow');
-			oShadow.style.display = 'none';
-		}
-		function modelwindow() {
-			var oShadow = document.getElementById('shadow');
-			oShadow.style.display = '';
+		function hideWindow(index) {
+			var oShadowBox = document.getElementById('shadow_box' + index);
+			oShadowBox.style.display = 'none';
 		}
 		//更新进度条 
-		
 		var timeout = false; //启动及关闭按钮  
 		function time() {  
 		  if(!timeout) return;  
@@ -406,23 +420,18 @@
 		  setTimeout(time,2000); //time是指本身,延时递归调用自己,100为间隔调用时间,单位毫秒  
 		} 
 		function updateProcess() {
-			var sid='${sid}';
-			var projectCode='${projectCode}';
-			var profile = '${profile}';
-			
 			$.ajax({
 	            type: "POST",
-	            url: "/${basePath}/mvn/${sid}/${projectCode}/" + profile + "/process.do",
+	            url: "/${basePath}/mvn/${sid}/${projectCode}/${profile}/process.do",
 	            data: {
 	            },
 	            dataType: "json",
 	            success: function(data) {
 					var result = data;
-					if(result.returncode=="200000") {
-						$("#process").width(result.returnmemo * 148.0 / 100.0);
-						$("#processText").text(result.returnmemo + "%");	
-						var intprocess = parseInt(result.returnmemo);
-						
+					if(result.returnmsg=="SUCCESS") {
+						$("#process").width(result.data * 148.0 / 100.0);
+						$("#processText").text(result.data + "%");	
+						var intprocess = parseInt(result.data);
 						if(intprocess >= 100){
 							$("#process").width(148);
 							$("#processText").text("100%");
@@ -432,6 +441,7 @@
 				}
 	        });
 		}
+		
 	</script>
 	<script>
 	$(document).ready(function() {
@@ -439,98 +449,110 @@
 	    $("#logout").on("click", function() {
 			window.location.href = '/${basePath}/user/logout/${sid}.do';
 		});
-		
 		//部署弹出框  输入版本
 		$(".deploy").on("click", function() {
-	        var value1 = $(this).attr("value1");
-	        $("#value11").val(value1);
-	        var profile = $(this).attr("value2");
-	        $("#value22").val(profile);
 	        showWindow(4);
 		})	
-		
 		// 部署
 	    $("#deployBtn").on("click", function() {
 	    	
-	    	var oShadowBox = document.getElementById('shadow_box4');
-			oShadowBox.style.display = 'none';
-			
-	        var value1 = $("#value11").val();
-	        var profile =  $("#value22").val();
+	    	hideWindow(4);
 			var parentVersion = $("#parentVersion").val();
 			var parentVersionSuffix = $("#parentVersionSuffix").val();
-			
 			$("#process").width(0);
 			$("#processText").text("0%");
-			
 	        $.ajax({
 	            type: "POST",
-	            url: "/${basePath}/mvn/${sid}/${projectCode}/" + profile + "/deploy.do",
+	            url: "/${basePath}/mvn/${sid}/${projectCode}/${profile}/deploy.do",
 	            data: {
-	                srcUrl: value1,
 	                parentVersion: parentVersion,
 	                parentVersionSuffix : parentVersionSuffix,
 	            },
 	            timeout: 600000,
 	            dataType: "json",
 	            success: function(data) {
-	            	//释放 整个界面
-	            	releasewindow();
 	            	$("#process").width(148);
 					$("#processText").text("100%");
 					timeout = false;
-					if (data == "SUCCESS") {
-						timeout = false;
-						
-						$("#process").width(0);
-						$("#processText").text("0%");
-						
-	                    $("#alert").css("display", "block");
-						$("#alert_title").text(data.returnmsg);
-						$("#alert_text").text(data.returnmemo);
-	                } else {
-	                	timeout = false;
-	                    $("#alert").css("display", "block");
-						$("#alert_title").text(data.returnmsg);
-						$("#alert_text").text(data.returnmemo);
-	                }
+                    $("#alert").css("display", "block");
+					$("#alert_title").text(data.returnmsg);
+					$("#alert_text").text(data.returnmemo);
 	                $("#process").width(0);
 					$("#processText").text("0%");
-	                //window.location.href = '/${basePath}/project/${sid}/${projectCode}/${profile}/projectConfig.do';
 				}
 	        });
-	        //模态化 整个界面
-	        modelwindow();
 	        //定时轮询 进度条更新
 	        timeout = true;
 	        time();
 	    });
+	    //刷新进度
+	    $(".updateProcess").on("click", function() {
+	    	updateProcess();
+	    });
+	    var select_tr = 0;
+	    //选择部署日志 条目
+	    $(".deploy_tr").on("click", function() {
+	    	$(this).css("background", "#f7f8fa");
+	    	var logid = $(this).attr("value1");
+	    	
+	    	if(select_tr == logid) {
+	    		$(this).css("background", "");
+	    		select_tr = 0;
+	    	} else {
+		    	$("#logtable").find("tr").filter(".deploy_tr").each(function(index, element) {
+		    		$(element).css("background", "");
+		    	});
+		    	select_tr = logid;
+		    	$(this).css("background", "#f7f8fa");
+		    }
+	    });
+	    //显示部署日志
+	    $(".showdeployLog").on("click", function() {
+	    	if(select_tr == 0) {
+	    		alert("先选择想要看的部署点");
+	    		return;
+	    	}
+			$.ajax({
+				type: "POST",
+				url: "/${basePath}/project/${sid}/${projectCode}/${profile}/showdeployLog.do",
+				data: {
+					logid : select_tr,
+				},
+				dataType: "json",
+				success: function(data) {
+					$("#alert").css("display", "block");
+					$("#alert_title").text(data.returnmsg);
+					$("#alert_text").html(data.data);
+				}
+			});
+	    });
+	    //显示war包lib jar信息列表
+	    $(".showwarInfo").on("click", function() {
+			if(select_tr == 0) {
+	    		alert("先选择想要看的部署点");
+	    		return;
+	    	}
+			$.ajax({
+				type: "POST",
+				url: "/${basePath}/project/${sid}/${projectCode}/${profile}/showwarInfo.do",
+				data:{
+					logid : select_tr,
+				},
+				dataType:"json",
+				success: function(data) {
+                    $("#alert").css("display", "block");
+					$("#alert_title").text(data.returnmsg);
+					$("#alert_text").html(data.data);
+				}
+			});
+		});
+	    
 	    //下载war包
 		$(".download").on("click", function() {
 			if (!confirm("是否确定下载war包（注：此次下载为最近一次部署版本）"))  {  
 	    		return ;
 	    	}
-	    	var profile = $(this).attr("value2");
-	    	/*$.ajax({
-	    		type: "get",
-	    		url: "/${basePath}/tomcat/${sid}/${projectCode}/"+profile+"/download.do",
-	    		data: {
-	    		},
-	    		dataType:"json",
-	    		success: function(data) {
-	    			if(data.returnmsg=="SUCCESS") {
-						//alert(data.echoMessage);
-						$("#alert").css("display", "block");
-						$("#alert_title").text(data.returnmsg);
-						$("#alert_text").text(data.returnmemo);
-					} else {
-	                    $("#alert").css("display", "block");
-						$("#alert_title").text(data.returnmsg);
-						$("#alert_text").text(data.returnmemo);
-	                }
-	    		}
-	    	});*/
-	    	window.location.href = "/${basePath}/tomcat/${sid}/${projectCode}/"+profile+"/download.do";
+	    	window.location.href = "/${basePath}/project/${sid}/${projectCode}/${profile}/download.do";
 		});
 		
 		//执行命令 upgrade,startclients,stopclients,stoptomcats,starttomcats
@@ -538,26 +560,17 @@
 			if(!confirm("是否确定操作客户端（注：此次操作所有客户端）")) {
 				return ;
 			}
-			modelwindow();
-			var profile = $(this).attr("value2");
 			var command = $(this).attr("value3");
 			$.ajax({
 				type: "get",
-				url: "/${basePath}/admin/${sid}/${projectCode}/"+profile+"/"+command+".do",
+				url: "/${basePath}/admin/${sid}/${projectCode}/${profile}/"+command+".do",
 				data:{
 				},
 				dataType:"json",
 				success: function(data) {
-					if(data.returnmsg=="SUCCESS") {
-						//alert(data.echoMessage);
-						$("#alert").css("display", "block");
-						$("#alert_title").text(data.returnmsg);
-						$("#alert_text").text(data.returnmemo);
-					} else {
-	                    $("#alert").css("display", "block");
-						$("#alert_title").text(data.returnmsg);
-						$("#alert_text").text(data.returnmemo);
-	                }
+                    $("#alert").css("display", "block");
+					$("#alert_title").text(data.returnmsg);
+					$("#alert_text").text(data.returnmemo);
 				}
 			});
 		});
@@ -567,25 +580,16 @@
 	    	if (!confirm("是否确定重新启动"))  {  
 	    		return ;
 	    	}
-	    	modelwindow();
-	        var profile = $(this).attr("value2");
 	        $.ajax({
 	            type: "GET",
-	            url: "/${basePath}/tomcat/${sid}/${projectCode}/"+profile+"/restart.do",
+	            url: "/${basePath}/project/${sid}/${projectCode}/${profile}/restart.do",
 	            data: {
 	            },
 	            dataType: "json",
 	            success: function(data) {
-					if(data.returnmsg=="SUCCESS") {
-						//alert(data.echoMessage);
-						$("#alert").css("display", "block");
-						$("#alert_title").text(data.returnmsg);
-						$("#alert_text").text(data.returnmemo);
-					} else {
-	                    $("#alert").css("display", "block");
-						$("#alert_title").text(data.returnmsg);
-						$("#alert_text").text(data.returnmemo);
-	                }
+	            	$("#alert").css("display", "block");
+					$("#alert_title").text(data.returnmsg);
+					$("#alert_text").text(data.returnmemo);
 				}
 	        });
 	    });
@@ -631,17 +635,9 @@
 	    			id: branchId,
 	    		},
 	    		success: function(data) {
-	    			//	window.location.href = '/${basePath}/project/${sid}/${projectCode}/${profile}/projectConfig.do';
-	    			if(data.returnmsg=="SUCCESS") {
-						//alert(data.echoMessage);
-						$("#alert").css("display", "block");
-						$("#alert_title").text(data.returnmsg);
-						$("#alert_text").text(data.returnmemo);
-					} else {
-	                    $("#alert").css("display", "block");
-						$("#alert_title").text(data.returnmsg);
-						$("#alert_text").text(data.returnmemo);
-	                }
+                    $("#alert").css("display", "block");
+					$("#alert_title").text(data.returnmsg);
+					$("#alert_text").text(data.returnmemo);
 	    		}
     		});
     	});
@@ -668,17 +664,9 @@
 	                branchUrl: branchUrl,
 	            },
 	            success: function(data) {
-	                    //window.location.href = '/${basePath}/project/${sid}/${projectCode}/${profile}/projectConfig.do';
-	                if(data.returnmsg=="SUCCESS") {
-						//alert(data.echoMessage);
-						$("#alert").css("display", "block");
-						$("#alert_title").text(data.returnmsg);
-						$("#alert_text").text(data.returnmemo);
-					} else {
-	                    $("#alert").css("display", "block");
-						$("#alert_title").text(data.returnmsg);
-						$("#alert_text").text(data.returnmemo);
-	                }
+                    $("#alert").css("display", "block");
+					$("#alert_title").text(data.returnmsg);
+					$("#alert_text").text(data.returnmemo);
 	            }
 	        });
 	    });
@@ -716,7 +704,7 @@
 	                checkoutPath: checkoutPath,
 	            },
 	            success: function(data) {
-	                if (data == "SUCCESS") {
+	                if (data.returnmsg == "SUCCESS") {
 	                    alert("success");
 	                } else {
 	                    alert("failed");
@@ -747,7 +735,7 @@
 	                branchUrl: branchUrl,
 	            },
 	            success: function(data) {
-	               if (data == "SUCCESS") {
+	               if (data.returnmsg == "SUCCESS") {
 	                    alert("success");
 	                } else {
 	                    alert("failed");
@@ -760,22 +748,14 @@
 	
 	    // svn 查看状态
 	    $(".show").on("click", function() {
-	    	modelwindow();
 	        $.ajax({
 	            type: "GET",
 	            url: "/${basePath}/svn/${sid}/${projectCode}/${profile}/status.do",
 	            dataType: "json",
 	            success: function(data) {
-					if(data.returnmsg=="SUCCESS") {
-						//alert(data.echoMessage);
-						$("#alert").css("display", "block");
-						$("#alert_title").text(data.returnmsg);
-						$("#alert_text").text(data.returnmemo);
-					} else {
-	                    $("#alert").css("display", "block");
-						$("#alert_title").text(data.returnmsg);
-						$("#alert_text").text(data.returnmemo);
-	                }
+                    $("#alert").css("display", "block");
+					$("#alert_title").text(data.returnmsg);
+					$("#alert_text").html(data.data);
 				}
 	        });
 	    });
@@ -784,22 +764,14 @@
 	    	if (!confirm("是否确定合并分支"))  {  
 	    		return ;
 	    	}
-	    	modelwindow();
 	        $.ajax({
 	            type: "GET",
 	            url: "/${basePath}/svn/${sid}/${projectCode}/${profile}/merge.do",
 	            dataType: "json",
 	            success: function(data) {
-					if(data.returnmsg=="SUCCESS") {
-						//alert(data.echoMessage);
-						$("#alert").css("display", "block");
-						$("#alert_title").text(data.returnmsg);
-						$("#alert_text").text(data.returnmemo);
-					} else {
-	                    $("#alert").css("display", "block");
-						$("#alert_title").text(data.returnmsg);
-						$("#alert_text").text(data.returnmemo);
-	                }
+                    $("#alert").css("display", "block");
+					$("#alert_title").text(data.returnmsg);
+					$("#alert_text").text(data.returnmemo);
 				}
 	        });
 	    });
@@ -808,76 +780,60 @@
 	    	if (!confirm("是否确定提交主干"))  {  
 	    		return ;
 	    	}
-	    	modelwindow();
 	        $.ajax({
 	            type: "GET",
 	            url: "/${basePath}/svn/${sid}/${projectCode}/${profile}/commit.do",
 	            dataType: "json",
 	            success: function(data) {
-						//window.location.href = '/${basePath}/project/${sid}/${projectCode}/${profile}/projectConfig.do';
-	                if(data.returnmsg=="SUCCESS") {
-						//alert(data.echoMessage);
-						$("#alert").css("display", "block");
-						$("#alert_title").text(data.returnmsg);
-						$("#alert_text").text(data.returnmemo);
-					} else {
-	                    $("#alert").css("display", "block");
-						$("#alert_title").text(data.returnmsg);
-						$("#alert_text").text(data.returnmemo);
-	                }
+                    $("#alert").css("display", "block");
+					$("#alert_title").text(data.returnmsg);
+					$("#alert_text").text(data.returnmemo);
 				}
 	        });
 	    });
-	
 	    // 退出
 	    $("#logout").on("click", function() {
 			window.location.href = '/${basePath}/user/logout/${sid}.do';
 		});
-	
 		//alert 弹出框关闭
 		$("#alert_close").on("click", function() {
 			$("#alert").css("display", "none");
-			//释放 整个界面
-	        releasewindow();
 	        window.location.href = '/${basePath}/project/${sid}/${projectCode}/${profile}/projectConfig.do';
 		});
 	});
 	</script>
-	
-	<div id="alert" class="shadow_con" style="display:none">
+<div id="alert" class="shadow_con" style="display:none">
+<style>
+.alert_wrap {
+	overflow: hidden;
+}
 
+.alert_wrap span, .alert_wrap p {
+	<!--float: left;-->
+	display: block;
+	text-align: left;
+	font-size: 14px;
+}
 
-				<style>
-			.alert_wrap {
-				overflow: hidden;
-			}
-			
-			.alert_wrap span, .alert_wrap p {
-				<!--float: left;-->
-				display: block;
-				text-align: left;
-				font-size: 14px;
-			}
-			
-			.alert_wrap span {
-				<!--text-align: left;-->
-				height: 32px;
-				width: 100px;
-			}
-			
-			.alert_wrap p {
-				height: auto;
-				width: 340px;
-			}
-			#alert{position:absolute;left:50%;top:50%;padding:20px 10px; z-index:999;width:380px;margin-left:-200px;height:auto;min-height:92px;background:#fff;border:2px solid #ddd;}
-			</style>
-			
-				<div class="alert_wrap">
-					<span id="alert_title"></span>
-					<p id="alert_text"></p>
-				</div>
-			
-				<input id="alert_close" type="button" class="shadow_btn mar150_l" value="确定" />
-			</div>
+.alert_wrap span {
+	<!--text-align: left;-->
+	height: 32px;
+	width: 100px;
+}
+
+.alert_wrap div {
+	height: auto;
+	width: 340px;
+}
+#alert{position:absolute;left:50%;top:50%;padding:20px 10px; z-index:999;width:380px;margin-left:-200px;height:auto;min-height:92px;background:#fff;border:2px solid #ddd;}
+</style>
+
+<div class="alert_wrap">
+	<span id="alert_title"></span>
+	<div id="alert_text"></div>
+</div>
+
+<input id="alert_close" type="button" class="shadow_btn mar150_l" value="确定" />
+</div>
 </body>
 </html>

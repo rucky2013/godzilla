@@ -22,6 +22,8 @@ public class Project implements Serializable{
 
     private String checkoutPath;
     private String webPath;
+    
+    private String libPath;
     private String warName;
     private String version;
     
@@ -30,7 +32,15 @@ public class Project implements Serializable{
     //DTO
     private String state;
     
-    public String getState() {
+    public String getLibPath() {
+		return libPath;
+	}
+
+	public void setLibPath(String libPath) {
+		this.libPath = libPath;
+	}
+
+	public String getState() {
 		return state;
 	}
 

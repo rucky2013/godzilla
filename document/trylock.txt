@@ -1,0 +1,16 @@
+部署			重新启动		下载war包
+test-project	test-project	待定
+pro								待定
+online							待定
+
+查看状态		合并代码		提交主干
+test-project	test-project	test-project，pro，online
+				pro	
+				online			
+源代码设置						分支设置
+
+
+配置添加		配置审核		配置排序		配置查询
+				test-project	test-project	test-project
+				pro				
+				online			

@@ -46,9 +46,9 @@ public class ResponseBodyJson implements ResponseBody {
 			super();
 			this.returncode = "200000";
 			this.returnmsg = "SUCCESS";
-			this.returnmemo = "";
-			this.operator = "";
-			this.data = null;
+			this.returnmemo = "200000:请求成功";
+			this.operator = "OK";
+			this.data = "附加信息";
 		}
 		
 		public ResponseBodyJson.Builder setReturncode(String returncode) {
@@ -86,7 +86,7 @@ public class ResponseBodyJson implements ResponseBody {
 			this.returnmsg = returnEnum.getStatus();
 			this.returnmemo = returnEnum.getReturnMsg();
 			this.operator = operator;
-			this.data = null;
+			this.data = returnEnum.getData();
 			return this;
 		}
 		
@@ -145,6 +145,24 @@ public class ResponseBodyJson implements ResponseBody {
 		Method dologmethod;
 		try {
 			dologmethod = logClass.getMethod("logThenReturn", ResponseBodyJson.class);
+			dologmethod.invoke(logClass, this);
+		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException |NoSuchMethodException | SecurityException e) {
+			e.printStackTrace();
+		}
+		return this;
+	}
+
+	public Object updateLog() {
+		Class logClass = null;
+		try {
+			logClass = Loader.getClass("cn.godzilla.service.impl.OperateLogServiceImpl");
+		} catch(ClassNotFoundException e) {
+			e.printStackTrace();
+			return this;
+		}
+		Method dologmethod;
+		try{
+			dologmethod = logClass.getMethod("updateLogThenReturn", ResponseBodyJson.class);
 			dologmethod.invoke(logClass, this);
 		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException |NoSuchMethodException | SecurityException e) {
 			e.printStackTrace();

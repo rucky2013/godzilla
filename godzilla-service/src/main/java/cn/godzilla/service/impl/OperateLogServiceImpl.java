@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import cn.godzilla.common.Application;
+import cn.godzilla.common.OperatorEnum;
 import cn.godzilla.common.response.ResponseBodyJson;
 import cn.godzilla.dao.OperateLogMapper;
 import cn.godzilla.model.OperateLog;
@@ -30,7 +31,11 @@ public class OperateLogServiceImpl extends GodzillaApplication implements Operat
 		map.put("projectCode", projectCode);
 		map.put("profile", profile);
 		//map.put("username", username) ;
-		return operateLogMapper.queryList(map);
+		List<OperateLog> logs = operateLogMapper.queryList(map);
+		for(OperateLog l : logs) {
+			l.setOperation(OperatorEnum.getOperatorCnByEn(l.getOperation()));
+		}
+		return logs;
 	}
 	
 	@Override
@@ -45,7 +50,12 @@ public class OperateLogServiceImpl extends GodzillaApplication implements Operat
 		
 		map.put("id", id) ;
 		//map.put("username", username) ;
-		return operateLogMapper.queryAll(map) ;
+		List<OperateLog> logs = operateLogMapper.queryAll(map);
+		
+		for(OperateLog l : logs) {
+			l.setOperation(OperatorEnum.getOperatorCnByEn(l.getOperation()));
+		}
+		return logs;
 	}
 	
 	public static ResponseBodyJson logThenReturn(ResponseBodyJson response) {
@@ -54,6 +64,50 @@ public class OperateLogServiceImpl extends GodzillaApplication implements Operat
 		GodzillaApplication.operateLogService.addOperateLog(GodzillaApplication.getUser().getUserName(), GodzillaApplication.getUser().getRealName(), Application.projectcodeThreadLocal.get(), Application.profileThreadLocal.get(), operation, response.getReturncode(), response.getReturnmsg(), response.getReturnmemo());
 		
 		return response;
+	}
+	
+	public static ResponseBodyJson updateLogThenReturn(ResponseBodyJson response) {
+		String operation = response.getOperator();
+		
+		GodzillaApplication.operateLogService.updateOperateLog(Integer.parseInt(response.getData()+""), GodzillaApplication.getUser().getUserName(), GodzillaApplication.getUser().getRealName(), Application.projectcodeThreadLocal.get(), Application.profileThreadLocal.get(), operation, response.getReturncode(), response.getReturnmsg(), response.getReturnmemo());
+		
+		return response;
+	}
+	@Override
+	public int addOperateLog(String mvnlog, String jarlog) {
+		OperateLog record = new OperateLog();
+		record.setDeployLog(mvnlog);
+		record.setWarInfo(jarlog);
+		operateLogMapper.insertSelective(record);
+		return record.getId().intValue();
+	}
+	@Override
+	public int updateOperateLog(int logid, String username, String realname,
+			String projectCode, String profile, String operation,
+			String operateCode, String executeResult, String resultInfo) {
+		OperateLog record = new OperateLog();
+		record.setId(Long.valueOf(logid));
+		record.setUserName(username);
+		record.setRealName(realname);
+		record.setProjectCode(projectCode);
+		record.setProfile(profile);
+		record.setSort("operate");
+		record.setOperation(operation);
+		try {
+			record.setExecuteResult(Integer.parseInt(executeResult));
+		} catch (NumberFormatException e) {
+			if("SUCCESS".equals(executeResult)) {
+				record.setExecuteResult(SUCC);
+			} else if("FAILURE".equals(executeResult)) {
+				record.setExecuteResult(FAIL);
+			} else {
+				record.setExecuteResult(-3);
+			}
+		}
+		record.setOperateCode(Integer.parseInt(operateCode));
+		record.setResultInfo(resultInfo);
+		record.setExecuteTime(new Date());
+		return operateLogMapper.updateLogById(record);
 	}
 	
 	public int addOperateLog(String username, String realname,String projectCode, String profile, String operation, String operateCode, String executeResult, String resultInfo) {
@@ -113,6 +167,10 @@ public class OperateLogServiceImpl extends GodzillaApplication implements Operat
 		return ;
 	}
 
-	
+	@Override
+	public OperateLog queryLogById(String logid) {
+		OperateLog log = operateLogMapper.queryLogById(Integer.parseInt(logid));
+		return log;
+	}
 
 }

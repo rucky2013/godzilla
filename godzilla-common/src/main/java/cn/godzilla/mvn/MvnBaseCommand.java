@@ -20,15 +20,16 @@ public class MvnBaseCommand extends Application implements Constant{
 	public static final String AREA = "mvn";
 	public static final String ENCODING = "UTF-8";
 	
-	public boolean execute(String command, String projectName, String env, final String username) {
+	public String execute(String command, String projectName, String env, final String username) {
 		
 		logger.info(command);
 		Runtime rt = Runtime.getRuntime();
 		Process p = null;
+		String mvnlog = "";
 		try {
 			p = rt.exec(command);
 			
-			inThreadPrint1(p, username);
+			mvnlog = inThreadPrint1(p, username);
 			
 			p.waitFor();
 			try{
@@ -57,12 +58,12 @@ public class MvnBaseCommand extends Application implements Constant{
 		
 		logger.debug("********MvnBaseCommand.execute Success*******");
 		
-		return true;
+		return mvnlog;
 		
 	}
-	private void inThreadPrint1(Process p, String username) {
+	private String inThreadPrint1(Process p, String username) {
 		final InputStream is1 = p.getInputStream();
-		
+		String deployLog = "<p>********Maven部署日志详情********";
 		try {
 			BufferedReader br1 = new BufferedReader(
 					new InputStreamReader(is1, "utf-8"));
@@ -84,15 +85,17 @@ public class MvnBaseCommand extends Application implements Constant{
 					/**
 					 * 不显示 上传war包 日志
 					 */
-					Pattern pattern = Pattern.compile("^[0-9]+");
+					Pattern pattern = Pattern.compile("^[0-9]+.+");
 					Matcher matcher = pattern.matcher(line1);
 					if(matcher.matches()) {
 						continue;
 					} else {
+						deployLog = deployLog + "<br />" + line1;
 						logger.info("******MvnBaseCommand.execute-->InputStream******"+line1);
 					}
 				}
 			}
+			deployLog = deployLog + "</p>";
 		} catch(Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -102,6 +105,7 @@ public class MvnBaseCommand extends Application implements Constant{
 				e1.printStackTrace();
 			}
 		}
+		return deployLog;
 	}
 	//no use 
 	public boolean executeNewThread(String command,String projectName,String env,final String username) {

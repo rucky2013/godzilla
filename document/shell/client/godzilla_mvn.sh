@@ -35,13 +35,6 @@ if [ $WHO == "root" ] ;then
 	echo "ERROR !Can't support for user root !"
 	exit 1
 fi
-if [ -z $1 ] ;then
-
-echo "ERROR! FOR HELP , /bin/sh $SHELL_NAME -help"
-
-exit 1
-
-fi
 
 BEGIN_STR="..................................."
 
@@ -87,6 +80,9 @@ deploy()
 	#/app/maven/bin/mvn clean deploy -f $POM_PATH -P$PROJECT_ENV
 	/app/maven/bin/mvn install -f $POM_PATH -P$PROJECT_ENV
 }
+showlib() {
+	ls $POM_PATH
+}
 deploy1()
 {
 	echo "deploy $BEGIN_STR"
@@ -118,6 +114,9 @@ case $ACTION in
 	;;
 	info)
 		info
+	;;
+	showlib)
+		showlib
 	;;
 	*)
 		echo "ERROR !ARGS ERROR ,For Help  /bin/sh $SHELL_NAME -help "

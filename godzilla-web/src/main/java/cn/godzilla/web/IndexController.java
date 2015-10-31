@@ -12,6 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import cn.godzilla.common.ReturnCodeEnum;
@@ -24,7 +25,7 @@ import cn.godzilla.model.SvnBranchConfig;
 import cn.godzilla.service.ClientConfigService;
 import cn.godzilla.service.MvnService;
 import cn.godzilla.service.OperateLogService;
-	import cn.godzilla.service.ProjectService;
+import cn.godzilla.service.ProjectService;
 import cn.godzilla.service.SvnBranchConfigService;
 
 @Controller
@@ -58,7 +59,6 @@ public class IndexController extends GodzillaApplication{
 	 * 目前gesilla 不需要判断是否热部署
 	 * 跳到index页
 	 * 用途：判断热部署是否成功
-	 * 
 	 * @param request
 	 * @param response
 	 * @return
@@ -67,28 +67,6 @@ public class IndexController extends GodzillaApplication{
 	public Object loginPage2(HttpServletRequest request, HttpServletResponse response) {
 		request.setAttribute("basePath", BASE_PATH);
 		return "/login";
-	}
-	
-	/**
-	 * 源代码设置 -->添加或修改源代码设置
-	 * @param sid
-	 * @param projectCode
-	 * @param profile
-	 * @param request
-	 * @return
-	 */
-	@RequestMapping(value="/project/{sid}/{projectCode}/{profile}/srcEdit", method = RequestMethod.POST)
-	@ResponseBody
-	public Object srcEdit(@PathVariable String sid, @PathVariable String projectCode, @PathVariable String profile, HttpServletRequest request) {
-		
-		//权限验证??
-		String srcId = StringUtil.getReqPrameter(request, "srcId");
-		String repositoryUrl = StringUtil.getReqPrameter(request, "repositoryUrl");
-		String checkoutPath = StringUtil.getReqPrameter(request, "checkoutPath");
-		
-		ReturnCodeEnum returnEnum = projectService.srcEdit(srcId, repositoryUrl, checkoutPath, projectCode, profile);
-		
-		return ResponseBodyJson.custom().setAll(returnEnum, SRCEDIT).build();
 	}
 	
 	/**
@@ -124,24 +102,95 @@ public class IndexController extends GodzillaApplication{
 		return "gesila1";
 	}
 	
+	/**
+	 * 下载war包
+	 * @param sid
+	 * @param projectCode
+	 * @param profile
+	 * @param response
+	 * @return
+	 */
 	@RequestMapping(value="/project/{sid}/{projectCode}/{profile}/download", method=RequestMethod.GET) 
 	public Object download(@PathVariable("sid") String sid, @PathVariable String projectCode, @PathVariable String profile, HttpServletResponse response) {
 		
 		ReturnCodeEnum returnEnum = mvnService.downLoadWar(response, projectCode, profile);
 		
-		ResponseBodyJson.custom().setAll(returnEnum, WARDOWNLOAD).build();
+		ResponseBodyJson.custom().setAll(returnEnum, WARDOWNLOAD).build().log();
 		
 		return null;
 	}
+	/**
+	 * 显示打包命令执行信息
+	 * @param sid
+	 * @param projectCode
+	 * @param profile
+	 * @param logid
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping(value="/project/{sid}/{projectCode}/{profile}/showdeployLog", method=RequestMethod.POST) 
+	@ResponseBody
+	public Object showdeployLog(@PathVariable("sid") String sid, @PathVariable String projectCode, @PathVariable String profile, 
+			@RequestParam("logid") String logid, HttpServletResponse response) {
+		
+		ReturnCodeEnum returnEnum = mvnService.showdeployLog(response, projectCode, profile, logid);
+		return ResponseBodyJson.custom().setAll(returnEnum, SHOWDEPLOYLOG).build().log();
+	}
+	/**
+	 * 显示war包信息
+	 * @param sid
+	 * @param projectCode
+	 * @param profile
+	 * @param logid
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping(value="/project/{sid}/{projectCode}/{profile}/showwarInfo", method=RequestMethod.POST) 
+	@ResponseBody
+	public Object showwarInfo(@PathVariable("sid") String sid, @PathVariable String projectCode, @PathVariable String profile, 
+			@RequestParam("logid") String logid, HttpServletResponse response) {
+		
+		ReturnCodeEnum returnEnum = mvnService.showwarInfo(response, projectCode, profile, logid);
+		return ResponseBodyJson.custom().setAll(returnEnum, SHOWWARINFO).build().log();
+	}
 	
 	
-	
-	@RequestMapping(value = "/tomcat/{sid}/{projectCode}/{profile}/restart", method = RequestMethod.GET)
+	/**
+	 * 项目重新启动(tomcat)
+	 * @param sid
+	 * @param projectCode
+	 * @param profile
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping(value = "/project/{sid}/{projectCode}/{profile}/restart", method = RequestMethod.GET)
 	@ResponseBody
 	public Object restart(@PathVariable String sid, @PathVariable String projectCode,@PathVariable String profile, HttpServletRequest request, HttpServletResponse response) {
 	
 		ReturnCodeEnum returnEnum = mvnService.restartTomcat(projectCode, profile);
 		
-		return ResponseBodyJson.custom().setAll(returnEnum, TOMCATRESTART).build();
+		return ResponseBodyJson.custom().setAll(returnEnum, TOMCATRESTART).build().log();
+	}
+	
+	/**
+	 * 源代码设置 -->添加或修改源代码设置
+	 * @param sid
+	 * @param projectCode
+	 * @param profile
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping(value="/project/{sid}/{projectCode}/{profile}/srcEdit", method = RequestMethod.POST)
+	@ResponseBody
+	public Object srcEdit(@PathVariable String sid, @PathVariable String projectCode, @PathVariable String profile, HttpServletRequest request) {
+		
+		String srcId = StringUtil.getReqPrameter(request, "srcId");
+		String repositoryUrl = StringUtil.getReqPrameter(request, "repositoryUrl");
+		String checkoutPath = StringUtil.getReqPrameter(request, "checkoutPath");
+		
+		ReturnCodeEnum returnEnum = projectService.srcEdit(srcId, repositoryUrl, checkoutPath, projectCode, profile);
+		
+		return ResponseBodyJson.custom().setAll(returnEnum, SRCEDIT).build().log();
 	}
 }

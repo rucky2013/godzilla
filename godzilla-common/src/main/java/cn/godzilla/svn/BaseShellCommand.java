@@ -84,13 +84,16 @@ public class BaseShellCommand extends Application{
 			BufferedReader br1 = new BufferedReader(
 					new InputStreamReader(is1, "UTF-8"));
 			String line1 = null;
+			String message = "<p>";
 			while ((line1 = br1.readLine()) != null) {
 				if (line1 != null) {
 					logger.info("******BaseShellCommand.execute-->InputStream******"+line1);
-					String message = echoMessageThreadLocal.get();
-					echoMessageThreadLocal.set(message+" \r\n "+line1);
+					message = message + line1 + "<br/>";
+					
 				}
 			}
+			message = message + "</p>";
+			echoMessageThreadLocal.set(message);
 		} catch (Exception e) {
 			logger.debug("******Stream closed******");
 		} finally {

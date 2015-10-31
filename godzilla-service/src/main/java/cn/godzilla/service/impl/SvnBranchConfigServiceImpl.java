@@ -76,9 +76,9 @@ public class SvnBranchConfigServiceImpl extends GodzillaApplication implements S
 		
 		int index = svnBranchConfigMapper.update(parameterMap);
 		if(index>0) {
-			return ReturnCodeEnum.getByReturnCode(OK_SVNVERSION);
+			return ReturnCodeEnum.getByReturnCode(OK_SVNEDIT);
 		}
-		return ReturnCodeEnum.getByReturnCode(OK_SVNVERSION);
+		return ReturnCodeEnum.getByReturnCode(NO_SVNEDIT);
 	}
 
 

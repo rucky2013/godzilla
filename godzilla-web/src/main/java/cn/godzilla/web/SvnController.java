@@ -29,11 +29,8 @@ import cn.godzilla.svn.BaseShellCommand;
  *
  */
 @Controller
-@RequestMapping(value="")
 public class SvnController extends GodzillaApplication implements Constant{
 
-	private final Logger logger = LogManager.getLogger(SvnController.class);
-	
 	@Autowired
 	private ProjectService projectService ;
 	@Autowired
@@ -61,21 +58,14 @@ public class SvnController extends GodzillaApplication implements Constant{
 		
 		ReturnCodeEnum returnenum = svnService.getStatus(projectCode, profile);
 		
-		return ResponseBodyJson.custom().setAll(returnenum.getReturnCode(), returnenum.getReturnMsg(), echoMessageThreadLocal.get(), SVNSTATUS).build();
+		return ResponseBodyJson.custom().setAll(returnenum, echoMessageThreadLocal.get(), SVNSTATUS).build().log();
 	}
 	
 	/**
 	 * 代码合并
-	 * @param branchPath
-	 * 项目分支svn地址
-	 * @param svnpwd
-	 * svn密码
-	 * @param trunkPath
-	 * 项目主干svn地址
-	 * @param projectName
-	 * 项目code
-	 * @param clientIp
-	 * 客户端IP
+	 * @param sid
+	 * @param projectCode
+	 * @param profile
 	 * @param request
 	 * @param response
 	 * @return
@@ -85,8 +75,9 @@ public class SvnController extends GodzillaApplication implements Constant{
 	public Object doMerge(@PathVariable String sid, @PathVariable String projectCode,@PathVariable String profile, HttpServletRequest request, HttpServletResponse response) {
 		
 		ReturnCodeEnum returnEnum = svnService.svnMerge(projectCode, profile);
-		return ResponseBodyJson.custom().setAll(returnEnum, SVNMERGE).build();
+		return ResponseBodyJson.custom().setAll(returnEnum, SVNMERGE).build().log();
 	}
+
 	/**
 	 * 提交主干
 	 * 1.合并分支
@@ -94,16 +85,9 @@ public class SvnController extends GodzillaApplication implements Constant{
 	 * 		检出主干-->合并分支-->删除分支-->提交主干
 	 * else branches is null
 	 * 		检出主干-->exit 5
-	 * @param branchPath
-	 * 项目分支svn地址
-	 * @param svnpwd
-	 * svn密码
-	 * @param trunkPath
-	 * 项目主干svn地址
-	 * @param projectName
-	 * 项目code
-	 * @param clientIp
-	 * 客户端IP
+	 * @param sid
+	 * @param projectCode
+	 * @param profile
 	 * @param request
 	 * @param response
 	 * @return
@@ -113,7 +97,7 @@ public class SvnController extends GodzillaApplication implements Constant{
 	public Object commit(@PathVariable String sid, @PathVariable String projectCode,@PathVariable String profile, HttpServletRequest request, HttpServletResponse response) {
 		
 		ReturnCodeEnum returnEnum = svnService.svnCommit(projectCode, profile);
-		return ResponseBodyJson.custom().setAll(returnEnum, SVNCOMMIT).build();
+		return ResponseBodyJson.custom().setAll(returnEnum, SVNCOMMIT).build().log();
 	}
 	
 	/**
@@ -122,7 +106,6 @@ public class SvnController extends GodzillaApplication implements Constant{
 	 * @param projectCode
 	 * @param profile
 	 * @param branchUrl
-	 * @param currentVersion
 	 * @param request
 	 * @param response
 	 * @return
@@ -134,16 +117,16 @@ public class SvnController extends GodzillaApplication implements Constant{
 			HttpServletRequest request, HttpServletResponse response) {
 
 		ReturnCodeEnum returnEnum = svnBranchConfigService.addNewBranch(projectCode, profile, branchUrl);
-		return ResponseBodyJson.custom().setAll(returnEnum, BRANCHADD).build();
+		return ResponseBodyJson.custom().setAll(returnEnum, BRANCHADD).build().log();
 	}
 	
 	/**
-	 * 分支编辑 保存  
+	 * 分支编辑 保存 
 	 * @param sid
 	 * @param projectCode
 	 * @param profile
+	 * @param id
 	 * @param branchUrl
-	 * @param currentVersion
 	 * @param request
 	 * @param response
 	 * @return
@@ -157,9 +140,19 @@ public class SvnController extends GodzillaApplication implements Constant{
 
 		
 		ReturnCodeEnum returnEnum = svnBranchConfigService.editBranch(projectCode, profile, id, branchUrl);
-		return ResponseBodyJson.custom().setAll(returnEnum, BRANCHEDIT).build();
+		return ResponseBodyJson.custom().setAll(returnEnum, BRANCHEDIT).build().log();
 	}
-	
+
+	/**
+	 * 分支编辑 删除
+	 * @param sid
+	 * @param projectCode
+	 * @param profile
+	 * @param id
+	 * @param request
+	 * @param response
+	 * @return
+	 */
 	@RequestMapping(value="/svnbranch/{sid}/{projectCode}/{profile}/delete", method=RequestMethod.GET) 
 	@ResponseBody
 	public Object delete(@PathVariable String sid, @PathVariable String projectCode, @PathVariable String profile, 
@@ -167,6 +160,6 @@ public class SvnController extends GodzillaApplication implements Constant{
 			HttpServletRequest request, HttpServletResponse response) {
 		
 		ReturnCodeEnum returnEnum = svnBranchConfigService.deletebranchesByProjectCode(projectCode);
-		return ResponseBodyJson.custom().setAll(returnEnum, BRANCHDELETE).build();
+		return ResponseBodyJson.custom().setAll(returnEnum, BRANCHDELETE).build().log();
 	}
 }

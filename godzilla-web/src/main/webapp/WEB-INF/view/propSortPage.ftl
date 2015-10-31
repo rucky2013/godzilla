@@ -168,7 +168,7 @@ $(document).ready(function(){
 				sortJson: sortJson,
 			},
 			success: function(data) {
-				if(data=='SUCCESS') {
+				if(data.returnmsg=='SUCCESS') {
 					alert("SUCCESS");
 					window.location.href = "/${basePath}/prop/${sid}/${projectCode}/ALL/propSort.do?selectedProfile="+"${selectedProfile}"+"&createBy=" + "${createBy}";
 				} else {

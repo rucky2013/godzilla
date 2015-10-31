@@ -208,9 +208,9 @@ $(function(){
 				p3:p3json
 				},
 			success: function(data){
-				if(data == 'SUCCESS') {
+				if(data.returnmsg == 'SUCCESS') {
 					alert("SUCCESS");
-					//重新进入查询页
+					//重新进入 主项目页
 					window.location.href = "/${basePath}/project/${sid}/${projectCode}/TEST/projectConfig.do"
 				} else {
 					alert("FAILURE");

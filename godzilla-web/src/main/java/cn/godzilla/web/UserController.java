@@ -32,7 +32,6 @@ import cn.godzilla.service.UserService;
 @RequestMapping("/user")
 public class UserController extends GodzillaApplication{
 	
-	private final Logger logger = LogManager.getLogger(UserController.class);
 	@Autowired
 	UserService userService;
 	@Autowired
@@ -44,7 +43,6 @@ public class UserController extends GodzillaApplication{
 	
 	/**
 	 * 登录页
-	 * 
 	 * @param request
 	 * @param response
 	 * @return
@@ -57,7 +55,6 @@ public class UserController extends GodzillaApplication{
 
 	/**
 	 * 登录
-	 * 
 	 * @param username
 	 * @param password
 	 * @param request
@@ -76,7 +73,7 @@ public class UserController extends GodzillaApplication{
 		ReturnCodeEnum loginReturn = userService.login(username, password, newsid);  
 		
 		request.setAttribute("sid", newsid);
-		return ResponseBodyJson.custom().setAll(loginReturn, newsid, LOGIN).build();
+		return ResponseBodyJson.custom().setAll(loginReturn, newsid, LOGIN).build().log();
 	}
 	
 	/**
@@ -90,15 +87,6 @@ public class UserController extends GodzillaApplication{
 	public Object home(@PathVariable String sid, HttpServletRequest request, HttpServletResponse response) {
 		
 		List<Project> projects = projectService.queryProjectsByUsername(super.getUser().getUserName());
-		//太卡先不启用
-		/*
-		<#if item.state == '1'>
-		已启动
-		<br/>
-		<#else>
-		</#if>
-		*/
-		//projectService.refreshProjectState(projects);
 		List<OperateLog> logs = operateLogService.queryAll(Long.MAX_VALUE);
 		if(logs.size()==0){
 			super.getUser().setLastOperation(null);
@@ -118,7 +106,6 @@ public class UserController extends GodzillaApplication{
 	
 	/**
 	 * 退出
-	 * 
 	 * @param sid
 	 * @param request
 	 * @param response
@@ -131,10 +118,8 @@ public class UserController extends GodzillaApplication{
 		return "/login";
 	}
 	
-	//权限
-	
 	/**
-	 * 显示权限主界面
+	 * 编辑工作台页面  显示权限列表
 	 * @param sid
 	 * @param request
 	 * @return
@@ -153,7 +138,12 @@ public class UserController extends GodzillaApplication{
 		request.setAttribute("basePath", BASE_PATH);
 		return "/operation";
 	}
-	
+	/**
+	 * 添加用户
+	 * @param sid
+	 * @param request
+	 * @return
+	 */
 	@RequestMapping(value="/{sid}/addUser", method=RequestMethod.POST)
 	@ResponseBody
 	public Object addUser(@PathVariable String sid, HttpServletRequest request) {
@@ -170,11 +160,11 @@ public class UserController extends GodzillaApplication{
 		//password is md5 
 		ReturnCodeEnum returnEnum = userService.addUser(username, password, confirm, departname);
 		
-		return ResponseBodyJson.custom().setAll(returnEnum, ADDUSER).build();
+		return ResponseBodyJson.custom().setAll(returnEnum, ADDUSER).build().log();
 	}
 	
 	/**
-	 * 显示编辑工作台页面   窗口
+	 * 编辑工作台页面   显示窗口
 	 * @param sid
 	 * @param request
 	 * @return
@@ -203,7 +193,7 @@ public class UserController extends GodzillaApplication{
 	}
 	
 	/**
-	 * 提交工作台 内容
+	 * 编辑工作台页面  提交内容
 	 * @param sid
 	 * @param request
 	 * @return
@@ -221,6 +211,6 @@ public class UserController extends GodzillaApplication{
 		String editUsername = StringUtil.getReqPrameter(request, "editUsername", "");
 		ReturnCodeEnum returnEnum = userService.updateUserProjects(editUsername, selectProjects);
 		
-		return ResponseBodyJson.custom().setAll(returnEnum, EDITWORKDESK).build();
+		return ResponseBodyJson.custom().setAll(returnEnum, EDITWORKDESK).build().log();
 	}
 }

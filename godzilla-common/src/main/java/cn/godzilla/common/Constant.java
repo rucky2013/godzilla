@@ -19,24 +19,27 @@ public interface Constant {
 	 */
 	public final int SUCC = 1;
 	public final int FAIL = -2;
-	public final String DEPLOY = "deploy";
-	public final String SRCEDIT = "srcEdit";
-	public final String UPDATEPROP = "updateProp";
-	public final String VERIFYPROP = "verifyProp";
-	public final String SORTPROP = "sortprop";
-	public final String BRANCHADD = "branchadd";
-	public final String BRANCHEDIT = "branchedit";
-	public final String BRANCHDELETE = "branchdelete";
-	public final String SVNSTATUS = "svnstatus";
-	public final String SVNMERGE = "svnmerge";
-	public final String SVNCOMMIT = "svncommit";
-	public final String TOMCATRESTART = "tomcatrestart";
-	public final String WARDOWNLOAD= "wardownload";
-	public final String GODZILLAEX= "godzillaex";
-	public final String ADMINOPERATOR= "adminoperator";
-	public final String EDITWORKDESK = "editworkdesk";
-	public final String ADDUSER = "adduser";
-	public final String LOGIN = "login";
+	public final String DEPLOY = "DEPLOY";
+	public final String SRCEDIT = "SRCEDIT";
+	public final String UPDATEPROP = "UPDATEPROP";
+	public final String VERIFYPROP = "VERIFYPROP";
+	public final String SORTPROP = "SORTPROP";
+	public final String BRANCHADD = "BRANCHADD";
+	public final String BRANCHEDIT = "BRANCHEDIT";
+	public final String BRANCHDELETE = "BRANCHDELETE";
+	public final String SVNSTATUS = "SVNSTATUS";
+	public final String SVNMERGE = "SVNMERGE";
+	public final String SVNCOMMIT = "SVNCOMMIT";
+	public final String TOMCATRESTART = "TOMCATRESTART";
+	public final String SSHCOPYWAR = "SSHCOPYWAR";
+	public final String WARDOWNLOAD= "WARDOWNLOAD";
+	public final String GODZILLAEX= "GODZILLAEX";
+	public final String ADMINOPERATOR= "ADMINOPERATOR";
+	public final String EDITWORKDESK = "EDITWORKDESK";
+	public final String ADDUSER = "ADDUSER";
+	public final String LOGIN = "LOGIN";
+	public final String SHOWDEPLOYLOG = "SHOWDEPLOYLOG";
+	public final String SHOWWARINFO = "SHOWWARINFO";
 	
 	public final String NOTYET_VERIFY_STATUS = "0";//未审核
 	public final String OK_VERIFY_STATUS = "1";//审核通过
@@ -84,10 +87,6 @@ public interface Constant {
 	public final String POM_BASEPATH_KEY = "rpc.pom.basepath";
 	
 	
-	public final static String PROFILE_TEST = "test";
-	public final static String PROFILE_PRO_DEPLOY = "pro_deploy";
-	public final static String PROFILE_ONLINE = "online" ;
-
 	public final static String NO_AJAX = "100000";
 	public final static String NULL_NAMEPASSWORD = "100001";
 	public final static String NOTEXIST_USER = "100002";
@@ -97,7 +96,7 @@ public interface Constant {
 	public final static String NO_ADDUPDATEPROP = "100011";
 	public final static String NO_VERIFYPROP = "100012";
 	public final static String NO_AUTHORITY = "100013";
-	public final static String NO_MVNDEPLOY = "100014";
+	//public final static String NO_MVNDEPLOY = "100014";
 	public final static String NO_CHANGEPOM = "100015";
 	public final static String NO_RPCFACTORY = "100016";
 	public final static String NO_AUTHORIZATION = "100017";
@@ -124,6 +123,18 @@ public interface Constant {
 	public final static String NO_SRCEDIT = "100039";
 	public final static String NO_BRANCHADD = "100040";
 	public final static String NO_SVNSTATUS = "100041";
+	public final static String NO_SHOWWARINFO = "100042";
+	public final static String NO_SHOWDEPLOYLOG = "100043";
+	public final static String NO_RESTARTTOMCAT = "100044";
+	public final static String NO_MVNBUILDLOG = "100045";
+	public final static String NO_DEPLOYLOGID = "100046";
+	public final static String NO_STOREDEPLOYLOG = "100047";
+	public final static String NO_SHOWWARINFOID = "100048";
+	public final static String NO_RESTARTEFFECT = "100049";
+	public final static String NO_INTERRUPTEDEX = "100050";
+	public final static String NO_SYSTEMEX = "100051";
+	public final static String NO_RPCEX = "100052";
+	public final static String NO_SVNEDIT = "100054";
 	
 	public final static String OK_AJAX = "200000";
 	public final static String OK_CHECKUSER = "200001";
@@ -144,4 +155,8 @@ public interface Constant {
 	public final static String OK_SRCEDIT = "200039";
 	public final static String OK_BRANCHADD = "200040";
 	public final static String OK_SVNSTATUS = "200041";
+	public final static String OK_SHOWWARINFO = "200042";
+	public final static String OK_SHOWDEPLOYLOG = "200043";
+	public final static String OK_QUERYPERCENT = "200053";
+	public final static String OK_SVNEDIT = "200054";
 }

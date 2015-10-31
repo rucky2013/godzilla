@@ -1,7 +1,5 @@
 package cn.godzilla.web;
 
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.locks.Lock;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -9,7 +7,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,7 +16,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import cn.godzilla.common.ReturnCodeEnum;
 import cn.godzilla.common.StringUtil;
 import cn.godzilla.common.response.ResponseBodyJson;
-import cn.godzilla.service.ClientConfigService;
 import cn.godzilla.service.MvnService;
 import cn.godzilla.service.OperateLogService;
 
@@ -27,15 +23,16 @@ import cn.godzilla.service.OperateLogService;
 @RequestMapping("/mvn")
 public class MvnController extends GodzillaApplication{
 	
-	private final Logger logger = LogManager.getLogger(MvnController.class);
-	
 	@Autowired
 	private MvnService mvnService;
 	@Autowired
 	private OperateLogService operateLogService;
+	
 	/**
 	 * 部署(打包)
-	 * 源码路径/项目名/环境类型/
+	 * @param sid
+	 * @param projectCode
+	 * @param profile
 	 * @param request
 	 * @param response
 	 * @return
@@ -44,44 +41,45 @@ public class MvnController extends GodzillaApplication{
 	@ResponseBody
 	public Object deploy(@PathVariable String sid,@PathVariable String projectCode,@PathVariable String profile,HttpServletRequest request, HttpServletResponse response) {
 
-		String srcUrl = StringUtil.getReqPrameter(request, "srcUrl");
 		String parentVersion = StringUtil.getReqPrameter(request, "parentVersion", "");
 		String parentVersionSuffix = StringUtil.getReqPrameter(request, "parentVersionSuffix", "");
 		
-		final String pencentkey = sid + "-" + projectCode + "-" + profile;
+		final String pencentkey = this.getPencentKey(projectCode, profile);
 		
-		processPercent.put(pencentkey, "0");
-		ReturnCodeEnum deployReturn = mvnService.doDeploy(srcUrl, projectCode, profile, parentVersion+parentVersionSuffix);
-		if(deployReturn.equals(ReturnCodeEnum.OK_MVNDEPLOY)) {
-			processPercent.put(pencentkey, "100");
-		} else {
-			processPercent.put(pencentkey, "0");
-		}
+		GodzillaApplication.processPercent.put(pencentkey, "0");
 		
-		new Thread() {
-			public void run() {
-				try {
-					Thread.sleep(5000);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-				processPercent.put(pencentkey, "0");
-			}
-		}.start();
+		ReturnCodeEnum deployReturn = mvnService.doDeploy(projectCode, profile, parentVersion+parentVersionSuffix, pencentkey);
 		
-		return ResponseBodyJson.custom().setAll(deployReturn, DEPLOY).build();
+		if(deployReturn.equals(ReturnCodeEnum.getByReturnCode(OK_MVNDEPLOY))
+				||deployReturn.equals(ReturnCodeEnum.getByReturnCode(NO_RESTARTTOMCAT))
+				||deployReturn.equals(ReturnCodeEnum.getByReturnCode(NO_MVNBUILD))) {
+			//rpc那边生成日志，为了添加部署日志跟jar包日志
+			return ResponseBodyJson.custom().setAll(deployReturn, DEPLOY).build().updateLog();
+		} 
+		return ResponseBodyJson.custom().setAll(deployReturn, DEPLOY).build().log();
 	}
 	
+	private String getPencentKey(String projectCode, String profile) {
+		return projectCode + "-" + profile;
+	}
+
+	/**
+	 * 查询部署进度
+	 * 进度存在 ResponseBodyJson.data里
+	 * @param sid
+	 * @param projectCode
+	 * @param profile
+	 * @param request
+	 * @param response
+	 * @return
+	 */
 	@RequestMapping(value="/{sid}/{projectCode}/{profile}/process", method=RequestMethod.POST)
 	@ResponseBody
 	public Object process(@PathVariable String sid, @PathVariable String projectCode, @PathVariable String profile, HttpServletRequest request, HttpServletResponse response) {
 		
-		String processPercent = mvnService.getProcessPercent(sid, projectCode, profile);
-		if(processPercent.equals("100")) {
-			String pencentkey = sid + "-" + projectCode + "-" + profile;
-			super.processPercent.put(pencentkey, "0");
-		}
-		return ResponseBodyJson.custom().setAll(OK_AJAX, SUCCESS, processPercent, "").build();
+		ReturnCodeEnum returnenum = mvnService.getProcessPercent(this.getPencentKey(projectCode, profile));
+		
+		return ResponseBodyJson.custom().setAll(returnenum, "").build();
 	}
 	
 }

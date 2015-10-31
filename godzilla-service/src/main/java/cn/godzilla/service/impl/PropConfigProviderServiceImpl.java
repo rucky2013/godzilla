@@ -20,11 +20,10 @@ import cn.godzilla.service.PropConfigProviderService;
 public class PropConfigProviderServiceImpl implements PropConfigProviderService {
 	
 	@Override
-	public RpcResult propToPom(String project_code, String srcUrl, String webPath, String profile, String parentVersion, ClientConfig clientConfig) throws DocumentException, IOException,  Exception {
+	public RpcResult propToPom(String project_code, String webPath, String profile, String parentVersion, ClientConfig clientConfig) throws DocumentException, IOException,  Exception {
 		/**
 		 * 1.get pom.xml path
 		 */
-		String parentPomPath = srcUrl + "/pom.xml";
 		String webPomPath = webPath + "/pom.xml";
 		
 		try {
@@ -57,16 +56,9 @@ public class PropConfigProviderServiceImpl implements PropConfigProviderService 
 			
 		} catch(Exception e) {
 			e.printStackTrace();
-			return RpcResult.create(FAILURE);
+			return RpcResult.create(FAILURE, 0);
 		}
-		return RpcResult.create(SUCCESS);
-	}
-	
-	private List<PropConfig> replaceHtml(List<PropConfig> propList) {
-		for(PropConfig prop: propList) {
-			prop.setProValue(this.replaceHtml(prop.getProValue()));
-		}
-		return propList;
+		return RpcResult.create(SUCCESS, 0);
 	}
 	
 	private String replaceHtml(String string) {

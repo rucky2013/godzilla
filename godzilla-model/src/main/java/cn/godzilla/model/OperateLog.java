@@ -36,8 +36,28 @@ public class OperateLog implements Serializable{
     private Integer executeResult;
 
     private String resultInfo;
+    
+    private String deployLog;
+    
+    private String warInfo;
+    
+    public String getDeployLog() {
+		return deployLog;
+	}
 
-    public String getClientIp() {
+	public void setDeployLog(String deployLog) {
+		this.deployLog = deployLog;
+	}
+
+	public String getWarInfo() {
+		return warInfo;
+	}
+
+	public void setWarInfo(String warInfo) {
+		this.warInfo = warInfo;
+	}
+
+	public String getClientIp() {
 		return clientIp;
 	}
 

@@ -176,9 +176,9 @@ $(document).ready(function() {
 				status :status,
 				},
 			success: function(data){
-				if(data == 'SUCCESS') {
+				if(data.returnmsg == 'SUCCESS') {
 					alert("SUCCESS");
-					window.location.href = '/${basePath}/prop/${sid}/${projectCode}/verifyProp.do';
+					window.location.href = '/${basePath}/prop/${sid}/${projectCode}/${profile}/verifyProp.do';
 				} else {
 					alert("FAILURE");
 				}

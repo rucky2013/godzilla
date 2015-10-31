@@ -12,6 +12,7 @@
     <result column="status" property="status" jdbcType="INTEGER" />
     <result column="checkout_path" jdbcType="VARCHAR" property="checkoutPath" />
     <result column="web_path" jdbcType="VARCHAR" property="webPath" />
+    <result column="lib_path" jdbcType="VARCHAR" property="libPath" />
     <result column="war_name" jdbcType="VARCHAR" property="warName" />
     <result column="version" jdbcType="VARCHAR" property="version" />
     <result column="svn_username" jdbcType="VARCHAR" property="svnUsername" />
@@ -22,11 +23,13 @@
    
     insert into project (id, project_code, project_name, 
       repository_url, create_by, manager, 
-      status, checkout_path, web_path,
-    version)
+      status, checkout_path, web_path,lib_path, war_name,
+    version, svn_username, svn_password)
     values (#{id,jdbcType=BIGINT}, #{projectCode,jdbcType=VARCHAR}, #{projectName,jdbcType=VARCHAR}, 
       #{repositoryUrl,jdbcType=VARCHAR}, #{createBy,jdbcType=VARCHAR}, #{manager,jdbcType=VARCHAR}, 
-      #{status,jdbcType=INTEGER}, #{checkoutPath,jdbcType=VARCHAR},#{webPath,jdbcType=VARCHAR},#{warName,jdbcType=VARCHAR}, #{version,jdbcType=VARCHAR})
+      #{status,jdbcType=INTEGER}, #{checkoutPath,jdbcType=VARCHAR},#{webPath,jdbcType=VARCHAR},
+      #{libPath,jdbcType=VARCHAR},
+      #{warName,jdbcType=VARCHAR}, #{version,jdbcType=VARCHAR})
       , #{svnUsername,jdbcType=VARCHAR})
       , #{svnPassword,jdbcType=VARCHAR})
   </insert>
@@ -58,10 +61,13 @@
       <if test="checkoutPath != null">
         checkout_path,
       </if>
-      <if test="checkoutPath != null">
+      <if test="webPath != null">
         web_path,
       </if>
-      <if test="checkoutPath != null">
+      <if test="libPath != null">
+        lib_path,
+      </if>
+      <if test="warName != null">
         war_name,
       </if>
       <if test="version != null">
@@ -102,7 +108,10 @@
       <if test="webPath != null">
         #{webPath,jdbcType=VARCHAR},
       </if>
-      <if test="webPath != null">
+      <if test="libPath != null">
+        #{libPath,jdbcType=VARCHAR},
+      </if>
+      <if test="warName != null">
         #{warName,jdbcType=VARCHAR},
       </if>
       <if test="version != null">
@@ -119,7 +128,8 @@
   
   <select id="queryProjectsByUsername" parameterType="string" resultMap="BaseResultMap">
   	select p.id, p.project_code, p.project_name, 
-      p.repository_url, p.create_by, p.manager,  p.status, p.checkout_path, p.web_path,p.war_name,
+      p.repository_url, p.create_by, p.manager,  p.status, p.checkout_path, p.web_path,
+      p.lib_path,p.war_name,
     p.version , p.svn_username, p.svn_password
      from project p
      left join function_right r on p.project_code = r.project_code
@@ -155,7 +165,10 @@
       <if test="webPath != null">
         web_path = #{webPath,jdbcType=VARCHAR},
       </if>
-      <if test="webPath != null">
+      <if test="libPath != null">
+        lib_path = #{libPath,jdbcType=VARCHAR},
+      </if>
+      <if test="warName != null">
         war_name = #{warName,jdbcType=VARCHAR},
       </if>
       <if test="version != null">
@@ -173,7 +186,8 @@
 
 <sql id="query">
 	id, project_code as projectCode, project_name as projectName, 
-    repository_url as repositoryUrl, create_by as createBy, manager, status, checkout_path as checkoutPath, web_path as webPath,war_name as warName,
+    repository_url as repositoryUrl, create_by as createBy, manager, status, checkout_path as checkoutPath, 
+    web_path as webPath, lib_path as libPath, war_name as warName,
     version, svn_username as svnUsername, svn_password as svnPassword
 </sql>
 <select id="qureyByProCode" resultType="cn.godzilla.model.Project" parameterType="String">
@@ -199,6 +213,9 @@
       </if>
       <if test="webPath != null">
         web_path = #{webPath,jdbcType=VARCHAR},
+      </if>
+      <if test="libPath != null">
+        lib_path = #{libPath,jdbcType=VARCHAR},
       </if>
       <if test="warName != null">
         war_name = #{warName,jdbcType=VARCHAR},

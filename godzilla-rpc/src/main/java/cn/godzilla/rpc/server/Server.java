@@ -34,7 +34,7 @@ public class Server {
 	private static final byte[] failure;
 	
 	static {
-		failure = Serializer.serialize(Result.fail(null, null));
+		failure = Serializer.serialize(Result.fail(null, "0"));
 	}
 	
 	private final List<BlockingDeque<Entry<Channel, byte[]>>> deques;
@@ -114,9 +114,9 @@ public class Server {
 			} catch(InterruptedException e ) {
 				continue;
 			}
-			
+			Parameters parameters = null;
 			try {
-				Parameters parameters = Serializer.deserializer(
+				parameters = Serializer.deserializer(
 						entry.getColumn(), Parameters.class);
 				
 				Object result = methodSupport.invoke(parameters
@@ -128,9 +128,14 @@ public class Server {
 						Serializer.serialize(Result.success(result, parameters.getId())));
 			} catch(Exception e) {
 				e.printStackTrace();
-				entry.getRow().write(failure);
+				entry.getRow().write(this.getFailure("方法调用失败(没有此方法)"+e.getMessage(), parameters.getId()));
 			}
 		}
+	}
+	
+	public byte[] getFailure(String msg, String reqId) {
+		byte[] failbytes = Serializer.serialize(Result.fail(msg, reqId));
+		return failbytes;
 	}
 	
 	public void putParameters(Channel channel, byte[] parameters) {

@@ -14,4 +14,8 @@ public interface OperateLogMapper {
     List<OperateLog> queryList(Map<String, String> map);
     
     List<OperateLog> queryAll(Map<String, Object> map);
+
+	OperateLog queryLogById(Integer parseInt);
+
+	int updateLogById(OperateLog record);
 }

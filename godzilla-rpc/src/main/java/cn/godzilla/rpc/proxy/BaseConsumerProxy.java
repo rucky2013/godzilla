@@ -70,7 +70,7 @@ public abstract class BaseConsumerProxy {
 		
 		int time = 0;
 		while(!channelFutureLocal.get().getChannel().isConnected()) {
-			System.out.println("channelFutureLocal.get().getChannel().isConnected() 睡眠  className:"+className  + "--ip:"+ip);
+			//System.out.println("channelFutureLocal.get().getChannel().isConnected() 睡眠  className:"+className  + "--ip:"+ip);
 			try {
 				Thread.sleep(500);
 			} catch (InterruptedException e1) {
@@ -78,8 +78,8 @@ public abstract class BaseConsumerProxy {
 			}
 			if(time++>10) {
 				Object rm = ProxyFactory.clazzMap.remove(className + ip);
-				System.out.println("channelFutureLocal.get().getChannel().isConnected() 连接失败 className:"+className  + "--ip:"+ip);
-				System.out.println("channelFutureLocal.get().getChannel().isConnected() 连接失败 rm:---|"+rm);
+				//System.out.println("channelFutureLocal.get().getChannel().isConnected() 连接失败 className:"+className  + "--ip:"+ip);
+				//System.out.println("channelFutureLocal.get().getChannel().isConnected() 连接失败 rm:---|"+rm);
 				throw new RpcException("channelFutureLocal.get().getChannel().isConnected() 连接失败  beyond 10 time try is connected");
 			}
 		}
@@ -100,17 +100,21 @@ public abstract class BaseConsumerProxy {
 			Result result = (Result)lock.get("result");
 			
 			if(!result.isSuccess()) {
-				System.out.println("出错啦");
-				throw new RpcException("调用失败啦");
+				System.out.println("出错"+result.getMessage());
+				throw new RpcException("调用失败"+result.getMessage());
 			}
 			
 			return result.getResult();
 		} catch(SerializeException e ) {
-			System.out.println("SerializeException 出错啦");
-			throw new RpcException("SerializeException 出错啦");
+			System.out.println("rpc SerializeException ");
+			throw new RpcException("rpc SerializeException ");
 		} catch(InterruptedException e ) {
-			System.out.println("InterruptedException 出错啦");
-			throw new RpcException("InterruptedException 出错啦");
+			System.out.println("rpc InterruptedException");
+			throw new RpcException("rpc InterruptedException");
+		} catch(Throwable e) {
+			e.printStackTrace();
+			System.out.println("rpc调用异常");
+			throw new RpcException("rpc调用异常");
 		}
 	}
 	

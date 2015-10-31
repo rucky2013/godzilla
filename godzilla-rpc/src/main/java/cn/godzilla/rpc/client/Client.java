@@ -49,7 +49,7 @@ public class Client {
 			throw new ClientStartException();
 		} else {
 			isStart = true;
-			
+
 			factory = new NioClientSocketChannelFactory(
 					Executors.newFixedThreadPool(10),
 					Executors.newFixedThreadPool(10), 2, 8);
@@ -78,13 +78,12 @@ public class Client {
 
 	public void putResult(Channel channel, byte[] result) {
 		if (isStart) {
-			
-			
+
 			Result result_ = Serializer.deserializer(result, Result.class);
 			String responseId = result_.getId();
 			Map<String, Object> lock = BaseConsumerProxy.locks.get(responseId);
 			lock.put("result", result_);
-			synchronized (lock){
+			synchronized (lock) {
 				lock.notify();
 			}
 		} else {
@@ -111,6 +110,3 @@ public class Client {
 	}
 
 }
-
-
-

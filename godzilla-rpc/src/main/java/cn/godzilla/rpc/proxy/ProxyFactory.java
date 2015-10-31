@@ -88,7 +88,6 @@ public class ProxyFactory {
 						}
 					}, NoOp.INSTANCE});
 			enhancer.setCallbackFilter(new CallbackFilter() {
-				
 				public int accept(Method obj) {
 					if(obj.getName().equals("doInterval")) {
 						return 1;

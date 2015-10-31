@@ -15,10 +15,13 @@
     <result column="operate_code" property="operateCode" jdbcType="INTEGER" />
     <result column="execute_time" property="executeTime" jdbcType="TIMESTAMP" />
     <result column="execute_result" property="executeResult" jdbcType="INTEGER" />
+    
   </resultMap>
   <resultMap id="ResultMapWithBLOBs" type="cn.godzilla.model.OperateLog" extends="BaseResultMap" >
     
     <result column="result_info" property="resultInfo" jdbcType="LONGVARCHAR" />
+    <result column="deploy_log" property="deployLog" jdbcType="LONGVARCHAR" />
+    <result column="war_info" property="warInfo" jdbcType="LONGVARCHAR" />
   </resultMap>
   <sql id="Blob_Column_List" >
     result_info
@@ -30,7 +33,8 @@
       execute_result, result_info)
     values (#{id,jdbcType=DECIMAL}, #{userName,jdbcType=VARCHAR}, #{realName,jdbcType=VARCHAR}, #{projectCode,jdbcType=VARCHAR}, 
       #{profile,jdbcType=VARCHAR},  #{clientIp,jdbcType=VARCHAR},#{sort,jdbcType=VARCHAR},#{commands,jdbcType=VARCHAR},#{operation,jdbcType=VARCHAR},#{operateCode,jdbcType=INTEGER}, now(), 
-      #{executeResult,jdbcType=INTEGER}, #{resultInfo,jdbcType=LONGVARCHAR})
+      #{executeResult,jdbcType=INTEGER}, #{resultInfo,jdbcType=LONGVARCHAR}
+      , #{deployLog,jdbcType=LONGVARCHAR}, #{warInfo,jdbcType=LONGVARCHAR})
   </insert>
   <insert id="insertSelective" useGeneratedKeys="true" keyProperty="id" parameterType="cn.godzilla.model.OperateLog" >
     insert into operate_logs
@@ -72,6 +76,12 @@
       <if test="resultInfo != null" >
         result_info,
       </if>
+      <if test="deployLog != null" >
+        deploy_log,
+      </if>
+      <if test="warInfo != null" >
+        war_info,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -111,12 +121,18 @@
       <if test="resultInfo != null" >
         #{resultInfo,jdbcType=LONGVARCHAR},
       </if>
+      <if test="deployLog != null" >
+        #{deployLog,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="warInfo != null" >
+        #{warInfo,jdbcType=LONGVARCHAR},
+      </if>
     </trim>
   </insert>
   
   <sql id="queryColumns">id, user_name as userName, real_name as realName, project_code as projectCode, 
       profile, operation,client_ip as clientIp, sort, commands, operate_code as operateCode, execute_time executeTime, 
-      execute_result executeResult, result_info resultInfo
+      execute_result executeResult, result_info resultInfo, deploy_log deployLog, war_info warInfo
       </sql>
       
       <select id="queryList" resultType="cn.godzilla.model.OperateLog" parameterType="java.util.Map">
@@ -142,5 +158,55 @@
  			and sort = 'operate' 
       		  order by id desc limit 20
       </select>
-  
+  <select id="queryLogById" resultType="cn.godzilla.model.OperateLog" parameterType="java.lang.Integer">
+  	select 
+  		<include refid="queryColumns" />
+  		from operate_logs
+  			where id = #{id}
+  </select>
+  <update id="updateLogById" parameterType="cn.godzilla.model.OperateLog">
+  	update operate_logs
+  	set 
+      <if test="userName != null" >
+        user_name = #{userName},
+      </if>
+      <if test="realName != null" >
+        real_name= #{realName},
+      </if>
+      <if test="projectCode != null" >
+        project_code= #{projectCode},
+      </if>
+      <if test="profile != null" >
+        profile = #{profile},
+      </if>
+      <if test="clientIp != null" >
+        client_ip = #{clientIp},
+      </if>
+      <if test="sort != null" >
+        sort = #{sort},
+      </if>
+      <if test="commands != null" >
+        commands = #{commands},
+      </if>
+      <if test="operation != null" >
+        operation = #{operation},
+      </if>
+      <if test="operateCode != null" >
+        operate_code = #{operateCode},
+      </if>
+      <if test="executeResult != null" >
+        execute_result = #{executeResult},
+      </if>
+      <if test="resultInfo != null" >
+        result_info = #{resultInfo},
+      </if>
+      <if test="deployLog != null" >
+        deploy_log = #{deployLog},
+      </if>
+      <if test="warInfo != null" >
+        war_info = #{warInfo},
+      </if>
+      execute_time = now()
+      where id = #{id}
+  </update>
 </mapper>

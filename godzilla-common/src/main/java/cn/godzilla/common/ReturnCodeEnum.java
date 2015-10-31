@@ -19,7 +19,7 @@ public enum ReturnCodeEnum {
 	NO_VERIFYPROP("100012","审核配置失败"),
 	NO_AUTHORITY("100013","没有审核权限"),
 	//mvn
-	NO_MVNDEPLOY("100014","mvn部署失败"),
+	//NO_MVNDEPLOY("100014","mvn部署失败:执行mvn命令失败"),
 	NO_CHANGEPOM("100015","mvn部署失败:替换pom文件失败"),
 	NO_RPCFACTORY("100016", "mvn部署失败:rpc初始化错误"),
 	//authorization
@@ -48,6 +48,18 @@ public enum ReturnCodeEnum {
 	NO_SRCEDIT("100039", "源代码设置失败"),
 	NO_BRANCHADD("100040", "分支添加失败"),
 	NO_SVNSTATUS("100041", "svn status信息获取失败"),
+	NO_SHOWWARINFO("100042", "显示war包信息失败"),
+	NO_SHOWDEPLOYLOG("100043", "显示打包日志失败"),
+	NO_RESTARTTOMCAT("100044", "mvn部署失败:重启tomcat失败"),
+	NO_MVNBUILDLOG("100045", "mvn部署失败:执行mvn命令失败，并且写入日志失败，请shell登录查看日志"),
+	NO_DEPLOYLOGID("100046", "没有选择logid"),
+	NO_STOREDEPLOYLOG("100047", "没有记录此项部署日志"),
+	NO_SHOWWARINFOID("100048", "没有选择logid"),
+	NO_RESTARTEFFECT("100049", "此环境没有tomcat可以重启"),
+	NO_INTERRUPTEDEX("100050", "INTERRUPTEDEX"),
+	NO_SYSTEMEX("100051", "系统异常"),
+	NO_RPCEX("100052", "rpc调用异常"),
+	NO_SVNEDIT("100054", "svn分支编程保存失败"),	
 	
 	OK_SUCCESS("200000", "SUCCESS"),
 	//user模块
@@ -73,15 +85,31 @@ public enum ReturnCodeEnum {
 	OK_SRCEDIT("200039", "源代码设置成功"),
 	OK_BRANCHADD("200040", "分支添加成功"),
 	OK_SVNSTATUS("200041", "svn status信息获取成功"),
+	OK_SHOWWARINFO("200042", "显示war包信息成功"),
+	OK_SHOWDEPLOYLOG("200043", "显示打包日志成功"),
+	OK_QUERYPERCENT("200053", "查询部署进度成功")	,
+	OK_SVNEDIT("200054", "svn分支编程保存成功"),	
 	;
 	
 	public String returnCode;
 	public String returnMsg;
+	public Object data;
 	
 	ReturnCodeEnum() {
 		this.returnCode = "";
 		this.returnMsg = "";
+		this.data = null;
 	}
+	
+	public Object getData() {
+		return data;
+	}
+
+	public ReturnCodeEnum setData(Object data) {
+		this.data = data;
+		return this;
+	}
+
 	ReturnCodeEnum(String returnCode, String returnMsg) {
 		this.returnCode = returnCode;
 		this.returnMsg = returnMsg;

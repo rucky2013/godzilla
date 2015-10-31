@@ -6,13 +6,22 @@ public class RpcResult implements Serializable{
 	
 	public String rpcCode;
 	public String rpcMsg;
+	public int logid;
 	
 	private RpcResult() {
-		this("0", "success");
+		this("0", "success", 0);
 	}
-	public RpcResult(String rpcCode, String rpcMsg) {
+	public RpcResult(String rpcCode, String rpcMsg, int logid) {
 		this.rpcCode = rpcCode;
 		this.rpcMsg = rpcMsg;
+		this.logid = logid;
+	}
+	
+	public int getLogid() {
+		return logid;
+	}
+	public void setLogid(int logid) {
+		this.logid = logid;
 	}
 	public String getRpcCode() {
 		return rpcCode;
@@ -27,23 +36,23 @@ public class RpcResult implements Serializable{
 		this.rpcMsg = rpcMsg;
 	}
 	
-	public static RpcResult create(String sort) {
+	public static RpcResult create(String sort, int logid) {
 		RpcResult rpcResult = null;
 		switch(sort){
 		case "SUCCESS":
-			rpcResult = new RpcResult(SUCCESS,"success");
+			rpcResult = new RpcResult(SUCCESS,"success", logid);
 			break;
 		case "FAILURE":
-			rpcResult = new RpcResult(FAILURE,"failure");
+			rpcResult = new RpcResult(FAILURE,"failure", logid);
 			break;
 		case "BUILDFAILURE":
-			rpcResult = new RpcResult(BUILDFAILURE,"BUILDFAILURE");
+			rpcResult = new RpcResult(BUILDFAILURE,"BUILDFAILURE", logid);
 			break;
 		case "NOSETPROPS":
-			rpcResult = new RpcResult(NOSETPROPS, "NOSETPROPS");
+			rpcResult = new RpcResult(NOSETPROPS, "NOSETPROPS", logid);
 			break;
 		default:
-			rpcResult = new RpcResult(CREATEFAIL, "RpcResult create failed");
+			rpcResult = new RpcResult(CREATEFAIL, "RpcResult create failed", logid);
 		}
 		return rpcResult;
 	}

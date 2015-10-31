@@ -1,26 +1,19 @@
 package cn.godzilla.service.impl;
 
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import org.dom4j.DocumentException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import cn.godzilla.common.ReturnCodeEnum;
-import cn.godzilla.common.StringUtil;
-import cn.godzilla.common.xml.XmlUtil;
 import cn.godzilla.dao.PropConfigMapper;
 import cn.godzilla.model.PropConfig;
-import cn.godzilla.model.RpcResult;
 import cn.godzilla.service.PropConfigService;
 import cn.godzilla.web.GodzillaApplication;
 
@@ -30,42 +23,42 @@ import com.alibaba.fastjson.JSON;
 public class PropConfigServiceImpl implements PropConfigService {
 
 	@Autowired
-	private PropConfigMapper dao;
+	private PropConfigMapper propConfigMapper;
 	
 	@Override
 	public int insert(PropConfig record) {
 
-		return dao.insert(record);
+		return propConfigMapper.insert(record);
 	}
 
 	@Override
 	public int insertSelective(PropConfig record) {
 
-		return dao.insertSelective(record);
+		return propConfigMapper.insertSelective(record);
 	}
 
 	@Override
 	public int update(PropConfig record) {
 
-		return dao.update(record);
+		return propConfigMapper.update(record);
 	}
 
 	@Override
 	public PropConfig queryDetailById(long id) {
 
-		return dao.queryDetailById(id);
+		return propConfigMapper.queryDetailById(id);
 	}
 
 	@Override
 	public PropConfig queryDetailByKey(Map<String, String> map) {
 
-		return dao.queryDetailByKey(map);
+		return propConfigMapper.queryDetailByKey(map);
 	}
 
 	@Override
 	public List<PropConfig> queryList(Map<String, String> map) {
 		
-		return dao.queryList(map);
+		return propConfigMapper.queryList(map);
 	}
 
 	@Override
@@ -115,7 +108,7 @@ public class PropConfigServiceImpl implements PropConfigService {
 		Map<String, String> parameters = new HashMap<String, String>();
 		parameters.put("projectCode", project_code);
 		parameters.put("profile", profile);
-		return dao.queryListByProjectcodeAndProfile(parameters);
+		return propConfigMapper.queryListByProjectcodeAndProfile(parameters);
 	}
 	
 
@@ -164,7 +157,7 @@ public class PropConfigServiceImpl implements PropConfigService {
 			prop.setAuditorText("");
 			prop.setIndexOrder(0);
 			
-			dao.insert(prop);
+			propConfigMapper.insert(prop);
 		}
 		return true;
 	}
@@ -186,7 +179,7 @@ public class PropConfigServiceImpl implements PropConfigService {
 		parameterMap.put("create_by", createBy);
 		parameterMap.put("status", status);
 		
-		List<PropConfig> propList = dao.queryByProjectcodeAndCreatebyAndProfile(parameterMap);
+		List<PropConfig> propList = propConfigMapper.queryByProjectcodeAndCreatebyAndProfile(parameterMap);
 		
 		return propList;
 	}
@@ -199,7 +192,7 @@ public class PropConfigServiceImpl implements PropConfigService {
 		parameterMap.put("create_by", createBy);
 		parameterMap.put("status", status);
 		
-		List<PropConfig> propList = dao.queryByProjectcodeAndCreatebyAndProfileGroupBy(parameterMap);
+		List<PropConfig> propList = propConfigMapper.queryByProjectcodeAndCreatebyAndProfileGroupBy(parameterMap);
 		
 		return propList;
 	}
@@ -280,7 +273,7 @@ public class PropConfigServiceImpl implements PropConfigService {
 						Map<String, Object> parameterMap1 = new HashMap<String, Object>();
 						parameterMap1.put("id", tempProp.getId());
 						parameterMap1.put("last_value", tempProp.getLastValue());
-						dao.updatePropLastValue(parameterMap1);
+						propConfigMapper.updatePropLastValue(parameterMap1);
 					}
 				}
 			}
@@ -291,12 +284,12 @@ public class PropConfigServiceImpl implements PropConfigService {
 				set a.status = 3
 					where b.project_code = #{project_code}  and b.profile = #{profile} and a.status = 1 and b.create_by = #{create_by}  and b.status = 0;
 			 */
-			int dbReturn1 = dao.changeStatusByNewverify(parameterMap);
+			int dbReturn1 = propConfigMapper.changeStatusByNewverify(parameterMap);
 			
 			/**
 			 * 更新所有 待审核配置状态
 			 */
-			int dbReturn2 = dao.verifyOKProp(parameterMap);
+			int dbReturn2 = propConfigMapper.verifyOKProp(parameterMap);
 			
 			return dbReturn1>=0&&dbReturn2>=0
 					?ReturnCodeEnum.getByReturnCode(OK_VERIFYPROP)
@@ -305,7 +298,7 @@ public class PropConfigServiceImpl implements PropConfigService {
 			/**
 			 * 更新所有 待审核配置状态
 			 */
-			int dbReturn2 = dao.verifyOKProp(parameterMap);
+			int dbReturn2 = propConfigMapper.verifyOKProp(parameterMap);
 			return dbReturn2>0
 					?ReturnCodeEnum.getByReturnCode(OK_VERIFYPROP)
 							:ReturnCodeEnum.getByReturnCode(NO_VERIFYPROP);
@@ -324,7 +317,7 @@ public class PropConfigServiceImpl implements PropConfigService {
 			Map<String , Integer> parameterMap = new HashMap<String, Integer>();
 			parameterMap.put("id", Integer.parseInt(entry.getKey()));
 			parameterMap.put("index_order", entry.getValue());
-			dao.updatePropIndex(parameterMap);
+			propConfigMapper.updatePropIndex(parameterMap);
 		}
 		return ReturnCodeEnum.getByReturnCode(OK_SORTPROP);
 	}

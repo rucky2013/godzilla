@@ -19,8 +19,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import cn.godzilla.common.ReturnCodeEnum;
-import cn.godzilla.common.response.ResponseBodyJson;
+import cn.godzilla.common.StringUtil;
 import cn.godzilla.model.ClientConfig;
+import cn.godzilla.model.OperateLog;
 import cn.godzilla.model.Project;
 import cn.godzilla.model.RpcResult;
 import cn.godzilla.rpc.api.RpcException;
@@ -57,7 +58,7 @@ public class MvnServiceImpl extends GodzillaApplication implements MvnService {
 			new HashMap<String, MvnProviderService>();
 	
 	@Override
-	public ReturnCodeEnum doDeploy(String srcUrl, String projectCode, String profile, String parentVersion) {
+	public ReturnCodeEnum doDeploy(String projectCode, String profile, String parentVersion, String pencentkey) {
 		/*
 		 * -2.限制并发　发布
 		 * 测试环境　每个项目　只允许　一个人发布（如果互相依赖项目　并发发布，还是会出现问题）
@@ -68,37 +69,58 @@ public class MvnServiceImpl extends GodzillaApplication implements MvnService {
 		boolean hasAC = false;
 		try {
 			if(profile.equals(TEST_PROFILE)) {
-				lock = super.deploy_lock.get(projectCode);
-				hasAC = lock.tryLock(5, TimeUnit.SECONDS);
+				lock = GodzillaApplication.deploy_lock.get(projectCode);
+				hasAC = lock.tryLock(1, TimeUnit.SECONDS);
 				if(!hasAC) 
 					return ReturnCodeEnum.getByReturnCode(NO_CONCURRENCEDEPLOY);
 			} else {
-				lock = super.deploy_lock.get(profile);
+				lock = GodzillaApplication.deploy_lock.get(profile);
 				hasAC = lock.tryLock(1, TimeUnit.SECONDS);
 				if(!hasAC) 
 					return ReturnCodeEnum.getByReturnCode(NO_CONCURRENCEDEPLOY);
 			}
-			this.doDeploy1(srcUrl, projectCode, profile, parentVersion);
+			
+			ReturnCodeEnum deployReturn = this.doDeploy1(projectCode, profile, parentVersion, pencentkey);
+			
+			if(deployReturn.equals(ReturnCodeEnum.OK_MVNDEPLOY)) {
+				GodzillaApplication.processPercent.put(pencentkey, "100");
+			} else {
+				GodzillaApplication.processPercent.put(pencentkey, "0");
+			}
+			final String pencentkeyF = pencentkey;
+			new Thread() {
+				public void run() {
+					try {
+						Thread.sleep(5000);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+					GodzillaApplication.processPercent.put(pencentkeyF, "0");
+				}
+			}.start();
+			
+			return deployReturn;
 		} catch(InterruptedException e) {
 			e.printStackTrace();
-			return ReturnCodeEnum.getByReturnCode(NO_CONCURRENCEDEPLOY);
+			return ReturnCodeEnum.getByReturnCode(NO_INTERRUPTEDEX);
+		} catch(Throwable e) {
+			e.printStackTrace();
+			return ReturnCodeEnum.getByReturnCode(NO_SYSTEMEX);
 		} finally {
 			try {
 				lock.unlock();
 			} /*catch(InvocationTargetException e2) {
 				return ReturnCodeEnum.getByReturnCode(NO_HASKEYDEPLOY);
-			} */catch(IllegalMonitorStateException e1) {
+			} */
+			catch(IllegalMonitorStateException e1) {
 				return ReturnCodeEnum.getByReturnCode(NO_CONCURRENCEDEPLOY);
 			} 
 			
 		}
-		return ReturnCodeEnum.getByReturnCode(NO_MVNDEPLOY);
-		
 	}
-	public ReturnCodeEnum doDeploy1(String srcUrl, String projectCode, String profile, String parentVersion) {
+	public ReturnCodeEnum doDeploy1(String projectCode, String profile, String parentVersion, String pencentkey) {
 		
 		String sid = super.getSid();
-		String pencentkey = sid + "-" + projectCode + "-" + profile;
 		
 		Project project = projectService.qureyByProCode(projectCode);
 		
@@ -141,8 +163,10 @@ public class MvnServiceImpl extends GodzillaApplication implements MvnService {
 		try {
 			PropConfigProviderService propConfigProviderService = propConfigProviderServices.get(IP);
 			
-			RpcResult result = propConfigProviderService.propToPom(projectCode, srcUrl, webPath, profile, parentVersion, clientconfig);
+			RpcResult result = propConfigProviderService.propToPom(projectCode, webPath, profile, parentVersion, clientconfig);
 			flag1 = result.getRpcCode().equals("0")?true:false;
+		} catch(RpcException e){
+			return ReturnCodeEnum.getByReturnCode(NO_RPCEX);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -151,7 +175,7 @@ public class MvnServiceImpl extends GodzillaApplication implements MvnService {
 		}
 		processPercent.put(pencentkey, "30");
 		
-		final String processKey1 = sid + "-" + projectCode + "-" + profile;
+		final String processKey1 = pencentkey;
 		Thread t1 = new Thread(new Runnable() {
 			@Override
 			public void run() {
@@ -181,66 +205,64 @@ public class MvnServiceImpl extends GodzillaApplication implements MvnService {
 			try {
 				MvnProviderService mvnProviderService = mvnProviderServices.get(IP);
 				String username = GodzillaApplication.getUser().getUserName();
-				result = this.deployProject(mvnProviderService, username, webPath, projectCode, profile, IP, parentVersion, parentPomPath);
+				result = this.deployProject(mvnProviderService, username, webPath, projectCode, profile, IP, parentVersion, parentPomPath, super.getUser().getRealName());
 				flag2 = result.getRpcCode().equals("0")?true:false;
-			} catch (Exception e) {
+			} catch(RpcException e){
+				return ReturnCodeEnum.getByReturnCode(NO_RPCEX);
+			}  catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
 		
 		t1.interrupt();
 		processPercent.put(pencentkey, "85");
-		if(flag1&&flag2) {
-			
-			/*
-			 * 存在定义 问题
-			 * end.部署成功  更新 部署版本号  
-			 */
-			//boolean flag3 = this.updateDeployVersion(projectCode, profile);
-			
-			/*
-			 * 3. 测试环境 ：httpclient 访问  ip:8080/war_name/index   查找 是否存在 <!--<h5>godzilla</h5>--> 字符串 判断 tomcat是否启动成功
-			 */
-			String warName = project.getWarName();
-			boolean flag4 = false;
-			/*if(projectCode.equals("godzilla")) {
-				flag4 = true;
-			} else {
-				if(TEST_PROFILE.equals(profile)) {
-					flag4 = super.ifSuccessStartTomcat(IP, warName);
-				} else {
-					flag4 = true;
-				}
-			}*/
-			// bug:tomcat hot deploy cannot success for netty-project
-			//workaround: restart for test,project start success.
-			if(TEST_PROFILE.equals(profile)) {
-				flag4 = this.restartTomcat(projectCode, profile).equals(ReturnCodeEnum.getByReturnCode(OK_STARTTOMCAT));
-			} else {
-				flag4 = true;
-			}
-			
-			if(flag4) {
-				return ReturnCodeEnum.getByReturnCode(OK_MVNDEPLOY);
-			} else {
-				return ReturnCodeEnum.getByReturnCode(NO_MVNDEPLOY);
-			}
-			
-		} else if(!flag1) {
+		int logid = result.getLogid();
+		if(0>=logid){
+			return ReturnCodeEnum.getByReturnCode(NO_MVNBUILDLOG);
 		} else if(!flag2) {
-			if(result.getRpcMsg().equals(BUILDFAILURE)) {
-				return ReturnCodeEnum.getByReturnCode(NO_MVNBUILD);
-			} else if(result.getRpcMsg().equals(NOSETPROPS)){
-				return ReturnCodeEnum.getByReturnCode(NO_MVNSETPROPS);
-			}
-			
-		} 
+			//20151030 暂时不用此检查
+			/*if(result.getRpcMsg().equals(NOSETPROPS)) 
+				return ReturnCodeEnum.getByReturnCode(NO_MVNSETPROPS);*/
+			return ReturnCodeEnum.getByReturnCode(NO_MVNBUILD).setData(logid);
+		}
 		
-		return ReturnCodeEnum.getByReturnCode(NO_MVNDEPLOY);
+		/*
+		 * 存在定义 问题
+		 * end.部署成功  更新 部署版本号  
+		 */
+		//boolean flag3 = this.updateDeployVersion(projectCode, profile);
+		
+		/*
+		 * 3. 测试环境 ：httpclient 访问  ip:8080/war_name/index   查找 是否存在 <!--<h5>godzilla</h5>--> 字符串 判断 tomcat是否启动成功
+		 */
+		String warName = project.getWarName();
+		boolean flag4 = false;
+		/*if(projectCode.equals("godzilla")) {
+			flag4 = true;
+		} else {
+			if(TEST_PROFILE.equals(profile)) {
+				flag4 = super.ifSuccessStartTomcat(IP, warName);
+			} else {
+				flag4 = true;
+			}
+		}*/
+		// bug:tomcat hot deploy cannot success for netty-project
+		//workaround: restart for test,project start success.
+		if(TEST_PROFILE.equals(profile)) {
+			flag4 = this.restartTomcat(projectCode, profile).equals(ReturnCodeEnum.getByReturnCode(OK_STARTTOMCAT));
+		} else {
+			flag4 = true;
+		}
+		//setData为给 统一日志 传输 更新日志ID，不传送给前台信息
+		if(flag4) {
+			return ReturnCodeEnum.getByReturnCode(OK_MVNDEPLOY).setData(logid);
+		} else {
+			return ReturnCodeEnum.getByReturnCode(NO_RESTARTTOMCAT).setData(logid);
+		}
 	}
 	
 	
-	public RpcResult deployProject(MvnProviderService mvnProviderService, String username, String webPath, String projectCode, String profile, String IP, String parentVersion, String parentPomPath) {
+	public RpcResult deployProject(MvnProviderService mvnProviderService, String username, String webPath, String projectCode, String profile, String IP, String parentVersion, String parentPomPath, String realname) {
 		boolean flag2 = false;
 		RpcResult result = null;
 		String commands = "";
@@ -256,13 +278,15 @@ public class MvnServiceImpl extends GodzillaApplication implements MvnService {
 									:(SHELL_CLIENT_PATH+"/" +"godzilla_mvn.sh");
 			String str = "sh "+shell+" deploy "+POM_PATH+" "+USER_NAME+" "+PROJECT_NAME+" "+ PROJECT_ENV +" " +parentVersion + " " + PARENTPOM_PATH;
 			
-			result = mvnProviderService.mvnDeploy(str, PROJECT_NAME, PROJECT_ENV, USER_NAME);
+			result = mvnProviderService.mvnDeploy(str, projectCode, PROJECT_ENV, USER_NAME, realname, profile);
 			commands = str;
 			flag2 = result.getRpcCode().equals("0")?true:false;
+		}  catch(RpcException e){
+			throw new RpcException(e);
 		} catch (Exception e) {
 			logger.error(e);
 			e.printStackTrace();
-			return RpcResult.create(FAILURE);
+			return RpcResult.create(FAILURE, 0);
 		}
 		if(flag2) {
 			//mvn deploy 执行成功
@@ -275,47 +299,75 @@ public class MvnServiceImpl extends GodzillaApplication implements MvnService {
 	}
 	
 	private void initRpc(String linuxIp) throws ClassNotFoundException, IllegalAccessException, InstantiationException, IOException {
+		RpcFactory rpcFactory1= null;
+		rpcFactory1 = Util.getRpcFactoryImpl();
 		
-		while(true) {
-			try {
-				synchronized(propConfigProviderServices) {
-					//if(propConfigProviderServices.get(linuxIp)==null||"".equals(propConfigProviderServices.get(linuxIp))) {
-						RpcFactory rpcFactory1= null;
-						rpcFactory1 = Util.getRpcFactoryImpl();
-						PropConfigProviderService propConfigProviderService = rpcFactory1.getReference(PropConfigProviderService.class, linuxIp);
-						if(propConfigProviderService!=null) {
-							propConfigProviderServices.put(linuxIp, propConfigProviderService);
-						}
-					//}
-					//if(mvnProviderServices.get(linuxIp)==null||"".equals(mvnProviderServices.get(linuxIp))) {
-		                RpcFactory rpcFactory2= null;
-						rpcFactory2 = Util.getRpcFactoryImpl();
-						MvnProviderService mvnProviderService = rpcFactory2.getReference(MvnProviderService.class, linuxIp);
-						if(mvnProviderService!=null) {
-							mvnProviderServices.put(linuxIp, mvnProviderService);
-						}
-					//}
-				}
-				break;
-			} catch(RpcException e) {
-				continue;
+		if(propConfigProviderServices.get(linuxIp)==null||"".equals(propConfigProviderServices.get(linuxIp))) {
+			
+			PropConfigProviderService propConfigProviderService = rpcFactory1.getReference(PropConfigProviderService.class, linuxIp);
+			if(propConfigProviderService!=null) {
+				propConfigProviderServices.put(linuxIp, propConfigProviderService);
+			}
+		}
+		if(mvnProviderServices.get(linuxIp)==null||"".equals(mvnProviderServices.get(linuxIp))) {
+			MvnProviderService mvnProviderService = rpcFactory1.getReference(MvnProviderService.class, linuxIp);
+			if(mvnProviderService!=null) {
+				mvnProviderServices.put(linuxIp, mvnProviderService);
 			}
 		}
 	}
 
 	@Override
-	public String getProcessPercent(String sid, String projectCode, String profile) {
+	public ReturnCodeEnum getProcessPercent(String pencentkey) {
 		
-		String pencentkey = sid + "-" + projectCode + "-" + profile;
+		String processPercent = GodzillaApplication.processPercent.get(pencentkey)==null?"0":GodzillaApplication.processPercent.get(pencentkey);
 		
-		String percent = processPercent.get(pencentkey)==null?"0":processPercent.get(pencentkey);
+		if(processPercent.equals("100")) {
+			GodzillaApplication.processPercent.put(pencentkey, "0");
+		}
 		
-		return percent;
+		return ReturnCodeEnum.getByReturnCode(OK_QUERYPERCENT).setData(processPercent);
 	}
 	
-	
-	public ReturnCodeEnum downLoadWar(HttpServletResponse response, String projectCode, String profile) {
+	@Override
+	public ReturnCodeEnum showdeployLog(HttpServletResponse response, String projectCode, String profile, String logid) {
+		if(StringUtil.isEmpty(logid) || logid.equals("0")) {
+			return ReturnCodeEnum.getByReturnCode(NO_DEPLOYLOGID);//id错误
+		} 
 		
+		OperateLog log =  operateLogService.queryLogById(logid);
+		if(StringUtil.isEmpty(log.getDeployLog())) 
+			return ReturnCodeEnum.getByReturnCode(NO_STOREDEPLOYLOG);//日志记录失败
+		//setData为给前台显示后台信息，而不输出日志
+		return ReturnCodeEnum.getByReturnCode(OK_SHOWDEPLOYLOG).setData(log.getDeployLog());
+	}
+	@Override
+	public ReturnCodeEnum showwarInfo(HttpServletResponse response, String projectCode, String profile, String logid) {
+		if(StringUtil.isEmpty(logid) || logid.equals("0")) {
+			return ReturnCodeEnum.getByReturnCode(NO_SHOWWARINFOID);//id错误
+		} 
+		
+		OperateLog log =  operateLogService.queryLogById(logid);
+		if(StringUtil.isEmpty(log.getDeployLog())) 
+			return ReturnCodeEnum.getByReturnCode(NO_SHOWWARINFO);//日志记录失败
+		//setData为给前台显示后台信息，而不输出日志
+		return ReturnCodeEnum.getByReturnCode(OK_SHOWWARINFO).setData(log.getWarInfo());
+	}
+	
+	@Override
+	public ReturnCodeEnum downLoadWar(HttpServletResponse response, String projectCode, String profile) {
+		/**
+		 * 1.限制并发　待定
+		 * 测试环境  待定
+		 * 准生产	待定
+		 * 生产　 待定
+		 **/
+		return this.downLoadWar1(response, projectCode, profile);
+		
+	}
+	
+	private ReturnCodeEnum downLoadWar1(HttpServletResponse response, String projectCode, String profile) {
+			
 		java.io.BufferedOutputStream bos = null;
 		java.io.BufferedInputStream bis = null;
 		String ctxPath = SAVE_WAR_PATH ;
@@ -377,7 +429,6 @@ public class MvnServiceImpl extends GodzillaApplication implements MvnService {
 		return findFolders[0];
 	}
 	
-	
 	private boolean copyWar(String projectCode, String profile) {
 		ClientConfig clientConfig = clientConfigService.queryDetail(projectCode, profile);
 		String clientIp = clientConfig.getRemoteIp();
@@ -400,7 +451,7 @@ public class MvnServiceImpl extends GodzillaApplication implements MvnService {
 			tomcatHome = "/home/godzilla/tomcat-godzilla";
 		} 
 		tomcatHome += "/webapps/*.war";
-		String str = "sh /home/godzilla/gzl/shell/server/copywar_server.sh " + clientIp + " " + tomcatHome + " " + SAVE_WAR_PATH;;
+		String str = "sh /home/godzilla/gzl/shell/server/copywar_server.sh " + clientIp + " " + tomcatHome + " " + SAVE_WAR_PATH;
 		boolean flag = false;
 		flag = command.execute(str, super.getUser().getUserName(), projectCode, project.getSvnUsername(), project.getSvnPassword());
 		
@@ -411,9 +462,40 @@ public class MvnServiceImpl extends GodzillaApplication implements MvnService {
 		}
 		
 	}
+	
 	public ReturnCodeEnum restartTomcat(String projectCode, String profile) {
-		ReturnCodeEnum renum = this.restartTomcat1(projectCode, profile);
-		return renum;
+		
+		/**
+		 * 1.限制并发　
+		 * 测试环境　每个项目　只允许　一个人重启（如果互相依赖项目　并发发布，还是会出现问题）
+		 * 准生产	　NO_RESTARTEFFECT
+		 * 生产　　　NO_RESTARTEFFECT
+		 **/
+		
+		Lock lock = PUBLIC_LOCK;
+		boolean hasAC = false;
+		try {
+			if(TEST_PROFILE.equals(profile)) {
+				lock = GodzillaApplication.deploy_lock.get(projectCode);
+				hasAC = lock.tryLock(1, TimeUnit.SECONDS);
+				if(!hasAC)
+					return ReturnCodeEnum.getByReturnCode(NO_CONCURRENCEDEPLOY);
+			} else {
+				return ReturnCodeEnum.getByReturnCode(NO_RESTARTEFFECT);
+			}
+			return this.restartTomcat1(projectCode, profile);
+		} catch(InterruptedException e) {
+			e.printStackTrace();
+			return ReturnCodeEnum.getByReturnCode(NO_CONCURRENCEDEPLOY);
+		} finally {
+			try {
+				lock.unlock();
+			} /*catch(InvocationTargetException e2) {
+				return ReturnCodeEnum.getByReturnCode(NO_HASKEYDEPLOY);
+			} */catch(IllegalMonitorStateException e1) {
+				return ReturnCodeEnum.getByReturnCode(NO_CONCURRENCEDEPLOY);
+			} 
+		}
 	}
 	private ReturnCodeEnum restartTomcat1(String projectCode, String profile) {
 		boolean flag =false;
@@ -458,10 +540,11 @@ public class MvnServiceImpl extends GodzillaApplication implements MvnService {
 		}
 		
 		if(flag) {
-			return ReturnCodeEnum.getByReturnCode(NO_STARTTOMCAT);
-		} else {
 			return ReturnCodeEnum.getByReturnCode(OK_STARTTOMCAT);
+		} else {
+			return ReturnCodeEnum.getByReturnCode(NO_STARTTOMCAT);
 		}
 	}
+	
 	
 }
