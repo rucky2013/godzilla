@@ -135,7 +135,7 @@ $(document).ready(function() {
             },
             dataType: "json",
             success: function(data) {
-				if(data=="SUCCESS") {
+				if(data.returnmsg =="SUCCESS") {
 					window.location.href = "/${basePath}/user/${sid}/userAuthList.do";
 				} else {
 					alert("提交失败");

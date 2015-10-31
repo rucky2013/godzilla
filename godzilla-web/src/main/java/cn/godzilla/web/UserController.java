@@ -189,7 +189,7 @@ public class UserController extends GodzillaApplication{
 		request.setAttribute("editUsername", edituser.getUserName());
 		request.setAttribute("user", super.getUser());
 		request.setAttribute("basePath", BASE_PATH);
-		return "/operation02";
+		return "/editWorkDeskPage";
 	}
 	
 	/**
