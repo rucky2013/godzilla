@@ -216,13 +216,15 @@ public abstract class GodzillaApplication extends Application implements Constan
 				HttpResponse response = client.execute(new HttpGet(test_url));
 			
 	            if (HttpStatus.SC_OK == response.getStatusLine().getStatusCode()) {
-	                HttpEntity entity = response.getEntity();
+	                /*HttpEntity entity = response.getEntity();
 	                InputStreamReader insr = new InputStreamReader(entity.getContent());
 	                int respInt = insr.read();
 	                while (respInt != -1) {
 	                    rs.append((char) respInt);
 	                    respInt = insr.read();
-	                }
+	                }*/
+	            	//20151102 不检查标识,返回200即成功
+	            	return true;
 	            } 
 	            //if(i>10) {
 	            	if(HttpStatus.SC_NOT_FOUND == response.getStatusLine().getStatusCode()){
@@ -280,13 +282,14 @@ public abstract class GodzillaApplication extends Application implements Constan
 			HttpResponse response = client.execute(new HttpGet(test_url));
 		
             if (HttpStatus.SC_OK == response.getStatusLine().getStatusCode()) {
-                HttpEntity entity = response.getEntity();
+                /*HttpEntity entity = response.getEntity();
                 InputStreamReader insr = new InputStreamReader(entity.getContent());
                 int respInt = insr.read();
                 while (respInt != -1) {
                     rs.append((char) respInt);
                     respInt = insr.read();
-                }
+                }*/
+            	return true;
             } 
         	if(HttpStatus.SC_NOT_FOUND == response.getStatusLine().getStatusCode()){
             	//如果信息码 为 4xx 或者 5xx 则退出

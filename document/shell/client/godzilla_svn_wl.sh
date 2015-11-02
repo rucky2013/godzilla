@@ -168,7 +168,7 @@ function commit() {
 	# 0.功能不清晰，暂时这么写
 	#***
 function status() {
-	svn info $SVN_TRUNK $svnuser
+	svn info $SVN_TRUNK $svnuser --non-interactive
 }
 function statusOld() {
 
@@ -227,7 +227,7 @@ function statusOld() {
 	svn info
 }
 function getVersion() {
-	version=`svn log ${SVN_TRUNK} $svnuser | grep "^r"| head -1|awk '{print $1}'`
+	version=`svn log ${SVN_TRUNK} $svnuser --non-interactive | grep "^r"| head -1|awk '{print $1}'`
 	echo "version${version}"
 }
 function getVersionOld(){
@@ -285,7 +285,7 @@ function getVersionOld(){
 	echo "0.显示主干状态"  > null 
 	cd $srcpath/$PROJECT_NAME
 	#version=`svn info | grep "^最后修改的版本:"|awk  '{print $2}'`
-	version=`svn log $svnuser | grep "^r"| head -1|awk '{print $1}'`
+	version=`svn log $svnuser --non-interactive | grep "^r"| head -1|awk '{print $1}'`
 	echo "version${version}"
 }
 
