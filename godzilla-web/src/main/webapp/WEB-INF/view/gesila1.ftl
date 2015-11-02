@@ -609,13 +609,14 @@
 	        $(this).parent().parent().find("td").each(function(index, element) {
 	            if (index == 0) {
 	                var param = $(this).html();
-	                $(this).html('<input type="text" name="branchUrl"  value="' + param + '"/>  ');
+	                //$(this).html('<input type="text" name="branchUrl"  value="' + param + '"/>  ');
+	                $(this).html('' + param + '');
 	            } else if (index == 1) {
 	            } else if (index == 2) {
 	            } else if (index == 3) {
 	            } else if (index == 4) {
-	                $(this).html('<a class="delete_branch" value1="' + branchId + '" href="javascript:void(0);" title="删除">删除</a>'+
-	                '&nbsp;&nbsp;&nbsp;&nbsp;<a class="save_branch" value1="' + branchId + '" href="javascript:void(0);" title="保存">保存</a>');
+	                $(this).html('<a class="delete_branch" value1="' + branchId + '" href="javascript:void(0);" title="删除">删除</a>');
+	                //+'&nbsp;&nbsp;&nbsp;&nbsp;<a class="save_branch" value1="' + branchId + '" href="javascript:void(0);" title="保存">保存</a>'
 	            }
 	        });
 	    });

@@ -18,6 +18,8 @@ PROJECT_ENV=$5
 
 PARENT_VERSION=$6
 
+PARENTPOM_PATH=$7
+
 G_PATH="/home/godzilla/gzl"
 # 本地路径
 srcpath=$G_PATH"/work"
@@ -29,6 +31,7 @@ echo USER_NAME:$USER_NAME
 echo PROJECT_NAME:$PROJECT_NAME
 echo PROJECT_ENV:$PROJECT_ENV
 echo PARENT_VERSION:$PARENT_VERSION
+echo PARENTPOM_PATH:$PARENTPOM_PATH
 
 if [ $WHO == "root" ] ;then
 	
@@ -47,8 +50,8 @@ info()
 	echo "whoami $WHO"
 	/app/maven/bin/mvn --version
 }
-#install
-deploy()
+#
+install()
 {
 	echo "install $BEGIN_STR" ;
 	if [ -z $POM_PATH ] || [ -z $PROJECT_ENV ] ; then
@@ -69,16 +72,37 @@ deploy()
 	/app/maven/bin/mvn clean package -f $POM_PATH -P$PROJECT_ENV
 	
 	#过滤配置文件,如果有未替换配置项 如果含有${XX}则退出
-	find . \( -name "*.properties" -o -name "*.xml" \) -type f|xargs grep -ri "\${.*}$" -l |grep -v "src/main" > props.log
+	#find . \( -name "*.properties" -o -name "*.xml" \) -type f|xargs grep -ri "\${.*}$" -l |grep -v "src/main" > props.log
 	if [ -s props.log ]; then
 		echo 4
 		echo 4
 		PROPS＝""
 		exit 4
 	fi
+	#PARENTPOM_PATH 为父pom
+	/app/maven/bin/mvn deploy -f $PARENTPOM_PATH -P$PROJECT_ENV
+	#/app/maven/bin/mvn install -f $PARENTPOM_PATH -P$PROJECT_ENV
+}
+deploy()
+{
+	echo "install $BEGIN_STR" ;
+	if [ -z $POM_PATH ] || [ -z $PROJECT_ENV ] ; then
+		echo "[ERROR!!!!]$BEGIN_STR"
+		echo "[ERROR!!!!] ARGS ERROR.........ERROR!......"
+		echo 1
+		echo 1
+		exit 1
+	fi 
+	echo $srcpath
+	cd $srcpath
+	echo $PROJECT_NAME
+	cd $PROJECT_NAME
 	
-	#/app/maven/bin/mvn clean deploy -f $POM_PATH -P$PROJECT_ENV
-	/app/maven/bin/mvn install -f $POM_PATH -P$PROJECT_ENV
+	/app/maven/bin/mvn versions:set -DnewVersion=${PARENT_VERSION}
+	/app/maven/bin/mvn -N versions:update-child-modules
+	
+	#PARENTPOM_PATH 为父pom
+	/app/maven/bin/mvn clean deploy -f $PARENTPOM_PATH -P$PROJECT_ENV
 }
 showlib() {
 	ls $POM_PATH
