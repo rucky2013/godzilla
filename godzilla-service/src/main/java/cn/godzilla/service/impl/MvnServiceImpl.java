@@ -139,7 +139,7 @@ public class MvnServiceImpl extends GodzillaApplication implements MvnService {
 		 */
 		ReturnCodeEnum renum1 = svnService.svnMerge(projectCode, profile);
 		
-		if(renum1.equals(ReturnCodeEnum.getByReturnCode(OK_SVNMERGE))){
+		if(renum1.equals(ReturnCodeEnum.getByReturnCode(OK_SVNMERGE))||renum1.equals(ReturnCodeEnum.getByReturnCode(NO_HAVEBRANCHES))){
 		} else {
 			return renum1;
 		} 
