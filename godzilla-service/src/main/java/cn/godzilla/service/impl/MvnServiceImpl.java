@@ -122,7 +122,7 @@ public class MvnServiceImpl extends GodzillaApplication implements MvnService {
 		
 		String sid = super.getSid();
 		
-		Project project = projectService.qureyByProCode(projectCode);
+		Project project = projectService.queryByProCode(projectCode);
 		
 		String webPath = project.getWebPath();
 		String parentPomPath = project.getCheckoutPath();
@@ -376,7 +376,7 @@ public class MvnServiceImpl extends GodzillaApplication implements MvnService {
 		//1.ssh scp 到本地
 		this.copyWar(projectCode, profile);
 		
-		Project project = projectService.qureyByProCode(projectCode);
+		Project project = projectService.queryByProCode(projectCode);
 		String warName= project.getWarName();
 		//1.5 获取 war包 文件名
 		File warfile = this.searchFile(new File(ctxPath), warName);
@@ -432,7 +432,7 @@ public class MvnServiceImpl extends GodzillaApplication implements MvnService {
 	private boolean copyWar(String projectCode, String profile) {
 		ClientConfig clientConfig = clientConfigService.queryDetail(projectCode, profile);
 		String clientIp = clientConfig.getRemoteIp();
-		Project project = projectService.qureyByProCode(projectCode);
+		Project project = projectService.queryByProCode(projectCode);
 		
 		String tomcatHome = "";
 		
@@ -502,7 +502,7 @@ public class MvnServiceImpl extends GodzillaApplication implements MvnService {
 		ClientConfig clientConfig = clientConfigService.queryDetail(projectCode, profile) ;
 		String clientIp = clientConfig.getRemoteIp();
 		// 暂时先不考虑权限
-		Project project = projectService.qureyByProCode(projectCode);
+		Project project = projectService.queryByProCode(projectCode);
 
 		/*String str = PropertiesUtil.getProperties().get("server.shell.restart.path") +" " + clientIp + " "
 				+ PropertiesUtil.getProperties().get("client.tomcat.home.path");*/

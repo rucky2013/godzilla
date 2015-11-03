@@ -30,7 +30,7 @@ public enum ReturnCodeEnum {
 	//svn model
 	NO_CHANGECOMMIT("100021", "没有更改可以提交"),
 	NO_SVNCOMMIT("100022", "svn提交失败"),
-	NO_FOUNDCONFLICT("100023", "合并出现冲突，请先解决冲突"),
+	NO_FOUNDCONFLICT("100023", "合并出现冲突，请检出冲突分支解决并标记解决完毕"),
 	NO_CLIENTPARAM("100024", "client.sh缺少参数"),
 	NO_SERVERPARAM("100025", "server.sh缺少参数"),
 	NO_JAVASHELLCALL("100026", "java调用shell执行失败"),
@@ -60,6 +60,14 @@ public enum ReturnCodeEnum {
 	NO_SYSTEMEX("100051", "系统异常"),
 	NO_RPCEX("100052", "rpc调用异常"),
 	NO_SVNEDIT("100054", "svn分支编程保存失败"),	
+	NO_EDITMERGESTATUS("100055", "更改项目合并状态失败"),
+	NO_SVNRESOLVED("100056", "存在冲突，请先标记解决"),
+	NO_ERRORCOMMAND("100057", "shell命令没有此选项"),
+	NO_STILLHASCONFLICTBRANCH("100058", "冲突分支仍然含有冲突标识，请再次检查"),
+	NO_HAVEBRANCHES("100059", "分支为空，不需要合并"),
+	NO_FOUNDNEWCONFLICT("100060", "产生了新冲突，重新解决冲突"),
+	NO_SVNRESOLVE("100061", "标记解决失败"),
+	NO_NEWCONFLICTFOUND("100062", "发现新冲突，重新合并分支解决冲突"),
 	
 	OK_SUCCESS("200000", "SUCCESS"),
 	//user模块
@@ -89,6 +97,8 @@ public enum ReturnCodeEnum {
 	OK_SHOWDEPLOYLOG("200043", "显示打包日志成功"),
 	OK_QUERYPERCENT("200053", "查询部署进度成功")	,
 	OK_SVNEDIT("200054", "svn分支编程保存成功"),	
+	OK_EDITMERGESTATUS("200055", "更改项目合并状态成功"),
+	OK_SVNRESOLVED("200061", "标记解决成功"),
 	;
 	
 	public String returnCode;

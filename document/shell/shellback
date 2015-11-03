@@ -1,0 +1,10 @@
+--mvn--
+#过滤配置文件,如果有未替换配置项 如果含有${XX}则退出
+find . \( -name "*.properties" -o -name "*.xml" \) -type f|xargs grep -ri "\${.*}$" -l |grep -v "src/main" > props.log
+if [ -s props.log ]; then
+	echo 4
+	PROPS＝""
+	exit 4
+fi
+
+--svn--

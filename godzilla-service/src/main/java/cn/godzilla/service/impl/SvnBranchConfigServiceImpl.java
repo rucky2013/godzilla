@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import cn.godzilla.common.ReturnCodeEnum;
 import cn.godzilla.dao.SvnBranchConfigMapper;
 import cn.godzilla.model.SvnBranchConfig;
+import cn.godzilla.service.ProjectService;
 import cn.godzilla.service.SvnBranchConfigService;
 import cn.godzilla.service.SvnService;
 import cn.godzilla.web.GodzillaApplication;
@@ -21,7 +22,8 @@ public class SvnBranchConfigServiceImpl extends GodzillaApplication implements S
 	private SvnBranchConfigMapper svnBranchConfigMapper;
 	@Autowired
 	private SvnService svnService;
-
+	@Autowired
+	private ProjectService projectService;
 	@Override
 	public List<SvnBranchConfig> queryListByProjectCode(String projectCode) {
 		return svnBranchConfigMapper.queryListByProjectCode(projectCode);
@@ -36,6 +38,16 @@ public class SvnBranchConfigServiceImpl extends GodzillaApplication implements S
 		}
 		
 		String currentVersion = svnVersionThreadLocal.get();
+		Map<String, String> parameterMap1 = new HashMap<String, String>();
+		
+		parameterMap1.put("project_code", projectCode);
+		parameterMap1.put("merge_status", "0");
+		//20151103 清除project表 merge_status标记,初始化为0
+		ReturnCodeEnum renum1 = projectService.editMergestatusByProjectCode(parameterMap1);
+		if(ReturnCodeEnum.getByReturnCode(NO_EDITMERGESTATUS).equals(renum1)) {
+			return renum1;
+		}
+		
 		Map<String, String> parameterMap = new HashMap<String, String>();
 		
 		String branchName = super.getBranchNameByBranchUrl(branchUrl);
@@ -104,9 +116,36 @@ public class SvnBranchConfigServiceImpl extends GodzillaApplication implements S
 
 	@Override
 	public ReturnCodeEnum deletebranchesByProjectCode(String projectCode) {
+		
 		Map<String, String> parameterMap = new HashMap<String, String>();
 		
 		parameterMap.put("project_code", projectCode);
+		parameterMap.put("merge_status", "0");
+		//20151103 清除project表 merge_status标记,初始化为0
+		ReturnCodeEnum renum1 = projectService.editMergestatusByProjectCode(parameterMap);
+		if(ReturnCodeEnum.getByReturnCode(NO_EDITMERGESTATUS).equals(renum1)) {
+			return renum1;
+		}
+		int index = svnBranchConfigMapper.updateByProjectCode(parameterMap);
+		if(index>0) {
+			return ReturnCodeEnum.getByReturnCode(OK_DELETEBRANCH);
+		} else {
+			return ReturnCodeEnum.getByReturnCode(NO_DELETEBRANCH);
+		}
+	}
+
+	@Override
+	public ReturnCodeEnum deletebranchesByProjectCode(String projectCode, String id) {
+		Map<String, String> parameterMap = new HashMap<String, String>();
+		
+		parameterMap.put("project_code", projectCode);
+		parameterMap.put("merge_status", "0");
+		parameterMap.put("delbranchid", id);
+		//20151103 清除project表 merge_status标记,初始化为0
+		ReturnCodeEnum renum1 = projectService.editMergestatusByProjectCode(parameterMap);
+		if(ReturnCodeEnum.getByReturnCode(NO_EDITMERGESTATUS).equals(renum1)) {
+			return renum1;
+		}
 		int index = svnBranchConfigMapper.updateByProjectCode(parameterMap);
 		if(index>0) {
 			return ReturnCodeEnum.getByReturnCode(OK_DELETEBRANCH);

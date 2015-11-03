@@ -154,7 +154,10 @@
   <update id="updateByProjectCode" parameterType="map">
   	update svn_branch_config set
         status = 0
-  	where project_code = #{project_code}
+  	where project_code = #{project_code} 
+  		<if test="delbranchid != null" >
+  			and id = #{delbranchid}
+  		</if>
   </update>
   
   <update id="updateVersionById" parameterType="map">

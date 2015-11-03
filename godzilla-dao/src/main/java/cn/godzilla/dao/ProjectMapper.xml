@@ -4,6 +4,8 @@
   <resultMap id="BaseResultMap" type="cn.godzilla.model.Project" >
     
     <result column="id" property="id" jdbcType="BIGINT" />
+    <result column="svn_conflict_id" property="svnConflictId" jdbcType="BIGINT"/>
+    <result column="merge_status" property="mergeStatus" jdbcType="VARCHAR" />
     <result column="project_code" property="projectCode" jdbcType="VARCHAR" />
     <result column="project_name" property="projectName" jdbcType="VARCHAR" />
     <result column="repository_url" property="repositoryUrl" jdbcType="VARCHAR" />
@@ -21,11 +23,13 @@
   
   <insert id="insert" parameterType="cn.godzilla.model.Project" >
    
-    insert into project (id, project_code, project_name, 
+    insert into project (id, svn_conflict_id, merge_status,
+    	project_code, project_name, 
       repository_url, create_by, manager, 
       status, checkout_path, web_path,lib_path, war_name,
     version, svn_username, svn_password)
-    values (#{id,jdbcType=BIGINT}, #{projectCode,jdbcType=VARCHAR}, #{projectName,jdbcType=VARCHAR}, 
+    values (#{id,jdbcType=BIGINT}, #{svnConflictId, jdbcType=VARCHAR}, #{mergeStatus, jdbcType=VARCHAR},
+    	#{projectCode,jdbcType=VARCHAR}, #{projectName,jdbcType=VARCHAR}, 
       #{repositoryUrl,jdbcType=VARCHAR}, #{createBy,jdbcType=VARCHAR}, #{manager,jdbcType=VARCHAR}, 
       #{status,jdbcType=INTEGER}, #{checkoutPath,jdbcType=VARCHAR},#{webPath,jdbcType=VARCHAR},
       #{libPath,jdbcType=VARCHAR},
@@ -39,6 +43,12 @@
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
         id,
+      </if>
+      <if test="svnConflictId != null">
+      	svn_conflict_id, 
+      </if>
+      <if test="mergeStatus != null">
+      	merge_status,
       </if>
       <if test="projectCode != null" >
         project_code,
@@ -84,6 +94,12 @@
       <if test="id != null" >
         #{id,jdbcType=BIGINT},
       </if>
+      <if test="svnConflictId != null">
+      	#{svnConflictId,jdbcType=BIGINT},
+      </if>
+      <if test="mergeStatus != null">
+      	#{mergeStatus != null,jdbcType=VARCHAR},
+      </if>
       <if test="projectCode != null" >
         #{projectCode,jdbcType=VARCHAR},
       </if>
@@ -127,7 +143,8 @@
   </insert>
   
   <select id="queryProjectsByUsername" parameterType="string" resultMap="BaseResultMap">
-  	select p.id, p.project_code, p.project_name, 
+  	select p.id, p.svn_conflict_id, p.merge_status,
+  	p.project_code, p.project_name, 
       p.repository_url, p.create_by, p.manager,  p.status, p.checkout_path, p.web_path,
       p.lib_path,p.war_name,
     p.version , p.svn_username, p.svn_password
@@ -140,10 +157,16 @@
   <update id="updateByProCode" parameterType="cn.godzilla.model.Project">
 	update project set
 	<trim suffixOverrides=",">
-		
+		<if test="svnConflictId != null">
+			svn_conflict_id = #{svnConflictId, jdbcType=VARCHAR},
+		</if>
+		<if test="mergeStatus != null">
+			merge_status = #{mergeStatus, jdbcType=VARCHAR},
+		</if>
 		<if test="projectCode != null">
 			project_code = #{projectCode,jdbcType=VARCHAR},
 		</if>
+		
 		<if test="projectName != null">
 			project_name = #{projectName,jdbcType=VARCHAR},
 		</if>
@@ -185,7 +208,8 @@
 </update>
 
 <sql id="query">
-	id, project_code as projectCode, project_name as projectName, 
+	id, svn_conflict_id as svnConflictId, merge_status as mergeStatus, 
+	project_code as projectCode, project_name as projectName, 
     repository_url as repositoryUrl, create_by as createBy, manager, status, checkout_path as checkoutPath, 
     web_path as webPath, lib_path as libPath, war_name as warName,
     version, svn_username as svnUsername, svn_password as svnPassword
@@ -241,6 +265,14 @@
 	where project_code = #{project_code}
 		and status = 1
 </update>
-
+	<update id="updateMergestatusByProjectcode" parameterType="java.util.Map">
+		update project set 
+			merge_status = #{merge_status, jdbcType=VARCHAR}
+			<if test="svn_conflict_id != null">
+			, svn_conflict_id = #{svn_conflict_id, jdbcType=VARCHAR}
+			</if>
+			where project_code = #{project_code}
+			and status = 1
+	</update>
 
 </mapper>

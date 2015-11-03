@@ -36,4 +36,8 @@ public interface SvnService {
 	 * @return
 	 */
 	ReturnCodeEnum getStatus(String projectCode, String profile) ;
+	
+	ReturnCodeEnum svnResolved(String projectCode, String profile);
+
+	void setConflictUrl(Project project);
 }

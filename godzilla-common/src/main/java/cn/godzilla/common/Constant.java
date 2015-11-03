@@ -40,6 +40,7 @@ public interface Constant {
 	public final String LOGIN = "LOGIN";
 	public final String SHOWDEPLOYLOG = "SHOWDEPLOYLOG";
 	public final String SHOWWARINFO = "SHOWWARINFO";
+	public final String CONFLICTRESOLVED = "CONFLICTRESOLVED";
 	
 	public final String NOTYET_VERIFY_STATUS = "0";//未审核
 	public final String OK_VERIFY_STATUS = "1";//审核通过
@@ -135,6 +136,14 @@ public interface Constant {
 	public final static String NO_SYSTEMEX = "100051";
 	public final static String NO_RPCEX = "100052";
 	public final static String NO_SVNEDIT = "100054";
+	public final static String NO_EDITMERGESTATUS = "100055";
+	public final static String NO_SVNRESOLVED = "100056";
+	public final static String NO_ERRORCOMMAND = "100057";
+	public final static String NO_STILLHASCONFLICTBRANCH = "100058";
+	public final static String NO_HAVEBRANCHES = "100059";
+	public final static String NO_FOUNDNEWCONFLICT = "100060";
+	public final static String NO_SVNRESOLVE = "100061";
+	public final static String NO_NEWCONFLICTFOUND = "100062";
 	
 	public final static String OK_AJAX = "200000";
 	public final static String OK_CHECKUSER = "200001";
@@ -159,4 +168,6 @@ public interface Constant {
 	public final static String OK_SHOWDEPLOYLOG = "200043";
 	public final static String OK_QUERYPERCENT = "200053";
 	public final static String OK_SVNEDIT = "200054";
+	public final static String OK_EDITMERGESTATUS = "200055";
+	public final static String OK_SVNRESOLVED = "200061";
 }

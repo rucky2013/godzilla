@@ -25,6 +25,7 @@ public enum OperatorEnum {
 	LOGIN("318", "LOGIN", "用户登录"),
 	SHOWDEPLOYLOG("319", "SHOWDEPLOYLOG", "查看部署日志"),
 	SHOWWARINFO("320", "SHOWWARINFO", "查看部署包"),
+	CONFLICTRESOLVED("321", "CONFLICTRESOLVED", "标记冲突解决"),
 	
 	;
 	public String operatorCode;

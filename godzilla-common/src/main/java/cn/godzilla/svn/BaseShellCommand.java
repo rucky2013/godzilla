@@ -18,6 +18,60 @@ public class BaseShellCommand extends Application{
 	private final Logger logger = LogManager.getLogger(BaseShellCommand.class);
 	public static final String AREA = "svn";
 	public static final String ENCODING = "UTF-8";
+	
+	public boolean execute(String command, final String username, String projectCode, String svnusername, String svnpassword, String CONFL_URL) {
+		if(StringUtils.isEmpty(command) || StringUtils.isEmpty(username)){
+			
+			logger.debug("*************svn baseBaseCommand.execute 参数为空!");
+			return false ;
+			
+		}
+		
+		command += " " + svnusername + " " + svnpassword + " " + CONFL_URL;
+		
+		System.out.println(command);
+		
+		Runtime rt = Runtime.getRuntime();
+		Process p = null;
+		try {
+			
+			p = rt.exec(command);
+			
+			if(!isEcho){
+				if(command.contains(" status ")) {
+					inThreadPrint1(p);
+				} else if(command.contains(" version ")) {
+					inThreadPrint2(p);
+				} else {
+					inThreadPrint3(p);
+				}
+				
+			} else {
+				newThreadPrint(p, username);
+			}
+			
+			p.waitFor();
+			p.destroy();
+			
+			
+			return true;
+		} catch (Exception e) {
+			
+			logger.debug(e.getMessage());
+			e.printStackTrace();
+			
+			try {
+				p.getErrorStream().close();
+				p.getInputStream().close();
+				p.getOutputStream().close();
+			} catch (Exception ee) {
+				logger.debug(ee.getMessage());
+				ee.printStackTrace();
+			}
+		}
+		return false;
+	}
+	
 	public boolean execute(String command, final String username, String projectCode, String svnusername, String svnpassword) {
 		
 		if(StringUtils.isEmpty(command) || StringUtils.isEmpty(username)){

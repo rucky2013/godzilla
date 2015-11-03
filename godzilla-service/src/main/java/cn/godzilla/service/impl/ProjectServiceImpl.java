@@ -35,7 +35,7 @@ public class ProjectServiceImpl extends GodzillaApplication implements ProjectSe
 
 
 	@Override
-	public Project qureyByProCode(String projectCode) {
+	public Project queryByProCode(String projectCode) {
 		
 		return projectMapper.qureyByProCode(projectCode);
 	}
@@ -76,7 +76,7 @@ public class ProjectServiceImpl extends GodzillaApplication implements ProjectSe
 	}
 	
 	public boolean refreshProjectVersion(String projectCode, String profile) {
-		Project project = this.qureyByProCode(projectCode);
+		Project project = this.queryByProCode(projectCode);
 		String trunkPath = project.getRepositoryUrl();
 		
 		ReturnCodeEnum versionreturn = svnService.getVersion(trunkPath, projectCode);
@@ -110,6 +110,16 @@ public class ProjectServiceImpl extends GodzillaApplication implements ProjectSe
 			return ReturnCodeEnum.getByReturnCode(OK_GODZILLA);
 		} else {
 			return ReturnCodeEnum.getByReturnCode(NO_GODZILLA);
+		}
+	}
+
+	@Override
+	public ReturnCodeEnum editMergestatusByProjectCode(Map<String, String> parameterMap) {
+		int index = projectMapper.updateMergestatusByProjectcode(parameterMap);
+		if(index>0) {
+			return ReturnCodeEnum.getByReturnCode(OK_EDITMERGESTATUS);
+		} else {
+			return ReturnCodeEnum.getByReturnCode(NO_EDITMERGESTATUS);
 		}
 	}
 

@@ -3,8 +3,6 @@ package cn.godzilla.web;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -102,6 +100,7 @@ public class SvnController extends GodzillaApplication implements Constant{
 	
 	/**
 	 * 分支设置
+	 * 注：20151103 清除project表 merge_status标记,初始化为0
 	 * @param sid
 	 * @param projectCode
 	 * @param profile
@@ -133,6 +132,7 @@ public class SvnController extends GodzillaApplication implements Constant{
 	 */
 	@RequestMapping(value = "/svnbranch/{sid}/{projectCode}/{profile}/edit", method = RequestMethod.POST)
 	@ResponseBody
+	@Deprecated
 	public Object edit(@PathVariable String sid, @PathVariable String projectCode, @PathVariable String profile, 
 			@RequestParam("id") String id,
 			@RequestParam("branchUrl") String branchUrl,
@@ -145,6 +145,7 @@ public class SvnController extends GodzillaApplication implements Constant{
 
 	/**
 	 * 分支编辑 删除
+	 * 注：20151103 清除project表 merge_status标记,初始化为0
 	 * @param sid
 	 * @param projectCode
 	 * @param profile
@@ -159,7 +160,24 @@ public class SvnController extends GodzillaApplication implements Constant{
 			@RequestParam("id") String id,
 			HttpServletRequest request, HttpServletResponse response) {
 		
-		ReturnCodeEnum returnEnum = svnBranchConfigService.deletebranchesByProjectCode(projectCode);
+		ReturnCodeEnum returnEnum = svnBranchConfigService.deletebranchesByProjectCode(projectCode, id);
 		return ResponseBodyJson.custom().setAll(returnEnum, BRANCHDELETE).build().log();
+	}
+	/**
+	 * 标记此项目 冲突分支 冲突已经解决
+	 * 注：20151103 清除project表 merge_status标记,初始化为0
+	 * @param sid
+	 * @param projectCode
+	 * @param profile
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping(value="/svnbranch/{sid}/{projectCode}/{profile}/resolved", method=RequestMethod.GET)
+	@ResponseBody
+	public Object resolved(@PathVariable String sid, @PathVariable String projectCode, @PathVariable String profile, HttpServletRequest request, HttpServletResponse response) {
+		
+		ReturnCodeEnum returnEnum = svnService.svnResolved(projectCode, profile);
+		return ResponseBodyJson.custom().setAll(returnEnum, CONFLICTRESOLVED).build().log();
 	}
 }

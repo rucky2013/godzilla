@@ -9,7 +9,7 @@ public class Project implements Serializable{
 	private static final long serialVersionUID = 1L;
 
 	private Long id;
-
+	
     private String projectCode;
     private String projectName;
     private String repositoryUrl;
@@ -29,9 +29,37 @@ public class Project implements Serializable{
     
     private String svnUsername;
     private String svnPassword;
-    //DTO
+    private String svnConflictId;
+    private String mergeStatus;
+
+	//DTO
     private String state;
+    private String conflictUrl;
     
+    public String getConflictUrl() {
+		return conflictUrl;
+	}
+
+	public void setConflictUrl(String conflictUrl) {
+		this.conflictUrl = conflictUrl;
+	}
+
+	public String getSvnConflictId() {
+		return svnConflictId;
+	}
+
+	public void setSvnConflictId(String svnConflictId) {
+		this.svnConflictId = svnConflictId;
+	}
+
+	public String getMergeStatus() {
+		return mergeStatus;
+	}
+
+	public void setMergeStatus(String mergeStatus) {
+		this.mergeStatus = mergeStatus;
+	}
+	
     public String getLibPath() {
 		return libPath;
 	}

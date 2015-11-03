@@ -1,6 +1,7 @@
 package cn.godzilla.service;
 
 import java.util.List;
+import java.util.Map;
 
 import cn.godzilla.common.ReturnCodeEnum;
 import cn.godzilla.model.Project;
@@ -8,7 +9,7 @@ import cn.godzilla.model.Project;
 public interface ProjectService{
 	
     
-    public Project qureyByProCode(String projectCode);
+    public Project queryByProCode(String projectCode);
     
     public List<Project> queryAll();
     
@@ -43,5 +44,13 @@ public interface ProjectService{
 	 * 			OK_GODZILLA  , NO_GODZILLA
 	 */
 	public ReturnCodeEnum godzillaCommand(String string);
+	/**
+	 * 修改project表 merge_status标记
+	 * 0：0:无 
+	 * 1：1:有
+	 * 2：2:标记解决
+	 * @param parameterMap
+	 */
+	public ReturnCodeEnum editMergestatusByProjectCode(Map<String, String> parameterMap);
 
 }

@@ -229,7 +229,14 @@
 					</tbody>
 				</table>
 				<#if profile = 'TEST'>
-				<h4 class="title">分支设置</h4>
+				<h4 class="title">分支设置
+				<!-- mergeStatus 0:无 1:有冲突 2:标记解决 -->
+				<#if project.mergeStatus == '1' >
+					&nbsp;&nbsp;&nbsp;&nbsp;>>> ${project.conflictUrl}
+				<#elseif project.mergeStatus == '2'>
+					&nbsp;&nbsp;&nbsp;&nbsp;>>> ${project.conflictUrl}
+				</#if>
+				</h4>
 				<table width="100%" border="0" class="table2">
 					<thead>
 						<tr>
@@ -242,13 +249,31 @@
 					</thead>
 					<tbody>
 						<#list svnBranchConfigs as branch>
-						<tr>
-							<td width="310">${branch.branchUrl!'error:branch.branchUrl不可为空值'}</td>
-							<td>${branch.createBy!''}</td>
-							<td>${branch.currentVersion!''}</td>
-							<td>${branch.createTime?string("yyyy-MM-dd HH:mm:ss")}</td>
-							<td><a class="edit_branch" value1="${branch.id}" href="javascript:void(0);" title="编辑">编辑</a></td>
-						</tr>
+							<#if project.mergeStatus == '0' >
+								<tr>
+									<td width="310">${branch.branchUrl!'error:branch.branchUrl不可为空值'}</td>
+									<td>${branch.createBy!''}</td>
+									<td>${branch.currentVersion!''}</td>
+									<td>${branch.createTime?string("yyyy-MM-dd HH:mm:ss")}</td>
+									<td><a class="edit_branch" value1="${branch.id}" href="javascript:void(0);" title="编辑">编辑</a></td>
+								</tr>
+							<#elseif project.mergeStatus == '2'>
+								<tr>
+									<td width="310">${branch.branchUrl!'error:branch.branchUrl不可为空值'}</td>
+									<td>${branch.createBy!''}</td>
+									<td>${branch.currentVersion!''}</td>
+									<td>${branch.createTime?string("yyyy-MM-dd HH:mm:ss")}</td>
+									<td><a class="edit_branch" value1="${branch.id}" href="javascript:void(0);" title="编辑">编辑</a></td>
+								</tr>
+							<#elseif project.mergeStatus == '1'>
+								<tr>
+									<td width="310">${branch.branchUrl!'error:branch.branchUrl不可为空值'}</td>
+									<td>${branch.createBy!''}</td>
+									<td>${branch.currentVersion!''}</td>
+									<td>${branch.createTime?string("yyyy-MM-dd HH:mm:ss")}</td>
+									<td><a class="resolve" href="javascript:void(0);" title="标记解决">标记解决</a></td>
+								</tr>
+							</#if>
 						</#list>
 					</tbody>
 				</table>
@@ -642,8 +667,26 @@
 	    		}
     		});
     	});
-	
+		//标记解决
+		$(".resolve").on("click", function() {
+			if(!confirm("是否确定标记解决冲突")) {
+				return ;
+			}
+			$.ajax({
+				type: "get",
+				url: "/${basePath}/svnbranch/${sid}/${projectCode}/${profile}/resolved.do",
+				dateType: "json",
+				data: {
+				},
+				success: function(data) {
+					$("#alert").css("display", "block");
+					$("#alert_title").text(data.returnmsg);
+					$("#alert_text").text(data.returnmemo);
+				}
+			});
+		});
 	    // 分支保存 修改分支
+	    //deparesed
 	    $(".save_branch").live("click", function() {
 	    	if (!confirm("是否确定提交修改分支"))  {  
 	    		return ;

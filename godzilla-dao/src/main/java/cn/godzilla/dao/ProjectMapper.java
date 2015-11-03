@@ -22,4 +22,6 @@ public interface ProjectMapper {
 	int updateProjectById(Map<String, String> parameterMap);
 
 	int updateVersionByProjectcode(Map<String, String> parameterMap);
+
+	int updateMergestatusByProjectcode(Map<String, String> parameterMap);
 }

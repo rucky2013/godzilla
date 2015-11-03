@@ -27,6 +27,7 @@ import cn.godzilla.service.MvnService;
 import cn.godzilla.service.OperateLogService;
 import cn.godzilla.service.ProjectService;
 import cn.godzilla.service.SvnBranchConfigService;
+import cn.godzilla.service.SvnService;
 
 @Controller
 public class IndexController extends GodzillaApplication{
@@ -42,6 +43,8 @@ public class IndexController extends GodzillaApplication{
 	SvnBranchConfigService svnBranchConfigService ;
 	@Autowired
 	MvnService mvnService;
+	@Autowired
+	SvnService svnService;
 	/**
 	 * 跳到登录页
 	 * 
@@ -85,7 +88,8 @@ public class IndexController extends GodzillaApplication{
 		
 		//刷新项目 版本
 		projectService.refreshProjectVersion(projectCode, profile);
-		Project project = projectService.qureyByProCode(projectCode);
+		Project project = projectService.queryByProCode(projectCode);
+		svnService.setConflictUrl(project);
 		//刷新分支 版本
 		List<SvnBranchConfig> svnBranchConfigs = svnBranchConfigService.queryListByProjectCode(projectCode);
 		svnBranchConfigService.refreshBranchesVersion(svnBranchConfigs);
