@@ -20,13 +20,12 @@ USER_NAME=$6			#操作人
 IP=$7 					#客户端IP 
 SVNUSERNAME=$8 			#客户端IP 
 SVNPASSWORD=$9 			#客户端IP 
-echo "CONFL_URL=${10}			#冲突解决分支"
 CONFL_URL=${10}			#冲突解决分支
 
 USER=godzilla
 PORT=2222				#ssh端口号
 
-if true; then
+if false; then
 echo "[INFO]****************参数信息***********************"
 echo "SHELL_NAME:${SHELL_NAME}"
 echo "ACTION:${ACTION}"
@@ -36,8 +35,6 @@ echo "CALL_BACK_URL:${CALL_BACK_URL}"
 echo "PROJECT_NAME:${PROJECT_NAME}"
 echo "USER_NAME:${USER_NAME}"
 echo "IP:${IP}"
-echo "SVNUSERNAME:${SVNUSERNAME}"
-echo "SVNPASSWORD:${SVNPASSWORD}"
 echo "CONFL_URL:${CONFL_URL}"
 echo "[INFO]***************参数信息END***********************"
 fi

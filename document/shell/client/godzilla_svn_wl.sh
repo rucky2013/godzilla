@@ -28,7 +28,7 @@ SVNUSERNAME=$7			#svn
 SVNPASSWORD=$8			#svn
 CONFL_URL=$9			#冲突解决分支
 
-if true; then
+if false; then
 echo "**********************参数信息***********************"
 echo "SHELL_NAME:${SHELL_NAME}"
 echo "ACTION:${ACTION}"
@@ -37,8 +37,6 @@ echo "SVN_BRANCHES:${SVN_BRANCHES}"
 echo "CALL_BACK_URL:${CALL_BACK_URL}"
 echo "PROJECT_NAME:${PROJECT_NAME}"
 echo "USER_NAME:${USER_NAME}" 
-echo "SVNUSERNAME:${SVNUSERNAME}" 
-echo "SVNPASSWORD:${SVNPASSWORD}" 
 echo "CONFL_URL:${CONFL_URL}" 
 echo "********************参数信息END***********************"
 fi
@@ -109,7 +107,7 @@ function common() {
 #***
 function getconflicts() {
 	cd ${srcpath}"/"${PROJECT_NAME}
-	for name in `grep -r ">>>>>>>" .|grep -v ".svn"| awk -F ":" '{print $1}'`
+	for name in `grep -r ">>>>>>>" .|grep -v ".svn"|grep -v ".ttf$"| awk -F ":" '{print $1}'`
 		do
 			svn resolved $name >/dev/null
 			fn=$(basename $name)
@@ -177,7 +175,7 @@ case $ACTION in
 		done  ;
 		
 		#过滤配置文件,如果有冲突则退出
-        grep -r ">>>>>>>" .|grep -v ".svn"| awk -F ":" '{print $1}' > ../conflict.log
+        grep -r ">>>>>>>" .|grep -v ".svn" |grep -v ".ttf$"| awk -F ":" '{print $1}' > ../conflict.log
 		
 		if [ -s ../conflict.log ]; then
 			getconflicts
@@ -235,7 +233,7 @@ case $ACTION in
 			exit 4
 		fi
 		#检查覆盖掉冲突文件后 是否项目仍然含有冲突标识
-		grep -r ">>>>>>>" .|grep -v ".svn"| awk -F ":" '{print $1}'  > ../conflict.log
+		grep -r ">>>>>>>" .|grep -v ".svn"|grep -v ".ttf$"| awk -F ":" '{print $1}'  > ../conflict.log
 		if [ -s ../conflict.log ]; then
 			echo "Error: some conflicts still found in branch ! Please renew resolve all of them."
 			echo 5
@@ -357,7 +355,7 @@ case $ACTION in
 			exit 4
 		fi
 		#检查覆盖掉冲突文件后是否仍然含有冲突标识
-		grep -r ">>>>>>>" .|grep -v ".svn"| awk -F ":" '{print $1}'  > ../conflict.log
+		grep -r ">>>>>>>" .|grep -v ".svn"|grep -v ".ttf$"| awk -F ":" '{print $1}'  > ../conflict.log
 		if [ -s ../conflict.log ]; then
 			echo "Error: some conflicts still found branch! Please renew resolve all of them."
 			echo 5
