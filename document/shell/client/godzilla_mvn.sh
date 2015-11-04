@@ -42,7 +42,7 @@ deploy()
 	/app/maven/bin/mvn -N versions:update-child-modules
 	
 	#PARENTPOM_PATH 为父pom
-	/app/maven/bin/mvn clean deploy -f $PARENTPOM_PATH -P$PROJECT_ENV
+	/app/maven/bin/mvn clean deploy -f $PARENTPOM_PATH -P$PROJECT_ENV -Dmaven.test.skip=true
 }
 showlib() {
 	ls $POM_PATH

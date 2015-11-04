@@ -63,7 +63,7 @@ h3.location{ padding-left:20px; margin:20px 0 15px; font-weight:normal!important
 #tab2{position:relative; z-index:9; margin-bottom:-1px}
 #tab2 li{width:101px; height:33px;line-height:33px; float:left; display:block; padding-top:2px; border-bottom:1px solid #edeef0; border-left:1px solid #e3e4e6; background:#edeef0;  text-align:center}
 #tab2 li.current{ background:#fff url(../img/tab2Bg1.png)  repeat-x; border-bottom:1px solid #fff}
-#tab2 li a{ color:#7c7e84; font-size:15px}
+#tab2 li a{ color:#7c7e84; font-size:15px;display:block; width:101px; height:33px;}
 #tab2 li.current a{color:#0097e0; }
 #tabCon2{ background:#fff; border-top:1px solid #e3e4e6;}
 #tabCon2 li{ display:none}

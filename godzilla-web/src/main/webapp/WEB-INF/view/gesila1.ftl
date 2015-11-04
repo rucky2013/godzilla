@@ -849,7 +849,9 @@
 <div id="alert" class="shadow_con" style="display:none">
 <style>
 .alert_wrap {
-	overflow: hidden;
+	overflow: auto;
+    min-height:32px;max-height:420px;
+    padding: 5px 10px;
 }
 
 .alert_wrap span, .alert_wrap p {
