@@ -257,7 +257,7 @@
         svn_password = #{svnPassword,jdbcType=VARCHAR},
       </if>
 	</trim>
-	where id = #{srcId} 
+	where id = #{projectId} 
 </update>
 <update id="updateVersionByProjectcode" parameterType="java.util.Map">
 	update project set

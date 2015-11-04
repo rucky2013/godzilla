@@ -14,18 +14,14 @@ public interface ProjectService{
     public List<Project> queryAll();
     
     /**
-	 * 源代码设置-->添加或修改源代码设置
-	 * @param projectCode
-	 * @param repositoryUrl
-	 * @param checkoutPath
-	 * @param version
-	 * @param deployVersion
-     * @param profile 
-     * @param projectCode 
-	 * @param deployVersion2 
-	 * @return
-	 */
-    ReturnCodeEnum srcEdit(String srcId, String repositoryUrl, String checkoutPath, String projectCode, String profile);
+     * 源代码设置-->添加或修改源代码设置
+     * @param repositoryUrl
+     * @param checkoutPath
+     * @param projectCode
+     * @param profile
+     * @return
+     */
+    ReturnCodeEnum srcEdit(String repositoryUrl, String checkoutPath, String projectCode, String profile);
 
 	/**
 	 * 更新  项目 版本号

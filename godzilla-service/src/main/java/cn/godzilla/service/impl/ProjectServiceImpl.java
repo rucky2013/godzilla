@@ -32,8 +32,6 @@ public class ProjectServiceImpl extends GodzillaApplication implements ProjectSe
 	@Autowired
 	private ClientConfigService clientConfigService;
 
-
-
 	@Override
 	public Project queryByProCode(String projectCode) {
 		
@@ -47,7 +45,7 @@ public class ProjectServiceImpl extends GodzillaApplication implements ProjectSe
 	}
 
 	@Override
-	public ReturnCodeEnum srcEdit(String srcId, String repositoryUrl, String checkoutPath, String projectCode, String profile) {
+	public ReturnCodeEnum srcEdit(String repositoryUrl, String checkoutPath, String projectCode, String profile) {
 		/**
 		 * 1.update trunk version
 		 */
@@ -55,10 +53,11 @@ public class ProjectServiceImpl extends GodzillaApplication implements ProjectSe
 		if(!versionreturn.equals(ReturnCodeEnum.getByReturnCode(OK_SVNVERSION))) {
 			return versionreturn;
 		}
+		Project project = this.queryByProCode(projectCode);
 		String version = svnVersionThreadLocal.get();
 		Map<String, String> parameterMap = new HashMap<String, String>();
 		
-		parameterMap.put("srcId", srcId);
+		parameterMap.put("projectId", project.getId()+"");
 		parameterMap.put("repositoryUrl", repositoryUrl);
 		parameterMap.put("checkoutPath", checkoutPath);
 		parameterMap.put("version", version);
@@ -69,9 +68,9 @@ public class ProjectServiceImpl extends GodzillaApplication implements ProjectSe
 		 */
 		
 		if(index>0) {
-			return ReturnCodeEnum.getByReturnCode(NO_SRCEDIT);
-		} else {
 			return ReturnCodeEnum.getByReturnCode(OK_SRCEDIT);
+		} else {
+			return ReturnCodeEnum.getByReturnCode(NO_SRCEDIT);
 		}
 	}
 	

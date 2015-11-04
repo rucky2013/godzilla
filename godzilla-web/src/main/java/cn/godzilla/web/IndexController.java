@@ -189,11 +189,10 @@ public class IndexController extends GodzillaApplication{
 	@ResponseBody
 	public Object srcEdit(@PathVariable String sid, @PathVariable String projectCode, @PathVariable String profile, HttpServletRequest request) {
 		
-		String srcId = StringUtil.getReqPrameter(request, "srcId");
 		String repositoryUrl = StringUtil.getReqPrameter(request, "repositoryUrl");
 		String checkoutPath = StringUtil.getReqPrameter(request, "checkoutPath");
 		
-		ReturnCodeEnum returnEnum = projectService.srcEdit(srcId, repositoryUrl, checkoutPath, projectCode, profile);
+		ReturnCodeEnum returnEnum = projectService.srcEdit(repositoryUrl, checkoutPath, projectCode, profile);
 		
 		return ResponseBodyJson.custom().setAll(returnEnum, SRCEDIT).build().log();
 	}
