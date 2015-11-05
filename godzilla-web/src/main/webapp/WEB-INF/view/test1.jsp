@@ -50,7 +50,7 @@
 					<#if profile = 'TEST'>
 					<li class="current" style="border-left: 0"><a
 						href="/${basePath}/project/${sid}/${projectCode}/TEST/projectConfig.do"
-						title="测试环境">测试环境</a></li>
+						title="日常环境">日常环境</a></li>
 					<li><a
 						href="/${basePath}/project/${sid}/${projectCode}/QUASIPRODUCT/projectConfig.do"
 						title="预发标准环境">预发标准环境</a></li>
@@ -59,7 +59,7 @@
 						title="生产标准环境">生产标准环境</a></li> <#elseif profile = 'QUASIPRODUCT'>
 					<li><a
 						href="/${basePath}/project/${sid}/${projectCode}/TEST/projectConfig.do"
-						title="测试环境">测试环境</a></li>
+						title="日常环境">日常环境</a></li>
 					<li class="current" style="border-left: 0"><a
 						href="/${basePath}/project/${sid}/${projectCode}/QUASIPRODUCT/projectConfig.do"
 						title="预发标准环境">预发标准环境</a></li>
@@ -68,7 +68,7 @@
 						title="生产标准环境">生产标准环境</a></li> <#elseif profile = 'PRODUCT'>
 					<li><a
 						href="/${basePath}/project/${sid}/${projectCode}/TEST/projectConfig.do"
-						title="测试环境">测试环境</a></li>
+						title="日常环境">日常环境</a></li>
 					<li><a
 						href="/${basePath}/project/${sid}/${projectCode}/QUASIPRODUCT/projectConfig.do"
 						title="预发标准环境">预发标准环境</a></li>

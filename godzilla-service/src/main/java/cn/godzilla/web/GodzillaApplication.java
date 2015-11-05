@@ -50,7 +50,7 @@ public abstract class GodzillaApplication extends Application implements Constan
 	protected ReentrantLock PUBLIC_LOCK2 = new ReentrantLock(true);
 	/*
 	 * -2.限制并发　发布
-	 * 测试环境　每个项目　只允许　一个人发布（如果互相依赖项目　并发发布，还是会出现问题）
+	 * 日常环境　每个项目　只允许　一个人发布（如果互相依赖项目　并发发布，还是会出现问题）
 	 * 准生产	　所有项目只允许一个人发布
 	 * 生产　　　所有项目只允许一个人发布
 	 */
@@ -193,7 +193,7 @@ public abstract class GodzillaApplication extends Application implements Constan
 		System.out.println(getBranchNameByBranchUrl(branchUrl));
 	}*/
 	/**
-	 * 测试环境  通过访问 index.jsp 判断 是否 项目启动成功
+	 * 日常环境  通过访问 index.jsp 判断 是否 项目启动成功
 	 * 其他环境暂不需要
 	 * @param IP
 	 * @param war_name
@@ -258,7 +258,7 @@ public abstract class GodzillaApplication extends Application implements Constan
 	/**
 	 * 
 	 * |快速判断|首页展示启动与否使用|
-	 * 测试环境  通过访问 index.jsp 判断 是否 项目启动成功
+	 * 日常环境  通过访问 index.jsp 判断 是否 项目启动成功
 	 * 其他环境暂不需要
 	 * project.state
 	 * 1.已启动

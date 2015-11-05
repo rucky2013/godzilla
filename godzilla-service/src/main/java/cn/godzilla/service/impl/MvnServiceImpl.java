@@ -61,7 +61,7 @@ public class MvnServiceImpl extends GodzillaApplication implements MvnService {
 	public ReturnCodeEnum doDeploy(String projectCode, String profile, String parentVersion, String pencentkey) {
 		/*
 		 * -2.限制并发　发布
-		 * 测试环境　每个项目　只允许　一个人发布（如果互相依赖项目　并发发布，还是会出现问题）
+		 * 日常环境　每个项目　只允许　一个人发布（如果互相依赖项目　并发发布，还是会出现问题）
 		 * 准生产	　所有项目只允许一个人发布
 		 * 生产　　　所有项目只允许一个人发布
 		 */
@@ -129,7 +129,7 @@ public class MvnServiceImpl extends GodzillaApplication implements MvnService {
 		ClientConfig clientconfig = clientConfigService.queryDetail(projectCode, profile);
 		String IP = clientconfig.getRemoteIp();
 		/*
-		 * -1.svn合并  只有测试环境需要branches 线上直接使用trunk版本
+		 * -1.svn合并  只有日常环境需要branches 线上直接使用trunk版本
 		 * depresed-1.svn合并提交主干  
 		 *  不应该提交  20150820
 		 * if svn commit success or svn no changecommit
@@ -233,7 +233,7 @@ public class MvnServiceImpl extends GodzillaApplication implements MvnService {
 		//boolean flag3 = this.updateDeployVersion(projectCode, profile);
 		
 		/*
-		 * 3. 测试环境 ：httpclient 访问  ip:8080/war_name/index   查找 是否存在 <!--<h5>godzilla</h5>--> 字符串 判断 tomcat是否启动成功
+		 * 3. 日常环境 ：httpclient 访问  ip:8080/war_name/index   查找 是否存在 <!--<h5>godzilla</h5>--> 字符串 判断 tomcat是否启动成功
 		 */
 		String warName = project.getWarName();
 		boolean flag4 = false;
@@ -358,7 +358,7 @@ public class MvnServiceImpl extends GodzillaApplication implements MvnService {
 	public ReturnCodeEnum downLoadWar(HttpServletResponse response, String projectCode, String profile) {
 		/**
 		 * 1.限制并发　待定
-		 * 测试环境  待定
+		 * 日常环境  待定
 		 * 准生产	待定
 		 * 生产　 待定
 		 **/
@@ -467,7 +467,7 @@ public class MvnServiceImpl extends GodzillaApplication implements MvnService {
 		
 		/**
 		 * 1.限制并发　
-		 * 测试环境　每个项目　只允许　一个人重启（如果互相依赖项目　并发发布，还是会出现问题）
+		 * 日常环境　每个项目　只允许　一个人重启（如果互相依赖项目　并发发布，还是会出现问题）
 		 * 准生产	　NO_RESTARTEFFECT
 		 * 生产　　　NO_RESTARTEFFECT
 		 **/

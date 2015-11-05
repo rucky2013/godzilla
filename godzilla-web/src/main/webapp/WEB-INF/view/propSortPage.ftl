@@ -122,7 +122,7 @@ $( "#sortable" ).disableSelection();
 		             		</span>
 	             		  	<span style="width:15%">		             		
 		             		  	<#if prop.profile == 'TEST'>
-			                    	测试环境
+			                    	日常环境
 								<#elseif prop.profile == 'PRODUCT'>
 									生产环境
 								<#elseif prop.profile == 'QUASIPRODUCT'>

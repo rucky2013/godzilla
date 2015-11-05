@@ -50,7 +50,7 @@
 				 <a class="backindex" href="/${basePath}/project/${sid}/${projectCode}/TEST/projectConfig.do" title="${projectCode}"><h3 class="location">当前应用：${projectCode}</h3></a>
 
                 <div class="clearfix" id="query_tab1">
-                    <h4 class="title">测试环境<span title="展开">展开</span></h4>
+                    <h4 class="title">日常环境<span title="展开">展开</span></h4>
                     <table  width="100%" border="0" class="table2" style="display:block">
                      <tbody id="tab_1">
                      </tbody>

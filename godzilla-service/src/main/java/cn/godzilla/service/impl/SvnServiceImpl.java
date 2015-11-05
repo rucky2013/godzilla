@@ -50,7 +50,7 @@ public class SvnServiceImpl extends GodzillaApplication implements SvnService {
 	public ReturnCodeEnum svnCommit(String projectCode, String profile) {
 		/**
 		 * 1.限制并发　
-		 * 测试环境,准生产,生产　每个项目　只允许　一个人提交(i.svn操作会清空work目录ii.改变svn主干代码,对其他所有操作都有影响) 
+		 * 日常环境,准生产,生产　每个项目　只允许　一个人提交(i.svn操作会清空work目录ii.改变svn主干代码,对其他所有操作都有影响) 
 		 **/
 		Lock lock1 = PUBLIC_LOCK;
 		Lock lock2 = PUBLIC_LOCK1;
@@ -193,7 +193,7 @@ public class SvnServiceImpl extends GodzillaApplication implements SvnService {
 	public ReturnCodeEnum svnResolved(String projectCode, String profile) {
 		/**
 		 * 1.限制并发　
-		 * 测试环境 每个项目　只允许　一个人merge(i.svn操作会清空work目录)
+		 * 日常环境 每个项目　只允许　一个人merge(i.svn操作会清空work目录)
 		 * 准生产   只允许　一个人merge(i.svn操作会清空work目录)
 		 * 生产　 只允许　一个人merge(i.svn操作会清空work目录)
 		 **/
@@ -299,7 +299,7 @@ public class SvnServiceImpl extends GodzillaApplication implements SvnService {
 		
 		/**
 		 * 1.限制并发　
-		 * 测试环境 每个项目　只允许　一个人merge(i.svn操作会清空work目录)
+		 * 日常环境 每个项目　只允许　一个人merge(i.svn操作会清空work目录)
 		 * 准生产   只允许　一个人merge(i.svn操作会清空work目录)
 		 * 生产　 只允许　一个人merge(i.svn操作会清空work目录)
 		 **/

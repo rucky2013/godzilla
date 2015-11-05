@@ -2,7 +2,7 @@ package cn.godzilla.common;
 
 public enum ProfileEnum {
 	
-	TEST("测试环境","test"),
+	TEST("日常环境","test"),
 	PRO_ONLINE("预发标准环境","pro_online"),
 	ONLINE("生产标准环境", "online");
 	
