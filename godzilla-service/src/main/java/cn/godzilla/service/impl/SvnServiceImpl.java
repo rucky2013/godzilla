@@ -14,6 +14,7 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import cn.godzilla.common.BusinessException;
 import cn.godzilla.common.ReturnCodeEnum;
 import cn.godzilla.common.StringUtil;
 import cn.godzilla.dao.SvnConflictMapper;
@@ -76,6 +77,12 @@ public class SvnServiceImpl extends GodzillaApplication implements SvnService {
 		} catch(InterruptedException e) {
 			e.printStackTrace();
 			return ReturnCodeEnum.getByReturnCode(NO_CONCURRENCEDEPLOY);
+		} catch(BusinessException e){
+			e.printStackTrace();
+			return ReturnCodeEnum.getByReturnCode(NO_SYSTEMEX).setSystemEXMsg(e.getErrorMsg());
+		} catch(Throwable e) {
+			e.printStackTrace();
+			return ReturnCodeEnum.getByReturnCode(NO_SYSTEMEX).setSystemEXMsg(e.getMessage());
 		} finally {
 			try {
 				lock1.unlock();
@@ -216,6 +223,12 @@ public class SvnServiceImpl extends GodzillaApplication implements SvnService {
 		} catch(InterruptedException e) {
 			e.printStackTrace();
 			return ReturnCodeEnum.getByReturnCode(NO_CONCURRENCEDEPLOY);
+		} catch(BusinessException e){
+			e.printStackTrace();
+			return ReturnCodeEnum.getByReturnCode(NO_SYSTEMEX).setSystemEXMsg(e.getErrorMsg());
+		} catch(Throwable e) {
+			e.printStackTrace();
+			return ReturnCodeEnum.getByReturnCode(NO_SYSTEMEX).setSystemEXMsg(e.getMessage());
 		} finally {
 			try {
 			lock1.unlock();
@@ -321,6 +334,12 @@ public class SvnServiceImpl extends GodzillaApplication implements SvnService {
 		} catch(InterruptedException e) {
 			e.printStackTrace();
 			return ReturnCodeEnum.getByReturnCode(NO_CONCURRENCEDEPLOY);
+		} catch(BusinessException e){
+			e.printStackTrace();
+			return ReturnCodeEnum.getByReturnCode(NO_SYSTEMEX).setSystemEXMsg(e.getErrorMsg());
+		} catch(Throwable e) {
+			e.printStackTrace();
+			return ReturnCodeEnum.getByReturnCode(NO_SYSTEMEX).setSystemEXMsg(e.getMessage());
 		} finally {
 			try {
 				lock1.unlock();
@@ -460,12 +479,18 @@ public class SvnServiceImpl extends GodzillaApplication implements SvnService {
 	 * @return
 	 */
 	private static String getRandConflictURL(String trunkUrl, String projectcode) {
-		String random6 = StringUtil.getRandom(6);
-		String baseUrl = trunkUrl.substring(0, trunkUrl.indexOf("/trunk"));
-		DateFormat sdf = new SimpleDateFormat("yyyyMMdd_");
+		String conflict_url = "";
+		try {
+			String random6 = StringUtil.getRandom(6);
+			String baseUrl = trunkUrl.substring(0, trunkUrl.indexOf("/trunk"));
+			DateFormat sdf = new SimpleDateFormat("yyyyMMdd_");
+			
+			String suffix = projectcode + sdf.format(new Date()) + random6;
+			conflict_url = baseUrl + "/conflict/"+suffix;
+		} catch(IndexOutOfBoundsException e) {
+			throw new BusinessException("请检查主干路径!trunkUrl::"+trunkUrl);
+		}
 		
-		String suffix = projectcode + sdf.format(new Date()) + random6;
-		String conflict_url = baseUrl + "/conflict/"+suffix;
 		return conflict_url;
 	}
 

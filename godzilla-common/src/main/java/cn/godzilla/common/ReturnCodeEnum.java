@@ -133,6 +133,10 @@ public enum ReturnCodeEnum {
 		return returnCode+":"+returnMsg;
 	}
 	
+	void setReturnMsg(String returnMsg) {
+		this.returnMsg = returnMsg;
+	}
+	
 	public String getStatus() {
 		if(this.getReturnCode().indexOf("2")==0) {
 			return "SUCCESS";
@@ -150,5 +154,12 @@ public enum ReturnCodeEnum {
 			}
 		}
 		return null;
+	}
+	
+	public ReturnCodeEnum setSystemEXMsg(String exmsg) {
+		if(NO_SYSTEMEX.equals(this)) {
+			this.setReturnMsg(this.getReturnMsg() + exmsg);
+		}
+		return this;
 	}
 }

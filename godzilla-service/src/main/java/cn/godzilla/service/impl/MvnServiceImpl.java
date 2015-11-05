@@ -18,6 +18,7 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import cn.godzilla.common.BusinessException;
 import cn.godzilla.common.ReturnCodeEnum;
 import cn.godzilla.common.StringUtil;
 import cn.godzilla.model.ClientConfig;
@@ -103,9 +104,12 @@ public class MvnServiceImpl extends GodzillaApplication implements MvnService {
 		} catch(InterruptedException e) {
 			e.printStackTrace();
 			return ReturnCodeEnum.getByReturnCode(NO_INTERRUPTEDEX);
+		} catch(BusinessException e){
+			e.printStackTrace();
+			return ReturnCodeEnum.getByReturnCode(NO_SYSTEMEX).setSystemEXMsg(e.getErrorMsg());
 		} catch(Throwable e) {
 			e.printStackTrace();
-			return ReturnCodeEnum.getByReturnCode(NO_SYSTEMEX);
+			return ReturnCodeEnum.getByReturnCode(NO_SYSTEMEX).setSystemEXMsg(e.getMessage());
 		} finally {
 			try {
 				lock.unlock();
