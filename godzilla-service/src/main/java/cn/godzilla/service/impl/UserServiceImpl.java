@@ -83,7 +83,7 @@ public class UserServiceImpl extends GodzillaApplication implements UserService{
 		//store in redis for security
 		rdbc.set("test", "test");
 		cache.createEntry(CACHE_ENUM.USERNAME, newsid)
-			.setValue(user.getUserName()==null?"":user.getUserName()).save();
+			.setValue(user.getUserName()==null?"":user.getUserName()).save().expired(7*24*60*60*1000l);;
 		cache.createEntry(CACHE_ENUM.USER, user.getUserName())
 			.setValue(JSON.toJSONString(user==null?"":user)).save();
 		cache.createEntry(CACHE_ENUM.PROJECTS, user.getUserName())
@@ -101,8 +101,14 @@ public class UserServiceImpl extends GodzillaApplication implements UserService{
 
 	@Override
 	public void logout(String sid) {
-		cache.createEntry(CACHE_ENUM.USERNAME, sid)
-			.delete();
+		cache.createEntry(CACHE_ENUM.USERNAME, sid).delete();
+	}
+	private void deleteUser() {
+		String username = getUser().getUserName();
+		String sid = getSid();
+		cache.createEntry(CACHE_ENUM.USER, username).delete();
+		cache.createEntry(CACHE_ENUM.PROJECTS, username).delete();
+		cache.createEntry(CACHE_ENUM.USERNAME, sid).delete();
 	}
 
 	@Override
@@ -224,6 +230,23 @@ public class UserServiceImpl extends GodzillaApplication implements UserService{
 	public User getUserById(String id) {
 		User user = userMapper.queryUserByUserId(id);
 		return user;
+	}
+
+	@Override
+	public ReturnCodeEnum changePassword(User user, String oldpassword, String password) {
+		if(!user.getPassword().equals(oldpassword)) {
+			return ReturnCodeEnum.getByReturnCode(NO_WRONGOLDPWD);
+		}
+		
+		Map<String, Object> parameterMap = new HashMap<String, Object>();
+		parameterMap.put("id", user.getId());
+		parameterMap.put("password", password);
+		int code = userMapper.updatePassword(parameterMap);
+		if(code>0) {
+			deleteUser();//del redis sid-username 
+			return ReturnCodeEnum.getByReturnCode(OK_CHANGEPWD);
+		} 
+		return ReturnCodeEnum.getByReturnCode(NO_CHANGEPWD);
 	}
 
 	

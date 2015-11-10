@@ -34,4 +34,12 @@ public interface PropConfigMapper {
 	int verifyOKProp(Map<String, String> parameterMap);
 
 	int updatePropIndex(Map<String, Integer> parameterMap);
+
+	List<PropConfig> queryByProjectcodeAndCreatebyAndProfileAndBillid(Map<String, Object> parameterMap);
+
+	void updatePropStatusById(Map<String, Object> parameterMap);
+
+	void updatePropLastValueAndStatusById(Map<String, Object> parameterMap1);
+
+	int verifyNOProp(Map<String, Object> parameterMap2);
 }

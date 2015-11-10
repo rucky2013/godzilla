@@ -144,6 +144,8 @@ public interface Constant {
 	public final static String NO_FOUNDNEWCONFLICT = "100060";
 	public final static String NO_SVNRESOLVE = "100061";
 	public final static String NO_NEWCONFLICTFOUND = "100062";
+	public final static String NO_WRONGOLDPWD = "100063";
+	public final static String NO_CHANGEPWD = "100064";
 	
 	public final static String OK_AJAX = "200000";
 	public final static String OK_CHECKUSER = "200001";
@@ -170,4 +172,5 @@ public interface Constant {
 	public final static String OK_SVNEDIT = "200054";
 	public final static String OK_EDITMERGESTATUS = "200055";
 	public final static String OK_SVNRESOLVED = "200061";
+	public final static String OK_CHANGEPWD = "200064";
 }

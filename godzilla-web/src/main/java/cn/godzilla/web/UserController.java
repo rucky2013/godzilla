@@ -9,11 +9,13 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.junit.runners.Parameterized.Parameters;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import cn.godzilla.common.ReturnCodeEnum;
@@ -159,6 +161,14 @@ public class UserController extends GodzillaApplication{
 		
 		//password is md5 
 		ReturnCodeEnum returnEnum = userService.addUser(username, password, confirm, departname);
+		
+		return ResponseBodyJson.custom().setAll(returnEnum, ADDUSER).build().log();
+	}
+	@RequestMapping(value="/{sid}/changePassword", method=RequestMethod.POST)
+	@ResponseBody
+	public Object changePassword(@PathVariable String sid, @RequestParam String oldpassword, @RequestParam String password, HttpServletRequest request) {
+		
+		ReturnCodeEnum returnEnum = userService.changePassword(getUser(), oldpassword, password);
 		
 		return ResponseBodyJson.custom().setAll(returnEnum, ADDUSER).build().log();
 	}

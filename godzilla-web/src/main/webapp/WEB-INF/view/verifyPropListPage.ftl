@@ -75,43 +75,31 @@
                 <thead>
                   <tr>
                     <th width="20%">待审核工单</th>
-                    <th width="15%">提交人</th>
+                    <th width="20%">提交人</th>
                     <th width="20%">应用名称</th>
-                    <th width="15%">环境</th>
-                    <th width="15%">状态</th>
-                    <th width="15%">操作</th>
+                    <th width="20%">状态</th>
+                    <th width="20%">操作</th>
                   </tr>
                  </thead>
                  <tbody>
                  <#list propList as prop>
 	                 <tr>
 	                    <td>${prop.id}</td>
-	                    <td>${prop.createBy}</td>
+	                    <td>${prop.createby}</td>
 	                    <td>${prop.projectCode}</td>
 	                    <td>
-							<#if prop.profile == 'TEST'>
-		                    	日常环境
-							<#elseif prop.profile == 'PRODUCT'>
-								生产环境
-							<#elseif prop.profile == 'QUASIPRODUCT'>
-								 准生产环境
-							</#if>  
-						</td>
-	                    <td>
-							<#if prop.status == 0>
+							<#if prop.status == "0">
 		                    	未审核
-							<#elseif prop.status == 1>
+							<#elseif prop.status == "1">
 								通过
-							<#elseif prop.status == 2>
+							<#elseif prop.status == "2">
 								未通过
 							</#if>  
 						</td>
 	                    <td class="operation">
-	                    	<#if prop.status == 0>
+	                    	<#if prop.status == "0">
 		                    	<a class="verify_btn" href="javascript:void(0);" 
-		                    	value1="/${basePath}/prop/${sid}/${prop.projectCode}/${prop.profile}/${prop.createBy}/verifyProp.do">审核</a>
-							<#elseif prop.status == 1>
-							<#elseif prop.status == 2>
+		                    	value1="/${basePath}/prop/${sid}/${prop.projectCode}/TEST/${prop.createby}/${prop.id}/verifyProp.do">审核</a>
 							</#if>  
 	                    </td>
 	                  </tr>

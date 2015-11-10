@@ -393,11 +393,11 @@
 						<label>版本号：</label> <input id="parentVersion" type="text" name="parentVersion" value="1.0.0" />
 						<label>&nbsp;</label>
 						<select id="parentVersionSuffix" name="parentVersionSuffix">
-	                		<option id="option1" value="-SNAPSHOT" selected="selected">-SNAPSHOT</option>
-							<option id="option2" value="-RELEASE">-RELEASE</option>
+	                		<option id="option1" value="-SNAPSHOT">-SNAPSHOT</option>
+	                		<option id="option2" value="-RELEASE">-RELEASE</option>
 	              		</select>
 					</div>
-					<input id="deployBtn" type="button" class="shadow_btn mar150_l" value="部署(打包)" />
+					<input id="deployBtn" type="button" class="shadow_btn mar150_l " value="部署(打包)" />
 				</div>
 			</div>
 			
@@ -476,14 +476,26 @@
 		});
 		//部署弹出框  输入版本
 		$(".deploy").on("click", function() {
-	        showWindow(4);
+			var profile = '${profile}';
+			showWindow(4);
+			if(profile == 'TEST') {
+				$("#parentVersionSuffix option").remove();
+				$("#parentVersionSuffix").append('<option id="option1" value="-SNAPSHOT">-SNAPSHOT</option>');
+			} else {
+				$("#parentVersionSuffix option").remove();
+				$("#parentVersionSuffix").append('<option id="option2" value="-RELEASE">-RELEASE</option>');
+			}
 		})	
 		// 部署
-	    $("#deployBtn").on("click", function() {
+	    $(".deployBtn").on("click", function() {
 	    	
 	    	hideWindow(4);
 			var parentVersion = $("#parentVersion").val();
 			var parentVersionSuffix = $("#parentVersionSuffix").val();
+			
+			parentVersion = parentVersion.replace(/(^\s*)|(\s*$)/g, "");
+			parentVersionSuffix = parentVersionSuffix.replace(/(^\s*)|(\s*$)/g, "");
+			
 			$("#process").width(0);
 			$("#processText").text("0%");
 	        $.ajax({

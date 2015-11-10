@@ -25,7 +25,10 @@ public class RedisCache extends AbstractCache<String, String, CACHE_ENUM> {
 	public void delete(String key) {
 		rdbc.delete(key);
 	}
-
+	@Override
+	public void expired(String key, Long millis){
+		rdbc.expireAt(key, millis);
+	}
 	@Override
 	public String get(String key) {
 		return rdbc.get(key);
@@ -110,6 +113,9 @@ public class RedisCache extends AbstractCache<String, String, CACHE_ENUM> {
 		}
 		public String get() {
 			return RedisCache.this.get(this.getKey());
+		}
+		public void expired(Long millis) {
+			RedisCache.this.expired(this.getKey(), millis);
 		}
 	}
 

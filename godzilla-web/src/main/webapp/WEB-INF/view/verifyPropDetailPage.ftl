@@ -6,11 +6,6 @@
 
 </head>
 <body id="query">
-<input type="hidden" name="projectCode" id="projectCode" value="${projectCode}" />
-<input type="hidden" name="sid" id="sid" value="${sid}" />
-<input type="hidden" name="createBy" id="createBy" value="${createBy}" />
-<input type="hidden" name="profile" id="profile" value="${profile}" />
-
 		<div class="main">
 		<div class="head  clearfix">
         	<h1><a class="logo" href="/${basePath}/user/${sid}/home.do" title="回到首页">哥斯拉</a></h1>
@@ -160,21 +155,16 @@ $(document).ready(function() {
 	
 	$(".verify_btn").on("click", function() {
 		
-		var sid = $("#sid").val();
-		var createBy = $("#createBy").val();
-		var projectCode = $("#projectCode").val();
-		var profile = $("#profile").val();
-		
 		var status = $(this).attr("value1");
 		var auditor_text = $("#auditor_text").val();
 		
 		$.ajax({ 
 		 	type: 'POST', 
-			url: '/${basePath}/prop/' + sid + '/' + projectCode +　'/' +  profile + '/' + createBy + '/' + 'verifyProp.do',
+			url: '/${basePath}/prop/${sid}/${projectCode}/${profile}/${createBy}/${billId}/verifyProp.do',
 			data: {
 				auditor_text :auditor_text,
 				status :status,
-				},
+			},
 			success: function(data){
 				if(data.returnmsg == 'SUCCESS') {
 					alert("SUCCESS");

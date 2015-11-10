@@ -46,6 +46,7 @@ public class Authorization extends GodzillaApplication implements Filter {
 		escapeUrls.add("/home");
 		escapeUrls.add("/addUser");
 		escapeUrls.add("/process");
+		escapeUrls.add("/changePassword");
 	}
 	
 	@Override

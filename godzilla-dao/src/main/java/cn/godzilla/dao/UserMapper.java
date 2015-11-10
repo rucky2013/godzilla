@@ -31,5 +31,7 @@ public interface UserMapper {
 	void updateLogintimeByUsername(String username);
 
 	User queryUserByUserId(String id);
+
+	int updatePassword(Map<String, Object> parameterMap);
 	
 }

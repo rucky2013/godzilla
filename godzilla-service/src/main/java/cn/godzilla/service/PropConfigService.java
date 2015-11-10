@@ -1,15 +1,12 @@
 package cn.godzilla.service;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
-import org.dom4j.DocumentException;
-
 import cn.godzilla.common.Constant;
 import cn.godzilla.common.ReturnCodeEnum;
+import cn.godzilla.model.PropBill;
 import cn.godzilla.model.PropConfig;
-import cn.godzilla.model.RpcResult;
 
 public interface PropConfigService extends Constant{
 	
@@ -90,9 +87,13 @@ public interface PropConfigService extends Constant{
 	     * @param propTest
 	     * @param propQuasiProduct
 	     * @param propProduct
+		 * @param billId 
 	     */
-		public void findPropByCreatebyAndProjectcodeAndProfileAndStatus(String createBy, String projectCode, String profile, StringBuilder propTest, StringBuilder propQuasiProduct, StringBuilder propProduct, String status);
+		public void findPropByCreatebyAndProjectcodeAndProfileAndStatus(String createBy, String projectCode, String profile, StringBuilder propTest, StringBuilder propQuasiProduct, StringBuilder propProduct, String status, Long billId);
 
+		@Deprecated
+		public ReturnCodeEnum verifyPropByCreatebyAndProjectcodeAndProfile(String createBy, String projectCode, String profile, String status, String auditor_text);
+		
 		/**
 		 * 审核通过  某人 某项目 某环境下的 所有配置
 		 * @param createBy
@@ -102,7 +103,7 @@ public interface PropConfigService extends Constant{
 		 * @param auditor_text
 		 * @return
 		 */
-		public ReturnCodeEnum verifyPropByCreatebyAndProjectcodeAndProfile(String createBy, String projectCode, String profile, String status, String auditor_text);
+		public ReturnCodeEnum verifyPropByCreatebyAndProjectcodeAndALLProfile(String createBy, String projectCode, String profile, String status, String auditor_text, Long billId);
 
 		/**
 		 * 排序 配置
@@ -110,6 +111,14 @@ public interface PropConfigService extends Constant{
 		 * @return
 		 */
 		public ReturnCodeEnum resortPropById(String propSort);
+		
+		/**
+		 * 20151110 添加propbill表,重写配置审核
+		 * @param projectCode
+		 * @return
+		 */
+		public List<PropBill> queryAllPropBill(String projectCode);
 
+		
 		
 }

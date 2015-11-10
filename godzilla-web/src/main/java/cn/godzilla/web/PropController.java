@@ -19,6 +19,7 @@ import cn.godzilla.common.ReturnCodeEnum;
 import cn.godzilla.common.StringUtil;
 import cn.godzilla.common.response.ResponseBodyJson;
 import cn.godzilla.model.Project;
+import cn.godzilla.model.PropBill;
 import cn.godzilla.model.PropConfig;
 import cn.godzilla.service.OperateLogService;
 import cn.godzilla.service.ProjectService;
@@ -204,14 +205,15 @@ public class PropController extends GodzillaApplication implements Constant{
 		
 		List<Project> projectList = projectService.queryAll();
 		Map<String, String> profileList = propConfigService.queryAllProfile();
-		List<PropConfig> propList = propConfigService.queryByProjectcodeAndCreatebyAndProfileGroupBy(projectCode, createBy, selectedProfile, NOTYET_VERIFY_STATUS);
+		//List<PropConfig> propList = propConfigService.queryByProjectcodeAndCreatebyAndProfileGroupBy(projectCode, createBy, selectedProfile, NOTYET_VERIFY_STATUS);
+		List<PropBill> propBillList = propConfigService.queryAllPropBill(projectCode);
 		
 		request.setAttribute("createBy", createBy);//提交人
 		request.setAttribute("projectList", projectList);
 		request.setAttribute("selectedProfile", selectedProfile);
 		request.setAttribute("profileList", profileList);
-		request.setAttribute("propList", this.replaceHtml(propList));
-		request.setAttribute("user", this.getUser());
+		request.setAttribute("propList", propBillList);
+		request.setAttribute("user", getUser());
 		request.setAttribute("basePath", BASE_PATH);
 		
 		return "verifyPropListPage";
@@ -227,20 +229,20 @@ public class PropController extends GodzillaApplication implements Constant{
 	 * @param request
 	 * @return
 	 */
-	@RequestMapping(value="/{sid}/{projectCode}/{profile}/{createBy}/verifyProp" , method=RequestMethod.GET) 
-	public Object verifyPropDetailPage(@PathVariable String sid, @PathVariable String createBy, @PathVariable String projectCode, @PathVariable String profile, HttpServletRequest request) {
+	@RequestMapping(value="/{sid}/{projectCode}/{profile}/{createBy}/{billId}/verifyProp" , method=RequestMethod.GET) 
+	public Object verifyPropDetailPage(@PathVariable String sid, @PathVariable String createBy, @PathVariable String projectCode, @PathVariable String profile, @PathVariable Long billId, HttpServletRequest request) {
 		
 		StringBuilder propTest = new StringBuilder("");
 		StringBuilder propQuasiProduct = new StringBuilder("");
 		StringBuilder propProduct = new StringBuilder("");
-		propConfigService.findPropByCreatebyAndProjectcodeAndProfileAndStatus(createBy, projectCode, profile, propTest, propQuasiProduct, propProduct, NOTYET_VERIFY_STATUS);
+		propConfigService.findPropByCreatebyAndProjectcodeAndProfileAndStatus(createBy, projectCode, profile, propTest, propQuasiProduct, propProduct, NOTYET_VERIFY_STATUS, billId);
 		
 		StringBuilder oldpropTest = new StringBuilder("");
 		StringBuilder oldpropQuasiProduct = new StringBuilder("");
 		StringBuilder oldpropProduct = new StringBuilder("");
-		propConfigService.findPropByCreatebyAndProjectcodeAndProfileAndStatus(createBy, projectCode, profile, oldpropTest, oldpropQuasiProduct, oldpropProduct, OK_VERIFY_STATUS);
+		propConfigService.findPropByCreatebyAndProjectcodeAndProfileAndStatus(createBy, projectCode, profile, oldpropTest, oldpropQuasiProduct, oldpropProduct, OK_VERIFY_STATUS, billId);
 		
-		request.setAttribute("user", this.getUser());
+		request.setAttribute("user", getUser());
 		
 		request.setAttribute("propTest", this.replaceHtml(propTest.toString()));
 		request.setAttribute("propQuasiProduct", this.replaceHtml(propQuasiProduct.toString()));
@@ -265,13 +267,13 @@ public class PropController extends GodzillaApplication implements Constant{
 	 * @param request
 	 * @return
 	 */
-	@RequestMapping(value="/{sid}/{projectCode}/{profile}/{createBy}/verifyProp" , method=RequestMethod.POST) 
+	@RequestMapping(value="/{sid}/{projectCode}/{profile}/{createBy}/{billId}/verifyProp" , method=RequestMethod.POST) 
 	@ResponseBody
-	public Object verifyProp(@PathVariable String sid, @PathVariable String createBy, @PathVariable String projectCode, @PathVariable String profile, HttpServletRequest request) {
+	public Object verifyProp(@PathVariable String sid, @PathVariable String createBy, @PathVariable String projectCode, @PathVariable String profile, @PathVariable Long billId, HttpServletRequest request) {
 		String status = StringUtil.getReqPrameter(request, "status", "0");
 		String auditor_text = StringUtil.getReqPrameter(request, "auditor_text", "");
 		
-		ReturnCodeEnum updateReturn = propConfigService.verifyPropByCreatebyAndProjectcodeAndProfile(createBy, projectCode, profile, status, auditor_text); 
+		ReturnCodeEnum updateReturn = propConfigService.verifyPropByCreatebyAndProjectcodeAndALLProfile(createBy, projectCode, profile, status, auditor_text, billId); 
 		
 		return ResponseBodyJson.custom().setAll(updateReturn, VERIFYPROP).build().log();
 	}

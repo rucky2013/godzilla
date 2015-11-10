@@ -87,4 +87,7 @@ public interface UserService extends Constant{
 	public ReturnCodeEnum updateUserProjects(String editUsername, String selectProjects);
 
 	public User getUserById(String sid);
+
+	public ReturnCodeEnum changePassword(User user, String oldpassword, String password);
+
 }

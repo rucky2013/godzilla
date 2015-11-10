@@ -4,6 +4,7 @@
   <resultMap id="BaseResultMap" type="cn.godzilla.model.PropConfig" >
    
     <result column="id" property="id" jdbcType="BIGINT" />
+    <result column="bill_id" property="billId" jdbcType="BIGINT" />
     <result column="project_code" property="projectCode" jdbcType="VARCHAR" />
     <result column="profile" property="profile" jdbcType="VARCHAR" />
     <result column="pro_key" property="proKey" jdbcType="VARCHAR" />
@@ -20,12 +21,12 @@
   </resultMap>
   <insert id="insert" parameterType="cn.godzilla.model.PropConfig" >
     
-    insert into properties_config (id, project_code, profile, 
+    insert into properties_config (id, bill_id, project_code, profile, 
       pro_key, pro_value, remark, 
       create_by, create_time, update_time, 
       last_value, status, auditor, 
       auditor_text, index_order)
-    values (#{id,jdbcType=DECIMAL}, #{projectCode,jdbcType=VARCHAR}, #{profile,jdbcType=VARCHAR}, 
+    values (#{id,jdbcType=DECIMAL},#{billId,jdbcType=DECIMAL}, #{projectCode,jdbcType=VARCHAR}, #{profile,jdbcType=VARCHAR}, 
       #{proKey,jdbcType=VARCHAR}, #{proValue,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, 
       #{createBy,jdbcType=VARCHAR}, now(), #{updateTime,jdbcType=TIMESTAMP}, 
       #{lastValue,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER}, #{auditor,jdbcType=VARCHAR}, 
@@ -35,6 +36,9 @@
    
     insert into properties_config
     <trim prefix="(" suffix=")" suffixOverrides="," >
+    	<if test="billId != null">
+    	bill_id,
+    	</if>
       <if test="projectCode != null" >
         project_code,
       </if>
@@ -72,8 +76,8 @@
        index_order
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        #{id,jdbcType=BIGINT},
+      <if test="billId != null" >
+        #{billId,jdbcType=BIGINT},
       </if>
       <if test="projectCode != null" >
         #{projectCode,jdbcType=VARCHAR},
@@ -112,12 +116,12 @@
        0
     </trim>
   </insert>
-  <sql id="queryColumns">id, project_code as projectCode, profile, 
+  <sql id="queryColumns">id,bill_id, project_code as projectCode, profile, 
       pro_key as proKey, pro_value as proValue, remark, 
       create_by as createBy, create_time as createTime, update_time as updateTime, 
       last_value as lastValue, status, auditor, 
       auditor_text as auditorText, index_order as indexOrder</sql>
-  <sql id="queryMaxColumns">max(id) as id, max(project_code) as projectCode, max(profile) as profile, 
+  <sql id="queryMaxColumns">max(id) as id, max(bill_id),max(project_code) as projectCode, max(profile) as profile, 
       max(pro_key) as proKey, max(pro_value) as proValue, max(remark) as remark, 
       max(create_by) as createBy, max(create_time) as createTime, max(update_time) as updateTime, 
       max(last_value) as lastValue, max(status) as status, max(auditor) as auditor, 
@@ -227,6 +231,34 @@ left JOIN properties_config b on a.pro_key = b.pro_key and a.project_code = b.pr
   	and create_by = #{create_by}
   	and status = 0
   </update>
+  <update id="verifyNOProp" parameterType="java.util.Map" >
+  	update properties_config set
+  	
+  	auditor = #{auditor},
+  	auditor_text = #{auditor_text},
+  	update_time = now(),
+  	status = #{status}
+  	
+  	where bill_id = #{id} and status = 0
+  </update>
+  
+  <update id="updatePropStatusById" parameterType="java.util.Map">
+  	update properties_config set
+  		status = #{status}
+  	where
+  		id = #{id}
+  </update>
+  
+  <update id="updatePropLastValueAndStatusById" parameterType="java.util.Map">
+  	update properties_config set
+  		last_value = #{last_value},
+  		auditor = #{auditor},
+	  	auditor_text = #{auditor_text},
+	  	update_time = now(),
+	  	status = #{status}
+  	where
+  		id = #{id}
+  </update>
   
   <select id="queryByProjectcodeAndCreatebyAndProfile" parameterType="java.util.Map" resultType="cn.godzilla.model.PropConfig">
   	select <include refid="queryColumns" /> from properties_config 
@@ -241,6 +273,25 @@ left JOIN properties_config b on a.pro_key = b.pro_key and a.project_code = b.pr
         and create_by = #{create_by} 
       </if>
       order by index_order , id
+  </select>
+  
+  <select id="queryByProjectcodeAndCreatebyAndProfileAndBillid" parameterType="java.util.Map" resultType="cn.godzilla.model.PropConfig">
+  	select <include refid="queryColumns" /> from properties_config
+  	where status = #{status} 
+  	<if test="billId != '' and billId != null" >
+        and bill_id = #{billId} 
+      </if>
+  	<if test="project_code != ''" >
+        and project_code = #{project_code} 
+      </if>
+      <if test="profile != ''" >
+        and profile = #{profile} 
+      </if>
+      <if test="create_by != '' and create_by != null" >
+        and create_by = #{create_by} 
+      </if>
+      order by index_order , id
+  
   </select>
   
   <select id="queryByProjectcodeAndCreatebyAndProfileGroupBy" parameterType="java.util.Map" resultType="cn.godzilla.model.PropConfig">

@@ -10,7 +10,9 @@ public class PropConfig implements Serializable{
 	private static final long serialVersionUID = 1L;
 
 	private Long id;
-
+	
+	private Long billId;
+	
     private String projectCode;
 
     private String profile;
@@ -31,14 +33,6 @@ public class PropConfig implements Serializable{
     
     private Integer indexOrder;
     
-    public Integer getIndexOrder() {
-		return indexOrder;
-	}
-
-	public void setIndexOrder(Integer indexOrder) {
-		this.indexOrder = indexOrder;
-	}
-
 	/**
      * 审核状态
      * 0:未审核
@@ -52,7 +46,23 @@ public class PropConfig implements Serializable{
 
     private String auditorText;
 
-    public Long getId() {
+    public Integer getIndexOrder() {
+		return indexOrder;
+	}
+
+	public void setIndexOrder(Integer indexOrder) {
+		this.indexOrder = indexOrder;
+	}
+	
+    public Long getBillId() {
+		return billId;
+	}
+
+	public void setBillId(Long billId) {
+		this.billId = billId;
+	}
+
+	public Long getId() {
         return id;
     }
 

@@ -68,6 +68,9 @@ public enum ReturnCodeEnum {
 	NO_FOUNDNEWCONFLICT("100060", "产生了新冲突，重新解决冲突"),
 	NO_SVNRESOLVE("100061", "标记解决失败"),
 	NO_NEWCONFLICTFOUND("100062", "发现新冲突，重新合并分支解决冲突"),
+	NO_WRONGOLDPWD("100063", "旧密码输入错误，如忘记密码找管理员更改密码"),
+	NO_CHANGEPWD("100064", "更改密码失败"),
+	
 	
 	OK_SUCCESS("200000", "SUCCESS"),
 	//user模块
@@ -99,6 +102,8 @@ public enum ReturnCodeEnum {
 	OK_SVNEDIT("200054", "svn分支编程保存成功"),	
 	OK_EDITMERGESTATUS("200055", "更改项目合并状态成功"),
 	OK_SVNRESOLVED("200061", "标记解决成功"),
+	OK_CHANGEPWD("200064", "更改密码成功"),
+	
 	;
 	
 	public String returnCode;

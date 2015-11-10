@@ -127,4 +127,10 @@
   	where user_name = #{user_name} 
   	and status = 1
   </update>
+  
+  <update id="updatePassword" parameterType="java.util.Map">
+  	update user set
+  		password = #{password}
+  	where id = #{id}
+  </update>
 </mapper>
