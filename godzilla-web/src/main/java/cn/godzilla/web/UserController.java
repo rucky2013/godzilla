@@ -167,7 +167,7 @@ public class UserController extends GodzillaApplication{
 		
 		ReturnCodeEnum returnEnum = userService.changePassword(getUser(), oldpassword, password);
 		
-		return ResponseBodyJson.custom().setAll(returnEnum, ADDUSER).build().log();
+		return ResponseBodyJson.custom().setAll(returnEnum, CHANGEPASSWD).build().log();
 	}
 	
 	/**

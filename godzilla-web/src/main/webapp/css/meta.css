@@ -29,7 +29,7 @@ td a:active{color:#0097e0}
 .logo{ width:260px; height:66px; background:url(../img/logo.png); display:block; float:left; text-indent:-99999em; overflow:hidden}
 .head{ font-size:15px; color:#fff; margin-bottom:20px}
 .head .r{ margin-top:25px}
-.head .r .btn1{ width:58px; height:24px; display:inline-block; margin-left:10px; line-height:24px; text-align:center; color:#0097e0!important; background:url(../img/btn1.png);}
+.head .r .btn1{ width:78px; height:24px; display:inline-block; margin-left:10px; line-height:24px; text-align:center; color:#0097e0!important; background: #fff; border-radius: 3px;}
 
 .mainConL{width:200px; overflow:hidden; height:232px; background:url(../img/mainConLBg.png) no-repeat}
 .mainConL h3{height:40px; line-height:40px; text-indent:10px; font-size:14px; display:inline-block}

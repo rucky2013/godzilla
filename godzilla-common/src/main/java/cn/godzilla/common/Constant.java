@@ -41,6 +41,7 @@ public interface Constant {
 	public final String SHOWDEPLOYLOG = "SHOWDEPLOYLOG";
 	public final String SHOWWARINFO = "SHOWWARINFO";
 	public final String CONFLICTRESOLVED = "CONFLICTRESOLVED";
+	public final String CHANGEPASSWD = "CHANGEPASSWD";
 	
 	public final String NOTYET_VERIFY_STATUS = "0";//未审核
 	public final String OK_VERIFY_STATUS = "1";//审核通过
