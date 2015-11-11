@@ -487,7 +487,7 @@
 			}
 		})	
 		// 部署
-	    $(".deployBtn").on("click", function() {
+	    $("#deployBtn").on("click", function() {
 	    	
 	    	hideWindow(4);
 			var parentVersion = $("#parentVersion").val();
