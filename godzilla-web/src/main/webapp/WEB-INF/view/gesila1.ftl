@@ -49,15 +49,21 @@
 					<#if profile = 'TEST'>
 					<li class="current" style="border-left: 0"><a href="/${basePath}/project/${sid}/${projectCode}/TEST/projectConfig.do" title="日常环境">日常环境</a></li>
 					<li><a href="/${basePath}/project/${sid}/${projectCode}/QUASIPRODUCT/projectConfig.do" title="预发标准环境">预发标准环境</a></li>
-					<li><a href="/${basePath}/project/${sid}/${projectCode}/PRODUCT/projectConfig.do" title="生产标准环境">生产标准环境</a></li> 
+						<#if user.userName = 'qinjingfan' || user.userName = 'zhongweili'>
+						<li><a href="/${basePath}/project/${sid}/${projectCode}/PRODUCT/projectConfig.do" title="生产标准环境">生产标准环境</a></li> 
+						</#if>
 					<#elseif profile = 'QUASIPRODUCT'>
 					<li><a href="/${basePath}/project/${sid}/${projectCode}/TEST/projectConfig.do" title="日常环境">日常环境</a></li>
 					<li class="current" style="border-left: 0"><a href="/${basePath}/project/${sid}/${projectCode}/QUASIPRODUCT/projectConfig.do" title="预发标准环境">预发标准环境</a></li>
-					<li><a href="/${basePath}/project/${sid}/${projectCode}/PRODUCT/projectConfig.do" title="生产标准环境">生产标准环境</a></li> 
+						<#if user.userName = 'qinjingfan' || user.userName = 'zhongweili'>
+						<li><a href="/${basePath}/project/${sid}/${projectCode}/PRODUCT/projectConfig.do" title="生产标准环境">生产标准环境</a></li> 
+						</#if>
 					<#elseif profile = 'PRODUCT'>
 					<li><a href="/${basePath}/project/${sid}/${projectCode}/TEST/projectConfig.do" title="日常环境">日常环境</a></li>
 					<li><a href="/${basePath}/project/${sid}/${projectCode}/QUASIPRODUCT/projectConfig.do" title="预发标准环境">预发标准环境</a></li>
-					<li class="current" style="border-left: 0"><a href="/${basePath}/project/${sid}/${projectCode}/PRODUCT/projectConfig.do" title="生产标准环境">生产标准环境</a></li> 
+						<#if user.userName = 'qinjingfan' || user.userName = 'zhongweili'>
+						<li class="current" style="border-left: 0"><a href="/${basePath}/project/${sid}/${projectCode}/PRODUCT/projectConfig.do" title="生产标准环境">生产标准环境</a></li> 
+						</#if>
 					</#if>
 				</ul>
 				<ul id="tabCon2">
