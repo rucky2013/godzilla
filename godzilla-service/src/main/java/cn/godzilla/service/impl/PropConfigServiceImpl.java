@@ -470,22 +470,22 @@ public class PropConfigServiceImpl extends GodzillaApplication implements PropCo
 			/**
 			 * 更新所有 待审核配置状态
 			 */
+			//设置propbill意见及状态
+			Map<String, Object> parameterMap2 = new HashMap<String, Object>();
+			parameterMap2.put("id", billId);
+			parameterMap2.put("status", "2");
+			parameterMap2.put("auditor", GodzillaApplication.getUser().getUserName());
+			parameterMap2.put("auditor_text", auditor_text);
+			int dbReturn1 = propBillMapper.updatePropBillById(parameterMap2);
+			
+			int dbReturn2 = 0;
 			for(PropConfig tempProp : noPropList) {
-				
-				//设置propbill意见及状态
-				Map<String, Object> parameterMap2 = new HashMap<String, Object>();
-				parameterMap2.put("id", billId);
-				parameterMap2.put("status", "2");
-				parameterMap2.put("auditor", GodzillaApplication.getUser().getUserName());
-				parameterMap2.put("auditor_text", auditor_text);
-				int dbReturn1 = propBillMapper.updatePropBillById(parameterMap2);
 				parameterMap2.put("status", 2);
-				int dbReturn2 = propConfigMapper.verifyNOProp(parameterMap2);
-				
-				return dbReturn2>0 && dbReturn1>0 ?ReturnCodeEnum.getByReturnCode(OK_VERIFYPROP)
-								:ReturnCodeEnum.getByReturnCode(NO_VERIFYPROP);
+				dbReturn2 = propConfigMapper.verifyNOProp(parameterMap2);
 			}
 			
+			return dbReturn2>0 && dbReturn1>0 ?ReturnCodeEnum.getByReturnCode(OK_VERIFYPROP)
+					:ReturnCodeEnum.getByReturnCode(NO_VERIFYPROP);
 		} else {
 			//impossible here;
 		}
