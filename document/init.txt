@@ -15,12 +15,12 @@
 
 -----
 测试机初始化
-1.group add godzilla
+1.groupadd godzilla
   useradd godzilla -g godzilla
-  passwd 
+  passwd godzilla
   
   useradd log
-  passwd 
+  passwd log
 2.复制 tomcat: 修改tomcat-user.xml 加入哥斯拉账户
 <role rolename="manager-gui"/>
 <role rolename="manager-script"/>
@@ -39,13 +39,17 @@ yum install subversion
 （注：需要提前svn使用下，确定是否保存密码）
 5.ssh 免密码登录
 ssh-keygen -t rsa -P ''
+scp -r -P 2222 id_rsa.pub87 godzilla@10.100.142.86
 scp -rP 2222 godzilla@10.100.142.69:~/* ~
-cat ~/id_rsa.pub*  >> .ssh/authorized_keys
+cat ~/id_rsa.pub87  >> .ssh/authorized_keys
 store-plaintext-passwords = no
 chmod 700 .ssh/authorized_keys
 
 6.时间同步
 yum install -y rdate && rdate -s time.nist.gov
+
+7.nginx 配置80重写url
+
 -----
 项目依赖关系
 
