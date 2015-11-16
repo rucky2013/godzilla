@@ -15,7 +15,6 @@ import cn.godzilla.service.SvnBranchConfigService;
 import cn.godzilla.service.SvnService;
 import cn.godzilla.web.GodzillaApplication;
 
-@Service("svnBranchConfigService")
 public class SvnBranchConfigServiceImpl extends GodzillaApplication implements SvnBranchConfigService {
 
 	@Autowired

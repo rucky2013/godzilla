@@ -18,7 +18,6 @@ import cn.godzilla.service.SvnService;
 import cn.godzilla.svn.BaseShellCommand;
 import cn.godzilla.web.GodzillaApplication;
 
-@Service("projectService")
 public class ProjectServiceImpl extends GodzillaApplication implements ProjectService {
 
 	@Autowired

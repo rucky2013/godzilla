@@ -11,7 +11,6 @@ import cn.godzilla.dao.FunRightMapper;
 import cn.godzilla.model.FunRight;
 import cn.godzilla.service.FunRightService;
 
-@Service("funRightService")
 public class FunRightServiceImpl implements FunRightService {
 
 	@Autowired

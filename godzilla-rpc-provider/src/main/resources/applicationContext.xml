@@ -16,7 +16,11 @@
           http://www.springframework.org/schema/mvc
           http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd">
 
-
+	<!--注解说明 -->
+	<context:annotation-config />
+	<!-- 把标记了@Controller注解的类转换为bean -->
+	<context:component-scan base-package="cn.godzilla" />
+	
 	<context:property-placeholder location="classpath:jdbc.properties" ignore-unresolvable="true" />
 	
 	<bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource" destroy-method="close"> 
@@ -53,5 +57,4 @@
 		<property name="dataSource" ref="dataSource" />
 	</bean>
 
-	<import resource="classpath:rpc-provider.xml"/>
 </beans>

@@ -1,6 +1,8 @@
 package cn.godzilla.web;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.Lock;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -172,11 +174,47 @@ public class IndexController extends GodzillaApplication{
 	@ResponseBody
 	public Object restart(@PathVariable String sid, @PathVariable String projectCode,@PathVariable String profile, HttpServletRequest request, HttpServletResponse response) {
 	
-		ReturnCodeEnum returnEnum = mvnService.restartTomcat(projectCode, profile);
+		ReturnCodeEnum returnEnum = this.restartTomcat(projectCode, profile);
 		
 		return ResponseBodyJson.custom().setAll(returnEnum, TOMCATRESTART).build().log();
 	}
 	
+	private ReturnCodeEnum restartTomcat(String projectCode, String profile) {
+		/**
+		 * 1.限制并发　
+		 * 日常环境　每个项目　只允许　一个人重启（如果互相依赖项目　并发发布，还是会出现问题）
+		 * 准生产	　NO_RESTARTEFFECT
+		 * 生产　　　NO_RESTARTEFFECT
+		 **/
+		
+		Lock lock = null;
+		boolean hasAC = false;
+		try {
+			if(TEST_PROFILE.equals(profile)) {
+				lock = GodzillaApplication.deploy_lock.get(projectCode);
+				hasAC = lock.tryLock(1, TimeUnit.SECONDS);
+				if(!hasAC)
+					return ReturnCodeEnum.getByReturnCode(NO_CONCURRENCEDEPLOY);
+			} else {
+				return ReturnCodeEnum.getByReturnCode(NO_RESTARTEFFECT);
+			}
+			return mvnService.restartTomcat(projectCode, profile);
+		} catch(InterruptedException e) {
+			e.printStackTrace();
+			return ReturnCodeEnum.getByReturnCode(NO_CONCURRENCEDEPLOY);
+		} finally {
+			if(lock!=null) {
+				try {
+					lock.unlock();
+				} /*catch(InvocationTargetException e2) {
+					return ReturnCodeEnum.getByReturnCode(NO_HASKEYDEPLOY);
+				} */catch(IllegalMonitorStateException e1) {
+					return ReturnCodeEnum.getByReturnCode(NO_CONCURRENCEDEPLOY);
+				} 
+			}
+		}
+	}
+
 	/**
 	 * 源代码设置 -->添加或修改源代码设置
 	 * @param sid

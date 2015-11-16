@@ -11,6 +11,7 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<rpcf.version>0.0.1.Alpha-SNAPSHOT</rpcf.version>
 	</properties>
 
 	<dependencies>
@@ -29,10 +30,15 @@
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-context</artifactId>
 		</dependency>
-		<dependency>
+		<!-- <dependency>
 			<groupId>cn.godzilla</groupId>
 			<artifactId>godzilla-rpc</artifactId>
 			<version>${project.version}</version>
+		</dependency> -->
+		<dependency>
+			<groupId>com.rpcf</groupId>
+			<artifactId>rpcf-all</artifactId>
+			<version>${rpcf.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>cn.godzilla</groupId>

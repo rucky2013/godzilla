@@ -16,7 +16,6 @@ import cn.godzilla.model.OperateLog;
 import cn.godzilla.service.OperateLogService;
 import cn.godzilla.web.GodzillaApplication;
 
-@Service("operateLogService")
 public class OperateLogServiceImpl extends GodzillaApplication implements OperateLogService {
 
 	@Autowired

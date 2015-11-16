@@ -6,8 +6,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FilenameFilter;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
 
@@ -21,29 +19,28 @@ import org.springframework.stereotype.Service;
 import cn.godzilla.common.BusinessException;
 import cn.godzilla.common.ReturnCodeEnum;
 import cn.godzilla.common.StringUtil;
+import cn.godzilla.dao.ProjectMapper;
 import cn.godzilla.model.ClientConfig;
 import cn.godzilla.model.OperateLog;
 import cn.godzilla.model.Project;
 import cn.godzilla.model.RpcResult;
-import cn.godzilla.rpc.api.RpcException;
-import cn.godzilla.rpc.api.RpcFactory;
-import cn.godzilla.rpc.main.Util;
+import cn.godzilla.mvn.MvnBaseCommand;
+import cn.godzilla.mvn.ShCommand;
 import cn.godzilla.service.ClientConfigService;
-import cn.godzilla.service.MvnProviderService;
 import cn.godzilla.service.MvnService;
 import cn.godzilla.service.OperateLogService;
 import cn.godzilla.service.ProjectService;
-import cn.godzilla.service.PropConfigProviderService;
+import cn.godzilla.service.PropConfigService;
 import cn.godzilla.service.SvnService;
 import cn.godzilla.svn.BaseShellCommand;
 import cn.godzilla.web.GodzillaApplication;
 
-@Service("mvnService")
+import com.rpcf.api.RpcException;
+
+//propConfigService svnService projectService clientConfigService
 public class MvnServiceImpl extends GodzillaApplication implements MvnService {
 	
 	private final Logger logger = LogManager.getLogger(MvnServiceImpl.class);
-	@Autowired
-	private OperateLogService operateLogService;
 	@Autowired
 	private ClientConfigService clientConfigService;
 	@Autowired
@@ -52,77 +49,11 @@ public class MvnServiceImpl extends GodzillaApplication implements MvnService {
 	private SvnService svnService;
 	@Autowired
 	private BaseShellCommand command;
-	
-	private Map<String, PropConfigProviderService> propConfigProviderServices = 
-				new HashMap<String, PropConfigProviderService>();
-	private Map<String, MvnProviderService> mvnProviderServices = 
-			new HashMap<String, MvnProviderService>();
+	@Autowired
+	private PropConfigService propConfigService;
 	
 	@Override
 	public ReturnCodeEnum doDeploy(String projectCode, String profile, String parentVersion, String pencentkey) {
-		/*
-		 * -2.限制并发　发布
-		 * 日常环境　每个项目　只允许　一个人发布（如果互相依赖项目　并发发布，还是会出现问题）
-		 * 准生产	　所有项目只允许一个人发布
-		 * 生产　　　所有项目只允许一个人发布
-		 */
-		Lock lock = PUBLIC_LOCK;
-		boolean hasAC = false;
-		try {
-			if(profile.equals(TEST_PROFILE)) {
-				lock = GodzillaApplication.deploy_lock.get(projectCode);
-				hasAC = lock.tryLock(1, TimeUnit.SECONDS);
-				if(!hasAC) 
-					return ReturnCodeEnum.getByReturnCode(NO_CONCURRENCEDEPLOY);
-			} else {
-				lock = GodzillaApplication.deploy_lock.get(profile);
-				hasAC = lock.tryLock(1, TimeUnit.SECONDS);
-				if(!hasAC) 
-					return ReturnCodeEnum.getByReturnCode(NO_CONCURRENCEDEPLOY);
-			}
-			
-			ReturnCodeEnum deployReturn = this.doDeploy1(projectCode, profile, parentVersion, pencentkey);
-			
-			if(deployReturn.equals(ReturnCodeEnum.OK_MVNDEPLOY)) {
-				GodzillaApplication.processPercent.put(pencentkey, "100");
-			} else {
-				GodzillaApplication.processPercent.put(pencentkey, "0");
-			}
-			final String pencentkeyF = pencentkey;
-			new Thread() {
-				public void run() {
-					try {
-						Thread.sleep(5000);
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					}
-					GodzillaApplication.processPercent.put(pencentkeyF, "0");
-				}
-			}.start();
-			
-			return deployReturn;
-		} catch(InterruptedException e) {
-			e.printStackTrace();
-			return ReturnCodeEnum.getByReturnCode(NO_INTERRUPTEDEX);
-		} catch(BusinessException e){
-			e.printStackTrace();
-			return ReturnCodeEnum.getByReturnCode(NO_SYSTEMEX).setSystemEXMsg(e.getErrorMsg());
-		} catch(Throwable e) {
-			e.printStackTrace();
-			return ReturnCodeEnum.getByReturnCode(NO_SYSTEMEX).setSystemEXMsg(e.getMessage());
-		} finally {
-			try {
-				lock.unlock();
-			} /*catch(InvocationTargetException e2) {
-				return ReturnCodeEnum.getByReturnCode(NO_HASKEYDEPLOY);
-			} */
-			catch(IllegalMonitorStateException e1) {
-				return ReturnCodeEnum.getByReturnCode(NO_CONCURRENCEDEPLOY);
-			} 
-			
-		}
-	}
-	public ReturnCodeEnum doDeploy1(String projectCode, String profile, String parentVersion, String pencentkey) {
 		
 		String sid = super.getSid();
 		
@@ -147,16 +78,6 @@ public class MvnServiceImpl extends GodzillaApplication implements MvnService {
 		} else {
 			return renum1;
 		} 
-		/*
-		 * 0.get RpcFactory and init rpcservice
-		 * percent 30%
-		 */
-		try {
-			this.initRpc(IP);
-		} catch (ClassNotFoundException | IllegalAccessException | InstantiationException | IOException e) {
-			e.printStackTrace();
-			return ReturnCodeEnum.getByReturnCode(NO_RPCFACTORY);
-		}
 		processPercent.put(pencentkey, "15");
 		/*
 		 * 1.替换pom文件 配置变量   
@@ -165,9 +86,7 @@ public class MvnServiceImpl extends GodzillaApplication implements MvnService {
 		 */
 		boolean flag1 = false;
 		try {
-			PropConfigProviderService propConfigProviderService = propConfigProviderServices.get(IP);
-			
-			RpcResult result = propConfigProviderService.propToPom(projectCode, webPath, profile, parentVersion, clientconfig);
+			RpcResult result = propConfigService.propToPom(projectCode, webPath, profile, parentVersion, clientconfig);
 			flag1 = result.getRpcCode().equals("0")?true:false;
 		} catch(RpcException e){
 			return ReturnCodeEnum.getByReturnCode(NO_RPCEX);
@@ -207,9 +126,8 @@ public class MvnServiceImpl extends GodzillaApplication implements MvnService {
 			flag2 = true;
 		} else {
 			try {
-				MvnProviderService mvnProviderService = mvnProviderServices.get(IP);
 				String username = GodzillaApplication.getUser().getUserName();
-				result = this.deployProject(mvnProviderService, username, webPath, projectCode, profile, IP, parentVersion, parentPomPath, super.getUser().getRealName());
+				result = this.deployProject(this, username, webPath, projectCode, profile, IP, parentVersion, parentPomPath, super.getUser().getRealName());
 				flag2 = result.getRpcCode().equals("0")?true:false;
 			} catch(RpcException e){
 				return ReturnCodeEnum.getByReturnCode(NO_RPCEX);
@@ -266,7 +184,7 @@ public class MvnServiceImpl extends GodzillaApplication implements MvnService {
 	}
 	
 	
-	public RpcResult deployProject(MvnProviderService mvnProviderService, String username, String webPath, String projectCode, String profile, String IP, String parentVersion, String parentPomPath, String realname) {
+	public RpcResult deployProject(MvnService mvnService, String username, String webPath, String projectCode, String profile, String IP, String parentVersion, String parentPomPath, String realname) {
 		boolean flag2 = false;
 		RpcResult result = null;
 		String commands = "";
@@ -282,7 +200,7 @@ public class MvnServiceImpl extends GodzillaApplication implements MvnService {
 									:(SHELL_CLIENT_PATH+"/" +"godzilla_mvn.sh");
 			String str = "sh "+shell+" deploy "+POM_PATH+" "+USER_NAME+" "+PROJECT_NAME+" "+ PROJECT_ENV +" " +parentVersion + " " + PARENTPOM_PATH;
 			
-			result = mvnProviderService.mvnDeploy(str, projectCode, PROJECT_ENV, USER_NAME, realname, profile);
+			result = mvnService.mvnDeploy(str, projectCode, PROJECT_ENV, USER_NAME, realname, profile);
 			commands = str;
 			flag2 = result.getRpcCode().equals("0")?true:false;
 		}  catch(RpcException e){
@@ -302,25 +220,6 @@ public class MvnServiceImpl extends GodzillaApplication implements MvnService {
 		return result;
 	}
 	
-	private void initRpc(String linuxIp) throws ClassNotFoundException, IllegalAccessException, InstantiationException, IOException {
-		RpcFactory rpcFactory1= null;
-		rpcFactory1 = Util.getRpcFactoryImpl();
-		
-		if(propConfigProviderServices.get(linuxIp)==null||"".equals(propConfigProviderServices.get(linuxIp))) {
-			
-			PropConfigProviderService propConfigProviderService = rpcFactory1.getReference(PropConfigProviderService.class, linuxIp);
-			if(propConfigProviderService!=null) {
-				propConfigProviderServices.put(linuxIp, propConfigProviderService);
-			}
-		}
-		if(mvnProviderServices.get(linuxIp)==null||"".equals(mvnProviderServices.get(linuxIp))) {
-			MvnProviderService mvnProviderService = rpcFactory1.getReference(MvnProviderService.class, linuxIp);
-			if(mvnProviderService!=null) {
-				mvnProviderServices.put(linuxIp, mvnProviderService);
-			}
-		}
-	}
-
 	@Override
 	public ReturnCodeEnum getProcessPercent(String pencentkey) {
 		
@@ -467,41 +366,8 @@ public class MvnServiceImpl extends GodzillaApplication implements MvnService {
 		
 	}
 	
-	public ReturnCodeEnum restartTomcat(String projectCode, String profile) {
-		
-		/**
-		 * 1.限制并发　
-		 * 日常环境　每个项目　只允许　一个人重启（如果互相依赖项目　并发发布，还是会出现问题）
-		 * 准生产	　NO_RESTARTEFFECT
-		 * 生产　　　NO_RESTARTEFFECT
-		 **/
-		
-		Lock lock = PUBLIC_LOCK;
-		boolean hasAC = false;
-		try {
-			if(TEST_PROFILE.equals(profile)) {
-				lock = GodzillaApplication.deploy_lock.get(projectCode);
-				hasAC = lock.tryLock(1, TimeUnit.SECONDS);
-				if(!hasAC)
-					return ReturnCodeEnum.getByReturnCode(NO_CONCURRENCEDEPLOY);
-			} else {
-				return ReturnCodeEnum.getByReturnCode(NO_RESTARTEFFECT);
-			}
-			return this.restartTomcat1(projectCode, profile);
-		} catch(InterruptedException e) {
-			e.printStackTrace();
-			return ReturnCodeEnum.getByReturnCode(NO_CONCURRENCEDEPLOY);
-		} finally {
-			try {
-				lock.unlock();
-			} /*catch(InvocationTargetException e2) {
-				return ReturnCodeEnum.getByReturnCode(NO_HASKEYDEPLOY);
-			} */catch(IllegalMonitorStateException e1) {
-				return ReturnCodeEnum.getByReturnCode(NO_CONCURRENCEDEPLOY);
-			} 
-		}
-	}
-	private ReturnCodeEnum restartTomcat1(String projectCode, String profile) {
+	 @Override
+	 public ReturnCodeEnum restartTomcat(String projectCode, String profile) {
 		boolean flag =false;
 		ClientConfig clientConfig = clientConfigService.queryDetail(projectCode, profile) ;
 		String clientIp = clientConfig.getRemoteIp();
@@ -548,6 +414,51 @@ public class MvnServiceImpl extends GodzillaApplication implements MvnService {
 		} else {
 			return ReturnCodeEnum.getByReturnCode(NO_STARTTOMCAT);
 		}
+	}
+	
+	//=======================
+	@Autowired
+	private OperateLogService operateLogService;
+	@Autowired
+	private ProjectMapper projectMapper;
+	@Override
+	public RpcResult mvnDeploy(String str1, String projectCode, String projectEnv, String username, String realname, String profile) {
+		mvnBuildThreadLocal.set("FAILURE");
+		mvnERRORThreadLocal.set("SUCCESS");
+		
+		MvnBaseCommand command1 = new MvnBaseCommand();
+		String mvnlog = command1.execute(str1, projectCode, PROJECT_ENV, username);
+		logger.info("mvnBuildThreadLocal:::"	+ mvnBuildThreadLocal.get());
+		logger.info("mvnERRORThreadLocal:::"	+ mvnERRORThreadLocal.get());
+		
+		//20151030 暂时不用此检查//判断　是否含有${XX}未设置配置项 
+		boolean flag4 = shellReturnThreadLocal.get().equals("4")?true:false;
+		/*if(flag4) {
+			return RpcResult.create(NOSETPROPS); 
+		}*/
+		boolean flag2 = mvnBuildThreadLocal.get().equals(SUCCESS)?true:false;
+		boolean flag3 = mvnERRORThreadLocal.get().equals(SUCCESS)?true:false;
+		//保存项目lib jar信息列表
+		String jarlog = "";
+		if(flag2&&flag3){
+			Project project = projectMapper.qureyByProCode(projectCode);
+			String libpath = project.getLibPath();
+			String str2 = "/home/godzilla/gzl/shell/client/godzilla_mvn.sh showlib " + libpath;
+			ShCommand command2 = new ShCommand();
+			jarlog = command2.execute(str2);
+			
+		}
+		//保存mvn部署日志
+		int logid = operateLogService.addOperateLog(mvnlog, jarlog);
+		
+		mvnBuildThreadLocal.set("FAILURE");
+		mvnERRORThreadLocal.set("SUCCESS");
+		if(flag2&&flag3) {
+			return RpcResult.create(SUCCESS, logid);
+		} else {
+			//build failure
+			return RpcResult.create(BUILDFAILURE, logid);
+		} 
 	}
 	
 	

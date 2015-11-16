@@ -23,8 +23,9 @@ public class ClientMain {
 		}
 	}*/
 
-	public static void main(String args[]) {
+	public static void main(String args[]) throws ClassNotFoundException, IllegalAccessException, InstantiationException, IOException, InterruptedException {
 		System.out.println("start client");
+		test(args);
 	}
 
 	public static void test(String args[]) throws ClassNotFoundException, IllegalAccessException, InstantiationException, IOException, InterruptedException {

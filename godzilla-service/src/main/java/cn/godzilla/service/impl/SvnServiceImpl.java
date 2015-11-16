@@ -30,7 +30,6 @@ import cn.godzilla.service.SvnService;
 import cn.godzilla.svn.BaseShellCommand;
 import cn.godzilla.web.GodzillaApplication;
 
-@Service("SvnService")
 public class SvnServiceImpl extends GodzillaApplication implements SvnService {
 	private final Logger logger = LogManager.getLogger(SvnServiceImpl.class);
 	
@@ -49,54 +48,6 @@ public class SvnServiceImpl extends GodzillaApplication implements SvnService {
 	
 	@Override
 	public ReturnCodeEnum svnCommit(String projectCode, String profile) {
-		/**
-		 * 1.限制并发　
-		 * 日常环境,准生产,生产　每个项目　只允许　一个人提交(i.svn操作会清空work目录ii.改变svn主干代码,对其他所有操作都有影响) 
-		 **/
-		Lock lock1 = PUBLIC_LOCK;
-		Lock lock2 = PUBLIC_LOCK1;
-		Lock lock3 = PUBLIC_LOCK2;
-		boolean hasAC1 = false;
-		boolean hasAC2 = false;
-		boolean hasAC3 = false;
-		try {
-			lock1 = GodzillaApplication.deploy_lock.get(projectCode);
-			hasAC1 = lock1.tryLock(1, TimeUnit.SECONDS);
-			if(!hasAC1)
-				return ReturnCodeEnum.getByReturnCode(NO_CONCURRENCEDEPLOY);
-			lock2 = GodzillaApplication.deploy_lock.get(QUASIPRODUCT_PROFILE);
-			hasAC2 = lock2.tryLock(1, TimeUnit.SECONDS);
-			if(!hasAC2)
-				return ReturnCodeEnum.getByReturnCode(NO_CONCURRENCEDEPLOY);
-			lock3 = GodzillaApplication.deploy_lock.get(PRODUCT_PROFILE);
-			hasAC3 = lock3.tryLock(1, TimeUnit.SECONDS);
-			if(!hasAC3)
-				return ReturnCodeEnum.getByReturnCode(NO_CONCURRENCEDEPLOY);
-			
-			return this.svnCommit0(projectCode, profile);
-		} catch(InterruptedException e) {
-			e.printStackTrace();
-			return ReturnCodeEnum.getByReturnCode(NO_CONCURRENCEDEPLOY);
-		} catch(BusinessException e){
-			e.printStackTrace();
-			return ReturnCodeEnum.getByReturnCode(NO_SYSTEMEX).setSystemEXMsg(e.getErrorMsg());
-		} catch(Throwable e) {
-			e.printStackTrace();
-			return ReturnCodeEnum.getByReturnCode(NO_SYSTEMEX).setSystemEXMsg(e.getMessage());
-		} finally {
-			try {
-				lock1.unlock();
-				lock2.unlock();
-				lock3.unlock();
-			} /*catch(InvocationTargetException e2) {
-				return ReturnCodeEnum.getByReturnCode(NO_HASKEYDEPLOY);
-			} */catch(IllegalMonitorStateException e1) {
-				return ReturnCodeEnum.getByReturnCode(NO_CONCURRENCEDEPLOY);
-			} 
-		}
-	}
-	
-	private ReturnCodeEnum svnCommit0(String projectCode, String profile) {
 		Project project = projectService.queryByProCode(projectCode);
 		// mergeStatus 0:无 1:有冲突 2:标记解决
 		if("1".equals(project.getMergeStatus())) {
@@ -198,46 +149,6 @@ public class SvnServiceImpl extends GodzillaApplication implements SvnService {
 
 	@Override
 	public ReturnCodeEnum svnResolved(String projectCode, String profile) {
-		/**
-		 * 1.限制并发　
-		 * 日常环境 每个项目　只允许　一个人merge(i.svn操作会清空work目录)
-		 * 准生产   只允许　一个人merge(i.svn操作会清空work目录)
-		 * 生产　 只允许　一个人merge(i.svn操作会清空work目录)
-		 **/
-		Lock lock1 = PUBLIC_LOCK;
-		boolean hasAC1 = false;
-		try {
-			if(TEST_PROFILE.equals(profile)) {
-				lock1 = GodzillaApplication.deploy_lock.get(projectCode);
-				hasAC1 = lock1.tryLock(1, TimeUnit.SECONDS);
-				if(!hasAC1)
-					return ReturnCodeEnum.getByReturnCode(NO_CONCURRENCEDEPLOY);
-			} else {
-				lock1 = GodzillaApplication.deploy_lock.get(profile);
-				hasAC1 = lock1.tryLock(1, TimeUnit.SECONDS);
-				if(!hasAC1) 
-					return ReturnCodeEnum.getByReturnCode(NO_CONCURRENCEDEPLOY);
-			}
-			
-			return this.svnResolved1(projectCode, profile);
-		} catch(InterruptedException e) {
-			e.printStackTrace();
-			return ReturnCodeEnum.getByReturnCode(NO_CONCURRENCEDEPLOY);
-		} catch(BusinessException e){
-			e.printStackTrace();
-			return ReturnCodeEnum.getByReturnCode(NO_SYSTEMEX).setSystemEXMsg(e.getErrorMsg());
-		} catch(Throwable e) {
-			e.printStackTrace();
-			return ReturnCodeEnum.getByReturnCode(NO_SYSTEMEX).setSystemEXMsg(e.getMessage());
-		} finally {
-			try {
-			lock1.unlock();
-			} catch(IllegalMonitorStateException e1) {
-				return ReturnCodeEnum.getByReturnCode(NO_CONCURRENCEDEPLOY);
-			} 
-		}
-	}
-	private ReturnCodeEnum svnResolved1(String projectCode, String profile) {
 		ClientConfig clientConfig = clientConfigService.queryDetail(projectCode, profile) ;
 		String clientIp = clientConfig.getRemoteIp();
 		List<SvnBranchConfig> svnBranchConfigs = svnBranchConfigService.queryListByProjectCode(projectCode);
@@ -306,52 +217,9 @@ public class SvnServiceImpl extends GodzillaApplication implements SvnService {
 		}
 		
 	}
-
+	
 	@Override
 	public ReturnCodeEnum svnMerge(String projectCode, String profile) {
-		
-		/**
-		 * 1.限制并发　
-		 * 日常环境 每个项目　只允许　一个人merge(i.svn操作会清空work目录)
-		 * 准生产   只允许　一个人merge(i.svn操作会清空work目录)
-		 * 生产　 只允许　一个人merge(i.svn操作会清空work目录)
-		 **/
-		Lock lock1 = PUBLIC_LOCK;
-		boolean hasAC1 = false;
-		try {
-			if(TEST_PROFILE.equals(profile)) {
-				lock1 = GodzillaApplication.deploy_lock.get(projectCode);
-				hasAC1 = lock1.tryLock(1, TimeUnit.SECONDS);
-				if(!hasAC1) 
-					return ReturnCodeEnum.getByReturnCode(NO_CONCURRENCEDEPLOY);
-			} else {
-				lock1 = GodzillaApplication.deploy_lock.get(profile);
-				hasAC1 = lock1.tryLock(1, TimeUnit.SECONDS);
-				if(!hasAC1)
-					return ReturnCodeEnum.getByReturnCode(NO_CONCURRENCEDEPLOY);
-			}
-			return this.svnMerge0(projectCode, profile);
-		} catch(InterruptedException e) {
-			e.printStackTrace();
-			return ReturnCodeEnum.getByReturnCode(NO_CONCURRENCEDEPLOY);
-		} catch(BusinessException e){
-			e.printStackTrace();
-			return ReturnCodeEnum.getByReturnCode(NO_SYSTEMEX).setSystemEXMsg(e.getErrorMsg());
-		} catch(Throwable e) {
-			e.printStackTrace();
-			return ReturnCodeEnum.getByReturnCode(NO_SYSTEMEX).setSystemEXMsg(e.getMessage());
-		} finally {
-			try {
-				lock1.unlock();
-			} /*catch(InvocationTargetException e2) {
-				return ReturnCodeEnum.getByReturnCode(NO_HASKEYDEPLOY);
-			} */catch(IllegalMonitorStateException e1) {
-				return ReturnCodeEnum.getByReturnCode(NO_CONCURRENCEDEPLOY);
-			} 
-		}
-	}
-	
-	private ReturnCodeEnum svnMerge0(String projectCode, String profile) {
 		Project project = projectService.queryByProCode(projectCode);
 		// mergeStatus 0:无 1:有冲突 2:标记解决
 		if("1".equals(project.getMergeStatus())) {

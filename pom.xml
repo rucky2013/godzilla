@@ -21,7 +21,6 @@
 		<module>godzilla-model</module>
 		<module>godzilla-common</module>
 		<module>godzilla-dao</module>
-		<module>godzilla-rpc</module>
 		<module>godzilla-service</module>
 		<module>godzilla-rpc-provider</module>
 		<module>godzilla-web</module>

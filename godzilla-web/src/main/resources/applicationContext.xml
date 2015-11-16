@@ -21,6 +21,7 @@
 	<!-- 把标记了@Controller注解的类转换为bean -->
 	<context:component-scan base-package="cn.godzilla" >
 		<context:exclude-filter type="regex" expression="cn.godzilla.web.*"/>
+		<context:exclude-filter type="regex" expression="cn.godzilla.service.*"/>
 	</context:component-scan>
 	
 	<context:property-placeholder location="classpath:jdbc.properties" ignore-unresolvable="true" />
@@ -58,7 +59,18 @@
 		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
 		<property name="dataSource" ref="dataSource" />
 	</bean>
-
+	
+	<bean id="clientConfigService" class="cn.godzilla.service.impl.ClientConfigServiceImpl" />
+	<bean id="funRightService" class="cn.godzilla.service.impl.FunRightServiceImpl" />
+	<bean id="mvnService" class="cn.godzilla.service.impl.MvnServiceImpl" />
+	<bean id="operateLogService" class="cn.godzilla.service.impl.OperateLogServiceImpl" />
+	<bean id="projectService" class="cn.godzilla.service.impl.ProjectServiceImpl" />
+	<bean id="propConfigService" class="cn.godzilla.service.impl.PropConfigServiceImpl" />
+	<bean id="svnBranchConfigService" class="cn.godzilla.service.impl.SvnBranchConfigServiceImpl" />
+	<bean id="svnService" class="cn.godzilla.service.impl.SvnServiceImpl" />
+	<bean id="userService" class="cn.godzilla.service.impl.UserServiceImpl" />
+	
 	<import resource="classpath:spring-redis.xml"/>
+	<import resource="classpath:spring-rpcf-consumer.xml"/>
 
 </beans>

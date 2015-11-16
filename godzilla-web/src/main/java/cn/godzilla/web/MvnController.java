@@ -1,6 +1,9 @@
 package cn.godzilla.web;
 
 
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.Lock;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -13,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import cn.godzilla.common.BusinessException;
 import cn.godzilla.common.ReturnCodeEnum;
 import cn.godzilla.common.StringUtil;
 import cn.godzilla.common.response.ResponseBodyJson;
@@ -48,7 +52,7 @@ public class MvnController extends GodzillaApplication{
 		
 		GodzillaApplication.processPercent.put(pencentkey, "0");
 		
-		ReturnCodeEnum deployReturn = mvnService.doDeploy(projectCode, profile, parentVersion+parentVersionSuffix, pencentkey);
+		ReturnCodeEnum deployReturn = this.doDeploy(projectCode, profile, parentVersion+parentVersionSuffix, pencentkey);
 		
 		if(deployReturn.equals(ReturnCodeEnum.getByReturnCode(OK_MVNDEPLOY))
 				||deployReturn.equals(ReturnCodeEnum.getByReturnCode(NO_RESTARTTOMCAT))
@@ -59,6 +63,77 @@ public class MvnController extends GodzillaApplication{
 		return ResponseBodyJson.custom().setAll(deployReturn, DEPLOY).build().log();
 	}
 	
+	
+	
+	private ReturnCodeEnum doDeploy(String projectCode, String profile, String version, String pencentkey) {
+		
+		/*
+		 * -2.限制并发　发布
+		 * 日常环境　每个项目　只允许　一个人发布（如果互相依赖项目　并发发布，还是会出现问题）
+		 * 准生产	　所有项目只允许一个人发布
+		 * 生产　　　所有项目只允许一个人发布
+		 */
+		Lock lock = null;
+		boolean hasAC = false;
+		try {
+			if(profile.equals(TEST_PROFILE)) {
+				lock = GodzillaApplication.deploy_lock.get(projectCode);
+				hasAC = lock.tryLock(1, TimeUnit.SECONDS);
+				if(!hasAC) 
+					return ReturnCodeEnum.getByReturnCode(NO_CONCURRENCEDEPLOY);
+			} else {
+				lock = GodzillaApplication.deploy_lock.get(profile);
+				hasAC = lock.tryLock(1, TimeUnit.SECONDS);
+				if(!hasAC) 
+					return ReturnCodeEnum.getByReturnCode(NO_CONCURRENCEDEPLOY);
+			}
+			
+			ReturnCodeEnum deployReturn = mvnService.doDeploy(projectCode, profile, version, pencentkey);
+			
+			if(deployReturn.equals(ReturnCodeEnum.OK_MVNDEPLOY)) {
+				GodzillaApplication.processPercent.put(pencentkey, "100");
+			} else {
+				GodzillaApplication.processPercent.put(pencentkey, "0");
+			}
+			final String pencentkeyF = pencentkey;
+			new Thread() {
+				public void run() {
+					try {
+						Thread.sleep(5000);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+					GodzillaApplication.processPercent.put(pencentkeyF, "0");
+				}
+			}.start();
+			
+			return deployReturn;
+		} catch(InterruptedException e) {
+			e.printStackTrace();
+			return ReturnCodeEnum.getByReturnCode(NO_INTERRUPTEDEX);
+		} catch(BusinessException e){
+			e.printStackTrace();
+			return ReturnCodeEnum.getByReturnCode(NO_SYSTEMEX).setSystemEXMsg(e.getErrorMsg());
+		} catch(Throwable e) {
+			e.printStackTrace();
+			return ReturnCodeEnum.getByReturnCode(NO_SYSTEMEX).setSystemEXMsg(e.getMessage());
+		} finally {
+			if(lock!=null) {
+				try {
+					lock.unlock();
+				} /*catch(InvocationTargetException e2) {
+					return ReturnCodeEnum.getByReturnCode(NO_HASKEYDEPLOY);
+				} */
+				catch(IllegalMonitorStateException e1) {
+					return ReturnCodeEnum.getByReturnCode(NO_CONCURRENCEDEPLOY);
+				} 
+			}
+		}
+		
+	}
+
+
+
 	private String getPencentKey(String projectCode, String profile) {
 		return projectCode + "-" + profile;
 	}

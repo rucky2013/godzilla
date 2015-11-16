@@ -28,7 +28,6 @@ import cn.godzilla.web.GodzillaApplication;
 
 import com.alibaba.fastjson.JSON;
 
-@Service("userService")
 public class UserServiceImpl extends GodzillaApplication implements UserService{
 	
 	@Autowired

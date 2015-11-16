@@ -45,9 +45,6 @@ public abstract class GodzillaApplication extends Application implements Constan
 	protected static OperateLogService operateLogService;
 	protected static ServletContext context;
 	protected List<String> escapeUrls = new ArrayList<String>();
-	protected ReentrantLock PUBLIC_LOCK = new ReentrantLock(true);
-	protected ReentrantLock PUBLIC_LOCK1 = new ReentrantLock(true);
-	protected ReentrantLock PUBLIC_LOCK2 = new ReentrantLock(true);
 	/*
 	 * -2.限制并发　发布
 	 * 日常环境　每个项目　只允许　一个人发布（如果互相依赖项目　并发发布，还是会出现问题）
