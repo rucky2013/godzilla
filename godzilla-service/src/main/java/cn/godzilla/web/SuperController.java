@@ -45,7 +45,7 @@ public abstract class SuperController implements Constant{
 	 * @param sid
 	 */
 	protected ReturnCodeEnum checkUser(UserService userService, String sid) {
-		ReturnCodeEnum userStatus = userService.checkUserStatusBySid(sid);
+		ReturnCodeEnum userStatus = userService.checkUserStatusBySid("apollo", TEST_PROFILE, sid);
 		return userStatus;
 	}
 	
@@ -60,7 +60,7 @@ public abstract class SuperController implements Constant{
 	
 	public static User getUser() {
 		String sid = getSid();
-		return userService.getUserBySid(sid) ;
+		return userService.getUserBySid(SERVER_USER, TEST_PROFILE, sid) ;
 	}
 	
 	public static String getSid() {
@@ -73,7 +73,7 @@ public abstract class SuperController implements Constant{
 	
 	protected static List<FunRight> getFunRights() {
 		String username = getUser().getUserName();
-		List<FunRight> funRightList = funRightService.findFunRightsByUsername(username);
+		List<FunRight> funRightList = funRightService.findFunRightsByUsername(SERVER_USER, TEST_PROFILE, username);
 		return funRightList;
 	}
 	

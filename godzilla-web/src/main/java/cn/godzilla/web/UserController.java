@@ -69,7 +69,7 @@ public class UserController extends GodzillaApplication{
 		String username = StringUtil.getReqPrameter(request, "username");
 		String password = StringUtil.getReqPrameter(request, "password");
 
-		ReturnCodeEnum loginReturn = userService.login(username, password, newsid);  
+		ReturnCodeEnum loginReturn = userService.login(SERVER_USER, TEST_PROFILE, username, password, newsid);  
 		
 		request.setAttribute("sid", newsid);
 		return ResponseBodyJson.custom().setAll(loginReturn, newsid, LOGIN).build().log();
@@ -85,8 +85,8 @@ public class UserController extends GodzillaApplication{
 	@RequestMapping(value="/{sid}/home", method=RequestMethod.GET)
 	public Object home(@PathVariable String sid, HttpServletRequest request, HttpServletResponse response) {
 		
-		List<Project> projects = projectService.queryProjectsByUsername(super.getUser().getUserName());
-		List<OperateLog> logs = operateLogService.queryAll(Long.MAX_VALUE);
+		List<Project> projects = projectService.queryProjectsByUsername(SERVER_USER, TEST_PROFILE, super.getUser().getUserName());
+		List<OperateLog> logs = operateLogService.queryAll(SERVER_USER, TEST_PROFILE, Long.MAX_VALUE);
 		if(logs.size()==0){
 			super.getUser().setLastOperation(null);
 		} else {
@@ -112,7 +112,7 @@ public class UserController extends GodzillaApplication{
 	 */
 	@RequestMapping(value="/{sid}/logout", method=RequestMethod.GET)
 	public Object logout(@PathVariable String sid, HttpServletRequest request, HttpServletResponse response) {
-		userService.logout(sid);//del redis sid-username 
+		userService.logout(SERVER_USER, TEST_PROFILE, sid);//del redis sid-username 
 		request.setAttribute("basePath", BASE_PATH);
 		return "/login";
 	}
@@ -130,7 +130,7 @@ public class UserController extends GodzillaApplication{
 		if(!"1".equals(user.getIsAdmin()+"")) {
 			return "forward:/user/" + sid + "/home";
 		}
-		List<Map<String, Object>> userAuthList = userService.getUserAuthList();
+		List<Map<String, Object>> userAuthList = userService.getUserAuthList(SERVER_USER, TEST_PROFILE);
 		
 		request.setAttribute("userAuthList", userAuthList);
 		request.setAttribute("user", super.getUser());
@@ -157,7 +157,7 @@ public class UserController extends GodzillaApplication{
 		String departname = StringUtil.getReqPrameter(request, "departname", "");
 		
 		//password is md5 
-		ReturnCodeEnum returnEnum = userService.addUser(username, password, confirm, departname);
+		ReturnCodeEnum returnEnum = userService.addUser(SERVER_USER, TEST_PROFILE, username, password, confirm, departname);
 		
 		return ResponseBodyJson.custom().setAll(returnEnum, ADDUSER).build().log();
 	}
@@ -165,7 +165,7 @@ public class UserController extends GodzillaApplication{
 	@ResponseBody
 	public Object changePassword(@PathVariable String sid, @RequestParam String oldpassword, @RequestParam String password, HttpServletRequest request) {
 		
-		ReturnCodeEnum returnEnum = userService.changePassword(getUser(), oldpassword, password);
+		ReturnCodeEnum returnEnum = userService.changePassword(SERVER_USER, TEST_PROFILE, getUser(), oldpassword, password);
 		
 		return ResponseBodyJson.custom().setAll(returnEnum, CHANGEPASSWD).build().log();
 	}
@@ -187,9 +187,9 @@ public class UserController extends GodzillaApplication{
 		if(StringUtil.isEmpty(id)) {
 			return "forward:/user/" + sid + "/home";
 		}
-		User edituser = userService.getUserById(id);
-		List<Map<String, Object>> userAuthList = userService.getUserAuthList();
-		List<Map<String, Object>> userProjects = userService.getUserProjects(edituser.getUserName());
+		User edituser = userService.getUserById(SERVER_USER, TEST_PROFILE,id);
+		List<Map<String, Object>> userAuthList = userService.getUserAuthList(SERVER_USER, TEST_PROFILE);
+		List<Map<String, Object>> userProjects = userService.getUserProjects(SERVER_USER, TEST_PROFILE, edituser.getUserName());
 		
 		request.setAttribute("userAuthList", userAuthList);
 		request.setAttribute("userProjects", userProjects);
@@ -216,7 +216,7 @@ public class UserController extends GodzillaApplication{
 		
 		String selectProjects = StringUtil.getReqPrameter(request, "selectProjects", "");
 		String editUsername = StringUtil.getReqPrameter(request, "editUsername", "");
-		ReturnCodeEnum returnEnum = userService.updateUserProjects(editUsername, selectProjects);
+		ReturnCodeEnum returnEnum = userService.updateUserProjects(SERVER_USER, TEST_PROFILE,editUsername, selectProjects);
 		
 		return ResponseBodyJson.custom().setAll(returnEnum, EDITWORKDESK).build().log();
 	}

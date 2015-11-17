@@ -40,37 +40,7 @@ public class PropConfigServiceImpl extends GodzillaApplication implements PropCo
 	}
 
 	@Override
-	public int insertSelective(PropConfig record) {
-
-		return propConfigMapper.insertSelective(record);
-	}
-
-	@Override
-	public int update(PropConfig record) {
-
-		return propConfigMapper.update(record);
-	}
-
-	@Override
-	public PropConfig queryDetailById(long id) {
-
-		return propConfigMapper.queryDetailById(id);
-	}
-
-	@Override
-	public PropConfig queryDetailByKey(Map<String, String> map) {
-
-		return propConfigMapper.queryDetailByKey(map);
-	}
-
-	@Override
-	public List<PropConfig> queryList(Map<String, String> map) {
-		
-		return propConfigMapper.queryList(map);
-	}
-
-	@Override
-	public void findPropByProjectCode(String projectCode, StringBuilder propTest, StringBuilder propQuasiProduct, StringBuilder propProduct) {
+	public void findPropByProjectCode(String projectCode, String profile, StringBuilder propTest, StringBuilder propQuasiProduct, StringBuilder propProduct) {
 		
 		Map<String, String> propTestMap = new HashMap<String, String>();
 		Map<String, String> propQuasiProductMap = new HashMap<String, String>();
@@ -121,7 +91,7 @@ public class PropConfigServiceImpl extends GodzillaApplication implements PropCo
 	
 
 	@Override
-	public ReturnCodeEnum addNotVerifyProp(String projectCode, String propTest, String propQuasiProduct, String propProduct) {
+	public ReturnCodeEnum addNotVerifyProp(String projectCode, String profile, String propTest, String propQuasiProduct, String propProduct) {
 		
 		Map<String, String> requestPropTest = JSON.parseObject(propTest, Map.class);
 		Map<String, String> requestPropQuasiProduct = JSON.parseObject(propQuasiProduct, Map.class);
@@ -185,7 +155,7 @@ public class PropConfigServiceImpl extends GodzillaApplication implements PropCo
 	}
 
 	@Override
-	public Map<String, String> queryAllProfile() {
+	public Map<String, String> queryAllProfile(String projectCode, String profile) {
 		Map<String, String> profileMap = new HashMap<String, String>();
 		profileMap.put("TEST","TEST");
 		profileMap.put("PRODUCT","PRODUCT");
@@ -194,7 +164,7 @@ public class PropConfigServiceImpl extends GodzillaApplication implements PropCo
 	}
 
 	@Override
-	public List<PropConfig> queryByProjectcodeAndCreatebyAndProfileAndStatus(String projectCode, String createBy, String profile, String status) {
+	public List<PropConfig> queryByProjectcodeAndCreatebyAndProfileAndStatus(String projectCode, String profile, String createBy, String status) {
 		Map<String, String> parameterMap = new HashMap<String, String>();
 		parameterMap.put("project_code", projectCode);
 		parameterMap.put("profile", profile);
@@ -207,7 +177,7 @@ public class PropConfigServiceImpl extends GodzillaApplication implements PropCo
 	}
 	
 	@Override
-	public List<PropConfig> queryByProjectcodeAndCreatebyAndProfileGroupBy(String projectCode, String createBy, String profile, String status) {
+	public List<PropConfig> queryByProjectcodeAndCreatebyAndProfileGroupBy(String projectCode, String profile, String createBy, String status) {
 		Map<String, String> parameterMap = new HashMap<String, String>();
 		parameterMap.put("project_code", projectCode);
 		parameterMap.put("profile", profile);
@@ -220,7 +190,7 @@ public class PropConfigServiceImpl extends GodzillaApplication implements PropCo
 	}
 	
 	@Override
-	public List<PropBill> queryAllPropBill(String projectCode) {
+	public List<PropBill> queryAllPropBill(String projectCode, String profile) {
 		
 		Map<String, Object> parameterMap = new HashMap<String, Object>();
 		parameterMap.put("project_code", projectCode);
@@ -231,28 +201,28 @@ public class PropConfigServiceImpl extends GodzillaApplication implements PropCo
 	
 	//20151110 创建prop_bill表重写配置审核
 	@Deprecated
-	private void findPropByCreatebyAndProjectcodeAndProfileAndStatus(String createBy, String projectCode, String profile, StringBuilder propTest, StringBuilder propQuasiProduct, StringBuilder propProduct, String status) {
+	private void findPropByCreatebyAndProjectcodeAndProfileAndStatus(String projectCode, String profile, String createBy, StringBuilder propTest, StringBuilder propQuasiProduct, StringBuilder propProduct, String status) {
 		Map<String, String> propTestMap = new HashMap<String, String>();
 		Map<String, String> propQuasiProductMap = new HashMap<String, String>();
 		Map<String, String> propProductMap = new HashMap<String, String>();
 		
 		switch(profile) {
 		case TEST_PROFILE:
-			propTestMap = getPropMapByCreatebyAndProjectcodeAndProfileAndStatus(createBy, projectCode, TEST_PROFILE, status);
+			propTestMap = getPropMapByCreatebyAndProjectcodeAndProfileAndStatus(projectCode, createBy, TEST_PROFILE, status);
 			propTest.append(JSON.toJSONString(propTestMap));
 			break;
 		case QUASIPRODUCT_PROFILE:
-			propQuasiProductMap = getPropMapByCreatebyAndProjectcodeAndProfileAndStatus(createBy, projectCode, QUASIPRODUCT_PROFILE, status);
+			propQuasiProductMap = getPropMapByCreatebyAndProjectcodeAndProfileAndStatus(projectCode, createBy, QUASIPRODUCT_PROFILE, status);
 			propQuasiProduct.append(JSON.toJSONString(propQuasiProductMap));
 			break;
 		case PRODUCT_PROFILE:
-			propProductMap = getPropMapByCreatebyAndProjectcodeAndProfileAndStatus(createBy, projectCode, PRODUCT_PROFILE, status);
+			propProductMap = getPropMapByCreatebyAndProjectcodeAndProfileAndStatus(projectCode, createBy, PRODUCT_PROFILE, status);
 			propProduct.append(JSON.toJSONString(propProductMap));
 			break;
 		}
 	}
 	
-	public void findPropByCreatebyAndProjectcodeAndProfileAndStatus(String createBy, String projectCode, String profile, StringBuilder propTest, StringBuilder propQuasiProduct, StringBuilder propProduct, String status, Long billId) {
+	public void findPropByCreatebyAndProjectcodeAndProfileAndStatus(String projectCode, String profile, String createBy, StringBuilder propTest, StringBuilder propQuasiProduct, StringBuilder propProduct, String status, Long billId) {
 		Map<String, String> propTestMap = new HashMap<String, String>();
 		Map<String, String> propQuasiProductMap = new HashMap<String, String>();
 		Map<String, String> propProductMap = new HashMap<String, String>();
@@ -266,13 +236,13 @@ public class PropConfigServiceImpl extends GodzillaApplication implements PropCo
 		
 	}
 		
-	private Map<String, String> getPropMapByBillidAndStatus(String createBy, String projectCode, String profile, String status, Long billId) {
+	private Map<String, String> getPropMapByBillidAndStatus(String projectCode, String profile, String createBy, String status, Long billId) {
 		Map<String, String> propMap = new HashMap<String, String>();
 		List<PropConfig> propConfigList = null;
 		
 		//未审核的 配置
 		if(NOTYET_VERIFY_STATUS.equals(status)) {
-			propConfigList = this.queryPropConfigByProjectcodeAndProfileAndStatusAndBillid(projectCode, createBy, profile,NOTYET_VERIFY_STATUS, billId);
+			propConfigList = this.queryPropConfigByProjectcodeAndProfileAndStatusAndBillid(projectCode, profile, createBy, NOTYET_VERIFY_STATUS, billId);
 			for(PropConfig tempProp : propConfigList) {
 					propMap.put(tempProp.getProKey(), tempProp.getProValue());
 			}
@@ -286,7 +256,7 @@ public class PropConfigServiceImpl extends GodzillaApplication implements PropCo
 		return propMap;
 	}
 
-	private List<PropConfig> queryPropConfigByProjectcodeAndProfileAndStatusAndBillid(String projectCode, String createBy, String profile, String status, Long billId) {
+	private List<PropConfig> queryPropConfigByProjectcodeAndProfileAndStatusAndBillid(String projectCode, String profile, String createBy, String status, Long billId) {
 		Map<String, Object> parameterMap = new HashMap<String, Object>();
 		parameterMap.put("project_code", projectCode);
 		parameterMap.put("profile", profile);
@@ -301,7 +271,7 @@ public class PropConfigServiceImpl extends GodzillaApplication implements PropCo
 
 	//20151110 创建prop_bill表重写配置审核
 	@Deprecated
-	private Map<String, String> getPropMapByCreatebyAndProjectcodeAndProfileAndStatus(String createBy, String projectCode, String profile, String status) {
+	private Map<String, String> getPropMapByCreatebyAndProjectcodeAndProfileAndStatus(String projectCode, String profile, String createBy, String status) {
 		Map<String, String> propMap = new HashMap<String, String>();
 		List<PropConfig> propConfigList = null;
 
@@ -330,7 +300,7 @@ public class PropConfigServiceImpl extends GodzillaApplication implements PropCo
 	@Override
 	@Transactional
 	@Deprecated
-	public synchronized ReturnCodeEnum verifyPropByCreatebyAndProjectcodeAndProfile(String createBy, String projectCode, String profile, String status, String auditor_text) {
+	public synchronized ReturnCodeEnum verifyPropByCreatebyAndProjectcodeAndProfile(String projectCode, String profile, String createBy, String status, String auditor_text) {
 		/*boolean hasAuthority = SuperController.checkFunright(projectCode);
 		if(!hasAuthority) {
 			return ReturnCodeEnum.getByReturnCode(NO_AUTHORITY);
@@ -395,7 +365,7 @@ public class PropConfigServiceImpl extends GodzillaApplication implements PropCo
 	
 	@Override
 	@Transactional
-	public ReturnCodeEnum verifyPropByCreatebyAndProjectcodeAndALLProfile(String createBy, String projectCode, String profile, String status, String auditor_text, Long billId) {
+	public ReturnCodeEnum verifyPropByCreatebyAndProjectcodeAndALLProfile(String projectCode, String profile, String createBy, String status, String auditor_text, Long billId) {
 		ReturnCodeEnum re1 = this.verifyPropByCreatebyAndProjectcodeAndProfile(createBy, projectCode, TEST_PROFILE, status, auditor_text, billId);
 		ReturnCodeEnum re2 = this.verifyPropByCreatebyAndProjectcodeAndProfile(createBy, projectCode, QUASIPRODUCT_PROFILE, status, auditor_text, billId);
 		ReturnCodeEnum re3 = this.verifyPropByCreatebyAndProjectcodeAndProfile(createBy, projectCode, PRODUCT_PROFILE, status, auditor_text, billId);
@@ -407,7 +377,7 @@ public class PropConfigServiceImpl extends GodzillaApplication implements PropCo
 	}
 		
 	
-	private ReturnCodeEnum verifyPropByCreatebyAndProjectcodeAndProfile(String createBy, String projectCode, String profile, String status, String auditor_text, Long billId) {
+	private ReturnCodeEnum verifyPropByCreatebyAndProjectcodeAndProfile(String projectCode, String profile, String createBy, String status, String auditor_text, Long billId) {
 		//当前 待审核 配置
 		List<PropConfig> noPropList = this.queryPropConfigByProjectcodeAndProfileAndStatusAndBillid(projectCode, createBy, profile,NOTYET_VERIFY_STATUS, billId);
 		//所有审核的配置
@@ -499,7 +469,7 @@ public class PropConfigServiceImpl extends GodzillaApplication implements PropCo
 	}
 
 	@Override
-	public ReturnCodeEnum resortPropById(String sortJson) {
+	public ReturnCodeEnum resortPropById(String projectCode, String profile, String sortJson) {
 		Map<String , Integer> propMap = (Map<String, Integer>) JSON.parse(sortJson);
 		Set<Entry<String, Integer>> entrySet = propMap.entrySet();
 		for(Entry<String, Integer> entry : entrySet) {

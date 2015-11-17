@@ -28,8 +28,8 @@ import cn.godzilla.web.GodzillaApplication;
 
 import com.alibaba.fastjson.JSON;
 
-public class UserServiceImpl extends GodzillaApplication implements UserService{
-	
+public class UserServiceImpl extends GodzillaApplication implements UserService {
+
 	@Autowired
 	private UserMapper userMapper;
 	@Autowired
@@ -41,67 +41,67 @@ public class UserServiceImpl extends GodzillaApplication implements UserService{
 
 	@Autowired
 	private RedisUtil rdbc;
-	
-	private String checkUser(String username, String password){
-		
-		if(StringUtils.isEmpty(username)||StringUtils.isEmpty(password)) {
+
+	private String checkUser(String username, String password) {
+
+		if (StringUtils.isEmpty(username) || StringUtils.isEmpty(password)) {
 			return NULL_NAMEPASSWORD;
 		}
-		
+
 		User user = userMapper.queryUserByUsername(username);
-		
-		if(user == null) {
+
+		if (user == null) {
 			return NOTEXIST_USER;
 		}
-		if(!password.equals(user.getPassword())) {
+		if (!password.equals(user.getPassword())) {
 			return WRONG_PASSWORD;
 		}
-		
+
 		return OK_CHECKUSER;
 	}
 
 	@Override
-	public ReturnCodeEnum login(String username, String password, String newsid) {
+	public ReturnCodeEnum login(String projectCode, String profile, String username, String password, String newsid) {
 		String checkState = checkUser(username, password);
-		if(OK_CHECKUSER != checkState) 
-			return ReturnCodeEnum.getByReturnCode(checkState); // fail check name and password 
-		
-		//check ok main login success
+		if (OK_CHECKUSER != checkState)
+			return ReturnCodeEnum.getByReturnCode(checkState); // fail check
+																// name and
+																// password
+
+		// check ok main login success
 		onLogin(username, password, newsid);
-		
+
 		return ReturnCodeEnum.getByReturnCode(OK_LOGIN);
 	}
-	
+
 	private void onLogin(String username, String password, String newsid) {
-		
-		//更新user login lasttime
+
+		// 更新user login lasttime
 		userMapper.updateLogintimeByUsername(username);
 		User user = userMapper.queryUserByUsername(username);
 		List<Project> projects = projectMapper.queryProjectsByUsername(username);
-		
-		//store in redis for security
+
+		// store in redis for security
 		rdbc.set("test", "test");
-		cache.createEntry(CACHE_ENUM.USERNAME, newsid)
-			.setValue(user.getUserName()==null?"":user.getUserName()).save().expired(7*24*60*60*1000l);;
-		cache.createEntry(CACHE_ENUM.USER, user.getUserName())
-			.setValue(JSON.toJSONString(user==null?"":user)).save();
-		cache.createEntry(CACHE_ENUM.PROJECTS, user.getUserName())
-			.setValue(JSON.toJSONString(projects==null?"":projects)).save();
+		cache.createEntry(CACHE_ENUM.USERNAME, newsid).setValue(user.getUserName() == null ? "" : user.getUserName()).save().expired(7 * 24 * 60 * 60 * 1000l);
+		cache.createEntry(CACHE_ENUM.USER, user.getUserName()).setValue(JSON.toJSONString(user == null ? "" : user)).save();
+		cache.createEntry(CACHE_ENUM.PROJECTS, user.getUserName()).setValue(JSON.toJSONString(projects == null ? "" : projects)).save();
 	}
-	
-	public ReturnCodeEnum checkUserStatusBySid(String sid) {
-		String userName = cache.createEntry(CACHE_ENUM.USERNAME, sid)
-			.get();
-		if(StringUtil.isEmpty(userName)) {
+
+	@Override
+	public ReturnCodeEnum checkUserStatusBySid(String projectCode, String profile, String sid) {
+		String userName = cache.createEntry(CACHE_ENUM.USERNAME, sid).get();
+		if (StringUtil.isEmpty(userName)) {
 			return ReturnCodeEnum.getByReturnCode(NO_LOGIN);
-		} 
+		}
 		return ReturnCodeEnum.getByReturnCode(OK_CHECKUSER);
 	}
 
 	@Override
-	public void logout(String sid) {
+	public void logout(String projectCode, String profile, String sid) {
 		cache.createEntry(CACHE_ENUM.USERNAME, sid).delete();
 	}
+
 	private void deleteUser() {
 		String username = getUser().getUserName();
 		String sid = getSid();
@@ -111,57 +111,53 @@ public class UserServiceImpl extends GodzillaApplication implements UserService{
 	}
 
 	@Override
-	public User getUserBySid(String sid) {
-		String userName = cache.createEntry(CACHE_ENUM.USERNAME, sid)
-				.get();
-		if(StringUtil.isEmpty(userName)){
+	public User getUserBySid(String projectCode, String profile, String sid) {
+		String userName = cache.createEntry(CACHE_ENUM.USERNAME, sid).get();
+		if (StringUtil.isEmpty(userName)) {
 			return null;
 		}
-		User user = JSON.parseObject(
-				cache.createEntry(CACHE_ENUM.USER, userName).get()
-				, User.class);
+		User user = JSON.parseObject(cache.createEntry(CACHE_ENUM.USER, userName).get(), User.class);
 		return user;
 	}
-	
-	
+
 	@Override
-	public List<User> queryAllUser() {
+	public List<User> queryAllUser(String projectCode, String profile) {
 		List<User> users = userMapper.queryAllUser();
 		return users;
 	}
 
 	@Override
-	public List<Project> queryProjectsByUsername(String userName) {
+	public List<Project> queryProjectsByUsername(String projectCode, String profile, String userName) {
 		List<Project> projects = projectMapper.queryProjectsByUsername(userName);
 		return projects;
 	}
 
 	@Override
-	public List<Map<String, Object>> getUserAuthList() {
-		List<User> userlist = this.queryAllUser();
+	public List<Map<String, Object>> getUserAuthList(String projectCode, String profile) {
+		List<User> userlist = this.queryAllUser(SERVER_USER, TEST_PROFILE);
 		List<Map<String, Object>> userAuthList = new ArrayList<Map<String, Object>>();
 		int index = 1;
-		for(User u: userlist) {
+		for (User u : userlist) {
 			Map<String, Object> userAuthMap = new HashMap<String, Object>();
-			List<Project> projects = this.queryProjectsByUsername(u.getUserName());
+			List<Project> projects = this.queryProjectsByUsername(SERVER_USER, TEST_PROFILE, u.getUserName());
 			userAuthMap.put("index", index++);
 			userAuthMap.put("id", u.getId());
 			userAuthMap.put("username", u.getUserName());
 			userAuthMap.put("realname", u.getRealName());
 			userAuthMap.put("projects", projects);
-			
+
 			userAuthList.add(userAuthMap);
 		}
 		return userAuthList;
 	}
 
 	@Override
-	public ReturnCodeEnum addUser(String username, String password, String confirm, String departname) {
-		
-		if(StringUtil.isEmpty(username)||StringUtil.isEmpty(password)||StringUtil.isEmpty(confirm)) {
+	public ReturnCodeEnum addUser(String projectCode, String profile, String username, String password, String confirm, String departname) {
+
+		if (StringUtil.isEmpty(username) || StringUtil.isEmpty(password) || StringUtil.isEmpty(confirm)) {
 			return ReturnCodeEnum.getByReturnCode(NULL_NAMEPASSWORD);
 		}
-		if(!password.equals(confirm)){
+		if (!password.equals(confirm)) {
 			return ReturnCodeEnum.getByReturnCode(NULL_NAMEPASSWORD);
 		}
 		User user = new User();
@@ -173,7 +169,7 @@ public class UserServiceImpl extends GodzillaApplication implements UserService{
 		user.setStatus(1);
 		user.setDepartName(departname);
 		User dbuser = userMapper.queryUserByUsername(username);
-		if(dbuser!=null) {
+		if (dbuser != null) {
 			return ReturnCodeEnum.getByReturnCode(NO_EXISTUSER);
 		}
 		int insert = userMapper.insertUser(user);
@@ -181,15 +177,15 @@ public class UserServiceImpl extends GodzillaApplication implements UserService{
 	}
 
 	@Override
-	public List<Map<String, Object>> getUserProjects(String editUsername) {
-		List<Project> userprojects = this.queryProjectsByUsername(editUsername);
+	public List<Map<String, Object>> getUserProjects(String projectCode, String profile, String editUsername) {
+		List<Project> userprojects = this.queryProjectsByUsername(SERVER_USER, TEST_PROFILE, editUsername);
 		List<Project> allprojects = projectMapper.queryAll();
-		
+
 		List<Map<String, Object>> userprojectsList = new ArrayList<Map<String, Object>>();
-		for(Project pro: allprojects){
+		for (Project pro : allprojects) {
 			Map<String, Object> tempMap = new HashMap<String, Object>();
-			tempMap.put("projectCode",pro.getProjectCode());
-			if(userprojects.contains(pro)) {
+			tempMap.put("projectCode", pro.getProjectCode());
+			if (userprojects.contains(pro)) {
 				tempMap.put("auth", "1");
 			} else {
 				tempMap.put("auth", "0");
@@ -201,52 +197,51 @@ public class UserServiceImpl extends GodzillaApplication implements UserService{
 
 	@Override
 	@Transactional
-	public ReturnCodeEnum updateUserProjects(String editUsername, String selectProjects) {
-		
+	public ReturnCodeEnum updateUserProjects(String projectCode1, String profile, String editUsername, String selectProjects) {
+
 		String[] projects = selectProjects.split(",");
 		Map<String, Object> parameterMap = new HashMap<String, Object>();
-		parameterMap.put("editUsername"	,editUsername );
+		parameterMap.put("editUsername", editUsername);
 		int delete = funRightMapper.deleteRightsByusername(parameterMap);
-		for(String projectCode: projects) {
-			if(StringUtil.isEmpty(projectCode)) {
+		for (String projectcd : projects) {
+			if (StringUtil.isEmpty(projectcd)) {
 				continue;
 			}
-			
+
 			FunRight funRight = new FunRight();
 			funRight.setUserName(editUsername);
-			funRight.setProjectCode(projectCode);
-			funRight.setProjectName(projectCode);
+			funRight.setProjectCode(projectcd);
+			funRight.setProjectName(projectcd);
 			funRight.setStatus(1);
 			funRight.setCreateBy(super.getUser().getUserName());
-			
+
 			int insert = funRightMapper.insertSelective(funRight);
-			
+
 		}
 		return ReturnCodeEnum.getByReturnCode(OK_UPDATEFUNRIGHT);
 	}
 
 	@Override
-	public User getUserById(String id) {
+	public User getUserById(String projectCode, String profile, String id) {
 		User user = userMapper.queryUserByUserId(id);
 		return user;
 	}
 
 	@Override
-	public ReturnCodeEnum changePassword(User user, String oldpassword, String password) {
-		if(!user.getPassword().equals(oldpassword)) {
+	public ReturnCodeEnum changePassword(String projectCode, String profile, User user, String oldpassword, String password) {
+		if (!user.getPassword().equals(oldpassword)) {
 			return ReturnCodeEnum.getByReturnCode(NO_WRONGOLDPWD);
 		}
-		
+
 		Map<String, Object> parameterMap = new HashMap<String, Object>();
 		parameterMap.put("id", user.getId());
 		parameterMap.put("password", password);
 		int code = userMapper.updatePassword(parameterMap);
-		if(code>0) {
-			deleteUser();//del redis sid-username 
+		if (code > 0) {
+			deleteUser();// del redis sid-username
 			return ReturnCodeEnum.getByReturnCode(OK_CHANGEPWD);
-		} 
+		}
 		return ReturnCodeEnum.getByReturnCode(NO_CHANGEPWD);
 	}
 
-	
 }

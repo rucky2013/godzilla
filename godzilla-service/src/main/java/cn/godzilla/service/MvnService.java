@@ -31,23 +31,15 @@ public interface MvnService extends Constant{
 	 * @param projectCode
 	 * @param profile
 	 */
-	public RpcResult mvnDeploy(String str, String PROJECT_NAME, String projectEnv, String USER_NAME, String realname, String profile);
+	public RpcResult mvnDeploy(String projectCode, String profile, String str, String projectEnv, String USER_NAME, String realname);
 	
 	/**
 	 * 部署项目进行进度百分比
 	 * @param pencentkey
 	 * @return
 	 */
-	public ReturnCodeEnum getProcessPercent(String pencentkey);
+	public ReturnCodeEnum getProcessPercent(String projectCode, String profile, String pencentkey);
 	
-	/**
-	 * 下载war包
-	 * @param response
-	 * @param projectCode
-	 * @param profile
-	 * @return
-	 */
-	public ReturnCodeEnum downLoadWar(HttpServletResponse response, String projectCode, String profile);
 	/**
 	 * 显示部署日志
 	 * @param response
@@ -56,7 +48,7 @@ public interface MvnService extends Constant{
 	 * @param logid
 	 * @return
 	 */
-	public ReturnCodeEnum showdeployLog(HttpServletResponse response, String projectCode, String profile, String logid);
+	public ReturnCodeEnum showdeployLog(String projectCode, String profile, String logid, HttpServletResponse response);
 	/**
 	 * 显示war包lib信息
 	 * @param response
@@ -65,8 +57,7 @@ public interface MvnService extends Constant{
 	 * @param logid
 	 * @return
 	 */
-	public ReturnCodeEnum showwarInfo(HttpServletResponse response, String projectCode, String profile, String logid);
-	
+	public ReturnCodeEnum showwarInfo(String projectCode, String profile, String logid, HttpServletResponse response);
 	/**
 	 * 重启tomcat
 	 * @param projectCode
@@ -74,6 +65,4 @@ public interface MvnService extends Constant{
 	 * @return
 	 */
 	public ReturnCodeEnum restartTomcat(String projectCode, String profile) ;
-
-	
 }

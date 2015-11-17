@@ -152,7 +152,7 @@ public class MvnController extends GodzillaApplication{
 	@ResponseBody
 	public Object process(@PathVariable String sid, @PathVariable String projectCode, @PathVariable String profile, HttpServletRequest request, HttpServletResponse response) {
 		
-		ReturnCodeEnum returnenum = mvnService.getProcessPercent(this.getPencentKey(projectCode, profile));
+		ReturnCodeEnum returnenum = mvnService.getProcessPercent(projectCode, profile, this.getPencentKey(projectCode, profile));
 		
 		return ResponseBodyJson.custom().setAll(returnenum, "").build();
 	}

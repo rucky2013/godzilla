@@ -48,7 +48,7 @@ public class SvnServiceImpl extends GodzillaApplication implements SvnService {
 	
 	@Override
 	public ReturnCodeEnum svnCommit(String projectCode, String profile) {
-		Project project = projectService.queryByProCode(projectCode);
+		Project project = projectService.queryByProCode(projectCode, TEST_PROFILE);
 		// mergeStatus 0:无 1:有冲突 2:标记解决
 		if("1".equals(project.getMergeStatus())) {
 			return ReturnCodeEnum.getByReturnCode(NO_SVNRESOLVED);
@@ -59,8 +59,8 @@ public class SvnServiceImpl extends GodzillaApplication implements SvnService {
 	private ReturnCodeEnum svnCommit1(String projectCode, String profile) {
 		ClientConfig clientConfig = clientConfigService.queryDetail(projectCode, profile) ;
 		String clientIp = clientConfig.getRemoteIp();
-		List<SvnBranchConfig> svnBranchConfigs = svnBranchConfigService.queryListByProjectCode(projectCode);
-		Project project = projectService.queryByProCode(projectCode);
+		List<SvnBranchConfig> svnBranchConfigs = svnBranchConfigService.queryListByProjectCode(projectCode, TEST_PROFILE);
+		Project project = projectService.queryByProCode(projectCode, TEST_PROFILE);
 		String trunkPath = project.getRepositoryUrl();
 		
 		boolean flag = false;
@@ -118,14 +118,14 @@ public class SvnServiceImpl extends GodzillaApplication implements SvnService {
 		**/
 		if("0".equals(shellReturn)){
 			//成功则 1.删除  当前分支
-			ReturnCodeEnum re = svnBranchConfigService.deletebranchesByProjectCode(projectCode);
+			ReturnCodeEnum re = svnBranchConfigService.deletebranchesByProjectCode(projectCode, TEST_PROFILE);
 			// 2.更新 项目 project版本号
 			boolean flag1 = projectService.refreshProjectVersion(projectCode, profile);
 			// 3. 取消冲突标记
 			Map<String, String> parameterMap1 = new HashMap<String, String>();
 			parameterMap1.put("project_code", projectCode);
 			parameterMap1.put("merge_status", "0");
-			ReturnCodeEnum renum1 = projectService.editMergestatusByProjectCode(parameterMap1);
+			ReturnCodeEnum renum1 = projectService.editMergestatusByProjectCode(SERVER_USER, TEST_PROFILE, parameterMap1);
 			if(renum1.equals(ReturnCodeEnum.getByReturnCode(NO_EDITMERGESTATUS))) {
 				return renum1; //修改冲突标识失败
 			}
@@ -151,8 +151,8 @@ public class SvnServiceImpl extends GodzillaApplication implements SvnService {
 	public ReturnCodeEnum svnResolved(String projectCode, String profile) {
 		ClientConfig clientConfig = clientConfigService.queryDetail(projectCode, profile) ;
 		String clientIp = clientConfig.getRemoteIp();
-		List<SvnBranchConfig> svnBranchConfigs = svnBranchConfigService.queryListByProjectCode(projectCode);
-		Project project = projectService.queryByProCode(projectCode);
+		List<SvnBranchConfig> svnBranchConfigs = svnBranchConfigService.queryListByProjectCode(projectCode, TEST_PROFILE);
+		Project project = projectService.queryByProCode(projectCode, TEST_PROFILE);
 		String trunkPath = project.getRepositoryUrl();
 		
 		boolean flag = false;
@@ -203,7 +203,7 @@ public class SvnServiceImpl extends GodzillaApplication implements SvnService {
 			Map<String, String> parameterMap1 = new HashMap<String, String>();
 			parameterMap1.put("project_code", projectCode);
 			parameterMap1.put("merge_status", "2");
-			ReturnCodeEnum renum1 = projectService.editMergestatusByProjectCode(parameterMap1);
+			ReturnCodeEnum renum1 = projectService.editMergestatusByProjectCode(SERVER_USER, TEST_PROFILE, parameterMap1);
 			if(renum1.equals(ReturnCodeEnum.getByReturnCode(NO_EDITMERGESTATUS))) {
 				return renum1; //修改冲突标识失败
 			}
@@ -220,7 +220,7 @@ public class SvnServiceImpl extends GodzillaApplication implements SvnService {
 	
 	@Override
 	public ReturnCodeEnum svnMerge(String projectCode, String profile) {
-		Project project = projectService.queryByProCode(projectCode);
+		Project project = projectService.queryByProCode(projectCode, TEST_PROFILE);
 		// mergeStatus 0:无 1:有冲突 2:标记解决
 		if("1".equals(project.getMergeStatus())) {
 			return ReturnCodeEnum.getByReturnCode(NO_SVNRESOLVED);
@@ -232,8 +232,8 @@ public class SvnServiceImpl extends GodzillaApplication implements SvnService {
 		
 		ClientConfig clientConfig = clientConfigService.queryDetail(projectCode, profile) ;
 		String clientIp = clientConfig.getRemoteIp();
-		List<SvnBranchConfig> svnBranchConfigs = svnBranchConfigService.queryListByProjectCode(projectCode);
-		Project project = projectService.queryByProCode(projectCode);
+		List<SvnBranchConfig> svnBranchConfigs = svnBranchConfigService.queryListByProjectCode(projectCode, TEST_PROFILE);
+		Project project = projectService.queryByProCode(projectCode, TEST_PROFILE);
 		String trunkPath = project.getRepositoryUrl();
 		
 		boolean flag = false;
@@ -306,7 +306,7 @@ public class SvnServiceImpl extends GodzillaApplication implements SvnService {
 			parameterMap1.put("project_code", projectCode);
 			parameterMap1.put("merge_status", "1");
 			parameterMap1.put("svn_conflict_id", svn_conflict_id+"");
-			ReturnCodeEnum renum1 = projectService.editMergestatusByProjectCode(parameterMap1);
+			ReturnCodeEnum renum1 = projectService.editMergestatusByProjectCode(SERVER_USER, TEST_PROFILE, parameterMap1);
 			if(renum1.equals(ReturnCodeEnum.getByReturnCode(NO_EDITMERGESTATUS))) {
 				return renum1; //修改冲突标识失败
 			}
@@ -320,7 +320,7 @@ public class SvnServiceImpl extends GodzillaApplication implements SvnService {
 			Map<String, String> parameterMap = new HashMap<String, String>();
 			parameterMap.put("project_code", projectCode);
 			parameterMap.put("merge_status", "0");
-			ReturnCodeEnum renum1 = projectService.editMergestatusByProjectCode(parameterMap);
+			ReturnCodeEnum renum1 = projectService.editMergestatusByProjectCode(SERVER_USER, TEST_PROFILE, parameterMap);
 			if(renum1.equals(ReturnCodeEnum.getByReturnCode(NO_EDITMERGESTATUS))) {
 				return renum1; //修改冲突标识失败
 			}
@@ -365,8 +365,8 @@ public class SvnServiceImpl extends GodzillaApplication implements SvnService {
 	public ReturnCodeEnum getStatus(String projectCode, String profile) {
 		ClientConfig clientConfig = clientConfigService.queryDetail(projectCode, profile) ;
 		String clientIp = clientConfig.getRemoteIp();
-		List<SvnBranchConfig> svnBranchConfigs = svnBranchConfigService.queryListByProjectCode(projectCode);
-		Project project = projectService.queryByProCode(projectCode);
+		List<SvnBranchConfig> svnBranchConfigs = svnBranchConfigService.queryListByProjectCode(projectCode, TEST_PROFILE);
+		Project project = projectService.queryByProCode(projectCode, TEST_PROFILE);
 		String trunkPath = project.getRepositoryUrl();
 		String localPath=project.getCheckoutPath(); 
 		
@@ -401,7 +401,7 @@ public class SvnServiceImpl extends GodzillaApplication implements SvnService {
 	
 	public ReturnCodeEnum getVersion(String trunkPath, String projectCode) {
 		ClientConfig clientConfig = clientConfigService.queryDetail(projectCode, TEST_PROFILE) ;
-		Project project = projectService.queryByProCode(projectCode);
+		Project project = projectService.queryByProCode(projectCode, TEST_PROFILE);
 		super.isEmpty(clientConfig, projectCode+"项目的clientconfig 未初始化") ;
 		
 		String clientIp = clientConfig.getRemoteIp();
@@ -432,7 +432,7 @@ public class SvnServiceImpl extends GodzillaApplication implements SvnService {
 	}
 
 	@Override
-	public void setConflictUrl(Project project) {
+	public void setConflictUrl(Project project, String profile) {
 		String conflictId = project.getSvnConflictId();
 		if(StringUtil.isEmpty(conflictId)) {
 			project.setConflictUrl(""); 

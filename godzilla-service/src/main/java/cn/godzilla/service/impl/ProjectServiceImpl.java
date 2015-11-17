@@ -32,19 +32,19 @@ public class ProjectServiceImpl extends GodzillaApplication implements ProjectSe
 	private ClientConfigService clientConfigService;
 
 	@Override
-	public Project queryByProCode(String projectCode) {
+	public Project queryByProCode(String projectCode, String profile) {
 		
 		return projectMapper.qureyByProCode(projectCode);
 	}
 
 	@Override
-	public List<Project> queryAll() {
+	public List<Project> queryAll(String projectCode, String profile) {
 		
 		return projectMapper.queryAll();
 	}
 
 	@Override
-	public ReturnCodeEnum srcEdit(String repositoryUrl, String checkoutPath, String projectCode, String profile) {
+	public ReturnCodeEnum srcEdit(String projectCode, String profile, String repositoryUrl, String checkoutPath) {
 		/**
 		 * 1.update trunk version
 		 */
@@ -52,7 +52,7 @@ public class ProjectServiceImpl extends GodzillaApplication implements ProjectSe
 		if(!versionreturn.equals(ReturnCodeEnum.getByReturnCode(OK_SVNVERSION))) {
 			return versionreturn;
 		}
-		Project project = this.queryByProCode(projectCode);
+		Project project = this.queryByProCode(projectCode, profile);
 		String version = svnVersionThreadLocal.get();
 		Map<String, String> parameterMap = new HashMap<String, String>();
 		
@@ -74,7 +74,7 @@ public class ProjectServiceImpl extends GodzillaApplication implements ProjectSe
 	}
 	
 	public boolean refreshProjectVersion(String projectCode, String profile) {
-		Project project = this.queryByProCode(projectCode);
+		Project project = this.queryByProCode(projectCode, profile);
 		String trunkPath = project.getRepositoryUrl();
 		
 		ReturnCodeEnum versionreturn = svnService.getVersion(trunkPath, projectCode);
@@ -92,13 +92,13 @@ public class ProjectServiceImpl extends GodzillaApplication implements ProjectSe
 	}
 
 	@Override
-	public List<Project> queryProjectsByUsername(String username) {
+	public List<Project> queryProjectsByUsername(String projectCode, String profile, String username) {
 		List<Project> projects = projectMapper.queryProjectsByUsername(username);
 		return projects;
 	}
 
 	@Override
-	public ReturnCodeEnum godzillaCommand(String actiion) {
+	public ReturnCodeEnum godzillaCommand(String projectCode, String profile, String actiion) {
 		
 		String str = "sh /home/godzilla/gzl/shell/server/godzilla.sh " + actiion;
 		boolean flag = false;
@@ -112,7 +112,7 @@ public class ProjectServiceImpl extends GodzillaApplication implements ProjectSe
 	}
 
 	@Override
-	public ReturnCodeEnum editMergestatusByProjectCode(Map<String, String> parameterMap) {
+	public ReturnCodeEnum editMergestatusByProjectCode(String projectCode, String profile, Map<String, String> parameterMap) {
 		int index = projectMapper.updateMergestatusByProjectcode(parameterMap);
 		if(index>0) {
 			return ReturnCodeEnum.getByReturnCode(OK_EDITMERGESTATUS);

@@ -1,22 +1,11 @@
 package cn.godzilla.service.impl;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FilenameFilter;
-import java.io.IOException;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.locks.Lock;
-
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
-import cn.godzilla.common.BusinessException;
 import cn.godzilla.common.ReturnCodeEnum;
 import cn.godzilla.common.StringUtil;
 import cn.godzilla.dao.ProjectMapper;
@@ -55,9 +44,7 @@ public class MvnServiceImpl extends GodzillaApplication implements MvnService {
 	@Override
 	public ReturnCodeEnum doDeploy(String projectCode, String profile, String parentVersion, String pencentkey) {
 		
-		String sid = super.getSid();
-		
-		Project project = projectService.queryByProCode(projectCode);
+		Project project = projectService.queryByProCode(projectCode, TEST_PROFILE);
 		
 		String webPath = project.getWebPath();
 		String parentPomPath = project.getCheckoutPath();
@@ -149,25 +136,10 @@ public class MvnServiceImpl extends GodzillaApplication implements MvnService {
 		}
 		
 		/*
-		 * 存在定义 问题
-		 * end.部署成功  更新 部署版本号  
-		 */
-		//boolean flag3 = this.updateDeployVersion(projectCode, profile);
-		
-		/*
-		 * 3. 日常环境 ：httpclient 访问  ip:8080/war_name/index   查找 是否存在 <!--<h5>godzilla</h5>--> 字符串 判断 tomcat是否启动成功
+		 * 3. 日常环境 ：httpclient 访问  ip:8080/war_name/index   判断200 tomcat是否启动成功
 		 */
 		String warName = project.getWarName();
 		boolean flag4 = false;
-		/*if(projectCode.equals("godzilla")) {
-			flag4 = true;
-		} else {
-			if(TEST_PROFILE.equals(profile)) {
-				flag4 = super.ifSuccessStartTomcat(IP, warName);
-			} else {
-				flag4 = true;
-			}
-		}*/
 		// bug:tomcat hot deploy cannot success for netty-project
 		//workaround: restart for test,project start success.
 		if(TEST_PROFILE.equals(profile)) {
@@ -183,196 +155,12 @@ public class MvnServiceImpl extends GodzillaApplication implements MvnService {
 		}
 	}
 	
-	
-	public RpcResult deployProject(MvnService mvnService, String username, String webPath, String projectCode, String profile, String IP, String parentVersion, String parentPomPath, String realname) {
-		boolean flag2 = false;
-		RpcResult result = null;
-		String commands = "";
-		try {
-			String POM_PATH = webPath + "/pom.xml";
-			String PARENTPOM_PATH = parentPomPath + "/pom.xml";
-			String USER_NAME = username;
-			String PROJECT_NAME = projectCode;
-			
-			
-			String shell = SHELL_CLIENT_PATH.endsWith("/")
-							?(SHELL_CLIENT_PATH+ "godzilla_mvn.sh")
-									:(SHELL_CLIENT_PATH+"/" +"godzilla_mvn.sh");
-			String str = "sh "+shell+" deploy "+POM_PATH+" "+USER_NAME+" "+PROJECT_NAME+" "+ PROJECT_ENV +" " +parentVersion + " " + PARENTPOM_PATH;
-			
-			result = mvnService.mvnDeploy(str, projectCode, PROJECT_ENV, USER_NAME, realname, profile);
-			commands = str;
-			flag2 = result.getRpcCode().equals("0")?true:false;
-		}  catch(RpcException e){
-			throw new RpcException(e);
-		} catch (Exception e) {
-			logger.error(e);
-			e.printStackTrace();
-			return RpcResult.create(FAILURE, 0);
-		}
-		if(flag2) {
-			//mvn deploy 执行成功
-		} else if(NOSETPROPS.equals(result.getRpcMsg())) {
-			//mvn deploy 执行失败, 含有${XX}未设置配置项
-		} else {
-			//mvn deploy 执行失败
-		}
-		return result;
-	}
-	
-	@Override
-	public ReturnCodeEnum getProcessPercent(String pencentkey) {
-		
-		String processPercent = GodzillaApplication.processPercent.get(pencentkey)==null?"0":GodzillaApplication.processPercent.get(pencentkey);
-		
-		if(processPercent.equals("100")) {
-			GodzillaApplication.processPercent.put(pencentkey, "0");
-		}
-		
-		return ReturnCodeEnum.getByReturnCode(OK_QUERYPERCENT).setData(processPercent);
-	}
-	
-	@Override
-	public ReturnCodeEnum showdeployLog(HttpServletResponse response, String projectCode, String profile, String logid) {
-		if(StringUtil.isEmpty(logid) || logid.equals("0")) {
-			return ReturnCodeEnum.getByReturnCode(NO_DEPLOYLOGID);//id错误
-		} 
-		
-		OperateLog log =  operateLogService.queryLogById(logid);
-		if(StringUtil.isEmpty(log.getDeployLog())) 
-			return ReturnCodeEnum.getByReturnCode(NO_STOREDEPLOYLOG);//日志记录失败
-		//setData为给前台显示后台信息，而不输出日志
-		return ReturnCodeEnum.getByReturnCode(OK_SHOWDEPLOYLOG).setData(log.getDeployLog());
-	}
-	@Override
-	public ReturnCodeEnum showwarInfo(HttpServletResponse response, String projectCode, String profile, String logid) {
-		if(StringUtil.isEmpty(logid) || logid.equals("0")) {
-			return ReturnCodeEnum.getByReturnCode(NO_SHOWWARINFOID);//id错误
-		} 
-		
-		OperateLog log =  operateLogService.queryLogById(logid);
-		if(StringUtil.isEmpty(log.getDeployLog())) 
-			return ReturnCodeEnum.getByReturnCode(NO_SHOWWARINFO);//日志记录失败
-		//setData为给前台显示后台信息，而不输出日志
-		return ReturnCodeEnum.getByReturnCode(OK_SHOWWARINFO).setData(log.getWarInfo());
-	}
-	
-	@Override
-	public ReturnCodeEnum downLoadWar(HttpServletResponse response, String projectCode, String profile) {
-		/**
-		 * 1.限制并发　待定
-		 * 日常环境  待定
-		 * 准生产	待定
-		 * 生产　 待定
-		 **/
-		return this.downLoadWar1(response, projectCode, profile);
-		
-	}
-	
-	private ReturnCodeEnum downLoadWar1(HttpServletResponse response, String projectCode, String profile) {
-			
-		java.io.BufferedOutputStream bos = null;
-		java.io.BufferedInputStream bis = null;
-		String ctxPath = SAVE_WAR_PATH ;
-		//String downLoadPath = ctxPath + "/" + projectCode + ".war";
-		//logger.info("****downloadpath : "+ downLoadPath);
-		//1.ssh scp 到本地
-		this.copyWar(projectCode, profile);
-		
-		Project project = projectService.queryByProCode(projectCode);
-		String warName= project.getWarName();
-		//1.5 获取 war包 文件名
-		File warfile = this.searchFile(new File(ctxPath), warName);
-		
-		//2.输出
-		try {
-			long fileLength = warfile.length();
-			response.setContentType("application/x-msdownload;");
-			response.setHeader("Content-disposition", "attachment;filename=" + 
-					new String(warfile.getName().getBytes("utf-8"),"ISO8859-1"));
-			response.setHeader("Content-Length", String.valueOf(fileLength));
-			
-			bis = new BufferedInputStream(new FileInputStream(warfile));
-			bos = new BufferedOutputStream(response.getOutputStream());
-			byte[] buff = new byte[2048];
-			int bytesRead;
-			while(-1!=(bytesRead = bis.read(buff, 0, buff.length))) {
-				bos.write(buff, 0, bytesRead);
-			}
-		} catch(IOException e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				if(bis!=null)
-					bis.close();
-				if(bos!=null) 
-					bos.close();
-			} catch(IOException e) {
-				e.printStackTrace();
-			}
-		}
-		
-		return null;
-	}
-	
-	private File searchFile(final File folder, final String keyWord) {
-		File[] findFolders = folder.listFiles(new FilenameFilter() {// 运用内部匿名类获得文件
-			@Override
-			public boolean accept(File dir, String name) {
-				logger.info("-----filename: "  + name);
-				// 目录或文件包含关键字
-				boolean flag = name.toLowerCase().contains(keyWord.toLowerCase());
-				if(flag)
-					return true;
-				else
-					return false;
-			}
-
-        });
-		return findFolders[0];
-	}
-	
-	private boolean copyWar(String projectCode, String profile) {
-		ClientConfig clientConfig = clientConfigService.queryDetail(projectCode, profile);
-		String clientIp = clientConfig.getRemoteIp();
-		Project project = projectService.queryByProCode(projectCode);
-		
-		String tomcatHome = "";
-		
-		if("TEST".equals(profile)) {
-			tomcatHome = "/app/tomcat";
-		} else if("QUASIPRODUCT".equals(profile)) {
-			clientIp = QUASIPRODUCT_WAR_IP;
-			tomcatHome = "/app/tomcat";
-		} else if("PRODUCT".equals(profile)) {
-			clientIp = PRODUCT_WAR_IP;
-			tomcatHome = "/app/tomcat";
-		}
-		
-		if("godzilla".equals(projectCode)) {
-			clientIp = "10.100.142.65";
-			tomcatHome = "/home/godzilla/tomcat-godzilla";
-		} 
-		tomcatHome += "/webapps/*.war";
-		String str = "sh /home/godzilla/gzl/shell/server/copywar_server.sh " + clientIp + " " + tomcatHome + " " + SAVE_WAR_PATH;
-		boolean flag = false;
-		flag = command.execute(str, super.getUser().getUserName(), projectCode, project.getSvnUsername(), project.getSvnPassword());
-		
-		if(flag) {
-			return true;
-		} else {
-			return false;
-		}
-		
-	}
-	
-	 @Override
 	 public ReturnCodeEnum restartTomcat(String projectCode, String profile) {
 		boolean flag =false;
 		ClientConfig clientConfig = clientConfigService.queryDetail(projectCode, profile) ;
 		String clientIp = clientConfig.getRemoteIp();
 		// 暂时先不考虑权限
-		Project project = projectService.queryByProCode(projectCode);
+		Project project = projectService.queryByProCode(projectCode, TEST_PROFILE);
 
 		/*String str = PropertiesUtil.getProperties().get("server.shell.restart.path") +" " + clientIp + " "
 				+ PropertiesUtil.getProperties().get("client.tomcat.home.path");*/
@@ -416,13 +204,87 @@ public class MvnServiceImpl extends GodzillaApplication implements MvnService {
 		}
 	}
 	
+	
+	public RpcResult deployProject(MvnService mvnService, String username, String webPath, String projectCode, String profile, String IP, String parentVersion, String parentPomPath, String realname) {
+		boolean flag2 = false;
+		RpcResult result = null;
+		String commands = "";
+		try {
+			String POM_PATH = webPath + "/pom.xml";
+			String PARENTPOM_PATH = parentPomPath + "/pom.xml";
+			String USER_NAME = username;
+			String PROJECT_NAME = projectCode;
+			
+			
+			String shell = SHELL_CLIENT_PATH.endsWith("/")
+							?(SHELL_CLIENT_PATH+ "godzilla_mvn.sh")
+									:(SHELL_CLIENT_PATH+"/" +"godzilla_mvn.sh");
+			String str = "sh "+shell+" deploy "+POM_PATH+" "+USER_NAME+" "+PROJECT_NAME+" "+ PROJECT_ENV +" " +parentVersion + " " + PARENTPOM_PATH;
+			
+			result = mvnService.mvnDeploy(str, projectCode, PROJECT_ENV, USER_NAME, realname, profile);
+			commands = str;
+			flag2 = result.getRpcCode().equals("0")?true:false;
+		}  catch(RpcException e){
+			throw new RpcException(e);
+		} catch (Exception e) {
+			logger.error(e);
+			e.printStackTrace();
+			return RpcResult.create(FAILURE, 0);
+		}
+		if(flag2) {
+			//mvn deploy 执行成功
+		} else if(NOSETPROPS.equals(result.getRpcMsg())) {
+			//mvn deploy 执行失败, 含有${XX}未设置配置项
+		} else {
+			//mvn deploy 执行失败
+		}
+		return result;
+	}
+	
+	@Override
+	public ReturnCodeEnum getProcessPercent(String projectCode, String profile, String pencentkey) {
+		
+		String processPercent = GodzillaApplication.processPercent.get(pencentkey)==null?"0":GodzillaApplication.processPercent.get(pencentkey);
+		
+		if(processPercent.equals("100")) {
+			GodzillaApplication.processPercent.put(pencentkey, "0");
+		}
+		
+		return ReturnCodeEnum.getByReturnCode(OK_QUERYPERCENT).setData(processPercent);
+	}
+	
+	@Override
+	public ReturnCodeEnum showdeployLog(String projectCode, String profile, String logid, HttpServletResponse response) {
+		if(StringUtil.isEmpty(logid) || logid.equals("0")) {
+			return ReturnCodeEnum.getByReturnCode(NO_DEPLOYLOGID);//id错误
+		} 
+		
+		OperateLog log =  operateLogService.queryLogById(projectCode, profile, logid);
+		if(StringUtil.isEmpty(log.getDeployLog())) 
+			return ReturnCodeEnum.getByReturnCode(NO_STOREDEPLOYLOG);//日志记录失败
+		//setData为给前台显示后台信息，而不输出日志
+		return ReturnCodeEnum.getByReturnCode(OK_SHOWDEPLOYLOG).setData(log.getDeployLog());
+	}
+	@Override
+	public ReturnCodeEnum showwarInfo(String projectCode, String profile, String logid, HttpServletResponse response) {
+		if(StringUtil.isEmpty(logid) || logid.equals("0")) {
+			return ReturnCodeEnum.getByReturnCode(NO_SHOWWARINFOID);//id错误
+		} 
+		
+		OperateLog log =  operateLogService.queryLogById(projectCode, profile, logid);
+		if(StringUtil.isEmpty(log.getDeployLog())) 
+			return ReturnCodeEnum.getByReturnCode(NO_SHOWWARINFO);//日志记录失败
+		//setData为给前台显示后台信息，而不输出日志
+		return ReturnCodeEnum.getByReturnCode(OK_SHOWWARINFO).setData(log.getWarInfo());
+	}
+	
 	//=======================
 	@Autowired
 	private OperateLogService operateLogService;
 	@Autowired
 	private ProjectMapper projectMapper;
 	@Override
-	public RpcResult mvnDeploy(String str1, String projectCode, String projectEnv, String username, String realname, String profile) {
+	public RpcResult mvnDeploy(String projectCode, String profile, String str1, String projectEnv, String username, String realname) {
 		mvnBuildThreadLocal.set("FAILURE");
 		mvnERRORThreadLocal.set("SUCCESS");
 		
@@ -449,7 +311,7 @@ public class MvnServiceImpl extends GodzillaApplication implements MvnService {
 			
 		}
 		//保存mvn部署日志
-		int logid = operateLogService.addOperateLog(mvnlog, jarlog);
+		int logid = operateLogService.addOperateLog(projectCode, profile, mvnlog, jarlog);
 		
 		mvnBuildThreadLocal.set("FAILURE");
 		mvnERRORThreadLocal.set("SUCCESS");

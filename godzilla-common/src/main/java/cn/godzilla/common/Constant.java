@@ -15,6 +15,10 @@ public interface Constant {
 	public final String AUDITOR_TEXT = "审核通过";
 	public final int DEFAULT_TIMEOUT = 50;//tomcat启动超时时间(second)
 	/**
+	 * userservice 连接客户端
+	 */
+	public final String SERVER_USER = "apollo";
+	/**
 	 * log constant
 	 */
 	public final int SUCC = 1;

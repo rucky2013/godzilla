@@ -34,7 +34,6 @@ import cn.godzilla.service.SvnService;
 @Controller
 public class IndexController extends GodzillaApplication{
 	
-	private final Logger logger = LogManager.getLogger(IndexController.class);
 	@Autowired
 	private ProjectService projectService ;
 	@Autowired
@@ -47,6 +46,8 @@ public class IndexController extends GodzillaApplication{
 	MvnService mvnService;
 	@Autowired
 	SvnService svnService;
+	@Autowired
+	SshUtil sshUitl;
 	/**
 	 * 跳到登录页
 	 * 
@@ -90,12 +91,12 @@ public class IndexController extends GodzillaApplication{
 		
 		//刷新项目 版本
 		projectService.refreshProjectVersion(projectCode, profile);
-		Project project = projectService.queryByProCode(projectCode);
-		svnService.setConflictUrl(project);
+		Project project = projectService.queryByProCode(projectCode, TEST_PROFILE);
+		svnService.setConflictUrl(project, TEST_PROFILE);
 		//刷新分支 版本
-		List<SvnBranchConfig> svnBranchConfigs = svnBranchConfigService.queryListByProjectCode(projectCode);
-		svnBranchConfigService.refreshBranchesVersion(svnBranchConfigs);
-		svnBranchConfigs = svnBranchConfigService.queryListByProjectCode(projectCode);
+		List<SvnBranchConfig> svnBranchConfigs = svnBranchConfigService.queryListByProjectCode(projectCode, TEST_PROFILE);
+		svnBranchConfigService.refreshBranchesVersion(projectCode, TEST_PROFILE, svnBranchConfigs);
+		svnBranchConfigs = svnBranchConfigService.queryListByProjectCode(projectCode, TEST_PROFILE);
 		List<OperateLog> operateLogs = operateLogService.queryList(projectCode, profile);
 		
 		request.setAttribute("username", GodzillaApplication.getUser().getUserName());
@@ -119,7 +120,7 @@ public class IndexController extends GodzillaApplication{
 	@RequestMapping(value="/project/{sid}/{projectCode}/{profile}/download", method=RequestMethod.GET) 
 	public Object download(@PathVariable("sid") String sid, @PathVariable String projectCode, @PathVariable String profile, HttpServletResponse response) {
 		
-		ReturnCodeEnum returnEnum = mvnService.downLoadWar(response, projectCode, profile);
+		ReturnCodeEnum returnEnum = sshUitl.downLoadWar(projectCode, profile, response);
 		
 		ResponseBodyJson.custom().setAll(returnEnum, WARDOWNLOAD).build().log();
 		
@@ -139,7 +140,7 @@ public class IndexController extends GodzillaApplication{
 	public Object showdeployLog(@PathVariable("sid") String sid, @PathVariable String projectCode, @PathVariable String profile, 
 			@RequestParam("logid") String logid, HttpServletResponse response) {
 		
-		ReturnCodeEnum returnEnum = mvnService.showdeployLog(response, projectCode, profile, logid);
+		ReturnCodeEnum returnEnum = mvnService.showdeployLog(projectCode, profile, logid, response);
 		return ResponseBodyJson.custom().setAll(returnEnum, SHOWDEPLOYLOG).build().log();
 	}
 	/**
@@ -156,7 +157,7 @@ public class IndexController extends GodzillaApplication{
 	public Object showwarInfo(@PathVariable("sid") String sid, @PathVariable String projectCode, @PathVariable String profile, 
 			@RequestParam("logid") String logid, HttpServletResponse response) {
 		
-		ReturnCodeEnum returnEnum = mvnService.showwarInfo(response, projectCode, profile, logid);
+		ReturnCodeEnum returnEnum = mvnService.showwarInfo(projectCode, profile, logid, response);
 		return ResponseBodyJson.custom().setAll(returnEnum, SHOWWARINFO).build().log();
 	}
 	
@@ -230,7 +231,7 @@ public class IndexController extends GodzillaApplication{
 		String repositoryUrl = StringUtil.getReqPrameter(request, "repositoryUrl");
 		String checkoutPath = StringUtil.getReqPrameter(request, "checkoutPath");
 		
-		ReturnCodeEnum returnEnum = projectService.srcEdit(repositoryUrl, checkoutPath, projectCode, profile);
+		ReturnCodeEnum returnEnum = projectService.srcEdit(projectCode, profile, repositoryUrl, checkoutPath);
 		
 		return ResponseBodyJson.custom().setAll(returnEnum, SRCEDIT).build().log();
 	}

@@ -22,8 +22,6 @@ import cn.godzilla.service.ProjectService;
 @RequestMapping(value="admin")
 public class AdminController extends GodzillaApplication{
 	
-	private final static Logger logger = LogManager.getLogger(AdminController.class);
-	
 	@Autowired
 	private MvnService mvnService;
 	
@@ -48,7 +46,7 @@ public class AdminController extends GodzillaApplication{
 		项目启动顺序
 		(nuggets-server,message-center,fso-lark,zeus,hades,uic,hera,apollo,va-web,va-schedule)->(xuanyuan,newmanager)->(cupid)
 	 * @return
-	 */
+	 
 	@RequestMapping(value="/{sid}/restartProjects", method=RequestMethod.GET)
 	@ResponseBody
 	public Object restartProjects(@PathVariable String sid, HttpServletRequest request, HttpServletResponse response) {
@@ -65,7 +63,7 @@ public class AdminController extends GodzillaApplication{
 		}
 		
 		return null;
-	}
+	}*/
 	
 	private static List<String> list1 = new ArrayList<String>();
 	private static List<String> list2 = new ArrayList<String>();
@@ -106,7 +104,7 @@ public class AdminController extends GodzillaApplication{
 		项目启动顺序
 		(nuggets-server,message-center,fso-lark,zeus,hades,uic,hera,apollo,va-web,va-schedule)->(xuanyuan,newmanager)->(cupid)
 	 * @return
-	 */
+	 
 	@RequestMapping(value="/{sid}/deployProjects", method=RequestMethod.GET)
 	@ResponseBody
 	public Object deployProjects(@PathVariable String sid, HttpServletRequest request, HttpServletResponse response) {
@@ -114,20 +112,20 @@ public class AdminController extends GodzillaApplication{
 		
 		
 		return null;
-	}
+	}*/
 	
 	/**
 	 * 执行命令
 	 * upgrade,startclients,stopclients,stoptomcats,starttomcats
 	 * @param response
 	 * @return 
-	 */
+	 
 	@RequestMapping(value="/{sid}/{projectCode}/{profile}/{command}", method=RequestMethod.GET) 
 	@ResponseBody
 	public Object upgrade(HttpServletResponse response, @PathVariable String command) {
 		
 		ReturnCodeEnum returnEnum = projectService.godzillaCommand(command);
 		return ResponseBodyJson.custom().setAll(returnEnum, ADMINOPERATOR).build();
-	}
+	}*/
 	
 }

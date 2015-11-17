@@ -17,7 +17,7 @@ public class FunRightServiceImpl implements FunRightService {
 	private FunRightMapper funRightMapper;
 
 	@Override
-	public List<FunRight> findFunRightsByUsername(String username) {
+	public List<FunRight> findFunRightsByUsername(String projectCode, String profile, String username) {
 		Map<String, Object> parameterMap = new HashMap<String, Object>();
 		parameterMap.put("username", username);
 		List<FunRight> funRightList = funRightMapper.queryRightsByUsername(parameterMap);

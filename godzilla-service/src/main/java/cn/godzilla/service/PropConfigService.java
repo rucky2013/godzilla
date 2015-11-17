@@ -15,18 +15,8 @@ import cn.godzilla.model.RpcResult;
 
 public interface PropConfigService extends Constant{
 	
-	 	public int insert(PropConfig record);
+	 	int insert(PropConfig record);
 
-	    public int insertSelective(PropConfig record);
-	    
-	    public int update(PropConfig record);
-	    
-	    public PropConfig queryDetailById(long id);
-	    
-	    public PropConfig queryDetailByKey(Map<String, String> map);
-	    
-	    public List<PropConfig> queryList(Map<String, String> map);
-	    
 	    /**
 	     * 查询  某项目   各个环境下配置   并返回 json格式 数据
 	     * 审核状态的配置 status = 1
@@ -35,7 +25,7 @@ public interface PropConfigService extends Constant{
 	     * @param propQuasiProduct
 	     * @param propProduct
 	     */
-		public void findPropByProjectCode(String projectCode, StringBuilder propTest, StringBuilder propQuasiProduct, StringBuilder propProduct);
+		public void findPropByProjectCode(String projectCode, String profile, StringBuilder propTest, StringBuilder propQuasiProduct, StringBuilder propProduct);
 	
 		
 		/**
@@ -58,13 +48,13 @@ public interface PropConfigService extends Constant{
 		 * @param propProduct
 		 * @return 
 		 */
-		public ReturnCodeEnum addNotVerifyProp(String projectCode, String propTest, String propQuasiProduct, String propProduct);
+		public ReturnCodeEnum addNotVerifyProp(String projectCode, String profile, String propTest, String propQuasiProduct, String propProduct);
 		
 		/**
 		 * 查询 所有环境 并加上all选项
 		 * @return
 		 */
-		public Map<String, String> queryAllProfile();
+		public Map<String, String> queryAllProfile(String projectCode, String profile);
 
 		/**
 		 * 查询 /显示  某项目  某人  某环境下  的所有审核配置
@@ -74,7 +64,7 @@ public interface PropConfigService extends Constant{
 		 * @param verifyStatus
 		 * @return
 		 */
-		public List<PropConfig> queryByProjectcodeAndCreatebyAndProfileAndStatus(String projectCode, String createBy, String profile, String verifyStatus);
+		public List<PropConfig> queryByProjectcodeAndCreatebyAndProfileAndStatus(String projectCode, String profile, String createBy, String verifyStatus);
 		
 		/**
 		 * 查询 /显示  某项目  某人  某环境下  的所有审核配置
@@ -94,10 +84,10 @@ public interface PropConfigService extends Constant{
 	     * @param propProduct
 		 * @param billId 
 	     */
-		public void findPropByCreatebyAndProjectcodeAndProfileAndStatus(String createBy, String projectCode, String profile, StringBuilder propTest, StringBuilder propQuasiProduct, StringBuilder propProduct, String status, Long billId);
+		public void findPropByCreatebyAndProjectcodeAndProfileAndStatus(String projectCode, String profile, String createBy, StringBuilder propTest, StringBuilder propQuasiProduct, StringBuilder propProduct, String status, Long billId);
 
 		@Deprecated
-		public ReturnCodeEnum verifyPropByCreatebyAndProjectcodeAndProfile(String createBy, String projectCode, String profile, String status, String auditor_text);
+		public ReturnCodeEnum verifyPropByCreatebyAndProjectcodeAndProfile(String projectCode, String profile, String createBy, String status, String auditor_text);
 		
 		/**
 		 * 审核通过  某人 某项目 某环境下的 所有配置
@@ -108,21 +98,21 @@ public interface PropConfigService extends Constant{
 		 * @param auditor_text
 		 * @return
 		 */
-		public ReturnCodeEnum verifyPropByCreatebyAndProjectcodeAndALLProfile(String createBy, String projectCode, String profile, String status, String auditor_text, Long billId);
+		public ReturnCodeEnum verifyPropByCreatebyAndProjectcodeAndALLProfile(String projectCode, String profile, String createBy, String status, String auditor_text, Long billId);
 
 		/**
 		 * 排序 配置
 		 * @param propSort
 		 * @return
 		 */
-		public ReturnCodeEnum resortPropById(String propSort);
+		public ReturnCodeEnum resortPropById(String projectCode, String profile, String propSort);
 		
 		/**
 		 * 20151110 添加propbill表,重写配置审核
 		 * @param projectCode
 		 * @return
 		 */
-		public List<PropBill> queryAllPropBill(String projectCode);
+		public List<PropBill> queryAllPropBill(String projectCode, String profile);
 
 		//=======================
 		/**

@@ -275,7 +275,7 @@ public class SvnController extends GodzillaApplication implements Constant{
 			@RequestParam("id") String id,
 			HttpServletRequest request, HttpServletResponse response) {
 		
-		ReturnCodeEnum returnEnum = svnBranchConfigService.deletebranchesByProjectCode(projectCode, id);
+		ReturnCodeEnum returnEnum = svnBranchConfigService.deletebranchesByProjectCode(projectCode, TEST_PROFILE, id);
 		return ResponseBodyJson.custom().setAll(returnEnum, BRANCHDELETE).build().log();
 	}
 	/**

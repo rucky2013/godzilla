@@ -34,7 +34,7 @@ public class InitFilter extends GodzillaApplication implements Filter {
 		context = filterConfig.getServletContext();
 		applicationContext = WebApplicationContextUtils.getWebApplicationContext(context);
 		projectService = (ProjectService)applicationContext.getBean("projectService");
-		List<Project> projects = projectService.queryAll();
+		List<Project> projects = projectService.queryAll(SERVER_USER, TEST_PROFILE);
 		for(Project pro: projects) {
 			deploy_lock.put(pro.getProjectCode(), new ReentrantLock());
 		}

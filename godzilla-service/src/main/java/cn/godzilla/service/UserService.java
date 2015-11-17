@@ -10,9 +10,9 @@ import cn.godzilla.model.User;
 
 public interface UserService extends Constant{
 	
-	public ReturnCodeEnum login(String username, String password, String newsid);
+	public ReturnCodeEnum login(String project, String profile, String username, String password, String newsid);
 
-	public void logout(String sid);
+	public void logout(String project, String profile, String sid);
 
 	/**
 	 * 判断当前用户 是否已经登录
@@ -26,7 +26,7 @@ public interface UserService extends Constant{
 	 * @param sid
 	 * @return
 	 */
-	public ReturnCodeEnum checkUserStatusBySid(String sid) ;
+	public ReturnCodeEnum checkUserStatusBySid(String project, String profile, String sid) ;
 
 	/**
 	 * 根据sid 查询 缓存 或者数据库 
@@ -34,27 +34,27 @@ public interface UserService extends Constant{
 	 * @param sid
 	 * @return
 	 */
-	public User getUserBySid(String sid);
+	public User getUserBySid(String project, String profile, String sid);
 
 	/**
 	 * 查询所有 用户
 	 * @return
 	 */
-	public List<User> queryAllUser();
+	public List<User> queryAllUser(String project, String profile);
 
 	/**
 	 * 查询 username的所有项目权限
 	 * @param userName
 	 * @return
 	 */
-	public List<Project> queryProjectsByUsername(String userName);
+	public List<Project> queryProjectsByUsername(String project, String profile, String userName);
 
 	/**
 	 * 查询 所有用户的所有项目权限
 	 * @param userName
 	 * @return
 	 */
-	public List<Map<String, Object>> getUserAuthList();
+	public List<Map<String, Object>> getUserAuthList(String project, String profile);
 
 	/**
 	 * 添加  用户 
@@ -64,7 +64,7 @@ public interface UserService extends Constant{
 	 * @param departname 
 	 * @return
 	 */
-	public ReturnCodeEnum addUser(String username, String password, String confirm, String departname);
+	public ReturnCodeEnum addUser(String project, String profile, String username, String password, String confirm, String departname);
 
 	/**
 	 * 获得用户的  所有权限项目 
@@ -73,7 +73,7 @@ public interface UserService extends Constant{
 	 * @param editUsername
 	 * @return
 	 */
-	public List<Map<String, Object>> getUserProjects(String editUsername);
+	public List<Map<String, Object>> getUserProjects(String project, String profile, String editUsername);
 	
 	/**
 	 * 编辑用户 工作台  项目权限
@@ -84,10 +84,10 @@ public interface UserService extends Constant{
 	 * @param selectProjects
 	 * @return
 	 */
-	public ReturnCodeEnum updateUserProjects(String editUsername, String selectProjects);
+	public ReturnCodeEnum updateUserProjects(String project, String profile, String editUsername, String selectProjects);
 
-	public User getUserById(String sid);
+	public User getUserById(String project, String profile, String sid);
 
-	public ReturnCodeEnum changePassword(User user, String oldpassword, String password);
+	public ReturnCodeEnum changePassword(String project, String profile, User user, String oldpassword, String password);
 
 }

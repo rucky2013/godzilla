@@ -19,7 +19,10 @@
 	<!--注解说明 -->
 	<context:annotation-config />
 	<!-- 把标记了@Controller注解的类转换为bean -->
-	<context:component-scan base-package="cn.godzilla" />
+	<context:component-scan base-package="cn.godzilla" >
+		<context:exclude-filter type="regex" expression="cn.godzilla.web.*"/>
+		<context:exclude-filter type="regex" expression="cn.godzilla.service.*"/>
+	</context:component-scan>
 	
 	<context:property-placeholder location="classpath:jdbc.properties" ignore-unresolvable="true" />
 	
@@ -67,4 +70,5 @@
 	<bean id="svnService" class="cn.godzilla.service.impl.SvnServiceImpl" />
 	<bean id="userService" class="cn.godzilla.service.impl.UserServiceImpl" />
 
+	<import resource="classpath:spring-redis.xml"/>
 </beans>

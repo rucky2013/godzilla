@@ -8,7 +8,7 @@ import cn.godzilla.model.SvnBranchConfig;
 public interface SvnBranchConfigService {
 	
 	
-	List<SvnBranchConfig> queryListByProjectCode(String projectCode);
+	List<SvnBranchConfig> queryListByProjectCode(String projectCode, String profile);
 
 	/**
 	 * 分支设置-->添加分支  
@@ -35,7 +35,7 @@ public interface SvnBranchConfigService {
 	 * @param id 
 	 * @return
 	 */
-	ReturnCodeEnum deletebranchesByProjectCode(String projectCode);
+	ReturnCodeEnum deletebranchesByProjectCode(String projectCode, String profile);
 	/**
 	 * 删除已提交分支
 	 * 注：20151103 清除project表 merge_status标记,初始化为0
@@ -43,12 +43,12 @@ public interface SvnBranchConfigService {
 	 * @param id 
 	 * @return
 	 */
-	ReturnCodeEnum deletebranchesByProjectCode(String projectCode, String id);
+	ReturnCodeEnum deletebranchesByProjectCode(String projectCode, String profile, String id);
 	/**
 	 * 刷新分支版本
 	 * @param svnBranchConfigs
 	 */
-	ReturnCodeEnum refreshBranchesVersion(List<SvnBranchConfig> svnBranchConfigs);
+	ReturnCodeEnum refreshBranchesVersion(String projectCode, String profile, List<SvnBranchConfig> svnBranchConfigs);
 
 	
 }

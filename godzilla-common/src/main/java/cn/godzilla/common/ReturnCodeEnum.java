@@ -1,6 +1,8 @@
 package cn.godzilla.common;
 
-public enum ReturnCodeEnum {
+import java.io.Serializable;
+
+public enum ReturnCodeEnum implements Serializable {
 	
 	/**
 	 * 错误码  6位

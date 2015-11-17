@@ -5,6 +5,8 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import junit.framework.Test;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,7 +60,7 @@ public class PropController extends GodzillaApplication implements Constant{
 		StringBuilder propQuasiProduct = new StringBuilder("");
 		StringBuilder propProduct = new StringBuilder("");
 		
-		propConfigService.findPropByProjectCode(projectCode, propTest, propQuasiProduct, propProduct);
+		propConfigService.findPropByProjectCode(projectCode, TEST_PROFILE, propTest, propQuasiProduct, propProduct);
 		
 		request.setAttribute("user", GodzillaApplication.getUser());
 		request.setAttribute("propTest", this.replaceHtml(propTest.toString()));
@@ -85,7 +87,7 @@ public class PropController extends GodzillaApplication implements Constant{
 		String propQuasiProduct = StringUtil.getReqPrameter(request, "p2");
 		String propProduct = StringUtil.getReqPrameter(request, "p3");
 		
-		ReturnCodeEnum updateReturn = propConfigService.addNotVerifyProp(projectCode, propTest, propQuasiProduct, propProduct); 
+		ReturnCodeEnum updateReturn = propConfigService.addNotVerifyProp(projectCode, TEST_PROFILE, propTest, propQuasiProduct, propProduct); 
 		
 		return ResponseBodyJson.custom().setAll(updateReturn, UPDATEPROP).build().log();
 	}
@@ -103,10 +105,10 @@ public class PropController extends GodzillaApplication implements Constant{
 		String createBy = StringUtil.getReqPrameter(request, "createBy", "");
 		String selectedProfile = StringUtil.getReqPrameter(request, "selectedProfile", TEST_PROFILE);
 		
-		List<Project> projectList = projectService.queryAll();
-		Map<String, String> profileList = propConfigService.queryAllProfile();
+		List<Project> projectList = projectService.queryAll(projectCode, TEST_PROFILE);
+		Map<String, String> profileList = propConfigService.queryAllProfile(projectCode, TEST_PROFILE);
 		//List<PropConfig> propList = propConfigService.queryByProjectcodeAndCreatebyAndProfileAndStatus(selectedProjectCode, createBy, selectedProfile, OK_VERIFY_STATUS);
-		List<PropConfig> propList = propConfigService.queryByProjectcodeAndCreatebyAndProfileAndStatus(projectCode, createBy, selectedProfile, OK_VERIFY_STATUS);
+		List<PropConfig> propList = propConfigService.queryByProjectcodeAndCreatebyAndProfileAndStatus(projectCode, selectedProfile, createBy, OK_VERIFY_STATUS);
 		
 		request.setAttribute("createBy", createBy);//提交人
 		//request.setAttribute("selectedProjectCode", selectedProjectCode);
@@ -133,10 +135,10 @@ public class PropController extends GodzillaApplication implements Constant{
 		String createBy = StringUtil.getReqPrameter(request, "createBy", "");
 		String selectedProfile = StringUtil.getReqPrameter(request, "selectedProfile", TEST_PROFILE);
 		
-		List<Project> projectList = projectService.queryAll();
-		Map<String, String> profileList = propConfigService.queryAllProfile();
+		List<Project> projectList = projectService.queryAll(projectCode, TEST_PROFILE);
+		Map<String, String> profileList = propConfigService.queryAllProfile(projectCode, TEST_PROFILE);
 		//List<PropConfig> propList = propConfigService.queryByProjectcodeAndCreatebyAndProfileAndStatus(selectedProjectCode, createBy, selectedProfile, OK_VERIFY_STATUS);
-		List<PropConfig> propList = propConfigService.queryByProjectcodeAndCreatebyAndProfileAndStatus(projectCode, createBy, selectedProfile, OK_VERIFY_STATUS);
+		List<PropConfig> propList = propConfigService.queryByProjectcodeAndCreatebyAndProfileAndStatus(projectCode, selectedProfile, createBy, OK_VERIFY_STATUS);
 		
 		request.setAttribute("createBy", createBy);//提交人
 		//request.setAttribute("selectedProjectCode", selectedProjectCode);
@@ -163,7 +165,7 @@ public class PropController extends GodzillaApplication implements Constant{
 		//String selectedProjectCode = StringUtil.getReqPrameter(request, "selectedProjectCode", "godzilla");
 		String sortJson = StringUtil.getReqPrameter(request, "sortJson", "");
 		
-		ReturnCodeEnum returnenum = propConfigService.resortPropById(sortJson);
+		ReturnCodeEnum returnenum = propConfigService.resortPropById(projectCode, TEST_PROFILE, sortJson);
 		
 		return ResponseBodyJson.custom().setAll(returnenum, SORTPROP).build().log();
 	}
@@ -203,10 +205,10 @@ public class PropController extends GodzillaApplication implements Constant{
 		String createBy = StringUtil.getReqPrameter(request, "createBy", "");
 		String selectedProfile = StringUtil.getReqPrameter(request, "selectedProfile", "");
 		
-		List<Project> projectList = projectService.queryAll();
-		Map<String, String> profileList = propConfigService.queryAllProfile();
+		List<Project> projectList = projectService.queryAll(projectCode, TEST_PROFILE);
+		Map<String, String> profileList = propConfigService.queryAllProfile(projectCode, TEST_PROFILE);
 		//List<PropConfig> propList = propConfigService.queryByProjectcodeAndCreatebyAndProfileGroupBy(projectCode, createBy, selectedProfile, NOTYET_VERIFY_STATUS);
-		List<PropBill> propBillList = propConfigService.queryAllPropBill(projectCode);
+		List<PropBill> propBillList = propConfigService.queryAllPropBill(projectCode, TEST_PROFILE);
 		
 		request.setAttribute("createBy", createBy);//提交人
 		request.setAttribute("projectList", projectList);
@@ -235,12 +237,12 @@ public class PropController extends GodzillaApplication implements Constant{
 		StringBuilder propTest = new StringBuilder("");
 		StringBuilder propQuasiProduct = new StringBuilder("");
 		StringBuilder propProduct = new StringBuilder("");
-		propConfigService.findPropByCreatebyAndProjectcodeAndProfileAndStatus(createBy, projectCode, profile, propTest, propQuasiProduct, propProduct, NOTYET_VERIFY_STATUS, billId);
+		propConfigService.findPropByCreatebyAndProjectcodeAndProfileAndStatus(projectCode, profile, createBy, propTest, propQuasiProduct, propProduct, NOTYET_VERIFY_STATUS, billId);
 		
 		StringBuilder oldpropTest = new StringBuilder("");
 		StringBuilder oldpropQuasiProduct = new StringBuilder("");
 		StringBuilder oldpropProduct = new StringBuilder("");
-		propConfigService.findPropByCreatebyAndProjectcodeAndProfileAndStatus(createBy, projectCode, profile, oldpropTest, oldpropQuasiProduct, oldpropProduct, OK_VERIFY_STATUS, billId);
+		propConfigService.findPropByCreatebyAndProjectcodeAndProfileAndStatus(projectCode, profile, createBy, oldpropTest, oldpropQuasiProduct, oldpropProduct, OK_VERIFY_STATUS, billId);
 		
 		request.setAttribute("user", getUser());
 		
@@ -273,7 +275,7 @@ public class PropController extends GodzillaApplication implements Constant{
 		String status = StringUtil.getReqPrameter(request, "status", "0");
 		String auditor_text = StringUtil.getReqPrameter(request, "auditor_text", "");
 		
-		ReturnCodeEnum updateReturn = propConfigService.verifyPropByCreatebyAndProjectcodeAndALLProfile(createBy, projectCode, profile, status, auditor_text, billId); 
+		ReturnCodeEnum updateReturn = propConfigService.verifyPropByCreatebyAndProjectcodeAndALLProfile(projectCode, profile, createBy, status, auditor_text, billId); 
 		
 		return ResponseBodyJson.custom().setAll(updateReturn, VERIFYPROP).build().log();
 	}

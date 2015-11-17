@@ -38,7 +38,7 @@ public class OperateLogServiceImpl extends GodzillaApplication implements Operat
 	}
 	
 	@Override
-	public List<OperateLog> queryAll(Long id) {
+	public List<OperateLog> queryAll(String projectCode,String profile, Long id) {
 		
 		String username = super.getUser().getUserName();
 		if(id <= 0 ){
@@ -56,7 +56,6 @@ public class OperateLogServiceImpl extends GodzillaApplication implements Operat
 		}
 		return logs;
 	}
-	
 	public static ResponseBodyJson logThenReturn(ResponseBodyJson response) {
 		String operation = response.getOperator();
 		
@@ -64,16 +63,15 @@ public class OperateLogServiceImpl extends GodzillaApplication implements Operat
 		
 		return response;
 	}
-	
 	public static ResponseBodyJson updateLogThenReturn(ResponseBodyJson response) {
 		String operation = response.getOperator();
 		
-		GodzillaApplication.operateLogService.updateOperateLog(Integer.parseInt(response.getData()+""), GodzillaApplication.getUser().getUserName(), GodzillaApplication.getUser().getRealName(), Application.projectcodeThreadLocal.get(), Application.profileThreadLocal.get(), operation, response.getReturncode(), response.getReturnmsg(), response.getReturnmemo());
+		GodzillaApplication.operateLogService.updateOperateLog(Application.projectcodeThreadLocal.get(), Application.profileThreadLocal.get(), Integer.parseInt(response.getData()+""), GodzillaApplication.getUser().getUserName(), GodzillaApplication.getUser().getRealName(), operation, response.getReturncode(), response.getReturnmsg(), response.getReturnmemo());
 		
 		return response;
 	}
 	@Override
-	public int addOperateLog(String mvnlog, String jarlog) {
+	public int addOperateLog(String projectCode, String profile, String mvnlog, String jarlog) {
 		OperateLog record = new OperateLog();
 		record.setDeployLog(mvnlog);
 		record.setWarInfo(jarlog);
@@ -81,9 +79,8 @@ public class OperateLogServiceImpl extends GodzillaApplication implements Operat
 		return record.getId().intValue();
 	}
 	@Override
-	public int updateOperateLog(int logid, String username, String realname,
-			String projectCode, String profile, String operation,
-			String operateCode, String executeResult, String resultInfo) {
+	public int updateOperateLog(String projectCode, String profile, int logid, String username, String realname,
+			String operation, String operateCode, String executeResult, String resultInfo) {
 		OperateLog record = new OperateLog();
 		record.setId(Long.valueOf(logid));
 		record.setUserName(username);
@@ -108,8 +105,8 @@ public class OperateLogServiceImpl extends GodzillaApplication implements Operat
 		record.setExecuteTime(new Date());
 		return operateLogMapper.updateLogById(record);
 	}
-	
-	public int addOperateLog(String username, String realname,String projectCode, String profile, String operation, String operateCode, String executeResult, String resultInfo) {
+	@Override
+	public int addOperateLog(String projectCode, String profile, String username, String realname, String operation, String operateCode, String executeResult, String resultInfo) {
 		OperateLog record = new OperateLog();
 		record.setUserName(username);
 		record.setRealName(realname);
@@ -134,40 +131,8 @@ public class OperateLogServiceImpl extends GodzillaApplication implements Operat
 		return operateLogMapper.insertSelective(record);
 	}
 
-
-
-	private void addSvnCommandLog(String username, String trunkPath, String commands, String username2) {
-		OperateLog record = new OperateLog();
-		record.setUserName(username);
-		record.setProjectCode("");
-		record.setProfile("");
-		record.setSort("svn");
-		record.setOperation("");
-		record.setCommands(commands);
-		
-		record.setResultInfo("");
-		record.setExecuteTime(new Date());
-		operateLogMapper.insertSelective(record);
-		return ;
-	}
-
-	private void addMvnCmdLog(String username, String projectCode, String profile, String commands, String resultInfo) {
-		OperateLog record = new OperateLog();
-		record.setUserName(username);
-		record.setProjectCode(projectCode);
-		record.setProfile(profile);
-		record.setSort("mvn");
-		record.setOperation("");
-		record.setCommands(commands);
-		
-		record.setResultInfo(resultInfo);
-		record.setExecuteTime(new Date());
-		operateLogMapper.insertSelective(record);
-		return ;
-	}
-
 	@Override
-	public OperateLog queryLogById(String logid) {
+	public OperateLog queryLogById(String projectCode, String profile, String logid) {
 		OperateLog log = operateLogMapper.queryLogById(Integer.parseInt(logid));
 		return log;
 	}
