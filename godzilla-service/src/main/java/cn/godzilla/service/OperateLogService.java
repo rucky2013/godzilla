@@ -14,10 +14,14 @@ public interface OperateLogService extends Constant {
 
 	public int addOperateLog(String username, String realname,String projectCode, String profile, String operation, String operateCode, String executeResult, String resultInfo) ;
 
-	public OperateLog queryLogById(String logid);
+	public OperateLog queryLogById(Long logid);
 
-	public int addOperateLog(String mvnlog, String jarlog);
+	public Long addOperateLog(String mvnlog, String jarlog);
 
-	public int updateOperateLog(int logid, String username, String realname,String projectCode, String profile, String operation, String operateCode, String executeResult, String resultInfo) ;
+	public int updateOperateLog(Long logid, String username, String realname,String projectCode, String profile, String operation, String operateCode, String executeResult, String resultInfo) ;
+
+	public Long addOperateLog(String catalinaLog);
+
+	public int updateOperateLog(String catalinaLog, Long logid);
 
 }

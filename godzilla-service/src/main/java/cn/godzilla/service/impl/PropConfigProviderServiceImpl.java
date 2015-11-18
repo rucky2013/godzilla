@@ -21,19 +21,27 @@ public class PropConfigProviderServiceImpl implements PropConfigProviderService 
 	
 	@Override
 	public RpcResult propToPom(String project_code, String webPath, String profile, String parentVersion, ClientConfig clientConfig) throws DocumentException, IOException,  Exception {
-		/**
+		/*
 		 * 1.get pom.xml path
 		 */
 		String webPomPath = webPath + "/pom.xml";
-		
+		List<PropConfig> propconfigs = this.getPropConfigsByProjectcodeAndProfile(project_code, profile);
 		try {
-			/**
+			/*
 			 * 2.get propconfigs from DB
 			 */
 			parentVersion = StringUtil.isEmpty(parentVersion)?DEFAULT_VERSION_PARENTPOM:parentVersion;
 			
-			/**
-			 * 4.change deploy war tomcat properties for web/pom.xml
+			/*
+			 * 2.5 check local web-pom.xml dev-test profile VS db ${projectCode-profile}'s profile 
+			 */
+			String looseProp = XmlUtil.comparePropFromWebPomVSDb(profile, propconfigs, webPomPath);
+			if(!"".equals(looseProp)) {
+				return RpcResult.createLooseprop(FAILURE, 0L, looseProp);
+			}
+			
+			/*
+			 * 3.change deploy war tomcat properties for web/pom.xml
 			 * if tomcat-need-plugin == 0
 			 *    delete plugin; 
 			 * else 
@@ -45,10 +53,10 @@ public class PropConfigProviderServiceImpl implements PropConfigProviderService 
 				XmlUtil.deleteWebPomPlugin(webPomPath, webPomPath);
 			}
 			
-			/**
-			 * 3.save propconfigs cover pom.xml
+			/*
+			 * 4.save propconfigs cover pom.xml
 			 */
-			List<PropConfig> propconfigs = this.getPropConfigsByProjectcodeAndProfile(project_code, profile);
+			
 			//XmlUtil.coverParentPom(parentVersion, parentPomPath, parentPomPath);
 			//this.replaceHtml(propconfigs);
 			XmlUtil.coverWebPom(propconfigs, webPomPath, webPomPath);
@@ -56,9 +64,9 @@ public class PropConfigProviderServiceImpl implements PropConfigProviderService 
 			
 		} catch(Exception e) {
 			e.printStackTrace();
-			return RpcResult.create(FAILURE, 0);
+			return RpcResult.create(FAILURE, 0L);
 		}
-		return RpcResult.create(SUCCESS, 0);
+		return RpcResult.create(SUCCESS, 0L);
 	}
 	
 	private String replaceHtml(String string) {

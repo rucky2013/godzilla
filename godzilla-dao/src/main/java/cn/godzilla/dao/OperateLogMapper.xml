@@ -22,6 +22,7 @@
     <result column="result_info" property="resultInfo" jdbcType="LONGVARCHAR" />
     <result column="deploy_log" property="deployLog" jdbcType="LONGVARCHAR" />
     <result column="war_info" property="warInfo" jdbcType="LONGVARCHAR" />
+    <result column="catalina_log" property="catalinaLog" jdbcType="LONGVARCHAR" />
   </resultMap>
   <sql id="Blob_Column_List" >
     result_info
@@ -30,11 +31,11 @@
     
     insert into operate_logs (id, user_name, real_name, project_code, 
       profile, client_ip, sort, commands, operation, operate_code, execute_time, 
-      execute_result, result_info)
+      execute_result, result_info, deploy_log, war_info, catalina_log)
     values (#{id,jdbcType=DECIMAL}, #{userName,jdbcType=VARCHAR}, #{realName,jdbcType=VARCHAR}, #{projectCode,jdbcType=VARCHAR}, 
       #{profile,jdbcType=VARCHAR},  #{clientIp,jdbcType=VARCHAR},#{sort,jdbcType=VARCHAR},#{commands,jdbcType=VARCHAR},#{operation,jdbcType=VARCHAR},#{operateCode,jdbcType=INTEGER}, now(), 
       #{executeResult,jdbcType=INTEGER}, #{resultInfo,jdbcType=LONGVARCHAR}
-      , #{deployLog,jdbcType=LONGVARCHAR}, #{warInfo,jdbcType=LONGVARCHAR})
+      , #{deployLog,jdbcType=LONGVARCHAR}, #{warInfo,jdbcType=LONGVARCHAR}, #{catalinaLog,jdbcType=LONGVARCHAR})
   </insert>
   <insert id="insertSelective" useGeneratedKeys="true" keyProperty="id" parameterType="cn.godzilla.model.OperateLog" >
     insert into operate_logs
@@ -82,6 +83,9 @@
       <if test="warInfo != null" >
         war_info,
       </if>
+      <if test="catalinaLog != null" >
+        catalina_log,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -127,12 +131,15 @@
       <if test="warInfo != null" >
         #{warInfo,jdbcType=LONGVARCHAR},
       </if>
+      <if test="catalinaLog != null" >
+        #{catalinaLog,jdbcType=LONGVARCHAR},
+      </if>
     </trim>
   </insert>
   
   <sql id="queryColumns">id, user_name as userName, real_name as realName, project_code as projectCode, 
       profile, operation,client_ip as clientIp, sort, commands, operate_code as operateCode, execute_time executeTime, 
-      execute_result executeResult, result_info resultInfo, deploy_log deployLog, war_info warInfo
+      execute_result executeResult, result_info resultInfo, deploy_log deployLog, war_info warInfo, catalina_log as catalinaLog
       </sql>
       
       <select id="queryList" resultType="cn.godzilla.model.OperateLog" parameterType="java.util.Map">
@@ -205,6 +212,9 @@
       </if>
       <if test="warInfo != null" >
         war_info = #{warInfo},
+      </if>
+      <if test="catalinaLog != null" >
+        catalina_log = #{catalinaLog},
       </if>
       execute_time = now()
       where id = #{id}

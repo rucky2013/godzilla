@@ -70,7 +70,7 @@ public enum ReturnCodeEnum {
 	NO_NEWCONFLICTFOUND("100062", "发现新冲突，重新合并分支解决冲突"),
 	NO_WRONGOLDPWD("100063", "旧密码输入错误，如忘记密码找管理员更改密码"),
 	NO_CHANGEPWD("100064", "更改密码失败"),
-	
+	NO_LOOSEPROP("100065", "存在没有添加到数据库的配置项"),
 	
 	OK_SUCCESS("200000", "SUCCESS"),
 	//user模块

@@ -45,7 +45,7 @@ public interface MvnService extends Constant{
 	 * @param logid
 	 * @return
 	 */
-	public ReturnCodeEnum showdeployLog(HttpServletResponse response, String projectCode, String profile, String logid);
+	public ReturnCodeEnum showdeployLog(HttpServletResponse response, String projectCode, String profile, Long logid);
 	/**
 	 * 显示war包lib信息
 	 * @param response
@@ -54,7 +54,7 @@ public interface MvnService extends Constant{
 	 * @param logid
 	 * @return
 	 */
-	public ReturnCodeEnum showwarInfo(HttpServletResponse response, String projectCode, String profile, String logid);
+	public ReturnCodeEnum showwarInfo(HttpServletResponse response, String projectCode, String profile, Long logid);
 	
 	/**
 	 * 重启tomcat
@@ -62,7 +62,7 @@ public interface MvnService extends Constant{
 	 * @param profile
 	 * @return
 	 */
-	public ReturnCodeEnum restartTomcat(String projectCode, String profile) ;
+	public ReturnCodeEnum restartTomcat(String projectCode, String profile, Long logid) ;
 
 	
 }

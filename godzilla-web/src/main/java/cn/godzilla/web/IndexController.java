@@ -124,7 +124,7 @@ public class IndexController extends GodzillaApplication{
 		return null;
 	}
 	/**
-	 * 显示打包命令执行信息
+	 * 显示打包命令执行信息+catalina log
 	 * @param sid
 	 * @param projectCode
 	 * @param profile
@@ -135,7 +135,7 @@ public class IndexController extends GodzillaApplication{
 	@RequestMapping(value="/project/{sid}/{projectCode}/{profile}/showdeployLog", method=RequestMethod.POST) 
 	@ResponseBody
 	public Object showdeployLog(@PathVariable("sid") String sid, @PathVariable String projectCode, @PathVariable String profile, 
-			@RequestParam("logid") String logid, HttpServletResponse response) {
+			@RequestParam("logid") Long logid, HttpServletResponse response) {
 		
 		ReturnCodeEnum returnEnum = mvnService.showdeployLog(response, projectCode, profile, logid);
 		return ResponseBodyJson.custom().setAll(returnEnum, SHOWDEPLOYLOG).build().log();
@@ -152,7 +152,7 @@ public class IndexController extends GodzillaApplication{
 	@RequestMapping(value="/project/{sid}/{projectCode}/{profile}/showwarInfo", method=RequestMethod.POST) 
 	@ResponseBody
 	public Object showwarInfo(@PathVariable("sid") String sid, @PathVariable String projectCode, @PathVariable String profile, 
-			@RequestParam("logid") String logid, HttpServletResponse response) {
+			@RequestParam("logid") Long logid, HttpServletResponse response) {
 		
 		ReturnCodeEnum returnEnum = mvnService.showwarInfo(response, projectCode, profile, logid);
 		return ResponseBodyJson.custom().setAll(returnEnum, SHOWWARINFO).build().log();
@@ -172,9 +172,10 @@ public class IndexController extends GodzillaApplication{
 	@ResponseBody
 	public Object restart(@PathVariable String sid, @PathVariable String projectCode,@PathVariable String profile, HttpServletRequest request, HttpServletResponse response) {
 	
-		ReturnCodeEnum returnEnum = mvnService.restartTomcat(projectCode, profile);
+		ReturnCodeEnum returnEnum = mvnService.restartTomcat(projectCode, profile, 0L);
 		
-		return ResponseBodyJson.custom().setAll(returnEnum, TOMCATRESTART).build().log();
+		//独立线程  处  初始化catalina日志了，已经，这边记录 ：成功失败
+		return ResponseBodyJson.custom().setAll(returnEnum, TOMCATRESTART).build().updateLog();
 	}
 	
 	/**

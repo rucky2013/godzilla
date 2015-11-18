@@ -40,6 +40,7 @@ yum install subversion
 5.ssh 免密码登录
 ssh-keygen -t rsa -P ''
 scp -rP 2222 godzilla@10.100.142.69:~/* ~
+scp -rP 2222 .ssh/id_rsa.pub godzilla@10.100.142.78:~/id_rsa.pub87
 cat ~/id_rsa.pub*  >> .ssh/authorized_keys
 store-plaintext-passwords = no
 chmod 700 .ssh/authorized_keys

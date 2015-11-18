@@ -147,6 +147,7 @@ public interface Constant {
 	public final static String NO_NEWCONFLICTFOUND = "100062";
 	public final static String NO_WRONGOLDPWD = "100063";
 	public final static String NO_CHANGEPWD = "100064";
+	public final static String NO_LOOSEPROP = "100065";
 	
 	public final static String OK_AJAX = "200000";
 	public final static String OK_CHECKUSER = "200001";

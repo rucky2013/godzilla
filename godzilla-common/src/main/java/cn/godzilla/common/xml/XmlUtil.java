@@ -5,7 +5,9 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -17,10 +19,11 @@ import org.dom4j.io.SAXReader;
 import org.dom4j.io.XMLWriter;
 
 import cn.godzilla.common.BusinessException;
+import cn.godzilla.common.Constant;
 import cn.godzilla.model.ClientConfig;
 import cn.godzilla.model.PropConfig;
 
-public class XmlUtil {
+public class XmlUtil implements Constant{
 	private static final Logger logger = LogManager.getLogger(XmlUtil.class);
 
 	public static final String PARENT_POMPATH = "F:/yixin_fso_app/godzilla/pom.xml";
@@ -151,6 +154,62 @@ public class XmlUtil {
 	}
 	
 	/**
+	 * 比较 pom中dev-test profile 与 数据库配置的相应 prop  是否 对应key 都存在，pom中
+	 * @param propconfigs
+	 * @param webPomPath
+	 * @throws DocumentException 
+	 * @throws FileNotFoundException 
+	 */
+	@SuppressWarnings("unchecked")
+	public static String comparePropFromWebPomVSDb(String profilestr, List<PropConfig> propconfigs, String webPomPath) throws FileNotFoundException, DocumentException {
+		
+		Document doc = parse(webPomPath);
+		Element root = doc.getRootElement();
+		
+		Set<String> propconfigsSet = new HashSet<String>();
+		for(PropConfig prop: propconfigs) {
+			String proKey = prop.getProKey();
+			propconfigsSet.add(proKey);
+		}
+		
+		List<Element> profileList = root.element("profiles").elements("profile");
+		
+		String looseProp = "";
+		if(TEST_PROFILE.equals(profilestr)) {
+			for(Element domProfile: profileList) {
+				/*if("test".equals(profile.element("id").getText())){
+					testProfile = profile;
+				}*/
+				if("dev-test".equals(domProfile.element("id").getText())){
+					Element domproperties = domProfile.element("properties");
+					List<Element> domproplist = domproperties.elements();
+					for(Element property: domproplist) {
+						String pro_Key = property.getName();
+						if(!propconfigsSet.contains(pro_Key)) {
+							looseProp += pro_Key;
+						}
+					}
+				}
+			}
+		} else {
+			for(Element domProfile: profileList) {
+				if(profilestr.equals(domProfile.element("id").getText())){
+					Element domproperties = domProfile.element("properties");
+					List<Element> domproplist = domproperties.elements();
+					for(Element property: domproplist) {
+						String pro_Key = property.getName();
+						if(!propconfigsSet.contains(pro_Key)) {
+							looseProp += pro_Key;
+						}
+					}
+				}
+			}
+		}
+		
+		return looseProp;
+	}
+	
+	/**
 	 * 删除  plugin  web.pom
 	 * @param webPomPath
 	 * @param savePomPath
@@ -245,5 +304,4 @@ public class XmlUtil {
 		writer.close();
 	}
 
-	
 }

@@ -164,17 +164,21 @@ public class MvnServiceImpl extends GodzillaApplication implements MvnService {
 		 * percent 50%
 		 */
 		boolean flag1 = false;
+		RpcResult result1 = null;
 		try {
 			PropConfigProviderService propConfigProviderService = propConfigProviderServices.get(IP);
 			
-			RpcResult result = propConfigProviderService.propToPom(projectCode, webPath, profile, parentVersion, clientconfig);
-			flag1 = result.getRpcCode().equals("0")?true:false;
+			result1 = propConfigProviderService.propToPom(projectCode, webPath, profile, parentVersion, clientconfig);
+			flag1 = result1.getRpcCode().equals("0")?true:false;
 		} catch(RpcException e){
 			return ReturnCodeEnum.getByReturnCode(NO_RPCEX);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		if(!flag1){
+			if(result1!=null &&result1.getRpcCode().equals(RpcResult.LOOSEPROP)){
+				return ReturnCodeEnum.getByReturnCode(NO_LOOSEPROP).setData(result1.getData());
+			}
 			return ReturnCodeEnum.getByReturnCode(NO_CHANGEPOM);
 		}
 		processPercent.put(pencentkey, "30");
@@ -202,15 +206,15 @@ public class MvnServiceImpl extends GodzillaApplication implements MvnService {
 		 * percent 90%
 		 */
 		boolean flag2 = false;
-		RpcResult result = null;
+		RpcResult result2 = null;
 		if("godzilla".equals(projectCode)) {
 			flag2 = true;
 		} else {
 			try {
 				MvnProviderService mvnProviderService = mvnProviderServices.get(IP);
 				String username = GodzillaApplication.getUser().getUserName();
-				result = this.deployProject(mvnProviderService, username, webPath, projectCode, profile, IP, parentVersion, parentPomPath, super.getUser().getRealName());
-				flag2 = result.getRpcCode().equals("0")?true:false;
+				result2 = this.deployProject(mvnProviderService, username, webPath, projectCode, profile, IP, parentVersion, parentPomPath, super.getUser().getRealName());
+				flag2 = result2.getRpcCode().equals("0")?true:false;
 			} catch(RpcException e){
 				return ReturnCodeEnum.getByReturnCode(NO_RPCEX);
 			}  catch (Exception e) {
@@ -220,7 +224,7 @@ public class MvnServiceImpl extends GodzillaApplication implements MvnService {
 		
 		t1.interrupt();
 		processPercent.put(pencentkey, "85");
-		int logid = result.getLogid();
+		Long logid = result2.getLogid();
 		if(0>=logid){
 			return ReturnCodeEnum.getByReturnCode(NO_MVNBUILDLOG);
 		} else if(!flag2) {
@@ -239,25 +243,15 @@ public class MvnServiceImpl extends GodzillaApplication implements MvnService {
 		/*
 		 * 3. 日常环境 ：httpclient 访问  ip:8080/war_name/index   查找 是否存在 <!--<h5>godzilla</h5>--> 字符串 判断 tomcat是否启动成功
 		 */
-		String warName = project.getWarName();
 		boolean flag4 = false;
-		/*if(projectCode.equals("godzilla")) {
-			flag4 = true;
-		} else {
-			if(TEST_PROFILE.equals(profile)) {
-				flag4 = super.ifSuccessStartTomcat(IP, warName);
-			} else {
-				flag4 = true;
-			}
-		}*/
 		// bug:tomcat hot deploy cannot success for netty-project
 		//workaround: restart for test,project start success.
 		if(TEST_PROFILE.equals(profile)) {
-			flag4 = this.restartTomcat(projectCode, profile).equals(ReturnCodeEnum.getByReturnCode(OK_STARTTOMCAT));
+			flag4 = this.restartTomcat(projectCode, profile, logid).equals(ReturnCodeEnum.getByReturnCode(OK_STARTTOMCAT));
 		} else {
 			flag4 = true;
 		}
-		//setData为给 统一日志 传输 更新日志ID，不传送给前台信息
+		
 		if(flag4) {
 			return ReturnCodeEnum.getByReturnCode(OK_MVNDEPLOY).setData(logid);
 		} else {
@@ -269,7 +263,6 @@ public class MvnServiceImpl extends GodzillaApplication implements MvnService {
 	public RpcResult deployProject(MvnProviderService mvnProviderService, String username, String webPath, String projectCode, String profile, String IP, String parentVersion, String parentPomPath, String realname) {
 		boolean flag2 = false;
 		RpcResult result = null;
-		String commands = "";
 		try {
 			String POM_PATH = webPath + "/pom.xml";
 			String PARENTPOM_PATH = parentPomPath + "/pom.xml";
@@ -283,14 +276,13 @@ public class MvnServiceImpl extends GodzillaApplication implements MvnService {
 			String str = "sh "+shell+" deploy "+POM_PATH+" "+USER_NAME+" "+PROJECT_NAME+" "+ PROJECT_ENV +" " +parentVersion + " " + PARENTPOM_PATH;
 			
 			result = mvnProviderService.mvnDeploy(str, projectCode, PROJECT_ENV, USER_NAME, realname, profile);
-			commands = str;
 			flag2 = result.getRpcCode().equals("0")?true:false;
 		}  catch(RpcException e){
 			throw new RpcException(e);
 		} catch (Exception e) {
 			logger.error(e);
 			e.printStackTrace();
-			return RpcResult.create(FAILURE, 0);
+			return RpcResult.create(FAILURE, 0L);
 		}
 		if(flag2) {
 			//mvn deploy 执行成功
@@ -334,20 +326,20 @@ public class MvnServiceImpl extends GodzillaApplication implements MvnService {
 	}
 	
 	@Override
-	public ReturnCodeEnum showdeployLog(HttpServletResponse response, String projectCode, String profile, String logid) {
-		if(StringUtil.isEmpty(logid) || logid.equals("0")) {
+	public ReturnCodeEnum showdeployLog(HttpServletResponse response, String projectCode, String profile, Long logid) {
+		if(logid<=0) {
 			return ReturnCodeEnum.getByReturnCode(NO_DEPLOYLOGID);//id错误
 		} 
 		
 		OperateLog log =  operateLogService.queryLogById(logid);
-		if(StringUtil.isEmpty(log.getDeployLog())) 
-			return ReturnCodeEnum.getByReturnCode(NO_STOREDEPLOYLOG);//日志记录失败
+		if(StringUtil.isEmpty(log.getDeployLog())&&StringUtil.isEmpty(log.getCatalinaLog())) 
+			return ReturnCodeEnum.getByReturnCode(NO_STOREDEPLOYLOG);//日志记录失败  20151118 添加catalina日志
 		//setData为给前台显示后台信息，而不输出日志
-		return ReturnCodeEnum.getByReturnCode(OK_SHOWDEPLOYLOG).setData(log.getDeployLog());
+		return ReturnCodeEnum.getByReturnCode(OK_SHOWDEPLOYLOG).setData(log.getDeployLog()+log.getCatalinaLog());
 	}
 	@Override
-	public ReturnCodeEnum showwarInfo(HttpServletResponse response, String projectCode, String profile, String logid) {
-		if(StringUtil.isEmpty(logid) || logid.equals("0")) {
+	public ReturnCodeEnum showwarInfo(HttpServletResponse response, String projectCode, String profile, Long logid) {
+		if(logid<=0) {
 			return ReturnCodeEnum.getByReturnCode(NO_SHOWWARINFOID);//id错误
 		} 
 		
@@ -466,8 +458,8 @@ public class MvnServiceImpl extends GodzillaApplication implements MvnService {
 		}
 		
 	}
-	
-	public ReturnCodeEnum restartTomcat(String projectCode, String profile) {
+	@Override
+	public ReturnCodeEnum restartTomcat(String projectCode, String profile, Long logid) {
 		
 		/**
 		 * 1.限制并发　
@@ -487,7 +479,7 @@ public class MvnServiceImpl extends GodzillaApplication implements MvnService {
 			} else {
 				return ReturnCodeEnum.getByReturnCode(NO_RESTARTEFFECT);
 			}
-			return this.restartTomcat1(projectCode, profile);
+			return this.restartTomcat1(projectCode, profile, logid);
 		} catch(InterruptedException e) {
 			e.printStackTrace();
 			return ReturnCodeEnum.getByReturnCode(NO_CONCURRENCEDEPLOY);
@@ -501,7 +493,7 @@ public class MvnServiceImpl extends GodzillaApplication implements MvnService {
 			} 
 		}
 	}
-	private ReturnCodeEnum restartTomcat1(String projectCode, String profile) {
+	private ReturnCodeEnum restartTomcat1(String projectCode, String profile, Long logid) {
 		boolean flag =false;
 		ClientConfig clientConfig = clientConfigService.queryDetail(projectCode, profile) ;
 		String clientIp = clientConfig.getRemoteIp();
@@ -529,8 +521,19 @@ public class MvnServiceImpl extends GodzillaApplication implements MvnService {
 		 * 3. httpclient 访问  ip:8080/war_name/index.jsp   查找 是否存在 <!--<h5>godzilla</h5>--> 字符串 判断 tomcat是否启动成功
 		 */
 		String warName = project.getWarName();
-		String IP = clientIp;
+		final String IP = clientIp;
 		
+		
+		//tail -500 catalina.out > db
+		//setData为给 统一日志 传输 更新日志ID，不传送给前台信息
+		final BaseShellCommand catalinaCommand = new BaseShellCommand();
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				
+				catalinaCommand.tailLogUtilNotify("sh /home/godzilla/gzl/shell/server/catalinalog_server.sh " + IP);
+			}
+		}).start();
 		
 		if(projectCode.equals("godzilla")) {
 			flag = flag&&true;
@@ -540,15 +543,22 @@ public class MvnServiceImpl extends GodzillaApplication implements MvnService {
 			} else {
 				flag = flag&&true;
 			}
-			
+		}
+		catalinaCommand.lock.lock();
+		catalinaCommand.done.signal();
+		catalinaCommand.lock.unlock();
+		if(logid == 0) {
+			//restart button
+			logid = operateLogService.addOperateLog(catalinaCommand.catalinaLog);
+		} else {
+			//deploy button
+			operateLogService.updateOperateLog(catalinaCommand.catalinaLog, logid);
 		}
 		
 		if(flag) {
-			return ReturnCodeEnum.getByReturnCode(OK_STARTTOMCAT);
+			return ReturnCodeEnum.getByReturnCode(OK_STARTTOMCAT).setData(logid);
 		} else {
-			return ReturnCodeEnum.getByReturnCode(NO_STARTTOMCAT);
+			return ReturnCodeEnum.getByReturnCode(NO_STARTTOMCAT).setData(logid);
 		}
 	}
-	
-	
 }

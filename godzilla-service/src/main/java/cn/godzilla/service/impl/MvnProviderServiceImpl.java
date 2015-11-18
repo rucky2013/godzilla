@@ -50,7 +50,7 @@ public class MvnProviderServiceImpl extends Application implements MvnProviderSe
 			
 		}
 		//保存mvn部署日志
-		int logid = operateLogService.addOperateLog(mvnlog, jarlog);
+		Long logid = operateLogService.addOperateLog(mvnlog, jarlog);
 		
 		mvnBuildThreadLocal.set("FAILURE");
 		mvnERRORThreadLocal.set("SUCCESS");

@@ -4,6 +4,9 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.concurrent.locks.Condition;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -13,53 +16,114 @@ import org.springframework.util.StringUtils;
 import cn.godzilla.common.Application;
 
 @Component("baseShellCommand")
-public class BaseShellCommand extends Application{
-	
+public class BaseShellCommand extends Application {
+
 	private final Logger logger = LogManager.getLogger(BaseShellCommand.class);
 	public static final String AREA = "svn";
 	public static final String ENCODING = "UTF-8";
-	
+
+	public Lock lock = new ReentrantLock();
+	public Condition done = lock.newCondition();
+	public String catalinaLog = "";
+	public Process p = null;
+	Runtime rt = Runtime.getRuntime();
+
+	public void tailLogUtilNotify(String command) {
+		try {
+			p = rt.exec(command);
+
+			final InputStream is1 = p.getInputStream();
+			Thread t1 = new Thread(new Runnable() {
+				@Override
+				public void run() {
+					try {
+						BufferedReader br1 = new BufferedReader(new InputStreamReader(is1, "UTF-8"));
+						String line1 = null;
+						while ((line1 = br1.readLine()) != null) {
+							if (line1 != null) {
+								logger.info("******BaseShellCommand.execute-->InputStream-->catalinaLog******" + line1);
+								catalinaLog = catalinaLog + line1 + "<br/>";
+							}
+						}
+					} catch (IOException e) {
+						logger.debug("******Stream closed******");
+					} finally {
+						try {
+							is1.close();
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+					}
+				}
+			});
+			t1.start();
+			p.waitFor();
+			lock.lock();
+			done.await();
+			lock.unlock();
+			t1.interrupt();
+			p.destroy();
+		} catch (IOException e) {
+			e.printStackTrace();
+			try {
+				p.getErrorStream().close();
+				p.getInputStream().close();
+				p.getOutputStream().close();
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+			try {
+				p.getErrorStream().close();
+				p.getInputStream().close();
+				p.getOutputStream().close();
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
+		}
+	}
+
 	public boolean execute(String command, final String username, String projectCode, String svnusername, String svnpassword, String CONFL_URL) {
-		if(StringUtils.isEmpty(command) || StringUtils.isEmpty(username)){
-			
+		if (StringUtils.isEmpty(command) || StringUtils.isEmpty(username)) {
+
 			logger.debug("*************svn baseBaseCommand.execute 参数为空!");
-			return false ;
-			
+			return false;
+
 		}
-		
+
 		command += " " + svnusername + " " + svnpassword + " " + CONFL_URL;
-		
+
 		System.out.println(command);
-		
+
 		Runtime rt = Runtime.getRuntime();
 		Process p = null;
 		try {
-			
+
 			p = rt.exec(command);
-			
-			if(!isEcho){
-				if(command.contains(" status ")) {
+
+			if (!isEcho) {
+				if (command.contains(" status ")) {
 					inThreadPrint1(p);
-				} else if(command.contains(" version ")) {
+				} else if (command.contains(" version ")) {
 					inThreadPrint2(p);
 				} else {
 					inThreadPrint3(p);
 				}
-				
+
 			} else {
 				newThreadPrint(p, username);
 			}
-			
+
 			p.waitFor();
 			p.destroy();
-			
-			
+
 			return true;
 		} catch (Exception e) {
-			
+
 			logger.debug(e.getMessage());
 			e.printStackTrace();
-			
+
 			try {
 				p.getErrorStream().close();
 				p.getInputStream().close();
@@ -71,49 +135,48 @@ public class BaseShellCommand extends Application{
 		}
 		return false;
 	}
-	
+
 	public boolean execute(String command, final String username, String projectCode, String svnusername, String svnpassword) {
-		
-		if(StringUtils.isEmpty(command) || StringUtils.isEmpty(username)){
-			
+
+		if (StringUtils.isEmpty(command) || StringUtils.isEmpty(username)) {
+
 			logger.debug("*************svn baseBaseCommand.execute 参数为空!");
-			return false ;
-			
+			return false;
+
 		}
-		
+
 		command += " " + svnusername + " " + svnpassword;
-		
+
 		System.out.println(command);
-		
+
 		Runtime rt = Runtime.getRuntime();
 		Process p = null;
 		try {
-			
+
 			p = rt.exec(command);
-			
-			if(!isEcho){
-				if(command.contains(" status ")) {
+
+			if (!isEcho) {
+				if (command.contains(" status ")) {
 					inThreadPrint1(p);
-				} else if(command.contains(" version ")) {
+				} else if (command.contains(" version ")) {
 					inThreadPrint2(p);
 				} else {
 					inThreadPrint3(p);
 				}
-				
+
 			} else {
 				newThreadPrint(p, username);
 			}
-			
+
 			p.waitFor();
 			p.destroy();
-			
-			
+
 			return true;
 		} catch (Exception e) {
-			
+
 			logger.debug(e.getMessage());
 			e.printStackTrace();
-			
+
 			try {
 				p.getErrorStream().close();
 				p.getInputStream().close();
@@ -125,25 +188,24 @@ public class BaseShellCommand extends Application{
 		}
 		return false;
 	}
-	
+
 	/**
-	 * no echo
-	 * svn status
+	 * no echo svn status
+	 * 
 	 * @param p
 	 */
 	private void inThreadPrint1(Process p) {
 		// 获取进程的标准输入流
 		final InputStream is1 = p.getInputStream();
 		try {
-			BufferedReader br1 = new BufferedReader(
-					new InputStreamReader(is1, "UTF-8"));
+			BufferedReader br1 = new BufferedReader(new InputStreamReader(is1, "UTF-8"));
 			String line1 = null;
 			String message = "<p>";
 			while ((line1 = br1.readLine()) != null) {
 				if (line1 != null) {
-					logger.info("******BaseShellCommand.execute-->InputStream******"+line1);
+					logger.info("******BaseShellCommand.execute-->InputStream******" + line1);
 					message = message + line1 + "<br/>";
-					
+
 				}
 			}
 			message = message + "</p>";
@@ -158,22 +220,22 @@ public class BaseShellCommand extends Application{
 			}
 		}
 	}
+
 	/**
-	 * no echo
-	 * svn version 
+	 * no echo svn version
+	 * 
 	 * @param p
 	 */
 	private void inThreadPrint2(Process p) {
 		// 获取进程的标准输入流
 		final InputStream is1 = p.getInputStream();
 		try {
-			BufferedReader br1 = new BufferedReader(
-					new InputStreamReader(is1, "UTF-8"));
+			BufferedReader br1 = new BufferedReader(new InputStreamReader(is1, "UTF-8"));
 			String line1 = null;
 			while ((line1 = br1.readLine()) != null) {
 				if (line1 != null) {
-					logger.info("******BaseShellCommand.execute-->InputStream******"+line1);
-					if(line1.startsWith("versionr")) {
+					logger.info("******BaseShellCommand.execute-->InputStream******" + line1);
+					if (line1.startsWith("versionr")) {
 						String version = line1.replaceAll("versionr", "");
 						svnVersionThreadLocal.set(version);
 					}
@@ -191,23 +253,22 @@ public class BaseShellCommand extends Application{
 			}
 		}
 	}
-	
+
 	/**
-	 * no echo
-	 * svn merge commit 
+	 * no echo svn merge commit
+	 * 
 	 * @param p
 	 */
 	private void inThreadPrint3(Process p) {
 		// 获取进程的标准输入流
 		final InputStream is1 = p.getInputStream();
 		try {
-			BufferedReader br1 = new BufferedReader(
-					new InputStreamReader(is1, "UTF-8"));
+			BufferedReader br1 = new BufferedReader(new InputStreamReader(is1, "UTF-8"));
 			String line1 = null;
 			while ((line1 = br1.readLine()) != null) {
 				if (line1 != null) {
 					shellReturnThreadLocal.set(line1);
-					logger.info("******BaseShellCommand.execute-->InputStream******"+line1);
+					logger.info("******BaseShellCommand.execute-->InputStream******" + line1);
 				}
 			}
 		} catch (Exception e) {
@@ -232,16 +293,15 @@ public class BaseShellCommand extends Application{
 			public void run() {
 
 				try {
-					BufferedReader br1 = new BufferedReader(
-							new InputStreamReader(is1, "UTF-8"));
+					BufferedReader br1 = new BufferedReader(new InputStreamReader(is1, "UTF-8"));
 					String line1 = null;
 					while ((line1 = br1.readLine()) != null) {
 						if (line1 != null) {
-							logger.info("******BaseShellCommand.execute-->InputStream******"+line1);
+							logger.info("******BaseShellCommand.execute-->InputStream******" + line1);
 						}
 					}
 				} catch (Exception e) {
-					//e.printStackTrace();
+					// e.printStackTrace();
 					logger.debug("******Stream closed******");
 				} finally {
 					try {
@@ -252,21 +312,20 @@ public class BaseShellCommand extends Application{
 				}
 			}
 		};
-		
+
 		Thread t2 = new Thread() {
 			public void run() {
 
 				try {
-					BufferedReader br2 = new BufferedReader(
-							new InputStreamReader(is2, "UTF-8"));
+					BufferedReader br2 = new BufferedReader(new InputStreamReader(is2, "UTF-8"));
 					String line2 = null;
 					while ((line2 = br2.readLine()) != null) {
 						if (line2 != null) {
-							logger.info("******BaseShellCommand.execute-->ErrorStream******"+line2);
+							logger.info("******BaseShellCommand.execute-->ErrorStream******" + line2);
 						}
 					}
 				} catch (IOException e) {
-					//e.printStackTrace();
+					// e.printStackTrace();
 					logger.debug("******Stream closed******");
 				} finally {
 					try {
@@ -277,7 +336,7 @@ public class BaseShellCommand extends Application{
 				}
 			}
 		};
-		
+
 		t1.start();
 		t2.start();
 		t1.join();

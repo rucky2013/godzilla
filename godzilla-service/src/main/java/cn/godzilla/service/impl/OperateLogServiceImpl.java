@@ -60,33 +60,52 @@ public class OperateLogServiceImpl extends GodzillaApplication implements Operat
 	
 	public static ResponseBodyJson logThenReturn(ResponseBodyJson response) {
 		String operation = response.getOperator();
-		
+		//20151118 因为 显示日志操作  data信息太多存储不到数据库， 而 配置pom文件与数据库 比对时候 ，将缺失配置key存入data中，数据库 无法记录
+		//GodzillaApplication.operateLogService.addOperateLog(GodzillaApplication.getUser().getUserName(), GodzillaApplication.getUser().getRealName(), Application.projectcodeThreadLocal.get(), Application.profileThreadLocal.get(), operation, response.getReturncode(), response.getReturnmsg(), response.getReturnmemo()+(response.getData()==null?"":response.getData()));
 		GodzillaApplication.operateLogService.addOperateLog(GodzillaApplication.getUser().getUserName(), GodzillaApplication.getUser().getRealName(), Application.projectcodeThreadLocal.get(), Application.profileThreadLocal.get(), operation, response.getReturncode(), response.getReturnmsg(), response.getReturnmemo());
-		
 		return response;
 	}
 	
 	public static ResponseBodyJson updateLogThenReturn(ResponseBodyJson response) {
 		String operation = response.getOperator();
 		
-		GodzillaApplication.operateLogService.updateOperateLog(Integer.parseInt(response.getData()+""), GodzillaApplication.getUser().getUserName(), GodzillaApplication.getUser().getRealName(), Application.projectcodeThreadLocal.get(), Application.profileThreadLocal.get(), operation, response.getReturncode(), response.getReturnmsg(), response.getReturnmemo());
+		GodzillaApplication.operateLogService.updateOperateLog(Long.parseLong(response.getData()+""), GodzillaApplication.getUser().getUserName(), GodzillaApplication.getUser().getRealName(), Application.projectcodeThreadLocal.get(), Application.profileThreadLocal.get(), operation, response.getReturncode(), response.getReturnmsg(), response.getReturnmemo());
 		
 		return response;
 	}
 	@Override
-	public int addOperateLog(String mvnlog, String jarlog) {
+	public Long addOperateLog(String mvnlog, String jarlog) {
 		OperateLog record = new OperateLog();
 		record.setDeployLog(mvnlog);
 		record.setWarInfo(jarlog);
 		operateLogMapper.insertSelective(record);
-		return record.getId().intValue();
+		return record.getId();
 	}
+	
 	@Override
-	public int updateOperateLog(int logid, String username, String realname,
+	public Long addOperateLog(String catalinaLog) {
+		OperateLog record = new OperateLog();
+		record.setCatalinaLog(catalinaLog);
+		operateLogMapper.insertSelective(record);
+		Long logid = record.getId();
+		return logid;
+	}
+
+	@Override
+	public int updateOperateLog(String catalinaLog, Long logid) {
+		OperateLog record = new OperateLog();
+		record.setId(Long.valueOf(logid));
+		record.setCatalinaLog(catalinaLog);
+		record.setExecuteTime(new Date());
+		return operateLogMapper.updateLogById(record);
+	}
+	
+	@Override
+	public int updateOperateLog(Long logid, String username, String realname,
 			String projectCode, String profile, String operation,
 			String operateCode, String executeResult, String resultInfo) {
 		OperateLog record = new OperateLog();
-		record.setId(Long.valueOf(logid));
+		record.setId(logid);
 		record.setUserName(username);
 		record.setRealName(realname);
 		record.setProjectCode(projectCode);
@@ -168,9 +187,11 @@ public class OperateLogServiceImpl extends GodzillaApplication implements Operat
 	}
 
 	@Override
-	public OperateLog queryLogById(String logid) {
-		OperateLog log = operateLogMapper.queryLogById(Integer.parseInt(logid));
+	public OperateLog queryLogById(Long logid) {
+		OperateLog log = operateLogMapper.queryLogById(logid.intValue());
 		return log;
 	}
+
+	
 
 }
