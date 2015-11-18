@@ -537,7 +537,7 @@
 	    var select_tr = 0;
 	    //选择部署日志 条目
 	    $(".deploy_tr").on("click", function() {
-	    	$(this).css("background", "#0097e0");
+	    	$(this).css("background", "#00E0D7");
 	    	var logid = $(this).attr("value1");
 	    	
 	    	if(select_tr == logid) {
@@ -548,7 +548,7 @@
 		    		$(element).css("background", "");
 		    	});
 		    	select_tr = logid;
-		    	$(this).css("background", "#0097e0");
+		    	$(this).css("background", "#00E0D7");
 		    }
 	    });
 	    //显示部署日志
