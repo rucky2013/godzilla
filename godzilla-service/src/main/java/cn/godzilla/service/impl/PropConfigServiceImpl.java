@@ -478,7 +478,7 @@ public class PropConfigServiceImpl extends GodzillaApplication implements PropCo
 			parameterMap2.put("auditor_text", auditor_text);
 			int dbReturn1 = propBillMapper.updatePropBillById(parameterMap2);
 			
-			int dbReturn2 = 0;
+			int dbReturn2 = 1;
 			for(PropConfig tempProp : noPropList) {
 				parameterMap2.put("status", 2);
 				dbReturn2 = propConfigMapper.verifyNOProp(parameterMap2);
