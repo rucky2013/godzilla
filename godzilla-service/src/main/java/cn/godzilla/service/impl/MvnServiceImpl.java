@@ -503,12 +503,7 @@ public class MvnServiceImpl extends GodzillaApplication implements MvnService {
 		/*String str = PropertiesUtil.getProperties().get("server.shell.restart.path") +" " + clientIp + " "
 				+ PropertiesUtil.getProperties().get("client.tomcat.home.path");*/
 		String tomcatHome = "";
-		if("godzilla".equals(projectCode)) {
-			clientIp = "10.100.142.65";
-			tomcatHome = "/home/godzilla/tomcat-godzilla";
-		} else {
-			tomcatHome = "/app/tomcat";
-		}
+		tomcatHome = "/app/tomcat";
 		String str = "sh /home/godzilla/gzl/shell/server/restart_server.sh " + clientIp + " " + tomcatHome + " " + project.getWarName();
 		
 		if("godzilla".equals(projectCode)) {
