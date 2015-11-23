@@ -10,7 +10,7 @@
 	<name>${project.artifactId}</name>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<rpcf.version>0.0.1.Alpha-SNAPSHOT</rpcf.version>
+		<rpcf.version>0.0.1.Beta3-SNAPSHOT</rpcf.version>
 	</properties>
 	<dependencies>
 

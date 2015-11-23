@@ -28,8 +28,6 @@ public class MvnController extends GodzillaWebApplication{
 	
 	@Autowired
 	private MvnService mvnService;
-	@Autowired
-	private OperateLogService operateLogService;
 	
 	/**
 	 * 部署(打包)

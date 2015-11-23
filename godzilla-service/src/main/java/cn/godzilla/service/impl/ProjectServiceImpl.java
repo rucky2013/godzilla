@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+import cn.godzilla.command.CommandEnum;
 import cn.godzilla.command.DefaultShellCommand;
 import cn.godzilla.common.ReturnCodeEnum;
 import cn.godzilla.dao.ProjectMapper;
@@ -91,21 +92,6 @@ public class ProjectServiceImpl extends GodzillaServiceApplication implements Pr
 	public List<Project> queryProjectsByUsername(String projectCode, String profile, String username) {
 		List<Project> projects = projectMapper.queryProjectsByUsername(username);
 		return projects;
-	}
-
-	@Override
-	public ReturnCodeEnum godzillaCommand(String projectCode, String profile, String actiion) {
-		
-		String str = "sh /home/godzilla/gzl/shell/server/godzilla.sh " + actiion;
-		boolean flag = false;
-		DefaultShellCommand command = new DefaultShellCommand();
-		command.execute(str, super.getUser().getUserName(), "", "", "");
-		
-		if(flag) {
-			return ReturnCodeEnum.getByReturnCode(OK_GODZILLA);
-		} else {
-			return ReturnCodeEnum.getByReturnCode(NO_GODZILLA);
-		}
 	}
 
 	@Override

@@ -27,6 +27,8 @@ public interface Constant {
 	public final String SH_COPYWAR_SERVER = "sh /home/godzilla/gzl/shell/server/copywar_server.sh";
 	public final String SAVE_WAR_PATH= "/home/godzilla/gzl/war";
 	public final String WAR_HOME = "/app/tomcat/webapps/*.war";
+	public final String SH_RESTARTTOMCAT_CLIENT = "/home/godzilla/gzl/shell/client/restart_client.sh";
+	public final String SH_GODZILLA_SERVER = "sh /home/godzilla/gzl/shell/server/godzilla.sh";
 	/**
 	 * userservice 连接客户端
 	 */

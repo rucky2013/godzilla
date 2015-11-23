@@ -7,30 +7,6 @@ TOMCAT_HOME=$1
 WARDIR=$2
 TOMCAT_BIN=
 
-if [ "$TOMCAT_HOME" == "" ] ; then
-{
-	echo "[ERROR] 请输入TOMCAT_HOME参数,如: /bin/sh $0 /app/tomcat " ;
-	exit ;
-}
-fi
-
-if [ ! -d $TOMCAT_HOME ] ; then 
-{
-	echo "[ERROR] TOMCAT应用服务器不存在！";
-	exit ;
-}
-fi
-
-##判断TOMCAT_HOME 路径最后一个字符是否含有"/"
-if [ "${TOMCAT_HOME%?}/" == "$TOMCAT_HOME" ] ; then
-{
-        TOMCAT_BIN=${TOMCAT_HOME}bin ;
-
-}
-else
-        TOMCAT_BIN=${TOMCAT_HOME}/bin ;
-fi
-
 pidlist=`ps -ef|grep "$TOMCAT_BIN"|grep -v "grep"|awk '{print $2}'`
 
 if [ "$pidlist" = "" ]

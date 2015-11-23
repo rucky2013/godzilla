@@ -4,6 +4,8 @@ public enum CommandEnum {
 	MERGE, COMMIT,INFO,VERSION,
 	MVN,
 	TAIL,LSJAR,
-	CPWAR,
+	CPWAR, 
+	RESTART,
+	GODZILLA,
 	;
 }

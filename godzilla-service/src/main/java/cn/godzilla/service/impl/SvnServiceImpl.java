@@ -28,7 +28,6 @@ import cn.godzilla.service.SvnService;
 import cn.godzilla.util.GodzillaServiceApplication;
 
 public class SvnServiceImpl extends GodzillaServiceApplication implements SvnService {
-	private final Logger logger = LogManager.getLogger(SvnServiceImpl.class);
 	
 	@Autowired
 	private ProjectService projectService ;
@@ -36,8 +35,6 @@ public class SvnServiceImpl extends GodzillaServiceApplication implements SvnSer
 	private SvnBranchConfigService svnBranchConfigService;
 	@Autowired
 	private ClientConfigService clientConfigService;
-	@Autowired
-	private OperateLogService operateLogService;
 	@Autowired
 	private SvnConflictMapper svnConflictMapper;
 	
@@ -80,8 +77,8 @@ public class SvnServiceImpl extends GodzillaServiceApplication implements SvnSer
 				flag = command.execute(str, super.getUser().getUserName(), projectCode, project.getSvnUsername(), project.getSvnPassword());
 				
 			} catch (Exception e) {
-				logger.error(e);
 				e.printStackTrace();
+				flag = false;
 			}
 		} else {
 			//"2".equals(project.getMergeStatus())
@@ -90,10 +87,9 @@ public class SvnServiceImpl extends GodzillaServiceApplication implements SvnSer
 				str = "sh /home/godzilla/gzl/shell/server/svn_server_wl.sh commit_resolve "+trunkPath+" '"+branches+"' "+" "+callbackUrl+" "+projectCode+" "+ operator +" "+clientIp  ;
 				DefaultShellCommand command = new DefaultShellCommand();
 				flag = command.execute(str, super.getUser().getUserName(), projectCode, project.getSvnUsername(), project.getSvnPassword(), CONFL_URL);
-				
 			} catch (Exception e) {
-				logger.error(e);
 				e.printStackTrace();
+				flag = false;
 			}
 		}
 		

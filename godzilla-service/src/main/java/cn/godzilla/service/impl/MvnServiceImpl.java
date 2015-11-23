@@ -6,8 +6,10 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.rpcf.api.RpcException;
+
+import cn.godzilla.command.CommandEnum;
 import cn.godzilla.command.DefaultShellCommand;
-import cn.godzilla.common.BusinessException;
 import cn.godzilla.common.ReturnCodeEnum;
 import cn.godzilla.common.StringUtil;
 import cn.godzilla.dao.ProjectMapper;
@@ -15,18 +17,13 @@ import cn.godzilla.model.ClientConfig;
 import cn.godzilla.model.OperateLog;
 import cn.godzilla.model.Project;
 import cn.godzilla.model.RpcResult;
-import cn.godzilla.mvn.MvnBaseCommand;
-import cn.godzilla.mvn.ShCommand;
 import cn.godzilla.service.ClientConfigService;
 import cn.godzilla.service.MvnService;
 import cn.godzilla.service.OperateLogService;
 import cn.godzilla.service.ProjectService;
 import cn.godzilla.service.PropConfigService;
 import cn.godzilla.service.SvnService;
-import cn.godzilla.svn.BaseShellCommand;
 import cn.godzilla.util.GodzillaServiceApplication;
-
-import com.rpcf.api.RpcException;
 
 //propConfigService svnService projectService clientConfigService
 public class MvnServiceImpl extends GodzillaServiceApplication implements MvnService {
@@ -181,17 +178,12 @@ public class MvnServiceImpl extends GodzillaServiceApplication implements MvnSer
 
 		/*String str = PropertiesUtil.getProperties().get("server.shell.restart.path") +" " + clientIp + " "
 				+ PropertiesUtil.getProperties().get("client.tomcat.home.path");*/
-		String tomcatHome = "/app/tomcat";
-		String str = "sh /home/godzilla/gzl/shell/server/restart_server.sh " + clientIp + " " + tomcatHome + " " + project.getWarName();
+		String TOMCATHOME = "/app/tomcat";
+		String WARNAME = project.getWarName();
+		String commandStr = SH_RESTARTTOMCAT_CLIENT + BLACKSPACE + TOMCATHOME + BLACKSPACE + WARNAME;
 		
-		DefaultShellCommand command = new DefaultShellCommand();
-		
-		if("godzilla".equals(projectCode)) {
-			flag = true;
-		} else {
-			flag = command.execute(str + " " + project.getSvnUsername()+ " " + project.getSvnPassword() ,);
-		}
-		
+		DefaultShellCommand shCommand = new DefaultShellCommand();
+		--shCommand.execute(commandStr, CommandEnum.RESTART);
 		/*
 		 * 3. httpclient 访问  ip:8080/war_name/index.jsp   查找 是否存在 <!--<h5>godzilla</h5>--> 字符串 判断 tomcat是否启动成功
 		 */

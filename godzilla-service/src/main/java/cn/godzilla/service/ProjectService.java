@@ -34,13 +34,6 @@ public interface ProjectService{
 	public List<Project> queryProjectsByUsername(String projectCode, String profile, String username);
 
 	/**
-	 * 
-	 * @param string
-	 * @return ReturnCodeEnum:
-	 * 			OK_GODZILLA  , NO_GODZILLA
-	 */
-	public ReturnCodeEnum godzillaCommand(String projectCode, String profile, String string);
-	/**
 	 * 修改project表 merge_status标记
 	 * 0：0:无 
 	 * 1：1:有

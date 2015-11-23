@@ -3,20 +3,38 @@ package cn.godzilla.web;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
+import javax.servlet.http.HttpServletResponse;
 
-import cn.godzilla.service.MvnService;
-import cn.godzilla.service.ProjectService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import cn.godzilla.common.ReturnCodeEnum;
+import cn.godzilla.common.response.ResponseBodyJson;
+import cn.godzilla.util.ControllerHelper;
 import cn.godzilla.util.GodzillaWebApplication;
 @RequestMapping(value="admin")
 public class AdminController extends GodzillaWebApplication{
 	
 	@Autowired
-	private MvnService mvnService;
+	private ControllerHelper controllerHelper;
 	
-	@Autowired
-	private ProjectService projectService;
+	/**
+	 * 执行命令
+	 * upgrade,startclients,stopclients,stoptomcats,starttomcats
+	 * @param response
+	 * @return 
+	*/
+	@RequestMapping(value="/{sid}/{projectCode}/{profile}/{command}", method=RequestMethod.GET) 
+	@ResponseBody
+	public Object upgrade(HttpServletResponse response, @PathVariable String command) {
+		
+		ReturnCodeEnum returnEnum = controllerHelper.godzillaCommand(command);
+		return ResponseBodyJson.custom().setAll(returnEnum, ADMINOPERATOR).build();
+	}
+	
 	/**
 	 *  重启所有项目
 	 *  
@@ -102,20 +120,6 @@ public class AdminController extends GodzillaWebApplication{
 		
 		
 		return null;
-	}*/
-	
-	/**
-	 * 执行命令
-	 * upgrade,startclients,stopclients,stoptomcats,starttomcats
-	 * @param response
-	 * @return 
-	 
-	@RequestMapping(value="/{sid}/{projectCode}/{profile}/{command}", method=RequestMethod.GET) 
-	@ResponseBody
-	public Object upgrade(HttpServletResponse response, @PathVariable String command) {
-		
-		ReturnCodeEnum returnEnum = projectService.godzillaCommand(command);
-		return ResponseBodyJson.custom().setAll(returnEnum, ADMINOPERATOR).build();
 	}*/
 	
 }

@@ -107,4 +107,24 @@ public class ControllerHelper extends GodzillaWebApplication {
 		DefaultShellCommand shCommand = new DefaultShellCommand();
 		shCommand.execute(shellcommand, CommandEnum.CPWAR);
 	}
+	
+	/**
+	 * 
+	 * @param string
+	 * @return ReturnCodeEnum:
+	 * 			OK_GODZILLA  , NO_GODZILLA
+	*/
+	public ReturnCodeEnum godzillaCommand(String actiion) {
+		
+		String commandStr = SH_GODZILLA_SERVER + BLACKSPACE + actiion;
+		boolean flag = false;
+		DefaultShellCommand shCommand = new DefaultShellCommand();
+		shCommand.execute(commandStr, CommandEnum.GODZILLA);
+		String shellreturn = shellReturnThreadLocal.get();
+		if(OK_SHELL.equals(shellreturn)) {
+			return ReturnCodeEnum.getByReturnCode(OK_GODZILLA);
+		} else {
+			return ReturnCodeEnum.getByReturnCode(NO_GODZILLA);
+		}
+	}
 }

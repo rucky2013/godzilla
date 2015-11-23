@@ -33,6 +33,7 @@ public class DefaultShellCommand extends AbstractShellCommand {
 			runnable = new MvnRunnable();
 			break;
 		case CPWAR:
+		case GODZILLA:
 			runnable = new DefaultRunnable();
 			break;
 		default:
