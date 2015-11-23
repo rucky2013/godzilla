@@ -1,7 +1,12 @@
 package cn.godzilla.common;
 
-public class Application implements Constant{
-	protected boolean isEcho = false;
+/**
+ * 哥斯拉全局变量 threadlocal
+ * @author 201407280166
+ *
+ */
+public class Application implements Constant {
+	
 	protected static ThreadLocal<String> projectcodeThreadLocal = 
 			new ThreadLocal<String>() {
 		protected String initialValue() {

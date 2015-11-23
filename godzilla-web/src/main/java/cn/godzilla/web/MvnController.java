@@ -7,8 +7,6 @@ import java.util.concurrent.locks.Lock;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,10 +20,11 @@ import cn.godzilla.common.StringUtil;
 import cn.godzilla.common.response.ResponseBodyJson;
 import cn.godzilla.service.MvnService;
 import cn.godzilla.service.OperateLogService;
+import cn.godzilla.util.GodzillaWebApplication;
 
 @Controller
 @RequestMapping("/mvn")
-public class MvnController extends GodzillaApplication{
+public class MvnController extends GodzillaWebApplication{
 	
 	@Autowired
 	private MvnService mvnService;
@@ -50,7 +49,7 @@ public class MvnController extends GodzillaApplication{
 		
 		final String pencentkey = this.getPencentKey(projectCode, profile);
 		
-		GodzillaApplication.processPercent.put(pencentkey, "0");
+		GodzillaWebApplication.processPercent.put(pencentkey, "0");
 		
 		ReturnCodeEnum deployReturn = this.doDeploy(projectCode, profile, parentVersion+parentVersionSuffix, pencentkey);
 		
@@ -77,12 +76,12 @@ public class MvnController extends GodzillaApplication{
 		boolean hasAC = false;
 		try {
 			if(profile.equals(TEST_PROFILE)) {
-				lock = GodzillaApplication.deploy_lock.get(projectCode);
+				lock = GodzillaWebApplication.deploy_lock.get(projectCode);
 				hasAC = lock.tryLock(1, TimeUnit.SECONDS);
 				if(!hasAC) 
 					return ReturnCodeEnum.getByReturnCode(NO_CONCURRENCEDEPLOY);
 			} else {
-				lock = GodzillaApplication.deploy_lock.get(profile);
+				lock = GodzillaWebApplication.deploy_lock.get(profile);
 				hasAC = lock.tryLock(1, TimeUnit.SECONDS);
 				if(!hasAC) 
 					return ReturnCodeEnum.getByReturnCode(NO_CONCURRENCEDEPLOY);
@@ -91,9 +90,9 @@ public class MvnController extends GodzillaApplication{
 			ReturnCodeEnum deployReturn = mvnService.doDeploy(projectCode, profile, version, pencentkey);
 			
 			if(deployReturn.equals(ReturnCodeEnum.OK_MVNDEPLOY)) {
-				GodzillaApplication.processPercent.put(pencentkey, "100");
+				GodzillaWebApplication.processPercent.put(pencentkey, "100");
 			} else {
-				GodzillaApplication.processPercent.put(pencentkey, "0");
+				GodzillaWebApplication.processPercent.put(pencentkey, "0");
 			}
 			final String pencentkeyF = pencentkey;
 			new Thread() {
@@ -103,7 +102,7 @@ public class MvnController extends GodzillaApplication{
 					} catch (InterruptedException e) {
 						e.printStackTrace();
 					}
-					GodzillaApplication.processPercent.put(pencentkeyF, "0");
+					GodzillaWebApplication.processPercent.put(pencentkeyF, "0");
 				}
 			}.start();
 			

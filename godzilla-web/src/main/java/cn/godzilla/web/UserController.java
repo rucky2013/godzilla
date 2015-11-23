@@ -25,11 +25,12 @@ import cn.godzilla.service.OperateLogService;
 import cn.godzilla.service.ProjectService;
 import cn.godzilla.service.PropConfigService;
 import cn.godzilla.service.UserService;
+import cn.godzilla.util.GodzillaWebApplication;
 
 
 @Component
 @RequestMapping("/user")
-public class UserController extends GodzillaApplication{
+public class UserController extends GodzillaWebApplication {
 	
 	@Autowired
 	UserService userService;

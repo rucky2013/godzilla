@@ -5,8 +5,6 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
-import junit.framework.Test;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import cn.godzilla.common.Constant;
 import cn.godzilla.common.ReturnCodeEnum;
 import cn.godzilla.common.StringUtil;
 import cn.godzilla.common.response.ResponseBodyJson;
@@ -27,6 +24,7 @@ import cn.godzilla.service.OperateLogService;
 import cn.godzilla.service.ProjectService;
 import cn.godzilla.service.PropConfigService;
 import cn.godzilla.service.UserService;
+import cn.godzilla.util.GodzillaWebApplication;
 
 /**
  * 需要  prop表 建立 唯一约束   根据   project  createby profile key
@@ -34,7 +32,7 @@ import cn.godzilla.service.UserService;
  */
 @Component
 @RequestMapping("/prop")
-public class PropController extends GodzillaApplication implements Constant{
+public class PropController extends GodzillaWebApplication {
  
 	private final Logger logger = LogManager.getLogger(PropController.class);
 	@Autowired
@@ -62,7 +60,7 @@ public class PropController extends GodzillaApplication implements Constant{
 		
 		propConfigService.findPropByProjectCode(projectCode, TEST_PROFILE, propTest, propQuasiProduct, propProduct);
 		
-		request.setAttribute("user", GodzillaApplication.getUser());
+		request.setAttribute("user", GodzillaWebApplication.getUser());
 		request.setAttribute("propTest", this.replaceHtml(propTest.toString()));
 		request.setAttribute("propQuasiProduct", this.replaceHtml(propQuasiProduct.toString()));
 		request.setAttribute("propProduct", this.replaceHtml(propProduct.toString()));

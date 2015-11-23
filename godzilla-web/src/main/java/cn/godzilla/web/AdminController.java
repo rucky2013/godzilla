@@ -3,24 +3,14 @@ package cn.godzilla.web;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
 
-import cn.godzilla.common.ReturnCodeEnum;
-import cn.godzilla.common.response.ResponseBodyJson;
-import cn.godzilla.model.Project;
 import cn.godzilla.service.MvnService;
 import cn.godzilla.service.ProjectService;
+import cn.godzilla.util.GodzillaWebApplication;
 @RequestMapping(value="admin")
-public class AdminController extends GodzillaApplication{
+public class AdminController extends GodzillaWebApplication{
 	
 	@Autowired
 	private MvnService mvnService;

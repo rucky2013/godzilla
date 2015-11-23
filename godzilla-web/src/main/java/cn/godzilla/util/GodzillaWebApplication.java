@@ -1,4 +1,4 @@
-package cn.godzilla.web;
+package cn.godzilla.util;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -35,9 +35,12 @@ import cn.godzilla.service.FunRightService;
 import cn.godzilla.service.OperateLogService;
 import cn.godzilla.service.UserService;
 
-public abstract class GodzillaApplication extends Application implements Constant{
-	
-	public static Logger logger = LogManager.getLogger(GodzillaApplication.class);
+/**
+ * 
+ * @author 201407280166
+ *
+ */
+public abstract class GodzillaWebApplication extends Application {
 	
 	protected ApplicationContext applicationContext;
 	protected static UserService userService;
@@ -72,7 +75,6 @@ public abstract class GodzillaApplication extends Application implements Constan
 	 * @param sid
 	 */
 	protected void initContextBySid(String newsid) {
-		logger.info("++|++|++>sid:" + newsid);
 		sidThreadLocal.set(newsid);
 	}
 	/**
@@ -213,37 +215,23 @@ public abstract class GodzillaApplication extends Application implements Constan
 				HttpResponse response = client.execute(new HttpGet(test_url));
 			
 	            if (HttpStatus.SC_OK == response.getStatusLine().getStatusCode()) {
-	                /*HttpEntity entity = response.getEntity();
-	                InputStreamReader insr = new InputStreamReader(entity.getContent());
-	                int respInt = insr.read();
-	                while (respInt != -1) {
-	                    rs.append((char) respInt);
-	                    respInt = insr.read();
-	                }*/
 	            	//20151102 不检查标识,返回200即成功
 	            	return true;
 	            } 
-	            //if(i>10) {
-	            	if(HttpStatus.SC_NOT_FOUND == response.getStatusLine().getStatusCode()){
-		            	//如果信息码 为 4xx 或者 5xx 则退出
-		            	return false;
-		            } else if(HttpStatus.SC_INTERNAL_SERVER_ERROR == response.getStatusLine().getStatusCode()) {
-		            	return false;
-		            }
-	           //}
+            	if(HttpStatus.SC_NOT_FOUND == response.getStatusLine().getStatusCode()){
+	            	//如果信息码 为 4xx 或者 5xx 则退出
+	            	return false;
+	            } else if(HttpStatus.SC_INTERNAL_SERVER_ERROR == response.getStatusLine().getStatusCode()) {
+	            	return false;
+	            }
 			} catch (IOException e1) {
-				System.out.println("---httpclient 报错啦=---");
-				e1.printStackTrace();
+				System.out.println("---httpclient 报异常，预计为超时---");
 			}
-	        if (rs.toString().indexOf("<!--<h5>godzilla</h5>-->") != -1) {
-	            	return true;
-	        } else {
-	        	try {
-					Thread.sleep(1000);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-	        }
+        	try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 	        //time out seconds : return false;
 	        i++;
 	        if(i>=timeout) {
@@ -279,13 +267,6 @@ public abstract class GodzillaApplication extends Application implements Constan
 			HttpResponse response = client.execute(new HttpGet(test_url));
 		
             if (HttpStatus.SC_OK == response.getStatusLine().getStatusCode()) {
-                /*HttpEntity entity = response.getEntity();
-                InputStreamReader insr = new InputStreamReader(entity.getContent());
-                int respInt = insr.read();
-                while (respInt != -1) {
-                    rs.append((char) respInt);
-                    respInt = insr.read();
-                }*/
             	return true;
             } 
         	if(HttpStatus.SC_NOT_FOUND == response.getStatusLine().getStatusCode()){
@@ -295,14 +276,9 @@ public abstract class GodzillaApplication extends Application implements Constan
             	return false;
             }
 		} catch (IOException e1) {
-			System.out.println("---httpclient 报错啦=---");
-			e1.printStackTrace();
+			System.out.println("---httpclient 报异常，预计为超时---");
 		}
-        if (rs.toString().indexOf("<!--<h5>godzilla</h5>-->") != -1) {
-            return true;
-        } else {
-        	return false;
-        }
+        return false;
 	}
 	
 	protected void isEmpty(Object o) {

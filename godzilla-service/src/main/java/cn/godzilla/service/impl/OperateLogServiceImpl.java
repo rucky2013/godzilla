@@ -12,9 +12,9 @@ import cn.godzilla.common.Application;
 import cn.godzilla.common.OperatorEnum;
 import cn.godzilla.common.response.ResponseBodyJson;
 import cn.godzilla.dao.OperateLogMapper;
+import cn.godzilla.filter.GodzillaApplication;
 import cn.godzilla.model.OperateLog;
 import cn.godzilla.service.OperateLogService;
-import cn.godzilla.web.GodzillaApplication;
 
 public class OperateLogServiceImpl extends GodzillaApplication implements OperateLogService {
 

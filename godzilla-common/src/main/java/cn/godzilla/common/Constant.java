@@ -1,5 +1,10 @@
 package cn.godzilla.common;
 
+/**
+ * 哥斯拉常量
+ * @author 201407280166
+ *
+ */
 public interface Constant {
 	
 	public final int TRUE = 1;
@@ -17,7 +22,7 @@ public interface Constant {
 	/**
 	 * userservice 连接客户端
 	 */
-	public final String SERVER_USER = "apollo";
+	public final String SERVER_USER = "new-manager";
 	/**
 	 * log constant
 	 */

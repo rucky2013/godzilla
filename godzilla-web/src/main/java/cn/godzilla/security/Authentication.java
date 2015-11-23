@@ -20,7 +20,7 @@ import cn.godzilla.common.ReturnCodeEnum;
 import cn.godzilla.service.FunRightService;
 import cn.godzilla.service.OperateLogService;
 import cn.godzilla.service.UserService;
-import cn.godzilla.web.GodzillaApplication;
+import cn.godzilla.util.GodzillaWebApplication;
 
 /**
  * 身份验证
@@ -28,7 +28,7 @@ import cn.godzilla.web.GodzillaApplication;
  * @author 201407280166
  *
  */
-public class Authentication extends GodzillaApplication implements Filter {
+public class Authentication extends GodzillaWebApplication implements Filter {
 
 	private final Logger logger = LogManager.getLogger(Authentication.class);
 	
@@ -36,7 +36,7 @@ public class Authentication extends GodzillaApplication implements Filter {
 	
 	@Override
 	public void init(FilterConfig filterConfig) throws ServletException {
-		logger.info("Authentication init身份验证");
+		//logger.info("Authentication init身份验证");
 		escapeUrls.add("/user/welcome");
 		escapeUrls.add("/user/login");
 		escapeUrls.add("/process");
@@ -46,9 +46,6 @@ public class Authentication extends GodzillaApplication implements Filter {
 		userService = (UserService)applicationContext.getBean("userService");
 		funRightService = (FunRightService)applicationContext.getBean("funRightService");
 		operateLogService = (OperateLogService)applicationContext.getBean("operateLogService");
-		//两种获取方式都报错  
-       /* ApplicationContext ac = new FileSystemXmlApplicationContext("classpath:applicationContext.xml");
-        userService = (UserService)ac.getBean("userService"); */
 	}
 	
 	@Override
@@ -59,11 +56,14 @@ public class Authentication extends GodzillaApplication implements Filter {
 			if(!this.escapeUrl(request)) {
 				String sid = super.getSidFromUrl(request);
 				ReturnCodeEnum userStatus = this.checkUser(userService, sid);
-				logger.info(">>>|>>request sid : " + sid);
+				//logger.info(">>>|>>request sid : " + sid);
 				if(userStatus == ReturnCodeEnum.NO_LOGIN) {
 					throw new BusinessException("还未登录或sid失效");
 				} else if(userStatus == ReturnCodeEnum.OK_CHECKUSER) {
 					this.initContext(userService, sid); //将sid保存到 threadlocal
+				} else{
+					//never reach here
+					throw new BusinessException("验证sid,未知异常");
 				}
 			}
 		} catch(BusinessException e1) {

@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import cn.godzilla.common.ReturnCodeEnum;
 import cn.godzilla.dao.ProjectMapper;
+import cn.godzilla.filter.GodzillaApplication;
 import cn.godzilla.model.ClientConfig;
 import cn.godzilla.model.Project;
 import cn.godzilla.service.ClientConfigService;
@@ -16,7 +17,6 @@ import cn.godzilla.service.OperateLogService;
 import cn.godzilla.service.ProjectService;
 import cn.godzilla.service.SvnService;
 import cn.godzilla.svn.BaseShellCommand;
-import cn.godzilla.web.GodzillaApplication;
 
 public class ProjectServiceImpl extends GodzillaApplication implements ProjectService {
 

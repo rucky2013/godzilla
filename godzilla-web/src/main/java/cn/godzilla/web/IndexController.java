@@ -7,8 +7,6 @@ import java.util.concurrent.locks.Lock;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -30,9 +28,10 @@ import cn.godzilla.service.OperateLogService;
 import cn.godzilla.service.ProjectService;
 import cn.godzilla.service.SvnBranchConfigService;
 import cn.godzilla.service.SvnService;
+import cn.godzilla.util.GodzillaWebApplication;
 
 @Controller
-public class IndexController extends GodzillaApplication{
+public class IndexController extends GodzillaWebApplication {
 	
 	@Autowired
 	private ProjectService projectService ;
@@ -99,7 +98,7 @@ public class IndexController extends GodzillaApplication{
 		svnBranchConfigs = svnBranchConfigService.queryListByProjectCode(projectCode, TEST_PROFILE);
 		List<OperateLog> operateLogs = operateLogService.queryList(projectCode, profile);
 		
-		request.setAttribute("username", GodzillaApplication.getUser().getUserName());
+		request.setAttribute("username", GodzillaWebApplication.getUser().getUserName());
 		request.setAttribute("clientConfig", clientConfig);
 		request.setAttribute("svnBranchConfigs", svnBranchConfigs);
 		request.setAttribute("operateLogs", operateLogs);
@@ -192,7 +191,7 @@ public class IndexController extends GodzillaApplication{
 		boolean hasAC = false;
 		try {
 			if(TEST_PROFILE.equals(profile)) {
-				lock = GodzillaApplication.deploy_lock.get(projectCode);
+				lock = GodzillaWebApplication.deploy_lock.get(projectCode);
 				hasAC = lock.tryLock(1, TimeUnit.SECONDS);
 				if(!hasAC)
 					return ReturnCodeEnum.getByReturnCode(NO_CONCURRENCEDEPLOY);

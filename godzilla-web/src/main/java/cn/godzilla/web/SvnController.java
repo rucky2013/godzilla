@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import cn.godzilla.common.BusinessException;
-import cn.godzilla.common.Constant;
 import cn.godzilla.common.ReturnCodeEnum;
 import cn.godzilla.common.response.ResponseBodyJson;
 import cn.godzilla.service.ClientConfigService;
@@ -24,6 +23,7 @@ import cn.godzilla.service.ProjectService;
 import cn.godzilla.service.SvnBranchConfigService;
 import cn.godzilla.service.SvnService;
 import cn.godzilla.svn.BaseShellCommand;
+import cn.godzilla.util.GodzillaWebApplication;
 
 /**
  * 合并代码
@@ -31,7 +31,7 @@ import cn.godzilla.svn.BaseShellCommand;
  *
  */
 @Controller
-public class SvnController extends GodzillaApplication implements Constant{
+public class SvnController extends GodzillaWebApplication {
 
 	@Autowired
 	private ProjectService projectService ;
@@ -91,12 +91,12 @@ public class SvnController extends GodzillaApplication implements Constant{
 		boolean hasAC1 = false;
 		try {
 			if(TEST_PROFILE.equals(profile)) {
-				lock1 = GodzillaApplication.deploy_lock.get(projectCode);
+				lock1 = GodzillaWebApplication.deploy_lock.get(projectCode);
 				hasAC1 = lock1.tryLock(1, TimeUnit.SECONDS);
 				if(!hasAC1) 
 					return ReturnCodeEnum.getByReturnCode(NO_CONCURRENCEDEPLOY);
 			} else {
-				lock1 = GodzillaApplication.deploy_lock.get(profile);
+				lock1 = GodzillaWebApplication.deploy_lock.get(profile);
 				hasAC1 = lock1.tryLock(1, TimeUnit.SECONDS);
 				if(!hasAC1)
 					return ReturnCodeEnum.getByReturnCode(NO_CONCURRENCEDEPLOY);
@@ -158,15 +158,15 @@ public class SvnController extends GodzillaApplication implements Constant{
 		boolean hasAC2 = false;
 		boolean hasAC3 = false;
 		try {
-			lock1 = GodzillaApplication.deploy_lock.get(projectCode);
+			lock1 = GodzillaWebApplication.deploy_lock.get(projectCode);
 			hasAC1 = lock1.tryLock(1, TimeUnit.SECONDS);
 			if(!hasAC1)
 				return ReturnCodeEnum.getByReturnCode(NO_CONCURRENCEDEPLOY);
-			lock2 = GodzillaApplication.deploy_lock.get(QUASIPRODUCT_PROFILE);
+			lock2 = GodzillaWebApplication.deploy_lock.get(QUASIPRODUCT_PROFILE);
 			hasAC2 = lock2.tryLock(1, TimeUnit.SECONDS);
 			if(!hasAC2)
 				return ReturnCodeEnum.getByReturnCode(NO_CONCURRENCEDEPLOY);
-			lock3 = GodzillaApplication.deploy_lock.get(PRODUCT_PROFILE);
+			lock3 = GodzillaWebApplication.deploy_lock.get(PRODUCT_PROFILE);
 			hasAC3 = lock3.tryLock(1, TimeUnit.SECONDS);
 			if(!hasAC3)
 				return ReturnCodeEnum.getByReturnCode(NO_CONCURRENCEDEPLOY);
@@ -307,12 +307,12 @@ public class SvnController extends GodzillaApplication implements Constant{
 		boolean hasAC1 = false;
 		try {
 			if(TEST_PROFILE.equals(profile)) {
-				lock1 = GodzillaApplication.deploy_lock.get(projectCode);
+				lock1 = GodzillaWebApplication.deploy_lock.get(projectCode);
 				hasAC1 = lock1.tryLock(1, TimeUnit.SECONDS);
 				if(!hasAC1)
 					return ReturnCodeEnum.getByReturnCode(NO_CONCURRENCEDEPLOY);
 			} else {
-				lock1 = GodzillaApplication.deploy_lock.get(profile);
+				lock1 = GodzillaWebApplication.deploy_lock.get(profile);
 				hasAC1 = lock1.tryLock(1, TimeUnit.SECONDS);
 				if(!hasAC1) 
 					return ReturnCodeEnum.getByReturnCode(NO_CONCURRENCEDEPLOY);

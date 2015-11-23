@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import cn.godzilla.common.ReturnCodeEnum;
 import cn.godzilla.common.StringUtil;
 import cn.godzilla.dao.ProjectMapper;
+import cn.godzilla.filter.GodzillaApplication;
 import cn.godzilla.model.ClientConfig;
 import cn.godzilla.model.OperateLog;
 import cn.godzilla.model.Project;
@@ -22,7 +23,6 @@ import cn.godzilla.service.ProjectService;
 import cn.godzilla.service.PropConfigService;
 import cn.godzilla.service.SvnService;
 import cn.godzilla.svn.BaseShellCommand;
-import cn.godzilla.web.GodzillaApplication;
 
 import com.rpcf.api.RpcException;
 

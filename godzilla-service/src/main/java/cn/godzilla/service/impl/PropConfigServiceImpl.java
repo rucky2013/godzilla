@@ -18,12 +18,12 @@ import cn.godzilla.common.StringUtil;
 import cn.godzilla.common.xml.XmlUtil;
 import cn.godzilla.dao.PropBillMapper;
 import cn.godzilla.dao.PropConfigMapper;
+import cn.godzilla.filter.GodzillaApplication;
 import cn.godzilla.model.ClientConfig;
 import cn.godzilla.model.PropBill;
 import cn.godzilla.model.PropConfig;
 import cn.godzilla.model.RpcResult;
 import cn.godzilla.service.PropConfigService;
-import cn.godzilla.web.GodzillaApplication;
 
 import com.alibaba.fastjson.JSON;
 

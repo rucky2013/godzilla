@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import cn.godzilla.common.Constant;
 import cn.godzilla.common.ReturnCodeEnum;
 import cn.godzilla.model.ClientConfig;
 import cn.godzilla.model.Project;
@@ -20,7 +21,7 @@ import cn.godzilla.service.ProjectService;
 import cn.godzilla.svn.BaseShellCommand;
 
 @Component
-public class SshUtil extends GodzillaApplication {
+public class SshUtil implements Constant {
 	@Autowired
 	private ProjectService projectService;
 	@Autowired
@@ -96,7 +97,6 @@ public class SshUtil extends GodzillaApplication {
 		File[] findFolders = folder.listFiles(new FilenameFilter() {// 运用内部匿名类获得文件
 			@Override
 			public boolean accept(File dir, String name) {
-				logger.info("-----filename: "  + name);
 				// 目录或文件包含关键字
 				boolean flag = name.toLowerCase().contains(keyWord.toLowerCase());
 				if(flag)
@@ -126,10 +126,6 @@ public class SshUtil extends GodzillaApplication {
 			tomcatHome = "/app/tomcat";
 		}
 		
-		if("godzilla".equals(projectCode)) {
-			clientIp = "10.100.142.65";
-			tomcatHome = "/home/godzilla/tomcat-godzilla";
-		} 
 		tomcatHome += "/webapps/*.war";
 		String str = "sh /home/godzilla/gzl/shell/server/copywar_server.sh " + clientIp + " " + tomcatHome + " " + SAVE_WAR_PATH;
 		boolean flag = false;

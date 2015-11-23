@@ -1,4 +1,4 @@
-package cn.godzilla.security;
+package cn.godzilla.filter;
 
 import java.io.IOException;
 import java.util.List;
@@ -17,20 +17,20 @@ import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import cn.godzilla.model.Project;
 import cn.godzilla.service.ProjectService;
-import cn.godzilla.web.GodzillaApplication;
+import cn.godzilla.util.GodzillaWebApplication;
 
 /**
  * 初始化
  * 1.各个项目部署锁初始化
  */
-public class InitFilter extends GodzillaApplication implements Filter {
+public class InitFilter extends GodzillaWebApplication implements Filter {
 
 	private final Logger logger = LogManager.getLogger(InitFilter.class);
 	
 	private ProjectService projectService;
 	@Override
 	public void init(FilterConfig filterConfig) throws ServletException {
-		logger.info("InitFilter init部署锁");
+		//logger.info("InitFilter init部署锁");
 		context = filterConfig.getServletContext();
 		applicationContext = WebApplicationContextUtils.getWebApplicationContext(context);
 		projectService = (ProjectService)applicationContext.getBean("projectService");

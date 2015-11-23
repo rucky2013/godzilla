@@ -18,6 +18,7 @@ import cn.godzilla.common.BusinessException;
 import cn.godzilla.common.ReturnCodeEnum;
 import cn.godzilla.common.StringUtil;
 import cn.godzilla.dao.SvnConflictMapper;
+import cn.godzilla.filter.GodzillaApplication;
 import cn.godzilla.model.ClientConfig;
 import cn.godzilla.model.Project;
 import cn.godzilla.model.SvnBranchConfig;
@@ -28,7 +29,6 @@ import cn.godzilla.service.ProjectService;
 import cn.godzilla.service.SvnBranchConfigService;
 import cn.godzilla.service.SvnService;
 import cn.godzilla.svn.BaseShellCommand;
-import cn.godzilla.web.GodzillaApplication;
 
 public class SvnServiceImpl extends GodzillaApplication implements SvnService {
 	private final Logger logger = LogManager.getLogger(SvnServiceImpl.class);

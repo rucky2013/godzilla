@@ -20,11 +20,11 @@ import cn.godzilla.common.cache.RedisCache;
 import cn.godzilla.dao.FunRightMapper;
 import cn.godzilla.dao.ProjectMapper;
 import cn.godzilla.dao.UserMapper;
+import cn.godzilla.filter.GodzillaApplication;
 import cn.godzilla.model.FunRight;
 import cn.godzilla.model.Project;
 import cn.godzilla.model.User;
 import cn.godzilla.service.UserService;
-import cn.godzilla.web.GodzillaApplication;
 
 import com.alibaba.fastjson.JSON;
 
