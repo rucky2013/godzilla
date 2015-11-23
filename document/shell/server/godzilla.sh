@@ -213,10 +213,6 @@ starttomcats() {
 	ssh -p 2222 godzilla@10.100.142.88 "source $HOME/.bash_profile;cd $TOMCAT_BIN;./startup.sh ;"
 }
 
-
-
-echo $1
-
 case $1 in
 	upgrade)
 		java_env
@@ -243,10 +239,14 @@ case $1 in
 	;;
 	stoptomcats)
 		stoptomcats
+		exit_code=$?
+		exit $exit_code
 	;;
 	starttomcats)
 		stoptomcats
 		starttomcats
+		exit_code=$?
+		exit $exit_code
 	;;
 	*)
      	echo "parameter not found"

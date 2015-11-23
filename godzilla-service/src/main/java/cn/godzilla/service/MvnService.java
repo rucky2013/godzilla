@@ -5,7 +5,6 @@ import javax.servlet.http.HttpServletResponse;
 import cn.godzilla.common.Constant;
 import cn.godzilla.common.ReturnCodeEnum;
 import cn.godzilla.model.RpcResult;
-import cn.godzilla.model.User;
 
 public interface MvnService extends Constant{
 

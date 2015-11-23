@@ -12,11 +12,12 @@ import cn.godzilla.service.PropConfigService;
 import cn.godzilla.service.SvnBranchConfigService;
 import cn.godzilla.service.SvnService;
 import cn.godzilla.service.UserService;
+import cn.godzilla.util.GodzillaServiceApplication;
 
 import com.rpcf.api.RpcFactory;
 import com.rpcf.factory.GodzillaRpcFactory;
 
-public class ProviderMain {
+public class ProviderMain extends GodzillaServiceApplication {
 	public static void main(String[] args) throws Exception {
 		
 		ApplicationContext context = new FileSystemXmlApplicationContext("classpath:applicationContext.xml");
@@ -30,6 +31,13 @@ public class ProviderMain {
 		SvnBranchConfigService svnBranchConfigService =(SvnBranchConfigService)context.getBean("svnBranchConfigService");
 		SvnService svnService =(SvnService)context.getBean("svnService");
 		UserService userService =(UserService)context.getBean("userService");
+		
+		//initGodzillaServiceApplication start
+		GodzillaServiceApplication.applicationContext = context;
+		GodzillaServiceApplication.userService = userService;
+		GodzillaServiceApplication.funRightService = funRightService;
+		GodzillaServiceApplication.operateLogService = operateLogService;
+		//initGodzillaServiceApplication end
 		
 		RpcFactory rpcFactory = new GodzillaRpcFactory();
         //暴露服务

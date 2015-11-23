@@ -139,7 +139,7 @@ function commit() {
 	fi;
 }
 
-function status() {
+function info() {
 	svn info $SVN_TRUNK $svnuser --non-interactive
 }
 function getVersion() {
@@ -373,8 +373,8 @@ case $ACTION in
 	#	注:功能不清晰，暂时这么写
 	#  	只将 svn info 信息输出,其他信息
 	#******
-	STATUS)
-		status
+	INFO)
+		info
 		exit_code=$?
 		#echo "${exit_code}"
 		exit $exit_code

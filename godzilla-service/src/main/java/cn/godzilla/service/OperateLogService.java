@@ -3,7 +3,6 @@ package cn.godzilla.service;
 import java.util.List;
 
 import cn.godzilla.common.Constant;
-import cn.godzilla.common.response.ResponseBodyJson;
 import cn.godzilla.model.OperateLog;
 
 public interface OperateLogService extends Constant {

@@ -6,19 +6,16 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.locks.Lock;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
+import cn.godzilla.command.DefaultShellCommand;
 import cn.godzilla.common.BusinessException;
 import cn.godzilla.common.ReturnCodeEnum;
 import cn.godzilla.common.StringUtil;
 import cn.godzilla.dao.SvnConflictMapper;
-import cn.godzilla.filter.GodzillaApplication;
 import cn.godzilla.model.ClientConfig;
 import cn.godzilla.model.Project;
 import cn.godzilla.model.SvnBranchConfig;
@@ -28,9 +25,9 @@ import cn.godzilla.service.OperateLogService;
 import cn.godzilla.service.ProjectService;
 import cn.godzilla.service.SvnBranchConfigService;
 import cn.godzilla.service.SvnService;
-import cn.godzilla.svn.BaseShellCommand;
+import cn.godzilla.util.GodzillaServiceApplication;
 
-public class SvnServiceImpl extends GodzillaApplication implements SvnService {
+public class SvnServiceImpl extends GodzillaServiceApplication implements SvnService {
 	private final Logger logger = LogManager.getLogger(SvnServiceImpl.class);
 	
 	@Autowired
@@ -41,8 +38,6 @@ public class SvnServiceImpl extends GodzillaApplication implements SvnService {
 	private ClientConfigService clientConfigService;
 	@Autowired
 	private OperateLogService operateLogService;
-	@Autowired
-	private BaseShellCommand command;
 	@Autowired
 	private SvnConflictMapper svnConflictMapper;
 	
@@ -74,7 +69,6 @@ public class SvnServiceImpl extends GodzillaApplication implements SvnService {
 		} else {
 			branches = branches.substring(0, branches.length()-1);
 		}
-		String callbackUrl = "http://localhost:8080/process-callback.do";
 		
 		String operator = super.getUser().getUserName();
 		String str="";
@@ -82,6 +76,7 @@ public class SvnServiceImpl extends GodzillaApplication implements SvnService {
 		if("0".equals(project.getMergeStatus())) {
 			try {
 				str = "sh /home/godzilla/gzl/shell/server/svn_server_wl.sh commit "+trunkPath+" '"+branches+"' "+" "+callbackUrl+" "+projectCode+" "+ operator +" "+clientIp ;
+				DefaultShellCommand command = new DefaultShellCommand();
 				flag = command.execute(str, super.getUser().getUserName(), projectCode, project.getSvnUsername(), project.getSvnPassword());
 				
 			} catch (Exception e) {
@@ -93,6 +88,7 @@ public class SvnServiceImpl extends GodzillaApplication implements SvnService {
 			String CONFL_URL = this.queryConflictURLById(project.getSvnConflictId());
 			try {
 				str = "sh /home/godzilla/gzl/shell/server/svn_server_wl.sh commit_resolve "+trunkPath+" '"+branches+"' "+" "+callbackUrl+" "+projectCode+" "+ operator +" "+clientIp  ;
+				DefaultShellCommand command = new DefaultShellCommand();
 				flag = command.execute(str, super.getUser().getUserName(), projectCode, project.getSvnUsername(), project.getSvnPassword(), CONFL_URL);
 				
 			} catch (Exception e) {

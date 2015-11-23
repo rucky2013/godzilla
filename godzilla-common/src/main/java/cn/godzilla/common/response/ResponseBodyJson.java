@@ -138,8 +138,9 @@ public class ResponseBodyJson implements ResponseBody {
 		Class logClass = null;
 		try {
 			logClass = Loader.getClass("cn.godzilla.service.impl.OperateLogServiceImpl");
-		} catch (ClassNotFoundException e) {
+		} catch (ClassNotFoundException | NoSuchMethodException | SecurityException e) {
 			e.printStackTrace();
+			System.out.println("OperateLogServiceImpl.logThenReturn 更新日志失败 类错误");
 			return this;
 		}
 		Method dologmethod;
@@ -148,6 +149,8 @@ public class ResponseBodyJson implements ResponseBody {
 			dologmethod.invoke(logClass, this);
 		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException |NoSuchMethodException | SecurityException e) {
 			e.printStackTrace();
+			System.out.println("OperateLogServiceImpl.logThenReturn 更新日志失败　方法错误");
+			return this;
 		}
 		return this;
 	}
@@ -156,8 +159,9 @@ public class ResponseBodyJson implements ResponseBody {
 		Class logClass = null;
 		try {
 			logClass = Loader.getClass("cn.godzilla.service.impl.OperateLogServiceImpl");
-		} catch(ClassNotFoundException e) {
+		} catch(ClassNotFoundException | NoSuchMethodException | SecurityException e) {
 			e.printStackTrace();
+			System.out.println("OperateLogServiceImpl.updateLogThenReturn 更新日志失败 类错误");
 			return this;
 		}
 		Method dologmethod;
@@ -166,6 +170,8 @@ public class ResponseBodyJson implements ResponseBody {
 			dologmethod.invoke(logClass, this);
 		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException |NoSuchMethodException | SecurityException e) {
 			e.printStackTrace();
+			System.out.println("OperateLogServiceImpl.updateLogThenReturn 更新日志失败　方法错误");
+			return this;
 		}
 		return this;
 	}

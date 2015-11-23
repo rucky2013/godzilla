@@ -55,12 +55,12 @@ public class Authentication extends GodzillaWebApplication implements Filter {
 		try {
 			if(!this.escapeUrl(request)) {
 				String sid = super.getSidFromUrl(request);
-				ReturnCodeEnum userStatus = this.checkUser(userService, sid);
+				ReturnCodeEnum userStatus = this.checkUser(sid);
 				//logger.info(">>>|>>request sid : " + sid);
 				if(userStatus == ReturnCodeEnum.NO_LOGIN) {
 					throw new BusinessException("还未登录或sid失效");
 				} else if(userStatus == ReturnCodeEnum.OK_CHECKUSER) {
-					this.initContext(userService, sid); //将sid保存到 threadlocal
+					this.initWebContext(sid); //将sid保存到 threadlocal
 				} else{
 					//never reach here
 					throw new BusinessException("验证sid,未知异常");
@@ -73,10 +73,9 @@ public class Authentication extends GodzillaWebApplication implements Filter {
 			return ;
 		}
 		chain.doFilter(request, response);
-		distroyContext(); //清空 threadlocal
+		distroyWebContext(); //清空 threadlocal
 	}
 	
-
 	@Override
 	public void destroy() {
 

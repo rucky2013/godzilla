@@ -5,20 +5,18 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
+import cn.godzilla.command.DefaultShellCommand;
 import cn.godzilla.common.ReturnCodeEnum;
 import cn.godzilla.dao.ProjectMapper;
-import cn.godzilla.filter.GodzillaApplication;
-import cn.godzilla.model.ClientConfig;
 import cn.godzilla.model.Project;
 import cn.godzilla.service.ClientConfigService;
 import cn.godzilla.service.OperateLogService;
 import cn.godzilla.service.ProjectService;
 import cn.godzilla.service.SvnService;
-import cn.godzilla.svn.BaseShellCommand;
+import cn.godzilla.util.GodzillaServiceApplication;
 
-public class ProjectServiceImpl extends GodzillaApplication implements ProjectService {
+public class ProjectServiceImpl extends GodzillaServiceApplication implements ProjectService {
 
 	@Autowired
 	private OperateLogService operateLogService;
@@ -26,8 +24,6 @@ public class ProjectServiceImpl extends GodzillaApplication implements ProjectSe
 	private ProjectMapper projectMapper;
 	@Autowired
 	private SvnService svnService;
-	@Autowired
-	private BaseShellCommand command;
 	@Autowired
 	private ClientConfigService clientConfigService;
 
@@ -102,7 +98,8 @@ public class ProjectServiceImpl extends GodzillaApplication implements ProjectSe
 		
 		String str = "sh /home/godzilla/gzl/shell/server/godzilla.sh " + actiion;
 		boolean flag = false;
-		flag = command.execute(str, super.getUser().getUserName(), "", "", "");
+		DefaultShellCommand command = new DefaultShellCommand();
+		command.execute(str, super.getUser().getUserName(), "", "", "");
 		
 		if(flag) {
 			return ReturnCodeEnum.getByReturnCode(OK_GODZILLA);

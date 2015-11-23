@@ -1,6 +1,5 @@
 package cn.godzilla.common.cache;
 
-import cn.godzilla.common.cache.Cache.Entry;
 
 public interface Cache<K, V, T> {
 	

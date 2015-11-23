@@ -5,30 +5,27 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
-import cn.godzilla.common.RedisUtil;
 import cn.godzilla.common.ReturnCodeEnum;
 import cn.godzilla.common.StringUtil;
 import cn.godzilla.common.cache.CACHE_ENUM;
 import cn.godzilla.common.cache.RedisCache;
+import cn.godzilla.common.cache.RedisUtil;
 import cn.godzilla.dao.FunRightMapper;
 import cn.godzilla.dao.ProjectMapper;
 import cn.godzilla.dao.UserMapper;
-import cn.godzilla.filter.GodzillaApplication;
 import cn.godzilla.model.FunRight;
 import cn.godzilla.model.Project;
 import cn.godzilla.model.User;
 import cn.godzilla.service.UserService;
+import cn.godzilla.util.GodzillaServiceApplication;
 
 import com.alibaba.fastjson.JSON;
 
-public class UserServiceImpl extends GodzillaApplication implements UserService {
+public class UserServiceImpl extends GodzillaServiceApplication implements UserService {
 
 	@Autowired
 	private UserMapper userMapper;
@@ -38,9 +35,6 @@ public class UserServiceImpl extends GodzillaApplication implements UserService 
 	private FunRightMapper funRightMapper;
 	@Autowired
 	private RedisCache cache;
-
-	@Autowired
-	private RedisUtil rdbc;
 
 	private String checkUser(String username, String password) {
 
@@ -82,7 +76,7 @@ public class UserServiceImpl extends GodzillaApplication implements UserService 
 		List<Project> projects = projectMapper.queryProjectsByUsername(username);
 
 		// store in redis for security
-		rdbc.set("test", "test");
+		// rdbc.set("test", "test");
 		cache.createEntry(CACHE_ENUM.USERNAME, newsid).setValue(user.getUserName() == null ? "" : user.getUserName()).save().expired(7 * 24 * 60 * 60 * 1000l);
 		cache.createEntry(CACHE_ENUM.USER, user.getUserName()).setValue(JSON.toJSONString(user == null ? "" : user)).save();
 		cache.createEntry(CACHE_ENUM.PROJECTS, user.getUserName()).setValue(JSON.toJSONString(projects == null ? "" : projects)).save();

@@ -5,17 +5,16 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 import cn.godzilla.common.ReturnCodeEnum;
 import cn.godzilla.dao.SvnBranchConfigMapper;
-import cn.godzilla.filter.GodzillaApplication;
 import cn.godzilla.model.SvnBranchConfig;
 import cn.godzilla.service.ProjectService;
 import cn.godzilla.service.SvnBranchConfigService;
 import cn.godzilla.service.SvnService;
+import cn.godzilla.util.GodzillaServiceApplication;
 
-public class SvnBranchConfigServiceImpl extends GodzillaApplication implements SvnBranchConfigService {
+public class SvnBranchConfigServiceImpl extends GodzillaServiceApplication implements SvnBranchConfigService {
 
 	@Autowired
 	private SvnBranchConfigMapper svnBranchConfigMapper;

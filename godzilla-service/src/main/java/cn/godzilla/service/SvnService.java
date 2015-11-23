@@ -1,11 +1,7 @@
 package cn.godzilla.service;
 
-import java.util.List;
-
 import cn.godzilla.common.ReturnCodeEnum;
-import cn.godzilla.model.ClientConfig;
 import cn.godzilla.model.Project;
-import cn.godzilla.model.SvnBranchConfig;
 
 public interface SvnService {
 

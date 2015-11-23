@@ -3,9 +3,6 @@ package cn.godzilla.common.cache;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import cn.godzilla.common.RedisUtil;
-
-
 @Component
 public class RedisCache extends AbstractCache<String, String, CACHE_ENUM> {
 

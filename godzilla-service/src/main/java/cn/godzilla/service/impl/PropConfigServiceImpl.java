@@ -10,7 +10,6 @@ import java.util.Set;
 
 import org.dom4j.DocumentException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import cn.godzilla.common.ReturnCodeEnum;
@@ -18,16 +17,16 @@ import cn.godzilla.common.StringUtil;
 import cn.godzilla.common.xml.XmlUtil;
 import cn.godzilla.dao.PropBillMapper;
 import cn.godzilla.dao.PropConfigMapper;
-import cn.godzilla.filter.GodzillaApplication;
 import cn.godzilla.model.ClientConfig;
 import cn.godzilla.model.PropBill;
 import cn.godzilla.model.PropConfig;
 import cn.godzilla.model.RpcResult;
 import cn.godzilla.service.PropConfigService;
+import cn.godzilla.util.GodzillaServiceApplication;
 
 import com.alibaba.fastjson.JSON;
 
-public class PropConfigServiceImpl extends GodzillaApplication implements PropConfigService {
+public class PropConfigServiceImpl extends GodzillaServiceApplication implements PropConfigService {
 
 	@Autowired
 	private PropConfigMapper propConfigMapper;
@@ -141,7 +140,7 @@ public class PropConfigServiceImpl extends GodzillaApplication implements PropCo
 			prop.setProKey(requestKey);
 			prop.setProValue(requestProp.get(requestKey));
 			prop.setRemark("");
-			prop.setCreateBy(GodzillaApplication.getUser().getUserName());
+			prop.setCreateBy(GodzillaServiceApplication.getUser().getUserName());
 			prop.setCreateTime(new Date());
 			prop.setUpdateTime(new Date());
 			prop.setLastValue("");//多人修改时，一个人通过会影响其他人的 旧值，所以不设置
@@ -310,7 +309,7 @@ public class PropConfigServiceImpl extends GodzillaApplication implements PropCo
 		parameterMap.put("project_code", projectCode);
 		parameterMap.put("profile", profile);
 		
-		parameterMap.put("auditor", GodzillaApplication.getUser().getUserName());
+		parameterMap.put("auditor", GodzillaServiceApplication.getUser().getUserName());
 		parameterMap.put("auditor_text", auditor_text);
 		parameterMap.put("status", status);
 		
@@ -403,7 +402,7 @@ public class PropConfigServiceImpl extends GodzillaApplication implements PropCo
 						parameterMap1.put("last_value", tempProp.getLastValue());
 						parameterMap1.put("status", "1");
 						
-						parameterMap1.put("auditor", GodzillaApplication.getUser().getUserName());
+						parameterMap1.put("auditor", GodzillaServiceApplication.getUser().getUserName());
 						parameterMap1.put("auditor_text", auditor_text);
 						propConfigMapper.updatePropLastValueAndStatusById(parameterMap1);
 						
@@ -412,7 +411,7 @@ public class PropConfigServiceImpl extends GodzillaApplication implements PropCo
 						parameterMap2.put("id", billId);
 						parameterMap2.put("status", "1");
 						
-						parameterMap2.put("auditor", GodzillaApplication.getUser().getUserName());
+						parameterMap2.put("auditor", GodzillaServiceApplication.getUser().getUserName());
 						parameterMap2.put("auditor_text", auditor_text);
 						propBillMapper.updatePropBillById(parameterMap2);
 					}
@@ -424,7 +423,7 @@ public class PropConfigServiceImpl extends GodzillaApplication implements PropCo
 					parameterMap1.put("id", tempProp.getId());
 					parameterMap1.put("status", "1");
 					
-					parameterMap1.put("auditor", GodzillaApplication.getUser().getUserName());
+					parameterMap1.put("auditor", GodzillaServiceApplication.getUser().getUserName());
 					parameterMap1.put("auditor_text", auditor_text);
 					propConfigMapper.updatePropLastValueAndStatusById(parameterMap1);
 					
@@ -433,7 +432,7 @@ public class PropConfigServiceImpl extends GodzillaApplication implements PropCo
 					parameterMap2.put("id", billId);
 					parameterMap2.put("status", "1");
 					
-					parameterMap2.put("auditor", GodzillaApplication.getUser().getUserName());
+					parameterMap2.put("auditor", GodzillaServiceApplication.getUser().getUserName());
 					parameterMap2.put("auditor_text", auditor_text);
 					propBillMapper.updatePropBillById(parameterMap2);
 				}
@@ -449,7 +448,7 @@ public class PropConfigServiceImpl extends GodzillaApplication implements PropCo
 			Map<String, Object> parameterMap2 = new HashMap<String, Object>();
 			parameterMap2.put("id", billId);
 			parameterMap2.put("status", "2");
-			parameterMap2.put("auditor", GodzillaApplication.getUser().getUserName());
+			parameterMap2.put("auditor", GodzillaServiceApplication.getUser().getUserName());
 			parameterMap2.put("auditor_text", auditor_text);
 			int dbReturn1 = propBillMapper.updatePropBillById(parameterMap2);
 			

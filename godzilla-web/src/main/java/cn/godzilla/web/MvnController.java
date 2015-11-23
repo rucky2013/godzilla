@@ -49,8 +49,6 @@ public class MvnController extends GodzillaWebApplication{
 		
 		final String pencentkey = this.getPencentKey(projectCode, profile);
 		
-		GodzillaWebApplication.processPercent.put(pencentkey, "0");
-		
 		ReturnCodeEnum deployReturn = this.doDeploy(projectCode, profile, parentVersion+parentVersionSuffix, pencentkey);
 		
 		if(deployReturn.equals(ReturnCodeEnum.getByReturnCode(OK_MVNDEPLOY))
@@ -88,23 +86,6 @@ public class MvnController extends GodzillaWebApplication{
 			}
 			
 			ReturnCodeEnum deployReturn = mvnService.doDeploy(projectCode, profile, version, pencentkey);
-			
-			if(deployReturn.equals(ReturnCodeEnum.OK_MVNDEPLOY)) {
-				GodzillaWebApplication.processPercent.put(pencentkey, "100");
-			} else {
-				GodzillaWebApplication.processPercent.put(pencentkey, "0");
-			}
-			final String pencentkeyF = pencentkey;
-			new Thread() {
-				public void run() {
-					try {
-						Thread.sleep(5000);
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					}
-					GodzillaWebApplication.processPercent.put(pencentkeyF, "0");
-				}
-			}.start();
 			
 			return deployReturn;
 		} catch(InterruptedException e) {

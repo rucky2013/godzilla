@@ -20,6 +20,14 @@ public interface Constant {
 	public final String AUDITOR_TEXT = "审核通过";
 	public final int DEFAULT_TIMEOUT = 50;//tomcat启动超时时间(second)
 	/**
+	 * shell command
+	 */
+	public final String OK_SHELL = "0";
+	public final String BLACKSPACE = " ";
+	public final String SH_COPYWAR_SERVER = "sh /home/godzilla/gzl/shell/server/copywar_server.sh";
+	public final String SAVE_WAR_PATH= "/home/godzilla/gzl/war";
+	public final String WAR_HOME = "/app/tomcat/webapps/*.war";
+	/**
 	 * userservice 连接客户端
 	 */
 	public final String SERVER_USER = "new-manager";
@@ -58,9 +66,7 @@ public interface Constant {
 	public final String PROJECT_ENV = "test";
 	public final String SHELL_SERVER_PATH = "/home/godzilla/gzl/shell/server";
 	public final String SHELL_CLIENT_PATH = "/home/godzilla/gzl/shell/client";
-	public final String SAVE_WAR_PATH= "/home/godzilla/gzl/war";
-	public final String QUASIPRODUCT_WAR_IP= "10.100.142.71";
-	public final String PRODUCT_WAR_IP = "10.100.142.72";
+	
 	/**
 	 * freemarker ftl url base path
 	 */

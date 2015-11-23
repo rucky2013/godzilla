@@ -10,7 +10,6 @@ import cn.godzilla.common.serialize.StringSerializerSpringAdapter;
 
 public class MyStringRedisTemplate extends RedisTemplate<String, String> {
 
-	
 	public MyStringRedisTemplate() {
 		RedisSerializer<String> stringSerializer = new StringSerializerSpringAdapter();
 		

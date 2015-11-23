@@ -6,10 +6,11 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import cn.godzilla.command.DefaultShellCommand;
+import cn.godzilla.common.BusinessException;
 import cn.godzilla.common.ReturnCodeEnum;
 import cn.godzilla.common.StringUtil;
 import cn.godzilla.dao.ProjectMapper;
-import cn.godzilla.filter.GodzillaApplication;
 import cn.godzilla.model.ClientConfig;
 import cn.godzilla.model.OperateLog;
 import cn.godzilla.model.Project;
@@ -23,11 +24,12 @@ import cn.godzilla.service.ProjectService;
 import cn.godzilla.service.PropConfigService;
 import cn.godzilla.service.SvnService;
 import cn.godzilla.svn.BaseShellCommand;
+import cn.godzilla.util.GodzillaServiceApplication;
 
 import com.rpcf.api.RpcException;
 
 //propConfigService svnService projectService clientConfigService
-public class MvnServiceImpl extends GodzillaApplication implements MvnService {
+public class MvnServiceImpl extends GodzillaServiceApplication implements MvnService {
 	
 	private final Logger logger = LogManager.getLogger(MvnServiceImpl.class);
 	@Autowired
@@ -37,12 +39,12 @@ public class MvnServiceImpl extends GodzillaApplication implements MvnService {
 	@Autowired
 	private SvnService svnService;
 	@Autowired
-	private BaseShellCommand command;
-	@Autowired
 	private PropConfigService propConfigService;
 	
 	@Override
 	public ReturnCodeEnum doDeploy(String projectCode, String profile, String parentVersion, String pencentkey) {
+		
+		processPercent.put(pencentkey, "0");
 		
 		Project project = projectService.queryByProCode(projectCode, TEST_PROFILE);
 		
@@ -92,10 +94,10 @@ public class MvnServiceImpl extends GodzillaApplication implements MvnService {
 				while(true) {
 					try {
 						Thread.currentThread().sleep(1000);
-						String processValue = GodzillaApplication.processPercent.get(processKey1);
+						String processValue = GodzillaServiceApplication.processPercent.get(processKey1);
 						int prVal = Integer.parseInt(processValue);
 						if(prVal>=75) break;
-						GodzillaApplication.processPercent.put(processKey1, ++prVal+"");
+						GodzillaServiceApplication.processPercent.put(processKey1, ++prVal+"");
 					} catch (InterruptedException e) {
 						e.printStackTrace();
 					}
@@ -113,7 +115,7 @@ public class MvnServiceImpl extends GodzillaApplication implements MvnService {
 			flag2 = true;
 		} else {
 			try {
-				String username = GodzillaApplication.getUser().getUserName();
+				String username = GodzillaServiceApplication.getUser().getUserName();
 				result = this.deployProject(this, username, webPath, projectCode, profile, IP, parentVersion, parentPomPath, super.getUser().getRealName());
 				flag2 = result.getRpcCode().equals("0")?true:false;
 			} catch(RpcException e){
@@ -148,9 +150,24 @@ public class MvnServiceImpl extends GodzillaApplication implements MvnService {
 			flag4 = true;
 		}
 		//setData为给 统一日志 传输 更新日志ID，不传送给前台信息
+		
+		
 		if(flag4) {
+			processPercent.put(pencentkey, "100");
+			final String pencentkeyF = pencentkey;
+			new Thread() {
+				public void run() {
+					try {
+						Thread.sleep(5000);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+					processPercent.put(pencentkeyF, "0");
+				}
+			}.start();
 			return ReturnCodeEnum.getByReturnCode(OK_MVNDEPLOY).setData(logid);
 		} else {
+			processPercent.put(pencentkey, "0");
 			return ReturnCodeEnum.getByReturnCode(NO_RESTARTTOMCAT).setData(logid);
 		}
 	}
@@ -164,19 +181,15 @@ public class MvnServiceImpl extends GodzillaApplication implements MvnService {
 
 		/*String str = PropertiesUtil.getProperties().get("server.shell.restart.path") +" " + clientIp + " "
 				+ PropertiesUtil.getProperties().get("client.tomcat.home.path");*/
-		String tomcatHome = "";
-		if("godzilla".equals(projectCode)) {
-			clientIp = "10.100.142.65";
-			tomcatHome = "/home/godzilla/tomcat-godzilla";
-		} else {
-			tomcatHome = "/app/tomcat";
-		}
+		String tomcatHome = "/app/tomcat";
 		String str = "sh /home/godzilla/gzl/shell/server/restart_server.sh " + clientIp + " " + tomcatHome + " " + project.getWarName();
+		
+		DefaultShellCommand command = new DefaultShellCommand();
 		
 		if("godzilla".equals(projectCode)) {
 			flag = true;
 		} else {
-			flag = command.execute(str, super.getUser().getUserName(), projectCode, project.getSvnUsername(), project.getSvnPassword());
+			flag = command.execute(str + " " + project.getSvnUsername()+ " " + project.getSvnPassword() ,);
 		}
 		
 		/*
@@ -244,10 +257,10 @@ public class MvnServiceImpl extends GodzillaApplication implements MvnService {
 	@Override
 	public ReturnCodeEnum getProcessPercent(String projectCode, String profile, String pencentkey) {
 		
-		String processPercent = GodzillaApplication.processPercent.get(pencentkey)==null?"0":GodzillaApplication.processPercent.get(pencentkey);
+		String processPercent = GodzillaServiceApplication.processPercent.get(pencentkey)==null?"0":GodzillaServiceApplication.processPercent.get(pencentkey);
 		
 		if(processPercent.equals("100")) {
-			GodzillaApplication.processPercent.put(pencentkey, "0");
+			GodzillaServiceApplication.processPercent.put(pencentkey, "0");
 		}
 		
 		return ReturnCodeEnum.getByReturnCode(OK_QUERYPERCENT).setData(processPercent);
@@ -322,6 +335,5 @@ public class MvnServiceImpl extends GodzillaApplication implements MvnService {
 			return RpcResult.create(BUILDFAILURE, logid);
 		} 
 	}
-	
 	
 }

@@ -22,7 +22,6 @@ import cn.godzilla.service.OperateLogService;
 import cn.godzilla.service.ProjectService;
 import cn.godzilla.service.SvnBranchConfigService;
 import cn.godzilla.service.SvnService;
-import cn.godzilla.svn.BaseShellCommand;
 import cn.godzilla.util.GodzillaWebApplication;
 
 /**
@@ -43,8 +42,6 @@ public class SvnController extends GodzillaWebApplication {
 	private SvnService svnService;
 	@Autowired
 	private OperateLogService operateLogService;
-	@Autowired
-	private BaseShellCommand command;
 	/**
 	 * 状态查看
 	 * @param sid

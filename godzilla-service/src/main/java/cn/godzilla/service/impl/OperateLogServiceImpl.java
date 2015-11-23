@@ -6,17 +6,16 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 import cn.godzilla.common.Application;
 import cn.godzilla.common.OperatorEnum;
 import cn.godzilla.common.response.ResponseBodyJson;
 import cn.godzilla.dao.OperateLogMapper;
-import cn.godzilla.filter.GodzillaApplication;
 import cn.godzilla.model.OperateLog;
 import cn.godzilla.service.OperateLogService;
+import cn.godzilla.util.GodzillaServiceApplication;
 
-public class OperateLogServiceImpl extends GodzillaApplication implements OperateLogService {
+public class OperateLogServiceImpl extends GodzillaServiceApplication implements OperateLogService {
 
 	@Autowired
 	private OperateLogMapper operateLogMapper ;
@@ -25,7 +24,7 @@ public class OperateLogServiceImpl extends GodzillaApplication implements Operat
 	//201027 所有用户都能看到 各个项目  所有人的操作
 	@Override
 	public List<OperateLog> queryList(String projectCode,String profile) {
-		String username = super.getUser().getUserName();
+		String username = getUser().getUserName();
 		Map<String, String> map = new HashMap<String, String>();
 		map.put("projectCode", projectCode);
 		map.put("profile", profile);
@@ -59,14 +58,14 @@ public class OperateLogServiceImpl extends GodzillaApplication implements Operat
 	public static ResponseBodyJson logThenReturn(ResponseBodyJson response) {
 		String operation = response.getOperator();
 		
-		GodzillaApplication.operateLogService.addOperateLog(GodzillaApplication.getUser().getUserName(), GodzillaApplication.getUser().getRealName(), Application.projectcodeThreadLocal.get(), Application.profileThreadLocal.get(), operation, response.getReturncode(), response.getReturnmsg(), response.getReturnmemo());
+		GodzillaServiceApplication.operateLogService.addOperateLog(GodzillaServiceApplication.getUser().getUserName(), GodzillaServiceApplication.getUser().getRealName(), Application.projectcodeThreadLocal.get(), Application.profileThreadLocal.get(), operation, response.getReturncode(), response.getReturnmsg(), response.getReturnmemo());
 		
 		return response;
 	}
 	public static ResponseBodyJson updateLogThenReturn(ResponseBodyJson response) {
 		String operation = response.getOperator();
 		
-		GodzillaApplication.operateLogService.updateOperateLog(Application.projectcodeThreadLocal.get(), Application.profileThreadLocal.get(), Integer.parseInt(response.getData()+""), GodzillaApplication.getUser().getUserName(), GodzillaApplication.getUser().getRealName(), operation, response.getReturncode(), response.getReturnmsg(), response.getReturnmemo());
+		GodzillaServiceApplication.operateLogService.updateOperateLog(Application.projectcodeThreadLocal.get(), Application.profileThreadLocal.get(), Integer.parseInt(response.getData()+""), GodzillaServiceApplication.getUser().getUserName(), GodzillaServiceApplication.getUser().getRealName(), operation, response.getReturncode(), response.getReturnmsg(), response.getReturnmemo());
 		
 		return response;
 	}

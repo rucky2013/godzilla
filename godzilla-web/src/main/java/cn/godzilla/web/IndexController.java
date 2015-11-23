@@ -28,6 +28,7 @@ import cn.godzilla.service.OperateLogService;
 import cn.godzilla.service.ProjectService;
 import cn.godzilla.service.SvnBranchConfigService;
 import cn.godzilla.service.SvnService;
+import cn.godzilla.util.ControllerHelper;
 import cn.godzilla.util.GodzillaWebApplication;
 
 @Controller
@@ -46,7 +47,7 @@ public class IndexController extends GodzillaWebApplication {
 	@Autowired
 	SvnService svnService;
 	@Autowired
-	SshUtil sshUitl;
+	ControllerHelper controllerHelper;
 	/**
 	 * 跳到登录页
 	 * 
@@ -119,7 +120,7 @@ public class IndexController extends GodzillaWebApplication {
 	@RequestMapping(value="/project/{sid}/{projectCode}/{profile}/download", method=RequestMethod.GET) 
 	public Object download(@PathVariable("sid") String sid, @PathVariable String projectCode, @PathVariable String profile, HttpServletResponse response) {
 		
-		ReturnCodeEnum returnEnum = sshUitl.downLoadWar(projectCode, profile, response);
+		ReturnCodeEnum returnEnum = controllerHelper.downLoadWar(projectCode, profile, response);
 		
 		ResponseBodyJson.custom().setAll(returnEnum, WARDOWNLOAD).build().log();
 		

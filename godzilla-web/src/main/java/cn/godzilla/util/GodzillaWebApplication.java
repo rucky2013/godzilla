@@ -1,32 +1,19 @@
 package cn.godzilla.util;
 
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.locks.ReentrantLock;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.HttpStatus;
-import org.apache.http.client.config.RequestConfig;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.springframework.context.ApplicationContext;
 
 import cn.godzilla.common.Application;
 import cn.godzilla.common.BusinessException;
-import cn.godzilla.common.Constant;
 import cn.godzilla.common.ReturnCodeEnum;
 import cn.godzilla.common.StringUtil;
 import cn.godzilla.model.FunRight;
@@ -42,11 +29,16 @@ import cn.godzilla.service.UserService;
  */
 public abstract class GodzillaWebApplication extends Application {
 	
-	protected ApplicationContext applicationContext;
+	protected static ApplicationContext applicationContext;
+	
 	protected static UserService userService;
+	
 	protected static FunRightService funRightService;
+	
 	protected static OperateLogService operateLogService;
+	
 	protected static ServletContext context;
+	
 	protected List<String> escapeUrls = new ArrayList<String>();
 	/*
 	 * -2.限制并发　发布
@@ -55,8 +47,6 @@ public abstract class GodzillaWebApplication extends Application {
 	 * 生产　　　所有项目只允许一个人发布
 	 */
 	protected static Map<String, ReentrantLock> deploy_lock = new HashMap<String, ReentrantLock>(); 
-	//部署进度百分比  <用户名-项目名-profile,百分比>
-	protected static ConcurrentHashMap<String, String> processPercent = new ConcurrentHashMap<String, String>(); 
 	
 	/*protected static ThreadLocal<ConcurrentHashMap<String, String>> processPercent = new ThreadLocal<ConcurrentHashMap<String, String>> () {
 		protected ConcurrentHashMap<String, String> initialValue() {
@@ -64,11 +54,15 @@ public abstract class GodzillaWebApplication extends Application {
 		};
 	}; //不使用原因：前台进度条 无法获得进度，不是一个线程
 	*/
-	private static ThreadLocal<String> sidThreadLocal = new ThreadLocal<String> () {
-		protected String initialValue() {
-			return "";
-		};
-	};
+	
+	/**
+	 * 初始化 当前jvm缓存  
+	 * @param userService
+	 * @param sid
+	 */
+	protected void initWebContext(String sid) {
+		sidThreadLocal.set(sid);
+	}
 	
 	/**
 	 * 登录用户 设置其 sid 存到 当前线程 threadlocal
@@ -82,7 +76,7 @@ public abstract class GodzillaWebApplication extends Application {
 	 * @param userService2
 	 * @param sid
 	 */
-	protected ReturnCodeEnum checkUser(UserService userService, String sid) {
+	protected ReturnCodeEnum checkUser(String sid) {
 		ReturnCodeEnum userStatus = userService.checkUserStatusBySid(SERVER_USER, TEST_PROFILE, sid);
 		return userStatus;
 	}
@@ -113,14 +107,7 @@ public abstract class GodzillaWebApplication extends Application {
 		profileThreadLocal.set(profile);
 	}
 	
-	/**
-	 * 初始化 当前jvm缓存  
-	 * @param userService
-	 * @param sid
-	 */
-	protected void initContext(UserService userService, String sid) {
-		sidThreadLocal.set(sid);
-	}
+	
 	
 	public static User getUser() {
 		String sid = getSid();
@@ -131,28 +118,14 @@ public abstract class GodzillaWebApplication extends Application {
 		return sidThreadLocal.get();
 	}
 	
-	protected void distroyContext() {
-		sidThreadLocal.set(null);
-		echoMessageThreadLocal.set("");
-		shellReturnThreadLocal.set("");
-		projectcodeThreadLocal.set("");
-		profileThreadLocal.set("");
+	protected void distroyWebContext() {
+		sidThreadLocal.set("");
 	}
 	
 	protected static List<FunRight> getFunRights() {
 		String username = getUser().getUserName();
 		List<FunRight> funRightList = funRightService.findFunRightsByUsername(SERVER_USER, TEST_PROFILE, username);
 		return funRightList;
-	}
-	
-	protected static String getBranchNameByBranchUrl(String branchUrl) {
-		String branchName = "";
-		if(branchUrl.endsWith("/")) {
-			branchName = branchUrl.substring(branchUrl.lastIndexOf("/", branchUrl.length()-2)+1, branchUrl.length()-2);
-		} else {
-			branchName = branchUrl.substring(branchUrl.lastIndexOf("/")+1);
-		}
-		return branchName;
 	}
 	
 	/**
@@ -191,124 +164,7 @@ public abstract class GodzillaWebApplication extends Application {
 		String branchUrl = "http://10.100.142.37:9090/svn/fso/godzilla/branch/godzilla-bug2/";
 		System.out.println(getBranchNameByBranchUrl(branchUrl));
 	}*/
-	/**
-	 * 日常环境  通过访问 index.jsp 判断 是否 项目启动成功
-	 * 其他环境暂不需要
-	 * @param IP
-	 * @param war_name
-	 * @return
-	 */
-	protected boolean ifSuccessStartTomcat(String IP, String war_name) {
-		try {
-			Thread.currentThread().sleep(2000);
-		} catch (InterruptedException e2) {
-			e2.printStackTrace();
-		}
-		int timeout = DEFAULT_TIMEOUT ;
-		int i = 0;
-		while (true) {
-			String test_url = "http://" + IP + ":8080/" + war_name + "/index.jsp";
-			StringBuilder rs = new StringBuilder();
-			try {
-				RequestConfig config = RequestConfig.custom().setSocketTimeout(10000).setConnectionRequestTimeout(10000).build();
-				CloseableHttpClient client = HttpClients.custom().setDefaultRequestConfig(config).build();
-				HttpResponse response = client.execute(new HttpGet(test_url));
-			
-	            if (HttpStatus.SC_OK == response.getStatusLine().getStatusCode()) {
-	            	//20151102 不检查标识,返回200即成功
-	            	return true;
-	            } 
-            	if(HttpStatus.SC_NOT_FOUND == response.getStatusLine().getStatusCode()){
-	            	//如果信息码 为 4xx 或者 5xx 则退出
-	            	return false;
-	            } else if(HttpStatus.SC_INTERNAL_SERVER_ERROR == response.getStatusLine().getStatusCode()) {
-	            	return false;
-	            }
-			} catch (IOException e1) {
-				System.out.println("---httpclient 报异常，预计为超时---");
-			}
-        	try {
-				Thread.sleep(1000);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-	        //time out seconds : return false;
-	        i++;
-	        if(i>=timeout) {
-	        	return false;
-	        }
-		}
-	}
 	
-	/**
-	 * 
-	 * |快速判断|首页展示启动与否使用|
-	 * 日常环境  通过访问 index.jsp 判断 是否 项目启动成功
-	 * 其他环境暂不需要
-	 * project.state
-	 * 1.已启动
-	 * 0.未知
-	 * @param IP
-	 * @param war_name
-	 * @return
-	 */
-	protected boolean ifSuccessStartProject(String IP, String war_name) {
-		
-		try {
-			Thread.currentThread().sleep(2000);
-		} catch (InterruptedException e2) {
-			e2.printStackTrace();
-		}
-		String test_url = "http://" + IP + ":8080/" + war_name + "/index.jsp";
-		StringBuilder rs = new StringBuilder();
-		try {
-			RequestConfig config = RequestConfig.custom().setSocketTimeout(100).setConnectionRequestTimeout(100).setConnectTimeout(1000).build();
-			CloseableHttpClient client = HttpClients.custom().setDefaultRequestConfig(config).build();
-			HttpResponse response = client.execute(new HttpGet(test_url));
-		
-            if (HttpStatus.SC_OK == response.getStatusLine().getStatusCode()) {
-            	return true;
-            } 
-        	if(HttpStatus.SC_NOT_FOUND == response.getStatusLine().getStatusCode()){
-            	//如果信息码 为 4xx 或者 5xx 则退出
-            	return false;
-            } else if(HttpStatus.SC_INTERNAL_SERVER_ERROR == response.getStatusLine().getStatusCode()) {
-            	return false;
-            }
-		} catch (IOException e1) {
-			System.out.println("---httpclient 报异常，预计为超时---");
-		}
-        return false;
-	}
 	
-	protected void isEmpty(Object o) {
-		if(o == null) 
-			throw new BusinessException("数据为null->" + o.getClass().getName());
-		if(o instanceof String) {
-			if(StringUtil.isEmpty((String)o)) {
-				throw new BusinessException("字符串为空");
-			}
-		}
-	}
-	
-	protected void isEmpty(Object o, String errorMsg) {
-		if(o == null) 
-			throw new BusinessException(errorMsg);
-		if(o instanceof String) {
-			if(StringUtil.isEmpty((String)o)) {
-				throw new BusinessException(errorMsg);
-			}
-		}
-	}
-	
-	protected void isEmpty(Object o, String errorCode, String errorMsg) {
-		if(o == null) 
-			throw new BusinessException(errorCode, errorMsg);
-		if(o instanceof String) {
-			if(StringUtil.isEmpty((String)o)) {
-				throw new BusinessException(errorCode, errorMsg);
-			}
-		}
-	}
 	
 }
