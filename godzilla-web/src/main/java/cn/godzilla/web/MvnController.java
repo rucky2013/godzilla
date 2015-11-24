@@ -19,7 +19,6 @@ import cn.godzilla.common.ReturnCodeEnum;
 import cn.godzilla.common.StringUtil;
 import cn.godzilla.common.response.ResponseBodyJson;
 import cn.godzilla.service.MvnService;
-import cn.godzilla.service.OperateLogService;
 import cn.godzilla.util.GodzillaWebApplication;
 
 @Controller

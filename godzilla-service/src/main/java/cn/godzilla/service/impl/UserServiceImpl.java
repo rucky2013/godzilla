@@ -13,7 +13,6 @@ import cn.godzilla.common.ReturnCodeEnum;
 import cn.godzilla.common.StringUtil;
 import cn.godzilla.common.cache.CACHE_ENUM;
 import cn.godzilla.common.cache.RedisCache;
-import cn.godzilla.common.cache.RedisUtil;
 import cn.godzilla.dao.FunRightMapper;
 import cn.godzilla.dao.ProjectMapper;
 import cn.godzilla.dao.UserMapper;

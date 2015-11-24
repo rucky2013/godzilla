@@ -9,11 +9,10 @@ HOME=$HOME
 SHELL_NAME=$0			#脚本名称
 ACTION=$1				#命令选择
 POM_PATH=$2  			#web pom路径
-USER_NAME=$3  			#操作人
-PROJECT_NAME=$4  		#项目名称
-PROJECT_ENV=$5  		#打包profile id
-PARENT_VERSION=$6  		#发布版本
-PARENTPOM_PATH=$7  		#父pom 路径
+PROJECT_NAME=$3  		#项目名称
+PROJECT_ENV=$4  		#打包profile id
+PARENT_VERSION=$5  		#发布版本
+PARENTPOM_PATH=$6  		#父pom 路径
 
 G_PATH="/home/godzilla/gzl"
 # 本地路径
@@ -52,13 +51,13 @@ case $ACTION in
 	#***
 	# 1.部署与打包
 	#***
-	deploy)
+	DEPLOY)
 		deploy
 	;;
 	#***
 	#2.显示web项目lib目录jar包列表
 	#***
-	showlib)
+	SHOWLIB)
 		showlib
 	;;
 	*)

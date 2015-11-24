@@ -24,11 +24,9 @@ public class OperateLogServiceImpl extends GodzillaServiceApplication implements
 	//201027 所有用户都能看到 各个项目  所有人的操作
 	@Override
 	public List<OperateLog> queryList(String projectCode,String profile) {
-		String username = getUser().getUserName();
 		Map<String, String> map = new HashMap<String, String>();
 		map.put("projectCode", projectCode);
 		map.put("profile", profile);
-		//map.put("username", username) ;
 		List<OperateLog> logs = operateLogMapper.queryList(map);
 		for(OperateLog l : logs) {
 			l.setOperation(OperatorEnum.getOperatorCnByEn(l.getOperation()));
@@ -39,7 +37,6 @@ public class OperateLogServiceImpl extends GodzillaServiceApplication implements
 	@Override
 	public List<OperateLog> queryAll(String projectCode,String profile, Long id) {
 		
-		String username = super.getUser().getUserName();
 		if(id <= 0 ){
 			id = Long.MAX_VALUE ;
 		}
@@ -47,7 +44,6 @@ public class OperateLogServiceImpl extends GodzillaServiceApplication implements
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		map.put("id", id) ;
-		//map.put("username", username) ;
 		List<OperateLog> logs = operateLogMapper.queryAll(map);
 		
 		for(OperateLog l : logs) {
@@ -70,12 +66,12 @@ public class OperateLogServiceImpl extends GodzillaServiceApplication implements
 		return response;
 	}
 	@Override
-	public int addOperateLog(String projectCode, String profile, String mvnlog, String jarlog) {
+	public Long addOperateLog(String projectCode, String profile, String mvnlog, String jarlog) {
 		OperateLog record = new OperateLog();
 		record.setDeployLog(mvnlog);
 		record.setWarInfo(jarlog);
 		operateLogMapper.insertSelective(record);
-		return record.getId().intValue();
+		return record.getId();
 	}
 	@Override
 	public int updateOperateLog(String projectCode, String profile, int logid, String username, String realname,
@@ -131,9 +127,18 @@ public class OperateLogServiceImpl extends GodzillaServiceApplication implements
 	}
 
 	@Override
-	public OperateLog queryLogById(String projectCode, String profile, String logid) {
-		OperateLog log = operateLogMapper.queryLogById(Integer.parseInt(logid));
+	public OperateLog queryLogById(String projectCode, String profile, Long logid) {
+		OperateLog log = operateLogMapper.queryLogById(logid.intValue());
 		return log;
+	}
+	
+	@Override
+	public int updateOperateLog(String catalinaLog, Long logid) {
+		OperateLog record = new OperateLog();
+		record.setId(logid);
+		record.setCatalinaLog(catalinaLog);
+		record.setExecuteTime(new Date());
+		return operateLogMapper.updateLogById(record);
 	}
 
 }

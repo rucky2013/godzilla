@@ -59,6 +59,12 @@ public abstract class Application implements Constant {
 			return "";
 		}
 	};
+	// mvn deploy  log
+	protected static ThreadLocal<String> deployLogThreadLocal = new ThreadLocal<String>() {
+		protected String initialValue() {
+			return "";
+		}
+	};
 	protected static ThreadLocal<String> svnVersionThreadLocal = new ThreadLocal<String>() {
 		protected String initialValue() {
 			return "";
@@ -88,7 +94,6 @@ public abstract class Application implements Constant {
 		int i = 0;
 		while (true) {
 			String test_url = "http://" + IP + ":8080/" + war_name + "/index.jsp";
-			StringBuilder rs = new StringBuilder();
 			try {
 				RequestConfig config = RequestConfig.custom().setSocketTimeout(10000).setConnectionRequestTimeout(10000).build();
 				CloseableHttpClient client = HttpClients.custom().setDefaultRequestConfig(config).build();
@@ -137,7 +142,6 @@ public abstract class Application implements Constant {
 			e2.printStackTrace();
 		}
 		String test_url = "http://" + IP + ":8080/" + war_name + "/index.jsp";
-		StringBuilder rs = new StringBuilder();
 		try {
 			RequestConfig config = RequestConfig.custom().setSocketTimeout(100).setConnectionRequestTimeout(100).setConnectTimeout(1000).build();
 			CloseableHttpClient client = HttpClients.custom().setDefaultRequestConfig(config).build();

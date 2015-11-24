@@ -74,6 +74,7 @@ public class GodzillaServiceApplication extends Application {
 		echoMessageThreadLocal.set("");
 		shellReturnThreadLocal.set("");
 		catalinaLogThreadLocal.set("");
+		deployLogThreadLocal.set("");
 		jarlogThreadLocal.set("");
 		svnVersionThreadLocal.set("");
 		mvnBuildThreadLocal.set(SUCCESS);
@@ -86,6 +87,7 @@ public class GodzillaServiceApplication extends Application {
 		echoMessageThreadLocal.set("");
 		shellReturnThreadLocal.set("");
 		catalinaLogThreadLocal.set("");
+		deployLogThreadLocal.set("");
 		jarlogThreadLocal.set("");
 		svnVersionThreadLocal.set("");
 		mvnBuildThreadLocal.set(SUCCESS);

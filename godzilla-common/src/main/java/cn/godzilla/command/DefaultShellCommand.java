@@ -21,6 +21,7 @@ public class DefaultShellCommand extends AbstractShellCommand {
 			break;
 		case MERGE:
 		case COMMIT:
+		case COMMIT_RESOLVE:
 			runnable = new DefaultRunnable();
 			break;
 		case TAIL:
@@ -97,6 +98,7 @@ public class DefaultShellCommand extends AbstractShellCommand {
 		@Override
 		protected void doLineNullBusi() {
 			deployLog = deployLog + "</p>";
+			deployLogThreadLocal.set(deployLog);
 			signal();
 		}
 	}
@@ -126,14 +128,13 @@ public class DefaultShellCommand extends AbstractShellCommand {
 		@Override
 		protected void doLineNotNullBusi() {
 			catalinaLog = catalinaLog + line + "<br/>";
-			shellReturnThreadLocal.set(line);
+			catalinaLogThreadLocal.set(catalinaLog);
 		}
 		
 		@Override
 		protected void doLineNullBusi() {
 			catalinaLog = catalinaLog + "</p>";
 			catalinaLogThreadLocal.set(catalinaLog);
-			signal();
 		}
 	}
 	

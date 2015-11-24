@@ -2,11 +2,9 @@ package cn.godzilla.service;
 
 import javax.servlet.http.HttpServletResponse;
 
-import cn.godzilla.common.Constant;
 import cn.godzilla.common.ReturnCodeEnum;
-import cn.godzilla.model.RpcResult;
 
-public interface MvnService extends Constant{
+public interface MvnService {
 
 	/**
 	 * 部署项目
@@ -21,16 +19,6 @@ public interface MvnService extends Constant{
 	 * @return
 	 */
 	public ReturnCodeEnum doDeploy(String projectCode, String profile, String parentVersion, String pencentkey);
-	
-	/**
-	 * 部署项目
-	 * 3.将sh命令>queue
-	 * 
-	 * @param srcUrl
-	 * @param projectCode
-	 * @param profile
-	 */
-	public RpcResult mvnDeploy(String projectCode, String profile, String str, String projectEnv, String USER_NAME, String realname);
 	
 	/**
 	 * 部署项目进行进度百分比

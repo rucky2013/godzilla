@@ -11,7 +11,6 @@ import cn.godzilla.common.ReturnCodeEnum;
 import cn.godzilla.model.ClientConfig;
 import cn.godzilla.model.PropBill;
 import cn.godzilla.model.PropConfig;
-import cn.godzilla.model.RpcResult;
 
 public interface PropConfigService extends Constant{
 	
@@ -127,6 +126,6 @@ public interface PropConfigService extends Constant{
 		 * @throws IOException
 		 * @throws Exception
 		 */
-		 public RpcResult propToPom(String project_code, String webPath, String profile, String parentVersion, ClientConfig clientconfig) throws DocumentException, IOException, Exception;
+		 public ReturnCodeEnum propToPom(String project_code, String webPath, String profile, String parentVersion, ClientConfig clientconfig) ;
 		
 }

@@ -22,6 +22,7 @@ public interface Constant {
 	/**
 	 * shell command
 	 */
+	public final String FILENAME_POM = "/pom.xml";
 	public final String OK_SHELL = "0";
 	public final String BLACKSPACE = " ";
 	public final String SH_COPYWAR_SERVER = "sh /home/godzilla/gzl/shell/server/copywar_server.sh";
@@ -29,6 +30,23 @@ public interface Constant {
 	public final String WAR_HOME = "/app/tomcat/webapps/*.war";
 	public final String SH_RESTARTTOMCAT_CLIENT = "/home/godzilla/gzl/shell/client/restart_client.sh";
 	public final String SH_GODZILLA_SERVER = "sh /home/godzilla/gzl/shell/server/godzilla.sh";
+	public final String SH_MVN_CLIENT = "/home/godzilla/gzl/shell/client/godzilla_mvn.sh";
+	public final String COM_DEPLOY = "DEPLOY";
+	public final String COM_SHOWLIB = "SHOWLIB";
+	public final String TOMCAT_HOME = "/app/tomcat";
+	public final String SH_SVN_CLIENT = "sh /home/godzilla/gzl/shell/server/svn_server.sh";
+	public final String COM_COMMIT = "COMMIT";
+	public final String QUATE = "'";
+	public final String COM_COMMIT_RESOLVE = "COMMIT_RESOLVE";
+	public final String COM_RESOLVE = "resolve";
+	public final String COM_MERGE = "merge";
+	public final String COM_MERGE_RESOLVE = "merge_resolve";
+	public final String COM_STATUS = "status";
+	public final String COM_VERSION = "version";
+	/**  svn mergestatus 0:无 1:有冲突 2:标记解决 */
+	public final String NO_CONFLICT = "0";
+	public final String HAS_CONFLICT = "1";/**  svn mergestatus 0:无 1:有冲突 2:标记解决 */
+	public final String OK_RESOLVED = "2";/**  svn mergestatus 0:无 1:有冲突 2:标记解决 */
 	/**
 	 * userservice 连接客户端
 	 */
@@ -171,6 +189,7 @@ public interface Constant {
 	public final static String OK_ADDUPDATEPROP = "200011";
 	public final static String OK_VERIFYPROP = "200012";
 	public final static String OK_MVNDEPLOY = "200014";
+	public final static String OK_CHANGEPOM = "200015";
 	public final static String OK_AUTHORIZATION = "200017";
 	public final static String OK_ADDUSER = "200018";
 	public final static String OK_UPDATEFUNRIGHT = "200020";
@@ -180,6 +199,7 @@ public interface Constant {
 	public final static String OK_GODZILLA = "200029";
 	public final static String OK_DELETEBRANCH = "200030";
 	public final static String OK_SVNMERGE = "200031";
+	public final static String OK_MVNBUILD = "200032";
 	public final static String OK_STARTTOMCAT = "200038";
 	public final static String OK_SRCEDIT = "200039";
 	public final static String OK_BRANCHADD = "200040";
@@ -191,4 +211,6 @@ public interface Constant {
 	public final static String OK_EDITMERGESTATUS = "200055";
 	public final static String OK_SVNRESOLVED = "200061";
 	public final static String OK_CHANGEPWD = "200064";
+	
+	
 }

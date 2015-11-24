@@ -9,9 +9,6 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import cn.godzilla.common.BusinessException;
 import cn.godzilla.common.Constant;
 import cn.godzilla.common.response.ResponseBodyJson;
@@ -20,8 +17,6 @@ import com.alibaba.fastjson.JSON;
 
 public class BusinessExceptionFilter implements Filter, Constant{
 	
-	private final Logger logger = LogManager.getLogger(BusinessExceptionFilter.class);
-
 	@Override
 	public void init(FilterConfig filterConfig) throws ServletException {
 		

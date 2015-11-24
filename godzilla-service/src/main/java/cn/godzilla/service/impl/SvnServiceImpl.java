@@ -7,10 +7,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import cn.godzilla.command.CommandEnum;
 import cn.godzilla.command.DefaultShellCommand;
 import cn.godzilla.common.BusinessException;
 import cn.godzilla.common.ReturnCodeEnum;
@@ -21,7 +20,6 @@ import cn.godzilla.model.Project;
 import cn.godzilla.model.SvnBranchConfig;
 import cn.godzilla.model.SvnConflict;
 import cn.godzilla.service.ClientConfigService;
-import cn.godzilla.service.OperateLogService;
 import cn.godzilla.service.ProjectService;
 import cn.godzilla.service.SvnBranchConfigService;
 import cn.godzilla.service.SvnService;
@@ -40,57 +38,28 @@ public class SvnServiceImpl extends GodzillaServiceApplication implements SvnSer
 	
 	@Override
 	public ReturnCodeEnum svnCommit(String projectCode, String profile) {
-		Project project = projectService.queryByProCode(projectCode, TEST_PROFILE);
-		// mergeStatus 0:无 1:有冲突 2:标记解决
-		if("1".equals(project.getMergeStatus())) {
-			return ReturnCodeEnum.getByReturnCode(NO_SVNRESOLVED);
-		} 
-		return svnCommit1(projectCode, profile);
-	}
-	
-	private ReturnCodeEnum svnCommit1(String projectCode, String profile) {
-		ClientConfig clientConfig = clientConfigService.queryDetail(projectCode, profile) ;
-		String clientIp = clientConfig.getRemoteIp();
 		List<SvnBranchConfig> svnBranchConfigs = svnBranchConfigService.queryListByProjectCode(projectCode, TEST_PROFILE);
 		Project project = projectService.queryByProCode(projectCode, TEST_PROFILE);
-		String trunkPath = project.getRepositoryUrl();
 		
-		boolean flag = false;
+		String BRANCHES = getBranchesByBranchConfigs(profile, svnBranchConfigs);
 		
-		String branches = "";
-		for(SvnBranchConfig sbc: svnBranchConfigs) {
-			branches = sbc.getBranchUrl() + ",";
-		}
-		if("".equals(branches)) {
-			branches = EMPTY_BRANCH;
-		} else {
-			branches = branches.substring(0, branches.length()-1);
-		}
-		
-		String operator = super.getUser().getUserName();
-		String str="";
+		String TRUNK_PATH = project.getRepositoryUrl();
+		String SVN_USERNAME = project.getSvnUsername();
+		String SVN_PASSWORD = project.getSvnPassword();
 		// mergeStatus 0:无 1:有冲突 2:标记解决
-		if("0".equals(project.getMergeStatus())) {
-			try {
-				str = "sh /home/godzilla/gzl/shell/server/svn_server_wl.sh commit "+trunkPath+" '"+branches+"' "+" "+callbackUrl+" "+projectCode+" "+ operator +" "+clientIp ;
-				DefaultShellCommand command = new DefaultShellCommand();
-				flag = command.execute(str, super.getUser().getUserName(), projectCode, project.getSvnUsername(), project.getSvnPassword());
-				
-			} catch (Exception e) {
-				e.printStackTrace();
-				flag = false;
-			}
-		} else {
-			//"2".equals(project.getMergeStatus())
+		if(NO_CONFLICT.equals(project.getMergeStatus())) {
+				String commandStr = SH_SVN_CLIENT + BLACKSPACE + COM_COMMIT + BLACKSPACE + TRUNK_PATH + BLACKSPACE + QUATE+ BRANCHES + QUATE + BLACKSPACE + projectCode + BLACKSPACE + SVN_USERNAME + BLACKSPACE + SVN_PASSWORD;
+				DefaultShellCommand commandShell = new DefaultShellCommand();
+				commandShell.execute(commandStr, CommandEnum.COMMIT);
+		} else if(HAS_CONFLICT.equals(project.getMergeStatus())) {
+			return ReturnCodeEnum.getByReturnCode(NO_SVNRESOLVED);
+		} else if(OK_RESOLVED.equals(project.getMergeStatus())) {
 			String CONFL_URL = this.queryConflictURLById(project.getSvnConflictId());
-			try {
-				str = "sh /home/godzilla/gzl/shell/server/svn_server_wl.sh commit_resolve "+trunkPath+" '"+branches+"' "+" "+callbackUrl+" "+projectCode+" "+ operator +" "+clientIp  ;
-				DefaultShellCommand command = new DefaultShellCommand();
-				flag = command.execute(str, super.getUser().getUserName(), projectCode, project.getSvnUsername(), project.getSvnPassword(), CONFL_URL);
-			} catch (Exception e) {
-				e.printStackTrace();
-				flag = false;
-			}
+			String commandStr = SH_SVN_CLIENT + BLACKSPACE + COM_COMMIT_RESOLVE + BLACKSPACE +TRUNK_PATH+ BLACKSPACE + QUATE + BRANCHES + QUATE + BLACKSPACE + projectCode + BLACKSPACE + SVN_USERNAME + BLACKSPACE + SVN_PASSWORD + CONFL_URL;
+			DefaultShellCommand command = new DefaultShellCommand();
+			command.execute(commandStr, CommandEnum.COMMIT_RESOLVE);
+		} else {
+			//never reach here.
 		}
 		
 		//shell返回值 ：通过shell 最后一行 echo 
@@ -106,7 +75,6 @@ public class SvnServiceImpl extends GodzillaServiceApplication implements SvnSer
 		# 5.some conflicts still found on branch ,please renew resolve it
 		# 6.branches is '' ,no need commit
 		#***
-		// mergeStatus 0:无 1:有冲突 2:标记解决
 		**/
 		if("0".equals(shellReturn)){
 			//成功则 1.删除  当前分支
@@ -116,7 +84,7 @@ public class SvnServiceImpl extends GodzillaServiceApplication implements SvnSer
 			// 3. 取消冲突标记
 			Map<String, String> parameterMap1 = new HashMap<String, String>();
 			parameterMap1.put("project_code", projectCode);
-			parameterMap1.put("merge_status", "0");
+			parameterMap1.put("merge_status", NO_CONFLICT);
 			ReturnCodeEnum renum1 = projectService.editMergestatusByProjectCode(SERVER_USER, TEST_PROFILE, parameterMap1);
 			if(renum1.equals(ReturnCodeEnum.getByReturnCode(NO_EDITMERGESTATUS))) {
 				return renum1; //修改冲突标识失败
@@ -141,42 +109,19 @@ public class SvnServiceImpl extends GodzillaServiceApplication implements SvnSer
 
 	@Override
 	public ReturnCodeEnum svnResolved(String projectCode, String profile) {
-		ClientConfig clientConfig = clientConfigService.queryDetail(projectCode, profile) ;
-		String clientIp = clientConfig.getRemoteIp();
 		List<SvnBranchConfig> svnBranchConfigs = svnBranchConfigService.queryListByProjectCode(projectCode, TEST_PROFILE);
 		Project project = projectService.queryByProCode(projectCode, TEST_PROFILE);
-		String trunkPath = project.getRepositoryUrl();
 		
-		boolean flag = false;
-		
-		String branches = "";
-		for(SvnBranchConfig sbc: svnBranchConfigs) {
-			branches += sbc.getBranchUrl() + ",";
-		}
-		if("".equals(branches)) {
-			branches = EMPTY_BRANCH;
-		} else {
-			branches = branches.substring(0, branches.length()-1);
-		}
-		//准生产 与生产环境  直接使用trunk 版本
-		if(!profile.equals("TEST")) {
-			branches = EMPTY_BRANCH;
-		}
-		
-		String callbackUrl = "http://localhost:8080/process-callback.do";
-		
-		String operator = super.getUser().getUserName();
-		String str= "";
+		String BRANCHES = getBranchesByBranchConfigs(profile, svnBranchConfigs);
+		String TRUNK_PATH = project.getRepositoryUrl();
+		String SVN_USERNAME = project.getSvnUsername();
+		String SVN_PASSWORD = project.getSvnPassword();
 		// mergeStatus 0:无 1:有冲突 2:标记解决
-		if("1".equals(project.getMergeStatus())) {
-			try {
-				String CONFL_URL = this.queryConflictURLById(project.getSvnConflictId());
-				str = "sh /home/godzilla/gzl/shell/server/svn_server_wl.sh resolve "+trunkPath+" '"+branches+"' "+" "+callbackUrl+" "+projectCode+" "+ operator +" "+clientIp ;
-				flag = command.execute(str, super.getUser().getUserName(), projectCode, project.getSvnUsername(), project.getSvnPassword(), CONFL_URL);
-			} catch (Exception e) {
-				logger.error(e);
-				e.printStackTrace();
-			}
+		if(HAS_CONFLICT.equals(project.getMergeStatus())) {
+			String CONFL_URL = this.queryConflictURLById(project.getSvnConflictId());
+			String commandStr = SH_SVN_CLIENT + BLACKSPACE + COM_RESOLVE + TRUNK_PATH + BLACKSPACE + QUATE + BRANCHES + QUATE + BLACKSPACE + projectCode + BLACKSPACE + SVN_USERNAME + BLACKSPACE + SVN_PASSWORD + BLACKSPACE + CONFL_URL;
+			DefaultShellCommand command = new DefaultShellCommand();
+			command.execute(commandStr, CommandEnum.RESOLVE);
 		} 
 		
 		/**
@@ -187,22 +132,21 @@ public class SvnServiceImpl extends GodzillaServiceApplication implements SvnSer
 		# 4.some conflicts still found in conflict-branch! Please resolve all of them. 
 		# 6.branches is '' ,no need commit
 		#***
-		// mergeStatus 0:无 1:有冲突 2:标记解决
 		**/
 		String shellReturn = shellReturnThreadLocal.get();
-		if("0".equals(shellReturnThreadLocal.get())){
+		if("0".equals(shellReturn)){
 			
 			Map<String, String> parameterMap1 = new HashMap<String, String>();
 			parameterMap1.put("project_code", projectCode);
-			parameterMap1.put("merge_status", "2");
+			parameterMap1.put("merge_status", OK_RESOLVED);
 			ReturnCodeEnum renum1 = projectService.editMergestatusByProjectCode(SERVER_USER, TEST_PROFILE, parameterMap1);
 			if(renum1.equals(ReturnCodeEnum.getByReturnCode(NO_EDITMERGESTATUS))) {
 				return renum1; //修改冲突标识失败
 			}
 			return ReturnCodeEnum.getByReturnCode(OK_SVNRESOLVED);
-		} else if("4".equals(shellReturnThreadLocal.get())) {
+		} else if("4".equals(shellReturn)) {
 			return ReturnCodeEnum.getByReturnCode(NO_STILLHASCONFLICTBRANCH); 
-		} else if("6".equals(shellReturnThreadLocal.get())) {
+		} else if("6".equals(shellReturn)) {
 			return ReturnCodeEnum.getByReturnCode(NO_HAVEBRANCHES); 
 		} else {
 			return ReturnCodeEnum.getByReturnCode(NO_SVNRESOLVE);
@@ -212,63 +156,30 @@ public class SvnServiceImpl extends GodzillaServiceApplication implements SvnSer
 	
 	@Override
 	public ReturnCodeEnum svnMerge(String projectCode, String profile) {
-		Project project = projectService.queryByProCode(projectCode, TEST_PROFILE);
-		// mergeStatus 0:无 1:有冲突 2:标记解决
-		if("1".equals(project.getMergeStatus())) {
-			return ReturnCodeEnum.getByReturnCode(NO_SVNRESOLVED);
-		} 
-		return svnMerge1(projectCode, profile);
-	}
-	
-	private ReturnCodeEnum svnMerge1(String projectCode, String profile) {
 		
-		ClientConfig clientConfig = clientConfigService.queryDetail(projectCode, profile) ;
-		String clientIp = clientConfig.getRemoteIp();
 		List<SvnBranchConfig> svnBranchConfigs = svnBranchConfigService.queryListByProjectCode(projectCode, TEST_PROFILE);
 		Project project = projectService.queryByProCode(projectCode, TEST_PROFILE);
-		String trunkPath = project.getRepositoryUrl();
 		
-		boolean flag = false;
-		
-		String branches = "";
-		for(SvnBranchConfig sbc: svnBranchConfigs) {
-			branches += sbc.getBranchUrl() + ",";
-		}
-		if("".equals(branches)) {
-			branches = EMPTY_BRANCH;
-		} else {
-			branches = branches.substring(0, branches.length()-1);
-		}
-		//准生产 与生产环境  直接使用trunk 版本
-		if(!profile.equals("TEST")) {
-			branches = EMPTY_BRANCH;
-		}
-		
-		String callbackUrl = "http://localhost:8080/process-callback.do";
-		
-		String operator = super.getUser().getUserName();
-		String str= "";
+		String BRANCHES = getBranchesByBranchConfigs(profile, svnBranchConfigs);
+		String TRUNK_PATH = project.getRepositoryUrl();
+		String SVN_USERNAME = project.getSvnUsername();
+		String SVN_PASSWORD = project.getSvnPassword();
 		//临时冲突解决分支
 		String NEW_CONFL_URL = getRandConflictURL(project.getRepositoryUrl(), projectCode);
 		// mergeStatus 0:无 1:有冲突 2:标记解决
-		if("0".equals(project.getMergeStatus())) {
-			try {
-				str = "sh /home/godzilla/gzl/shell/server/svn_server_wl.sh merge "+trunkPath+" '"+branches+"' "+" "+callbackUrl+" "+projectCode+" "+ operator +" "+clientIp ;
-				flag = command.execute(str, super.getUser().getUserName(), projectCode, project.getSvnUsername(), project.getSvnPassword(), NEW_CONFL_URL);
-			} catch (Exception e) {
-				logger.error(e);
-				e.printStackTrace();
-			}
-		} else {
-			//"2".equals(project.getMergeStatus())
+		if(NO_CONFLICT.equals(project.getMergeStatus())) {
+			String commandStr = SH_SVN_CLIENT + BLACKSPACE + COM_MERGE + BLACKSPACE + TRUNK_PATH + BLACKSPACE + QUATE + BRANCHES + QUATE + BLACKSPACE + projectCode + BLACKSPACE + SVN_USERNAME + BLACKSPACE + SVN_PASSWORD + BLACKSPACE + NEW_CONFL_URL;
+			DefaultShellCommand command = new DefaultShellCommand();
+			command.execute(commandStr, CommandEnum.MERGE);
+		} if(HAS_CONFLICT.equals(project.getMergeStatus())) {
+			return ReturnCodeEnum.getByReturnCode(NO_SVNRESOLVED);
+		} else if(OK_RESOLVED.equals(project.getMergeStatus())) {
 			String CONFL_URL = this.queryConflictURLById(project.getSvnConflictId());
-			try {
-				str = "sh /home/godzilla/gzl/shell/server/svn_server_wl.sh merge_resolve "+trunkPath+" '"+branches+"' "+" "+callbackUrl+" "+projectCode+" "+ operator +" "+clientIp ;
-				flag = command.execute(str, super.getUser().getUserName(), projectCode, project.getSvnUsername(), project.getSvnPassword(), CONFL_URL);
-			} catch (Exception e) {
-				logger.error(e);
-				e.printStackTrace();
-			}
+			String commandStr = SH_SVN_CLIENT + BLACKSPACE + COM_MERGE_RESOLVE + BLACKSPACE + TRUNK_PATH + BLACKSPACE + QUATE + BRANCHES + QUATE + BLACKSPACE + projectCode + BLACKSPACE + SVN_USERNAME + BLACKSPACE + SVN_PASSWORD + BLACKSPACE + CONFL_URL;
+			DefaultShellCommand command = new DefaultShellCommand();
+			command.execute(commandStr, CommandEnum.MERGE_RESOLVE);
+		} else {
+			//never reach here.
 		}
 		
 		/**
@@ -281,9 +192,10 @@ public class SvnServiceImpl extends GodzillaServiceApplication implements SvnSer
 		# 5.some conflicts still found on branch ,please renew resolve it
 		# 6.branches is '' ,no need commit
 		#***
-		// mergeStatus 0:无 1:有冲突 2:标记解决
 		**/
-		if("0".equals(shellReturnThreadLocal.get())){
+		String shellReturn = shellReturnThreadLocal.get();
+		
+		if("0".equals(shellReturn)){
 			return ReturnCodeEnum.getByReturnCode(OK_SVNMERGE);
 		} else if("2".equals(shellReturnThreadLocal.get())) {
 			//标记存在冲突　设置冲突分支url
@@ -296,28 +208,28 @@ public class SvnServiceImpl extends GodzillaServiceApplication implements SvnSer
 			
 			Map<String, String> parameterMap1 = new HashMap<String, String>();
 			parameterMap1.put("project_code", projectCode);
-			parameterMap1.put("merge_status", "1");
+			parameterMap1.put("merge_status", HAS_CONFLICT);
 			parameterMap1.put("svn_conflict_id", svn_conflict_id+"");
 			ReturnCodeEnum renum1 = projectService.editMergestatusByProjectCode(SERVER_USER, TEST_PROFILE, parameterMap1);
 			if(renum1.equals(ReturnCodeEnum.getByReturnCode(NO_EDITMERGESTATUS))) {
 				return renum1; //修改冲突标识失败
 			}
 			return ReturnCodeEnum.getByReturnCode(NO_FOUNDCONFLICT); //合并分支冲突 ,请检出冲突分支，并解决冲突
-		} else if("3".equals(shellReturnThreadLocal.get())) {
+		} else if("3".equals(shellReturn)) {
 			return ReturnCodeEnum.getByReturnCode(NO_ERRORCOMMAND); 
-		} else if("4".equals(shellReturnThreadLocal.get())) {
+		} else if("4".equals(shellReturn)) {
 			return ReturnCodeEnum.getByReturnCode(NO_STILLHASCONFLICTBRANCH); 
-		} else if("5".equals(shellReturnThreadLocal.get())) {
-			//标记还有冲突　重新建立解决冲突分支
+		} else if("5".equals(shellReturn)) {
+			//标记还有冲突　重新建立解决冲突分支 , 20151124 需要重新合并 0状态是对的
 			Map<String, String> parameterMap = new HashMap<String, String>();
 			parameterMap.put("project_code", projectCode);
-			parameterMap.put("merge_status", "0");
+			parameterMap.put("merge_status", NO_CONFLICT);
 			ReturnCodeEnum renum1 = projectService.editMergestatusByProjectCode(SERVER_USER, TEST_PROFILE, parameterMap);
 			if(renum1.equals(ReturnCodeEnum.getByReturnCode(NO_EDITMERGESTATUS))) {
 				return renum1; //修改冲突标识失败
 			}
 			return this.svnMerge(projectCode, profile); //renew resolve
-		} else if("6".equals(shellReturnThreadLocal.get())) {
+		} else if("6".equals(shellReturn)) {
 			return ReturnCodeEnum.getByReturnCode(NO_HAVEBRANCHES); 
 		} else {
 			return ReturnCodeEnum.getByReturnCode(NO_SVNMERGE);
@@ -354,73 +266,69 @@ public class SvnServiceImpl extends GodzillaServiceApplication implements SvnSer
 		return conflict_url;
 	}
 
+	@Override
 	public ReturnCodeEnum getStatus(String projectCode, String profile) {
-		ClientConfig clientConfig = clientConfigService.queryDetail(projectCode, profile) ;
-		String clientIp = clientConfig.getRemoteIp();
 		List<SvnBranchConfig> svnBranchConfigs = svnBranchConfigService.queryListByProjectCode(projectCode, TEST_PROFILE);
 		Project project = projectService.queryByProCode(projectCode, TEST_PROFILE);
-		String trunkPath = project.getRepositoryUrl();
-		String localPath=project.getCheckoutPath(); 
 		
-		boolean flag = false;
+		String TRUNK_PATH = project.getRepositoryUrl();
+		String BRANCHES = getBranchesByBranchConfigs(profile, svnBranchConfigs);
+		String SVN_USERNAME = project.getSvnUsername();
+		String SVN_PASSWORD = project.getSvnPassword();
 		
+		String commandStr =SH_SVN_CLIENT + BLACKSPACE + COM_STATUS + BLACKSPACE + TRUNK_PATH + BLACKSPACE + QUATE + BRANCHES + QUATE + BLACKSPACE + projectCode + BLACKSPACE + SVN_USERNAME + BLACKSPACE + SVN_PASSWORD + BLACKSPACE;
+		DefaultShellCommand command = new DefaultShellCommand();
+		command.execute(commandStr, CommandEnum.INFO); //svn info
+		
+		String shellReturn = shellReturnThreadLocal.get();
+		
+		if("0".equals(shellReturn)){
+			return ReturnCodeEnum.getByReturnCode(OK_SVNSTATUS);
+		} else {
+			return ReturnCodeEnum.getByReturnCode(NO_SVNSTATUS);
+		}
+	}
+	
+	private String getBranchesByBranchConfigs(String profile, List<SvnBranchConfig> svnBranchConfigs) {
 		String branches = "";
 		for(SvnBranchConfig sbc: svnBranchConfigs) {
 			branches = sbc.getBranchUrl() + ",";
 		}
-		if("".equals(branches)) {
+		if(StringUtil.isEmpty(branches)) {
 			branches = EMPTY_BRANCH;
 		} else {
 			branches = branches.substring(0, branches.length()-1);
 		}
-		String callbackUrl = "http://localhost:8080/process-callback.do";
-		
-		String operator = super.getUser().getUserName();
-		String str = "";
-		try {
-			str ="sh /home/godzilla/gzl/shell/server/svn_server_wl.sh status "+trunkPath+" '"+branches+"' "+" "+callbackUrl+" "+projectCode+" "+ operator +" "+clientIp ;
-			flag = command.execute(str, super.getUser().getUserName(), projectCode, project.getSvnUsername(), project.getSvnPassword());
-		} catch (Exception e) {
-			logger.error(e);
-			e.printStackTrace();
+		//准生产 与生产环境  直接使用trunk 版本
+		if(!TEST_PROFILE.equals(profile)) {
+			branches = EMPTY_BRANCH;
 		}
-		
-		if(flag) {
-			return ReturnCodeEnum.getByReturnCode(OK_SVNSTATUS);
-		}
-		return ReturnCodeEnum.getByReturnCode(NO_SVNSTATUS);
+		return branches;
 	}
-	
+
+	@Override
 	public ReturnCodeEnum getVersion(String trunkPath, String projectCode) {
 		ClientConfig clientConfig = clientConfigService.queryDetail(projectCode, TEST_PROFILE) ;
 		Project project = projectService.queryByProCode(projectCode, TEST_PROFILE);
-		super.isEmpty(clientConfig, projectCode+"项目的clientconfig 未初始化") ;
+		isEmpty(clientConfig, projectCode+"项目的clientconfig 未初始化") ;
 		
-		String clientIp = clientConfig.getRemoteIp();
-		String branches = EMPTY_BRANCH;
-		boolean flag = false;
+		String BRANCHES = EMPTY_BRANCH;
+		String TRUNK_PATH = project.getRepositoryUrl();
+		String SVN_USERNAME = project.getSvnUsername();
+		String SVN_PASSWORD = project.getSvnPassword();
 		
-		String callbackUrl = "http://localhost:8080/process-callback.do";
-		String operator = super.getUser().getUserName();
-		String str = "";
-		try {
-			str ="sh /home/godzilla/gzl/shell/server/svn_server_wl.sh version "+trunkPath+" '"+branches+"' "+" "+callbackUrl+" "+projectCode+" "+ operator +" "+clientIp ;
-			flag = command.execute(str, super.getUser().getUserName(), projectCode, project.getSvnUsername(), project.getSvnPassword());
-		} catch (Exception e) {
-			logger.error(e);
-			e.printStackTrace();
-		}
-		String username = super.getUser().getUserName();
+		String commandStr =SH_SVN_CLIENT + BLACKSPACE + COM_VERSION + BLACKSPACE + TRUNK_PATH + BLACKSPACE + QUATE + BRANCHES + QUATE + BLACKSPACE +  projectCode + BLACKSPACE + SVN_USERNAME + BLACKSPACE + SVN_PASSWORD + BLACKSPACE ;
+		DefaultShellCommand command = new DefaultShellCommand();
+		command.execute(commandStr, CommandEnum.VERSION); //svn log
+		
 		//shell返回值 ：通过shell 最后一行 echo 
 		String shellReturn = shellReturnThreadLocal.get();
 		//如果合并成功  1.shell执行返回true 2.shell返回值为 0 
-		if(flag&&"0".equals(shellReturn)){
+		if("0".equals(shellReturn)){
 			return ReturnCodeEnum.getByReturnCode(OK_SVNVERSION);
-		} else if(flag) {
-			return ReturnCodeEnum.getByReturnCode(NO_SVNVERSION);
 		} else {
-			return ReturnCodeEnum.getByReturnCode(NO_JAVASHELLCALL);
-		}
+			return ReturnCodeEnum.getByReturnCode(NO_SVNVERSION);
+		} 
 	}
 
 	@Override
@@ -433,5 +341,4 @@ public class SvnServiceImpl extends GodzillaServiceApplication implements SvnSer
 		SvnConflict svnConflict = svnConflictMapper.selectByPrimaryKey(Long.parseLong(conflictId));
 		project.setConflictUrl(svnConflict.getConflictPath()); 
 	}
-	
 }

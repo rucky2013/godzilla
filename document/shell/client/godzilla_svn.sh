@@ -21,12 +21,10 @@ SHELL_NAME=$0			#脚本名称
 ACTION=$1				#命令选择
 SVN_TRUNK=$2  			#SVN主干
 SVN_BRANCHES=$3 		#SVN所有分支(以,分隔)
-CALL_BACK_URL=$4 		#回调url
-PROJECT_NAME=$5			#项目名(checkout目录名)
-USER_NAME=$6			#操作人
-SVNUSERNAME=$7			#svn
-SVNPASSWORD=$8			#svn
-CONFL_URL=$9			#冲突解决分支
+PROJECT_NAME=$4			#项目名(checkout目录名)
+SVNUSERNAME=$5			#svn
+SVNPASSWORD=$6			#svn
+CONFL_URL=$7			#冲突解决分支
 
 if false; then
 echo "**********************参数信息***********************"
@@ -34,9 +32,7 @@ echo "SHELL_NAME:${SHELL_NAME}"
 echo "ACTION:${ACTION}"
 echo "SVN_TRUNK:${SVN_TRUNK}"
 echo "SVN_BRANCHES:${SVN_BRANCHES}"
-echo "CALL_BACK_URL:${CALL_BACK_URL}"
 echo "PROJECT_NAME:${PROJECT_NAME}"
-echo "USER_NAME:${USER_NAME}" 
 echo "CONFL_URL:${CONFL_URL}" 
 echo "********************参数信息END***********************"
 fi

@@ -41,6 +41,16 @@ public class OperateLog implements Serializable{
     
     private String warInfo;
     
+    private String catalinaLog;
+    
+    public String getCatalinaLog() {
+		return catalinaLog;
+	}
+
+	public void setCatalinaLog(String catalinaLog) {
+		this.catalinaLog = catalinaLog;
+	}
+	
     public String getDeployLog() {
 		return deployLog;
 	}

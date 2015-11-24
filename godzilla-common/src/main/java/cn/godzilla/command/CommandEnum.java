@@ -1,7 +1,8 @@
 package cn.godzilla.command;
 
 public enum CommandEnum {
-	MERGE, COMMIT,INFO,VERSION,
+	INFO,VERSION,
+	COMMIT, COMMIT_RESOLVE, RESOLVE, MERGE, MERGE_RESOLVE,
 	MVN,
 	TAIL,LSJAR,
 	CPWAR, 

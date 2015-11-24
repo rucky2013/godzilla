@@ -15,7 +15,6 @@ import org.springframework.context.ApplicationContext;
 import cn.godzilla.common.Application;
 import cn.godzilla.common.BusinessException;
 import cn.godzilla.common.ReturnCodeEnum;
-import cn.godzilla.common.StringUtil;
 import cn.godzilla.model.FunRight;
 import cn.godzilla.model.User;
 import cn.godzilla.service.FunRightService;

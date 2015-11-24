@@ -114,7 +114,7 @@ public class PropController extends GodzillaWebApplication {
 		request.setAttribute("selectedProfile", selectedProfile);
 		request.setAttribute("profileList", profileList);
 		request.setAttribute("propList", this.replaceHtml(propList));
-		request.setAttribute("user", this.getUser());
+		request.setAttribute("user", getUser());
 		request.setAttribute("basePath", BASE_PATH);
 		return "queryPropPage";
 	}
@@ -144,7 +144,7 @@ public class PropController extends GodzillaWebApplication {
 		request.setAttribute("selectedProfile", selectedProfile);
 		request.setAttribute("profileList", profileList);
 		request.setAttribute("propList", this.replaceHtml(propList));
-		request.setAttribute("user", this.getUser());
+		request.setAttribute("user", getUser());
 		request.setAttribute("basePath", BASE_PATH);
 		return "propSortPage";
 	}

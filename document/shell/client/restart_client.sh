@@ -1,11 +1,9 @@
 #!/bin/sh
-#重启tomcat
-#TOMCAT_HOME=/app/tomcat
 
 SHELL_NAME=$0
 TOMCAT_HOME=$1
 WARDIR=$2
-TOMCAT_BIN=
+TOMCAT_BIN="${TOMCAT_HOME}/bin"
 
 pidlist=`ps -ef|grep "$TOMCAT_BIN"|grep -v "grep"|awk '{print $2}'`
 

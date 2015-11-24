@@ -6,8 +6,6 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
-import cn.godzilla.command.CommandEnum;
-import cn.godzilla.command.DefaultShellCommand;
 import cn.godzilla.common.ReturnCodeEnum;
 import cn.godzilla.dao.ProjectMapper;
 import cn.godzilla.model.Project;

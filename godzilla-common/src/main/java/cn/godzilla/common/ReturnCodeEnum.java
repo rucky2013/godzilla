@@ -83,6 +83,7 @@ public enum ReturnCodeEnum implements Serializable {
 	OK_VERIFYPROP("200012","审核配置成功"),
 	//mvn
 	OK_MVNDEPLOY("200014","mvn部署成功"),
+	OK_CHANGEPOM("200015", "mvn部署成功:替换pom文件成功"),
 	//authorization
 	OK_AUTHORIZATION("200017","验证项目权限成功"),
 	OK_ADDUSER("200018","添加用户成功"),
@@ -94,6 +95,7 @@ public enum ReturnCodeEnum implements Serializable {
 	OK_GODZILLA("200029","godzilla 客户端操作成功"),
 	OK_DELETEBRANCH("200030", "删除分支成功"),
 	OK_SVNMERGE("200031", "合并分支成功"),
+	OK_MVNBUILD("200032", "mvn 命令 build执行成功"),
 	OK_STARTTOMCAT("200038", "tomcat启动成功"),
 	OK_SRCEDIT("200039", "源代码设置成功"),
 	OK_BRANCHADD("200040", "分支添加成功"),
