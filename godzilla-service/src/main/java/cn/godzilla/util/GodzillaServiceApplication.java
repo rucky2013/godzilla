@@ -32,14 +32,15 @@ public class GodzillaServiceApplication extends Application {
 		sidThreadLocal.set("");
 	}
 	
-	public static void setSid(Object sid) {
+	public static void setSid(String sid) {
 		if(sid==null||StringUtils.isEmpty(sid)) return;
 		sidThreadLocal.set((String)sid);
 	}
 
 	public static User getUser() {
 		String sid = getSid();
-		return userService.getUserBySid(SERVER_USER, TEST_PROFILE, sid);
+		User user = userService.getUserBySid(SERVER_USER, TEST_PROFILE, sid);
+		return user;
 	}
 
 	public static String getSid() {
@@ -67,7 +68,7 @@ public class GodzillaServiceApplication extends Application {
 		profileThreadLocal.set(profile);
 	}
 	
-	protected static void initThreadLocals() {
+	public static void initThreadLocals() {
 		sidThreadLocal.set("");
 		projectcodeThreadLocal.set(SERVER_USER);
 		profileThreadLocal.set(TEST_PROFILE);
@@ -80,7 +81,7 @@ public class GodzillaServiceApplication extends Application {
 		mvnBuildThreadLocal.set(SUCCESS);
 	}
 	
-	protected static void distroyThreadLocals() {
+	public static void destroyThreadLocals() {
 		sidThreadLocal.set("");
 		projectcodeThreadLocal.set(SERVER_USER);
 		profileThreadLocal.set(TEST_PROFILE);

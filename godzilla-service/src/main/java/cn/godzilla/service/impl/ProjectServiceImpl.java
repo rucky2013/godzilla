@@ -34,8 +34,8 @@ public class ProjectServiceImpl extends GodzillaServiceApplication implements Pr
 
 	@Override
 	public List<Project> queryAll(String projectCode, String profile) {
-		
-		return projectMapper.queryAll();
+		List<Project> projectlist = projectMapper.queryAll();
+		return projectlist;
 	}
 
 	@Override

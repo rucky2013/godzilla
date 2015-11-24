@@ -35,5 +35,5 @@ public interface SvnService {
 	
 	ReturnCodeEnum svnResolved(String projectCode, String profile);
 
-	void setConflictUrl(Project project, String profile);
+	void setConflictUrl(String projectCode, String profile, Project project);
 }

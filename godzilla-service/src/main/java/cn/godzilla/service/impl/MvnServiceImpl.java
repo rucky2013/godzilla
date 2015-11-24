@@ -227,7 +227,7 @@ public class MvnServiceImpl extends GodzillaServiceApplication implements MvnSer
 		shCommand.signal();
 		//保存catalina日志到DB
 		String catalinaLog = catalinaLogThreadLocal.get();
-		operateLogService.updateOperateLog(catalinaLog, logid);
+		operateLogService.updateOperateLog(SERVER_USER, TEST_PROFILE, catalinaLog, logid);
 		if(!ok_starttomcat) {
 			return ReturnCodeEnum.getByReturnCode(NO_STARTTOMCAT).setData(logid);
 			

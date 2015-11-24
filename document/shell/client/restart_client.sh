@@ -26,3 +26,4 @@ cd $TOMCAT_BIN
 ./startup.sh ;
 
 echo "[INFO] 启动TOMCAT SUCCESS!"
+tail -f /app/tomcat/logs/catalina.out 

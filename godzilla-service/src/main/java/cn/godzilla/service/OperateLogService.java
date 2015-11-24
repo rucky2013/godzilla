@@ -2,6 +2,7 @@ package cn.godzilla.service;
 
 import java.util.List;
 
+import cn.godzilla.common.response.ResponseBodyJson;
 import cn.godzilla.model.OperateLog;
 
 public interface OperateLogService {
@@ -18,6 +19,10 @@ public interface OperateLogService {
 
 	public int updateOperateLog(String projectCode, String profile, int logid, String username, String realname,String operation, String operateCode, String executeResult, String resultInfo) ;
 
-	public int updateOperateLog(String catalinaLog, Long logid);
+	public int updateOperateLog(String projectCode, String profile, String catalinaLog, Long logid);
+	
+	public ResponseBodyJson logThenReturn(String projectCode, String profile, ResponseBodyJson response) ;
+	
+	public ResponseBodyJson updateLogThenReturn(String projectCode, String profile, ResponseBodyJson response);
 
 }

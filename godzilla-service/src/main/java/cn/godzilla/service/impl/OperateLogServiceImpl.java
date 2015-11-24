@@ -12,6 +12,7 @@ import cn.godzilla.common.OperatorEnum;
 import cn.godzilla.common.response.ResponseBodyJson;
 import cn.godzilla.dao.OperateLogMapper;
 import cn.godzilla.model.OperateLog;
+import cn.godzilla.model.User;
 import cn.godzilla.service.OperateLogService;
 import cn.godzilla.util.GodzillaServiceApplication;
 
@@ -51,17 +52,17 @@ public class OperateLogServiceImpl extends GodzillaServiceApplication implements
 		}
 		return logs;
 	}
-	public static ResponseBodyJson logThenReturn(ResponseBodyJson response) {
+	public ResponseBodyJson logThenReturn(String projectCode, String profile, ResponseBodyJson response) {
 		String operation = response.getOperator();
-		
-		GodzillaServiceApplication.operateLogService.addOperateLog(GodzillaServiceApplication.getUser().getUserName(), GodzillaServiceApplication.getUser().getRealName(), Application.projectcodeThreadLocal.get(), Application.profileThreadLocal.get(), operation, response.getReturncode(), response.getReturnmsg(), response.getReturnmemo());
+		User user = GodzillaServiceApplication.getUser();
+		GodzillaServiceApplication.operateLogService.addOperateLog(user.getUserName(), user.getRealName(), projectCode, profile, operation, response.getReturncode(), response.getReturnmsg(), response.getReturnmemo());
 		
 		return response;
 	}
-	public static ResponseBodyJson updateLogThenReturn(ResponseBodyJson response) {
+	public ResponseBodyJson updateLogThenReturn(String projectCode, String profile, ResponseBodyJson response) {
 		String operation = response.getOperator();
-		
-		GodzillaServiceApplication.operateLogService.updateOperateLog(Application.projectcodeThreadLocal.get(), Application.profileThreadLocal.get(), Integer.parseInt(response.getData()+""), GodzillaServiceApplication.getUser().getUserName(), GodzillaServiceApplication.getUser().getRealName(), operation, response.getReturncode(), response.getReturnmsg(), response.getReturnmemo());
+		User user = GodzillaServiceApplication.getUser();
+		GodzillaServiceApplication.operateLogService.updateOperateLog(projectCode, profile, Integer.parseInt(response.getData()+""), user.getUserName(), user.getRealName(), operation, response.getReturncode(), response.getReturnmsg(), response.getReturnmemo());
 		
 		return response;
 	}
@@ -133,7 +134,7 @@ public class OperateLogServiceImpl extends GodzillaServiceApplication implements
 	}
 	
 	@Override
-	public int updateOperateLog(String catalinaLog, Long logid) {
+	public int updateOperateLog(String projectCode, String profile, String catalinaLog, Long logid) {
 		OperateLog record = new OperateLog();
 		record.setId(logid);
 		record.setCatalinaLog(catalinaLog);

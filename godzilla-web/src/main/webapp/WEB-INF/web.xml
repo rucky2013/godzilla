@@ -38,7 +38,7 @@
   </filter-mapping>
   <filter>
     <filter-name>initFilter</filter-name>
-    <filter-class>cn.godzilla.security.InitFilter</filter-class>
+    <filter-class>cn.godzilla.filter.InitFilter</filter-class>
   </filter>
   <filter-mapping>
     <filter-name>initFilter</filter-name>

@@ -66,7 +66,7 @@ public class UserController extends GodzillaWebApplication {
 	@ResponseBody
 	public Object login(HttpServletRequest request, HttpServletResponse response) {
 		String newsid = StringUtil.getRandom(6);
-		super.initContextBySid(newsid);
+		super.initSid(newsid);
 		String username = StringUtil.getReqPrameter(request, "username");
 		String password = StringUtil.getReqPrameter(request, "password");
 

@@ -15,6 +15,7 @@ import org.springframework.context.ApplicationContext;
 import cn.godzilla.common.Application;
 import cn.godzilla.common.BusinessException;
 import cn.godzilla.common.ReturnCodeEnum;
+import cn.godzilla.common.response.ResponseBodyJson;
 import cn.godzilla.model.FunRight;
 import cn.godzilla.model.User;
 import cn.godzilla.service.FunRightService;
@@ -34,11 +35,23 @@ public abstract class GodzillaWebApplication extends Application {
 	
 	protected static FunRightService funRightService;
 	
-	protected static OperateLogService operateLogService;
+	public static OperateLogService operateLogService;
 	
 	protected static ServletContext context;
 	
 	protected List<String> escapeUrls = new ArrayList<String>();
+	
+	public static ResponseBodyJson logThenReturn(ResponseBodyJson response) {
+		String projectCode = projectcodeThreadLocal.get()==""?SERVER_USER:projectcodeThreadLocal.get();
+		String profile = profileThreadLocal.get()==""?TEST_PROFILE:profileThreadLocal.get();
+		return operateLogService.logThenReturn(projectCode, profile, response);
+	}
+	
+	public static ResponseBodyJson updateLogThenReturn(ResponseBodyJson response) {
+		String projectCode = projectcodeThreadLocal.get()==""?SERVER_USER:projectcodeThreadLocal.get();
+		String profile = profileThreadLocal.get()==""?TEST_PROFILE:profileThreadLocal.get();
+		return operateLogService.updateLogThenReturn(projectCode, profile, response);
+	}
 	/*
 	 * -2.限制并发　发布
 	 * 日常环境　每个项目　只允许　一个人发布（如果互相依赖项目　并发发布，还是会出现问题）
@@ -59,17 +72,17 @@ public abstract class GodzillaWebApplication extends Application {
 	 * @param userService
 	 * @param sid
 	 */
-	protected void initWebContext(String sid) {
+	protected void initSid(String sid) {
 		sidThreadLocal.set(sid);
 	}
 	
 	/**
 	 * 登录用户 设置其 sid 存到 当前线程 threadlocal
 	 * @param sid
-	 */
+	 
 	protected void initContextBySid(String newsid) {
 		sidThreadLocal.set(newsid);
-	}
+	}*/
 	/**
 	 * 根据sid判断用户 是否登录态
 	 * @param userService2
@@ -110,7 +123,8 @@ public abstract class GodzillaWebApplication extends Application {
 	
 	public static User getUser() {
 		String sid = getSid();
-		return userService.getUserBySid(SERVER_USER, TEST_PROFILE, sid) ;
+		User user = userService.getUserBySid(SERVER_USER, TEST_PROFILE, sid);
+		return user;
 	}
 	
 	public static String getSid() {

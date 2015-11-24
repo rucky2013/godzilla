@@ -332,7 +332,7 @@ public class SvnServiceImpl extends GodzillaServiceApplication implements SvnSer
 	}
 
 	@Override
-	public void setConflictUrl(Project project, String profile) {
+	public void setConflictUrl(String projectCode, String profile, Project project) {
 		String conflictId = project.getSvnConflictId();
 		if(StringUtil.isEmpty(conflictId)) {
 			project.setConflictUrl(""); 

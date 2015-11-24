@@ -70,7 +70,7 @@ public class RedisCache extends AbstractCache<String, String, CACHE_ENUM> {
 	public class Entry implements Cache.Entry<String, String> {
 		String key;
 		String value;
-		private Entry() {
+		Entry() {
 			key = value = "";
 		}
 		@Override

@@ -137,10 +137,10 @@ public class ResponseBodyJson implements ResponseBody {
 	public ResponseBodyJson log() {
 		Class logClass = null;
 		try {
-			logClass = Loader.getClass("cn.godzilla.service.impl.OperateLogServiceImpl");
+			logClass = Loader.getClass("cn.godzilla.util.GodzillaWebApplication");
 		} catch (ClassNotFoundException | NoSuchMethodException | SecurityException e) {
 			e.printStackTrace();
-			System.out.println("OperateLogServiceImpl.logThenReturn 更新日志失败 类错误");
+			System.out.println("GodzillaWebApplication.logThenReturn 更新日志失败 类错误");
 			return this;
 		}
 		Method dologmethod;
@@ -149,7 +149,7 @@ public class ResponseBodyJson implements ResponseBody {
 			dologmethod.invoke(logClass, this);
 		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException |NoSuchMethodException | SecurityException e) {
 			e.printStackTrace();
-			System.out.println("OperateLogServiceImpl.logThenReturn 更新日志失败　方法错误");
+			System.out.println("GodzillaWebApplication.logThenReturn 更新日志失败　方法错误");
 			return this;
 		}
 		return this;
@@ -158,10 +158,10 @@ public class ResponseBodyJson implements ResponseBody {
 	public Object updateLog() {
 		Class logClass = null;
 		try {
-			logClass = Loader.getClass("cn.godzilla.service.impl.OperateLogServiceImpl");
+			logClass = Loader.getClass("cn.godzilla.util.GodzillaWebApplication");
 		} catch(ClassNotFoundException | NoSuchMethodException | SecurityException e) {
 			e.printStackTrace();
-			System.out.println("OperateLogServiceImpl.updateLogThenReturn 更新日志失败 类错误");
+			System.out.println("GodzillaWebApplication.updateLogThenReturn 更新日志失败 类错误");
 			return this;
 		}
 		Method dologmethod;
@@ -170,7 +170,7 @@ public class ResponseBodyJson implements ResponseBody {
 			dologmethod.invoke(logClass, this);
 		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException |NoSuchMethodException | SecurityException e) {
 			e.printStackTrace();
-			System.out.println("OperateLogServiceImpl.updateLogThenReturn 更新日志失败　方法错误");
+			System.out.println("GodzillaWebApplication.updateLogThenReturn 更新日志失败　方法错误");
 			return this;
 		}
 		return this;

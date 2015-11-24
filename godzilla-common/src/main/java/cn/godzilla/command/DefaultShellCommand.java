@@ -24,8 +24,8 @@ public class DefaultShellCommand extends AbstractShellCommand {
 		case COMMIT_RESOLVE:
 			runnable = new DefaultRunnable();
 			break;
-		case TAIL:
-			runnable = new TailRunnable();
+		case RESTART:
+			runnable = new RestartAndTailRunnable();
 			break;
 		case LSJAR:
 			runnable = new LsjarRunnable();
@@ -121,7 +121,7 @@ public class DefaultShellCommand extends AbstractShellCommand {
 		}
 	}
 	
-	class TailRunnable extends abstractSvnCommandRunnable {
+	class RestartAndTailRunnable extends abstractSvnCommandRunnable {
 		
 		String catalinaLog = "<p>********catalina.out详情********<p><br />";
 		

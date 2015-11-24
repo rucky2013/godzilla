@@ -60,7 +60,7 @@ public class Authentication extends GodzillaWebApplication implements Filter {
 				if(userStatus == ReturnCodeEnum.NO_LOGIN) {
 					throw new BusinessException("还未登录或sid失效");
 				} else if(userStatus == ReturnCodeEnum.OK_CHECKUSER) {
-					this.initWebContext(sid); //将sid保存到 threadlocal
+					this.initSid(sid); //将sid保存到 threadlocal
 				} else{
 					//never reach here
 					throw new BusinessException("验证sid,未知异常");
