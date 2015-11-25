@@ -58,12 +58,13 @@ public interface PropConfigService extends Constant{
 		/**
 		 * 查询 /显示  某项目  某人  某环境下  的所有审核配置
 		 * @param projectCode
-		 * @param createBy
 		 * @param profile
+		 * @param selectedprofile
+		 * @param createBy
 		 * @param verifyStatus
 		 * @return
 		 */
-		public List<PropConfig> queryByProjectcodeAndCreatebyAndProfileAndStatus(String projectCode, String profile, String createBy, String verifyStatus);
+		public List<PropConfig> queryByProjectcodeAndCreatebyAndProfileAndStatus(String projectCode, String profile, String selectedprofile, String createBy, String verifyStatus);
 		
 		/**
 		 * 查询 /显示  某项目  某人  某环境下  的所有审核配置
@@ -83,11 +84,8 @@ public interface PropConfigService extends Constant{
 	     * @param propProduct
 		 * @param billId 
 	     */
-		public void findPropByCreatebyAndProjectcodeAndProfileAndStatus(String projectCode, String profile, String createBy, StringBuilder propTest, StringBuilder propQuasiProduct, StringBuilder propProduct, String status, Long billId);
+		public Map<String, StringBuilder> findPropByCreatebyAndProjectcodeAndProfileAndStatus(String projectCode, String profile, String createBy, StringBuilder propTest, StringBuilder propQuasiProduct, StringBuilder propProduct, String status, Long billId);
 
-		@Deprecated
-		public ReturnCodeEnum verifyPropByCreatebyAndProjectcodeAndProfile(String projectCode, String profile, String createBy, String status, String auditor_text);
-		
 		/**
 		 * 审核通过  某人 某项目 某环境下的 所有配置
 		 * @param createBy

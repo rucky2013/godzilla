@@ -35,7 +35,7 @@ public interface MvnService {
 	 * @param logid
 	 * @return
 	 */
-	public ReturnCodeEnum showdeployLog(String projectCode, String profile, String logid, HttpServletResponse response);
+	public ReturnCodeEnum showdeployLog(String projectCode, String profile, String logid);
 	/**
 	 * 显示war包lib信息
 	 * @param response
@@ -44,7 +44,7 @@ public interface MvnService {
 	 * @param logid
 	 * @return
 	 */
-	public ReturnCodeEnum showwarInfo(String projectCode, String profile, String logid, HttpServletResponse response);
+	public ReturnCodeEnum showwarInfo(String projectCode, String profile, String logid);
 	/**
 	 * 重启tomcat
 	 * @param projectCode

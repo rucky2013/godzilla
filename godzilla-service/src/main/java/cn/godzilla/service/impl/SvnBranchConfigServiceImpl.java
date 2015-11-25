@@ -95,10 +95,10 @@ public class SvnBranchConfigServiceImpl extends GodzillaServiceApplication imple
 	@Override
 	public ReturnCodeEnum refreshBranchesVersion(String projectCode, String profile, List<SvnBranchConfig> svnBranchConfigs) {
 		
-		boolean flag = false;
+		boolean flag = true;
 		for(SvnBranchConfig branch: svnBranchConfigs){
 			ReturnCodeEnum versionreturn = svnService.getVersion(branch.getBranchUrl(), branch.getProjectCode());
-			if(!flag||!versionreturn.equals(ReturnCodeEnum.getByReturnCode(OK_SVNVERSION))) {
+			if(!flag&&!versionreturn.equals(ReturnCodeEnum.getByReturnCode(OK_SVNVERSION))) {
 				return versionreturn;
 			}
 			String currentVersion = svnVersionThreadLocal.get();

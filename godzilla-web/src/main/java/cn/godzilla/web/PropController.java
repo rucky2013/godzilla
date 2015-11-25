@@ -106,7 +106,7 @@ public class PropController extends GodzillaWebApplication {
 		List<Project> projectList = projectService.queryAll(projectCode, TEST_PROFILE);
 		Map<String, String> profileList = propConfigService.queryAllProfile(projectCode, TEST_PROFILE);
 		//List<PropConfig> propList = propConfigService.queryByProjectcodeAndCreatebyAndProfileAndStatus(selectedProjectCode, createBy, selectedProfile, OK_VERIFY_STATUS);
-		List<PropConfig> propList = propConfigService.queryByProjectcodeAndCreatebyAndProfileAndStatus(projectCode, selectedProfile, createBy, OK_VERIFY_STATUS);
+		List<PropConfig> propList = propConfigService.queryByProjectcodeAndCreatebyAndProfileAndStatus(projectCode, TEST_PROFILE, selectedProfile, createBy, OK_VERIFY_STATUS);
 		
 		request.setAttribute("createBy", createBy);//提交人
 		//request.setAttribute("selectedProjectCode", selectedProjectCode);
@@ -136,7 +136,7 @@ public class PropController extends GodzillaWebApplication {
 		List<Project> projectList = projectService.queryAll(projectCode, TEST_PROFILE);
 		Map<String, String> profileList = propConfigService.queryAllProfile(projectCode, TEST_PROFILE);
 		//List<PropConfig> propList = propConfigService.queryByProjectcodeAndCreatebyAndProfileAndStatus(selectedProjectCode, createBy, selectedProfile, OK_VERIFY_STATUS);
-		List<PropConfig> propList = propConfigService.queryByProjectcodeAndCreatebyAndProfileAndStatus(projectCode, selectedProfile, createBy, OK_VERIFY_STATUS);
+		List<PropConfig> propList = propConfigService.queryByProjectcodeAndCreatebyAndProfileAndStatus(projectCode, TEST_PROFILE, selectedProfile, createBy, OK_VERIFY_STATUS);
 		
 		request.setAttribute("createBy", createBy);//提交人
 		//request.setAttribute("selectedProjectCode", selectedProjectCode);
@@ -235,12 +235,18 @@ public class PropController extends GodzillaWebApplication {
 		StringBuilder propTest = new StringBuilder("");
 		StringBuilder propQuasiProduct = new StringBuilder("");
 		StringBuilder propProduct = new StringBuilder("");
-		propConfigService.findPropByCreatebyAndProjectcodeAndProfileAndStatus(projectCode, profile, createBy, propTest, propQuasiProduct, propProduct, NOTYET_VERIFY_STATUS, billId);
+		Map<String, StringBuilder> propStrings = propConfigService.findPropByCreatebyAndProjectcodeAndProfileAndStatus(projectCode, profile, createBy, propTest, propQuasiProduct, propProduct, NOTYET_VERIFY_STATUS, billId);
+		propTest = propStrings.get("propTest");
+		propQuasiProduct = propStrings.get("propQuasiProduct");
+		propProduct = propStrings.get("propProduct");
 		
 		StringBuilder oldpropTest = new StringBuilder("");
 		StringBuilder oldpropQuasiProduct = new StringBuilder("");
 		StringBuilder oldpropProduct = new StringBuilder("");
-		propConfigService.findPropByCreatebyAndProjectcodeAndProfileAndStatus(projectCode, profile, createBy, oldpropTest, oldpropQuasiProduct, oldpropProduct, OK_VERIFY_STATUS, billId);
+		Map<String, StringBuilder> oldpropStrings = propConfigService.findPropByCreatebyAndProjectcodeAndProfileAndStatus(projectCode, profile, createBy, oldpropTest, oldpropQuasiProduct, oldpropProduct, OK_VERIFY_STATUS, billId);
+		oldpropTest = oldpropStrings.get("propTest");
+		oldpropQuasiProduct = oldpropStrings.get("propQuasiProduct");
+		oldpropProduct = oldpropStrings.get("propProduct");
 		
 		request.setAttribute("user", getUser());
 		

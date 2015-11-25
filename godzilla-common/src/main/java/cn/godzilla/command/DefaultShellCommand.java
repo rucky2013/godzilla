@@ -8,46 +8,79 @@ import java.util.regex.Pattern;
 
 public class DefaultShellCommand extends AbstractShellCommand {
 
-	Runnable runnable = null;
+	DefaultRunnable runnable = null;
 	
 	@Override
 	protected void startdoLog(CommandEnum type) {
 		switch(type) {
 		case INFO:
 			runnable = new InfoRunnable();
+			new Thread(runnable).start();
 			break;
 		case VERSION:
 			runnable = new VersionRunnable();
+			new Thread(runnable).start();
 			break;
 		case MERGE:
 		case COMMIT:
 		case COMMIT_RESOLVE:
-			runnable = new DefaultRunnable();
-			break;
-		case RESTART:
-			runnable = new RestartAndTailRunnable();
-			break;
-		case LSJAR:
-			runnable = new LsjarRunnable();
-			break;
-		case MVN:
-			runnable = new MvnRunnable();
-			break;
 		case CPWAR:
 		case GODZILLA:
 			runnable = new DefaultRunnable();
+			new Thread(runnable).start();
+			break;
+		case RESTART:
+			runnable = new RestartAndTailRunnable();
+			new Thread(runnable).start();
+			break;
+		case LSJAR:
+			runnable = new LsjarRunnable();
+			new Thread(runnable).start();
+			break;
+		case MVN:
+			runnable = new MvnRunnable();
+			new Thread(runnable).start();
 			break;
 		default:
 			signal();
 			return ;
 		}
-		new Thread(runnable).start();
+	}
+	
+	@Override
+	protected void afterProcessShell(CommandEnum type) {
+		switch(type) {
+		case INFO:
+			echoMessageThreadLocal.set(((InfoRunnable)runnable).echoMessage);
+			break;
+		case VERSION:
+			svnVersionThreadLocal.set(((VersionRunnable)runnable).svnVersion);
+			break;
+		case MERGE:
+		case COMMIT:
+		case COMMIT_RESOLVE:
+		case CPWAR:
+		case GODZILLA:
+			break;
+		case RESTART:
+			catalinaLogThreadLocal.set(((RestartAndTailRunnable)runnable).catalinaLog);
+			break;
+		case LSJAR:
+			jarlogThreadLocal.set(((LsjarRunnable)runnable).jarlog);
+			break;
+		case MVN:
+			deployLogThreadLocal.set(((MvnRunnable)runnable).deployLog);
+			mvnBuildThreadLocal.set(((MvnRunnable)runnable).mvnBuild);
+			break;
+		default:
+			return ;
+		}
+		shellReturnThreadLocal.set(runnable.shellReturn);
 	}
 	
 	abstract class abstractSvnCommandRunnable implements Runnable {
 		
 		String line = null;
-		
 		@Override
 		public void run() {
 			BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
@@ -67,8 +100,17 @@ public class DefaultShellCommand extends AbstractShellCommand {
 			}
 		}
 
+		abstract protected void doLineNotNullBusi() ;
+		
+		abstract protected void doLineNullBusi() ;
+	}
+	
+	class DefaultRunnable extends abstractSvnCommandRunnable {
+		
+		String shellReturn = "";
+		
 		protected void doLineNotNullBusi() {
-			shellReturnThreadLocal.set(line);
+			shellReturn = line;
 		}
 		
 		protected void doLineNullBusi() {
@@ -76,15 +118,16 @@ public class DefaultShellCommand extends AbstractShellCommand {
 		}
 	}
 	
-	class MvnRunnable extends abstractSvnCommandRunnable {
+	class MvnRunnable extends DefaultRunnable {
 		
 		String deployLog = "<p>********maven 打包详情********<p><br />";
 		
+		String mvnBuild = SUCCESS;
 		@Override
 		protected void doLineNotNullBusi() {
-			shellReturnThreadLocal.set(line);
+			shellReturn =line;
 			if(line.contains("BUILD FAILURE") || line.contains("[ERROR]")) {
-				mvnBuildThreadLocal.set(FAILURE);
+				mvnBuild = FAILURE;
 			}
 			Pattern pattern = Pattern.compile("^[0-9]+.+");
 			Matcher matcher = pattern.matcher(line);
@@ -98,58 +141,52 @@ public class DefaultShellCommand extends AbstractShellCommand {
 		@Override
 		protected void doLineNullBusi() {
 			deployLog = deployLog + "</p>";
-			deployLogThreadLocal.set(deployLog);
 			signal();
 		}
 	}
 	
-	class LsjarRunnable extends abstractSvnCommandRunnable {
+	class LsjarRunnable extends DefaultRunnable {
 		
 		String jarlog = "<p>********jar lib列表详情********<p><br />";
 
 		@Override
 		protected void doLineNotNullBusi() {
 			jarlog = jarlog + line + "<br >";
-			shellReturnThreadLocal.set(line);
+			shellReturn = line;
 		}
 		
 		@Override
 		protected void doLineNullBusi() {
 			jarlog = jarlog + "<p>";
-			jarlogThreadLocal.set(jarlog);
 			signal();
 		}
 	}
 	
-	class RestartAndTailRunnable extends abstractSvnCommandRunnable {
+	class RestartAndTailRunnable extends DefaultRunnable {
 		
 		String catalinaLog = "<p>********catalina.out详情********<p><br />";
 		
 		@Override
 		protected void doLineNotNullBusi() {
 			catalinaLog = catalinaLog + line + "<br/>";
-			catalinaLogThreadLocal.set(catalinaLog);
 		}
 		
 		@Override
 		protected void doLineNullBusi() {
 			catalinaLog = catalinaLog + "</p>";
-			catalinaLogThreadLocal.set(catalinaLog);
 		}
 	}
 	
-	class DefaultRunnable extends abstractSvnCommandRunnable {
-	}
-	
-	class VersionRunnable extends abstractSvnCommandRunnable {
-
+	class VersionRunnable extends DefaultRunnable {
+		
+		String svnVersion = "";
 		@Override
 		protected void doLineNotNullBusi() {
 			if(line.startsWith("versionr")) {
 				String version = line.replaceAll("versionr", "");
-				svnVersionThreadLocal.set(version);
+				svnVersion = version;
 			}
-			shellReturnThreadLocal.set(line);
+			shellReturn = line;
 		}
 		
 		@Override
@@ -158,20 +195,19 @@ public class DefaultShellCommand extends AbstractShellCommand {
 		}
 		
 	}
-	class InfoRunnable extends abstractSvnCommandRunnable {
+	class InfoRunnable extends DefaultRunnable {
 
-		String message = "<p>********svn info详情********<p><br />";
+		String echoMessage = "<p>********svn info详情********<p><br />";
 		
 		@Override
 		protected void doLineNotNullBusi() {
-			message = message + line + "<br />";
-			shellReturnThreadLocal.set(line);
+			echoMessage = echoMessage + line + "<br />";
+			shellReturn = line;
 		}
 		
 		@Override
 		protected void doLineNullBusi() {
-			message = message + "<p>";
-			echoMessageThreadLocal.set(message);
+			echoMessage = echoMessage + "<p>";
 			signal();
 		}
 		
@@ -183,5 +219,4 @@ public class DefaultShellCommand extends AbstractShellCommand {
 		done.signal();
 		lock.unlock();
 	}
-	
 }

@@ -310,7 +310,7 @@
 						<tbody>
 							<#list operateLogs as log>
 								
-								<#if log.operation == '部署'>
+								<#if log.operation == '部署' || log.operation == '重新启动'>
 									<tr class="deploy_tr" value1="${log.id}">
 										<td>${log.executeTime?string("yyyy-MM-dd HH:mm:ss")}</td>
 										<td>${log.realName}</td>
@@ -524,6 +524,8 @@
 					$("#processText").text("0%");
 				}
 	        });
+	        $("#process").width(14);
+			$("#processText").text("10%");
 	        //定时轮询 进度条更新
 	        timeout = true;
 	        time();
@@ -535,7 +537,7 @@
 	    var select_tr = 0;
 	    //选择部署日志 条目
 	    $(".deploy_tr").on("click", function() {
-	    	$(this).css("background", "#f7f8fa");
+	    	$(this).css("background", "#00E0D7");
 	    	var logid = $(this).attr("value1");
 	    	
 	    	if(select_tr == logid) {
@@ -546,7 +548,7 @@
 		    		$(element).css("background", "");
 		    	});
 		    	select_tr = logid;
-		    	$(this).css("background", "#f7f8fa");
+		    	$(this).css("background", "#00E0D7");
 		    }
 	    });
 	    //显示部署日志

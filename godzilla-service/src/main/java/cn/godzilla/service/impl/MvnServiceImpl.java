@@ -42,7 +42,7 @@ public class MvnServiceImpl extends GodzillaServiceApplication implements MvnSer
 	@Override
 	public ReturnCodeEnum doDeploy(String projectCode, String profile, String parentVersion, String pencentkey) {
 		isStop = false;
-		processPercent.put(pencentkey, "0");
+		processPercent.put(pencentkey, "10");
 
 		Project project = projectService.queryByProCode(projectCode, TEST_PROFILE);
 		String webPath = project.getWebPath();
@@ -54,23 +54,19 @@ public class MvnServiceImpl extends GodzillaServiceApplication implements MvnSer
 		 * 20150820 if svn commit success or svn no changecommit continue else
 		 * break
 		 */
-		if(TEST_PROFILE.equals(profile)) {
-			ReturnCodeEnum svnMergeResult = svnService.svnMerge(projectCode, profile);
-			if (ReturnCodeEnum.getByReturnCode(NO_SVNRESOLVED).equals(svnMergeResult) 
-					|| ReturnCodeEnum.getByReturnCode(NO_SVNCOMMIT).equals(svnMergeResult)
-					|| ReturnCodeEnum.getByReturnCode(NO_FOUNDCONFLICT).equals(svnMergeResult)
-					|| ReturnCodeEnum.getByReturnCode(NO_CLIENTPARAM).equals(svnMergeResult)
-					|| ReturnCodeEnum.getByReturnCode(NO_SERVERPARAM).equals(svnMergeResult)
-					|| ReturnCodeEnum.getByReturnCode(NO_NEWCONFLICTFOUND).equals(svnMergeResult)
-					|| ReturnCodeEnum.getByReturnCode(NO_CHANGECOMMIT).equals(svnMergeResult)
-					|| ReturnCodeEnum.getByReturnCode(NO_JAVASHELLCALL).equals(svnMergeResult)) {
-				return svnMergeResult;
-			}
-		} else {
-			//no need to merge-branches
+		//merge-branches only when profile is TEST, the others just checkout trunk
+		ReturnCodeEnum svnMergeResult = svnService.svnMerge(projectCode, profile);
+		if (ReturnCodeEnum.getByReturnCode(NO_SVNRESOLVED).equals(svnMergeResult) 
+				|| ReturnCodeEnum.getByReturnCode(NO_SVNCOMMIT).equals(svnMergeResult)
+				|| ReturnCodeEnum.getByReturnCode(NO_FOUNDCONFLICT).equals(svnMergeResult)
+				|| ReturnCodeEnum.getByReturnCode(NO_CLIENTPARAM).equals(svnMergeResult)
+				|| ReturnCodeEnum.getByReturnCode(NO_SERVERPARAM).equals(svnMergeResult)
+				|| ReturnCodeEnum.getByReturnCode(NO_NEWCONFLICTFOUND).equals(svnMergeResult)
+				|| ReturnCodeEnum.getByReturnCode(NO_CHANGECOMMIT).equals(svnMergeResult)
+				|| ReturnCodeEnum.getByReturnCode(NO_JAVASHELLCALL).equals(svnMergeResult)) {
+			return svnMergeResult;
 		}
-		
-		processPercent.put(pencentkey, "15");
+		processPercent.put(pencentkey, "11");
 		/*
 		 * 1.替换pom文件 配置变量 20150908 parentVersion 改为由 mvn命令更改 percent 30%
 		 */
@@ -78,14 +74,14 @@ public class MvnServiceImpl extends GodzillaServiceApplication implements MvnSer
 		if (ReturnCodeEnum.getByReturnCode(NO_CHANGEPOM).equals(changePomResult)) {
 			return changePomResult;
 		}
-		processPercent.put(pencentkey, "30");
+		processPercent.put(pencentkey, "15");
 
 		increaseProcessPercent(pencentkey);
 		/*
 		 * 2.mvn deploy 3.将sh命令>queue percent 85%
 		 */
 		String username = GodzillaServiceApplication.getUser().getUserName();
-		ReturnCodeEnum mvnBuildResult = deployProject(this, username, webPath, projectCode, profile, IP, parentVersion, parentPomPath, super.getUser().getRealName());
+		ReturnCodeEnum mvnBuildResult = deployProject(username, webPath, projectCode, profile, IP, parentVersion, parentPomPath, super.getUser().getRealName());
 
 		if(ReturnCodeEnum.getByReturnCode(NO_MVNBUILD).equals(mvnBuildResult)||ReturnCodeEnum.getByReturnCode(NO_JAVASHELLCALL).equals(mvnBuildResult)) {
 			return mvnBuildResult;
@@ -98,7 +94,7 @@ public class MvnServiceImpl extends GodzillaServiceApplication implements MvnSer
 		if (TEST_PROFILE.equals(profile)) {
 			ReturnCodeEnum restartTomcatResult = restartTomcat(projectCode, profile);
 			signalforstop();
-			if (ReturnCodeEnum.getByReturnCode(NO_STARTTOMCAT).equals(restartTomcatResult)) {
+			if (ReturnCodeEnum.getByReturnCode(NO_STARTTOMCAT).equals(restartTomcatResult) || ReturnCodeEnum.getByReturnCode(NO_JAVASHELLCALL).equals(restartTomcatResult)) {
 				processPercent.put(pencentkey, "0");
 				return restartTomcatResult;
 			}
@@ -134,7 +130,7 @@ public class MvnServiceImpl extends GodzillaServiceApplication implements MvnSer
 		}.start();
 	}
 
-	private ReturnCodeEnum deployProject(MvnService mvnService, String username, String webPath, String projectCode, String profile, String IP, String PARENT_VERSION, String PARENTPOM_PATH, String realname) {
+	private ReturnCodeEnum deployProject(String username, String webPath, String projectCode, String profile, String IP, String PARENT_VERSION, String PARENTPOM_PATH, String realname) {
 		String POM_PATH = webPath + FILENAME_POM;
 		String PROJECT_NAME = projectCode;
 
@@ -198,7 +194,7 @@ public class MvnServiceImpl extends GodzillaServiceApplication implements MvnSer
 		
 		//保存项目lib jar信息列表
 		String LIBPATH = project.getLibPath();
-		String commandStr1 = SH_MVN_CLIENT + BLACKSPACE + COM_SHOWLIB + LIBPATH;
+		String commandStr1 = SH_MVN_CLIENT + BLACKSPACE + COM_SHOWLIB + BLACKSPACE + LIBPATH;
 		Command shellCommand = new DefaultShellCommand();
 		shellCommand.execute(commandStr1, CommandEnum.LSJAR);
 		boolean ok_shell = OK_SHELL.equals(shellReturnThreadLocal.get()) ? true : false;
@@ -218,21 +214,43 @@ public class MvnServiceImpl extends GodzillaServiceApplication implements MvnSer
 		String IP = clientIp;
 		
 		String WAR_NAME = project.getWarName();
-		String commandStr2 = SH_RESTARTTOMCAT_CLIENT + BLACKSPACE + TOMCAT_HOME + BLACKSPACE + WAR_NAME;
 		
-		TailShellCommand shCommand = new TailShellCommand();
-		shCommand.execute(commandStr2, CommandEnum.RESTART);
+		TailShellCommand shCommand = restartAndTailLog(WAR_NAME);
+		
 		boolean ok_starttomcat = ifSuccessStartTomcat(IP, warName);
 		//暂停存储 catalina 日志
 		shCommand.signal();
 		//保存catalina日志到DB
-		String catalinaLog = catalinaLogThreadLocal.get();
+		String catalinaLog = shCommand.catalinaLog;
+		String shellReturn = shCommand.shellReturn;
+		
+		if(StringUtil.isEmpty(catalinaLog)) {
+			try {
+				Thread.sleep(2000);
+			} catch (InterruptedException e) {
+			}
+		}
+		
+		catalinaLog = shCommand.catalinaLog;
+		shellReturn = shCommand.shellReturn;
+		
 		operateLogService.updateOperateLog(SERVER_USER, TEST_PROFILE, catalinaLog, logid);
 		if(!ok_starttomcat) {
 			return ReturnCodeEnum.getByReturnCode(NO_STARTTOMCAT).setData(logid);
-			
 		}
 		return ReturnCodeEnum.getByReturnCode(OK_STARTTOMCAT).setData(logid);
+	}
+
+	private TailShellCommand restartAndTailLog(String WAR_NAME) {
+		final String commandStr2 = SH_RESTARTTOMCAT_CLIENT + BLACKSPACE + TOMCAT_HOME + BLACKSPACE + WAR_NAME;
+		final TailShellCommand shCommand = new TailShellCommand();
+		new Thread() {
+			@Override
+			public void run() {
+				shCommand.execute(commandStr2, CommandEnum.RESTART);
+			}
+		}.start();
+		return shCommand;
 	}
 
 	@Override
@@ -248,24 +266,24 @@ public class MvnServiceImpl extends GodzillaServiceApplication implements MvnSer
 	}
 
 	@Override
-	public ReturnCodeEnum showdeployLog(String projectCode, String profile, String logid, HttpServletResponse response) {
+	public ReturnCodeEnum showdeployLog(String projectCode, String profile, String logid) {
 		if (StringUtil.isEmpty(logid) || logid.equals("0")) {
 			return ReturnCodeEnum.getByReturnCode(NO_DEPLOYLOGID);// id错误
 		}
 		OperateLog log = operateLogService.queryLogById(projectCode, profile, Long.parseLong(logid));
-		if (StringUtil.isEmpty(log.getDeployLog()))
-			return ReturnCodeEnum.getByReturnCode(NO_STOREDEPLOYLOG);// 日志记录失败
-		// setData为给前台显示后台信息，而不输出日志
-		return ReturnCodeEnum.getByReturnCode(OK_SHOWDEPLOYLOG).setData(log.getDeployLog());
+		if(StringUtil.isEmpty(log.getDeployLog())&&StringUtil.isEmpty(log.getCatalinaLog())) 
+			return ReturnCodeEnum.getByReturnCode(NO_STOREDEPLOYLOG);//日志记录失败  20151118 添加catalina日志
+		//setData为给前台显示后台信息，而不输出日志
+		return ReturnCodeEnum.getByReturnCode(OK_SHOWDEPLOYLOG).setData(log.getDeployLog()+log.getCatalinaLog());
 	}
 
 	@Override
-	public ReturnCodeEnum showwarInfo(String projectCode, String profile, String logid, HttpServletResponse response) {
+	public ReturnCodeEnum showwarInfo(String projectCode, String profile, String logid) {
 		if (StringUtil.isEmpty(logid) || logid.equals("0")) {
 			return ReturnCodeEnum.getByReturnCode(NO_SHOWWARINFOID);// id错误
 		}
 		OperateLog log = operateLogService.queryLogById(projectCode, profile, Long.parseLong(logid));
-		if (StringUtil.isEmpty(log.getDeployLog()))
+		if (StringUtil.isEmpty(log.getWarInfo()))
 			return ReturnCodeEnum.getByReturnCode(NO_SHOWWARINFO);// 日志记录失败
 		// setData为给前台显示后台信息，而不输出日志
 		return ReturnCodeEnum.getByReturnCode(OK_SHOWWARINFO).setData(log.getWarInfo());

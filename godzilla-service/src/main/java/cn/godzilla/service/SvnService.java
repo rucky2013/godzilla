@@ -31,7 +31,7 @@ public interface SvnService {
 	 * @param profile
 	 * @return
 	 */
-	ReturnCodeEnum getStatus(String projectCode, String profile) ;
+	ReturnCodeEnum getInfo(String projectCode, String profile) ;
 	
 	ReturnCodeEnum svnResolved(String projectCode, String profile);
 

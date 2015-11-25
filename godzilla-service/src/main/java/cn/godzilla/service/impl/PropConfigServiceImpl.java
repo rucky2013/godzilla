@@ -102,9 +102,9 @@ public class PropConfigServiceImpl extends GodzillaServiceApplication implements
 		 * getPropMapByProjectcodeAndProfile(projectCode, PRODUCT_PROFILE);
 		 */
 		long billId = createPropBill(projectCode, getUser().getUserName());
-		boolean fg1 = addProp(requestPropTest, projectCode, TEST_PROFILE, 0, billId);
-		boolean fg2 = addProp(requestPropQuasiProduct, projectCode, QUASIPRODUCT_PROFILE, 0, billId);
-		boolean fg3 = addProp(requestPropProduct, projectCode, PRODUCT_PROFILE, 0, billId);
+		boolean fg1 = addProp(projectCode, TEST_PROFILE, requestPropTest, 0, billId);
+		boolean fg2 = addProp(projectCode, QUASIPRODUCT_PROFILE, requestPropQuasiProduct, 0, billId);
+		boolean fg3 = addProp(projectCode, PRODUCT_PROFILE, requestPropProduct, 0, billId);
 
 		return (fg1 && fg2 && fg3) ? ReturnCodeEnum.getByReturnCode(OK_ADDUPDATEPROP) : ReturnCodeEnum.getByReturnCode(NO_ADDUPDATEPROP);
 	}
@@ -134,7 +134,7 @@ public class PropConfigServiceImpl extends GodzillaServiceApplication implements
 	 * @param status
 	 * @return
 	 */
-	private boolean addProp(Map<String, String> requestProp, String projectCode, String profile, int status, long billId) {
+	private boolean addProp(String projectCode, String profile, Map<String, String> requestProp, int status, long billId) {
 		Set<String> requestKeys = requestProp.keySet();
 		for (String requestKey : requestKeys) {
 			PropConfig prop = new PropConfig();
@@ -167,10 +167,10 @@ public class PropConfigServiceImpl extends GodzillaServiceApplication implements
 	}
 
 	@Override
-	public List<PropConfig> queryByProjectcodeAndCreatebyAndProfileAndStatus(String projectCode, String profile, String createBy, String status) {
+	public List<PropConfig> queryByProjectcodeAndCreatebyAndProfileAndStatus(String projectCode, String profile, String selectedprofile, String createBy, String status) {
 		Map<String, String> parameterMap = new HashMap<String, String>();
 		parameterMap.put("project_code", projectCode);
-		parameterMap.put("profile", profile);
+		parameterMap.put("profile", selectedprofile);
 		parameterMap.put("create_by", createBy);
 		parameterMap.put("status", status);
 
@@ -202,41 +202,24 @@ public class PropConfigServiceImpl extends GodzillaServiceApplication implements
 		return propBillList;
 	}
 
-	// 20151110 创建prop_bill表重写配置审核
-	@Deprecated
-	private void findPropByCreatebyAndProjectcodeAndProfileAndStatus(String projectCode, String profile, String createBy, StringBuilder propTest, StringBuilder propQuasiProduct, StringBuilder propProduct, String status) {
+	public Map<String, StringBuilder> findPropByCreatebyAndProjectcodeAndProfileAndStatus(String projectCode, String profile, String createBy, StringBuilder propTest, StringBuilder propQuasiProduct, StringBuilder propProduct, String status, Long billId) {
+		Map<String, StringBuilder> propStrings = new HashMap<String, StringBuilder>();
+		
 		Map<String, String> propTestMap = new HashMap<String, String>();
 		Map<String, String> propQuasiProductMap = new HashMap<String, String>();
 		Map<String, String> propProductMap = new HashMap<String, String>();
-
-		switch (profile) {
-		case TEST_PROFILE:
-			propTestMap = getPropMapByCreatebyAndProjectcodeAndProfileAndStatus(projectCode, createBy, TEST_PROFILE, status);
-			propTest.append(JSON.toJSONString(propTestMap));
-			break;
-		case QUASIPRODUCT_PROFILE:
-			propQuasiProductMap = getPropMapByCreatebyAndProjectcodeAndProfileAndStatus(projectCode, createBy, QUASIPRODUCT_PROFILE, status);
-			propQuasiProduct.append(JSON.toJSONString(propQuasiProductMap));
-			break;
-		case PRODUCT_PROFILE:
-			propProductMap = getPropMapByCreatebyAndProjectcodeAndProfileAndStatus(projectCode, createBy, PRODUCT_PROFILE, status);
-			propProduct.append(JSON.toJSONString(propProductMap));
-			break;
-		}
-	}
-
-	public void findPropByCreatebyAndProjectcodeAndProfileAndStatus(String projectCode, String profile, String createBy, StringBuilder propTest, StringBuilder propQuasiProduct, StringBuilder propProduct, String status, Long billId) {
-		Map<String, String> propTestMap = new HashMap<String, String>();
-		Map<String, String> propQuasiProductMap = new HashMap<String, String>();
-		Map<String, String> propProductMap = new HashMap<String, String>();
-
-		propTestMap = getPropMapByBillidAndStatus(createBy, projectCode, TEST_PROFILE, status, billId);
+		propStrings.put("propTest", propTest);
+		propStrings.put("propQuasiProduct", propQuasiProduct);
+		propStrings.put("propProduct", propProduct);
+		
+		propTestMap = getPropMapByBillidAndStatus(projectCode, TEST_PROFILE, createBy, status, billId);
 		propTest.append(JSON.toJSONString(propTestMap));
-		propQuasiProductMap = getPropMapByBillidAndStatus(createBy, projectCode, QUASIPRODUCT_PROFILE, status, billId);
+		propQuasiProductMap = getPropMapByBillidAndStatus(projectCode, QUASIPRODUCT_PROFILE, createBy, status, billId);
 		propQuasiProduct.append(JSON.toJSONString(propQuasiProductMap));
-		propProductMap = getPropMapByBillidAndStatus(createBy, projectCode, PRODUCT_PROFILE, status, billId);
+		propProductMap = getPropMapByBillidAndStatus(projectCode, PRODUCT_PROFILE, createBy, status, billId);
 		propProduct.append(JSON.toJSONString(propProductMap));
-
+		
+		return propStrings;
 	}
 
 	private Map<String, String> getPropMapByBillidAndStatus(String projectCode, String profile, String createBy, String status, Long billId) {
@@ -272,102 +255,12 @@ public class PropConfigServiceImpl extends GodzillaServiceApplication implements
 		return propList;
 	}
 
-	// 20151110 创建prop_bill表重写配置审核
-	@Deprecated
-	private Map<String, String> getPropMapByCreatebyAndProjectcodeAndProfileAndStatus(String projectCode, String profile, String createBy, String status) {
-		Map<String, String> propMap = new HashMap<String, String>();
-		List<PropConfig> propConfigList = null;
-
-		// 未审核的 配置
-		if (NOTYET_VERIFY_STATUS.equals(status)) {
-			propConfigList = this.queryByProjectcodeAndCreatebyAndProfileAndStatus(projectCode, createBy, profile, NOTYET_VERIFY_STATUS);
-			for (PropConfig tempProp : propConfigList) {
-				propMap.put(tempProp.getProKey(), tempProp.getProValue());
-			}
-		} else if (OK_VERIFY_STATUS.equals(status)) {
-			// 审核 的 配置
-			propConfigList = this.getPropConfigsByProjectcodeAndProfile(projectCode, profile);
-			for (PropConfig tempProp : propConfigList) {
-				propMap.put(tempProp.getProKey(), tempProp.getProValue());
-			}
-		}
-		return propMap;
-	}
-
-	/**
-	 * 此方法 感觉需要 同步 synchronized 1.将旧配置 设为 失效 status 3 2.将未审核 配置 置为 审核
-	 */
-
-	@Override
-	@Transactional
-	@Deprecated
-	public synchronized ReturnCodeEnum verifyPropByCreatebyAndProjectcodeAndProfile(String projectCode, String profile, String createBy, String status, String auditor_text) {
-		/*
-		 * boolean hasAuthority = SuperController.checkFunright(projectCode);
-		 * if(!hasAuthority) { return
-		 * ReturnCodeEnum.getByReturnCode(NO_AUTHORITY); }
-		 */
-		Map<String, String> parameterMap = new HashMap<String, String>();
-		parameterMap.put("create_by", createBy);
-		parameterMap.put("project_code", projectCode);
-		parameterMap.put("profile", profile);
-
-		parameterMap.put("auditor", GodzillaServiceApplication.getUser().getUserName());
-		parameterMap.put("auditor_text", auditor_text);
-		parameterMap.put("status", status);
-
-		if (OK_VERIFY_STATUS.equals(status)) {
-			// 当前 待审核 配置
-			List<PropConfig> noPropList = this.queryByProjectcodeAndCreatebyAndProfileAndStatus(projectCode, createBy, profile, NOTYET_VERIFY_STATUS);
-			// 所有审核的配置
-			List<PropConfig> propList = this.getPropConfigsByProjectcodeAndProfile(projectCode, profile);
-
-			for (PropConfig tempProp : noPropList) {
-				for (PropConfig oldProp : propList) {
-					if (oldProp.getProKey().equals(tempProp.getProKey())) {
-						tempProp.setLastValue(oldProp.getProValue());
-						Map<String, Object> parameterMap1 = new HashMap<String, Object>();
-						parameterMap1.put("id", tempProp.getId());
-						parameterMap1.put("last_value", tempProp.getLastValue());
-						propConfigMapper.updatePropLastValue(parameterMap1);
-					}
-				}
-			}
-			/**
-			 * 测试语句 将 新审核的 配置 所对应的 旧配置的条目 设为 失效 status = 3 update
-			 * t_g_properties_config a left JOIN t_g_properties_config b on
-			 * a.pro_key = b.pro_key and a.project_code = b.project_code and
-			 * a.profile = b.profile set a.status = 3 where b.project_code =
-			 * #{project_code} and b.profile = #{profile} and a.status = 1 and
-			 * b.create_by = #{create_by} and b.status = 0;
-			 */
-			int dbReturn1 = propConfigMapper.changeStatusByNewverify(parameterMap);
-
-			/**
-			 * 更新所有 待审核配置状态
-			 */
-			int dbReturn2 = propConfigMapper.verifyOKProp(parameterMap);
-
-			return dbReturn1 >= 0 && dbReturn2 >= 0 ? ReturnCodeEnum.getByReturnCode(OK_VERIFYPROP) : ReturnCodeEnum.getByReturnCode(NO_VERIFYPROP);
-		} else if (STOP_VERIFY_STATUS.equals(status)) {
-			/**
-			 * 更新所有 待审核配置状态
-			 */
-			int dbReturn2 = propConfigMapper.verifyOKProp(parameterMap);
-			return dbReturn2 > 0 ? ReturnCodeEnum.getByReturnCode(OK_VERIFYPROP) : ReturnCodeEnum.getByReturnCode(NO_VERIFYPROP);
-		} else {
-			// impossible here;
-			return null;
-		}
-
-	}
-
 	@Override
 	@Transactional
 	public ReturnCodeEnum verifyPropByCreatebyAndProjectcodeAndALLProfile(String projectCode, String profile, String createBy, String status, String auditor_text, Long billId) {
-		ReturnCodeEnum re1 = this.verifyPropByCreatebyAndProjectcodeAndProfile(createBy, projectCode, TEST_PROFILE, status, auditor_text, billId);
-		ReturnCodeEnum re2 = this.verifyPropByCreatebyAndProjectcodeAndProfile(createBy, projectCode, QUASIPRODUCT_PROFILE, status, auditor_text, billId);
-		ReturnCodeEnum re3 = this.verifyPropByCreatebyAndProjectcodeAndProfile(createBy, projectCode, PRODUCT_PROFILE, status, auditor_text, billId);
+		ReturnCodeEnum re1 = this.verifyPropByCreatebyAndProjectcodeAndProfile(projectCode, TEST_PROFILE, createBy, status, auditor_text, billId);
+		ReturnCodeEnum re2 = this.verifyPropByCreatebyAndProjectcodeAndProfile(projectCode, QUASIPRODUCT_PROFILE, createBy, status, auditor_text, billId);
+		ReturnCodeEnum re3 = this.verifyPropByCreatebyAndProjectcodeAndProfile(projectCode, PRODUCT_PROFILE, createBy, status, auditor_text, billId);
 		if (re1.equals(ReturnCodeEnum.getByReturnCode(OK_VERIFYPROP)) && re1.equals(re2) && re2.equals(re3)) {
 			return re1;
 		} else {
@@ -377,7 +270,7 @@ public class PropConfigServiceImpl extends GodzillaServiceApplication implements
 
 	private ReturnCodeEnum verifyPropByCreatebyAndProjectcodeAndProfile(String projectCode, String profile, String createBy, String status, String auditor_text, Long billId) {
 		// 当前 待审核 配置
-		List<PropConfig> noPropList = this.queryPropConfigByProjectcodeAndProfileAndStatusAndBillid(projectCode, createBy, profile, NOTYET_VERIFY_STATUS, billId);
+		List<PropConfig> noPropList = this.queryPropConfigByProjectcodeAndProfileAndStatusAndBillid(projectCode, profile, createBy, NOTYET_VERIFY_STATUS, billId);
 		// 所有审核的配置
 		List<PropConfig> propList = this.getPropConfigsByProjectcodeAndProfile(projectCode, profile);
 

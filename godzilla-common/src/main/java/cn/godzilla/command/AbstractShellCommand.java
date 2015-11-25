@@ -26,13 +26,14 @@ public abstract class AbstractShellCommand extends Application implements Comman
 		try {
 			process = runtime.exec(shellCommand);
 			startdoLog(type);
-			process.waitFor();
 			lock.lock();
 			if(!isSignaled) {
 				done.await();
 			}
-			lock.unlock();
 			stopdoLog();
+			afterProcessShell(type);
+			lock.unlock();
+			//process.waitFor();
 			process.destroy();
 		} catch(IOException | InterruptedException e) {
 			e.printStackTrace();
@@ -45,6 +46,8 @@ public abstract class AbstractShellCommand extends Application implements Comman
 			}
 		}
 	}
+
+	protected abstract void afterProcessShell(CommandEnum type) ;
 
 	protected abstract void startdoLog(CommandEnum type);
 	

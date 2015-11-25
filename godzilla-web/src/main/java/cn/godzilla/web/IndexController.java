@@ -127,7 +127,7 @@ public class IndexController extends GodzillaWebApplication {
 		return null;
 	}
 	/**
-	 * 显示打包命令执行信息
+	 * 显示打包命令执行信息+catalina log
 	 * @param sid
 	 * @param projectCode
 	 * @param profile
@@ -140,7 +140,7 @@ public class IndexController extends GodzillaWebApplication {
 	public Object showdeployLog(@PathVariable("sid") String sid, @PathVariable String projectCode, @PathVariable String profile, 
 			@RequestParam("logid") String logid, HttpServletResponse response) {
 		
-		ReturnCodeEnum returnEnum = mvnService.showdeployLog(projectCode, profile, logid, response);
+		ReturnCodeEnum returnEnum = mvnService.showdeployLog(projectCode, profile, logid);
 		return ResponseBodyJson.custom().setAll(returnEnum, SHOWDEPLOYLOG).build().log();
 	}
 	/**
@@ -157,7 +157,7 @@ public class IndexController extends GodzillaWebApplication {
 	public Object showwarInfo(@PathVariable("sid") String sid, @PathVariable String projectCode, @PathVariable String profile, 
 			@RequestParam("logid") String logid, HttpServletResponse response) {
 		
-		ReturnCodeEnum returnEnum = mvnService.showwarInfo(projectCode, profile, logid, response);
+		ReturnCodeEnum returnEnum = mvnService.showwarInfo(projectCode, profile, logid);
 		return ResponseBodyJson.custom().setAll(returnEnum, SHOWWARINFO).build().log();
 	}
 	
@@ -177,7 +177,7 @@ public class IndexController extends GodzillaWebApplication {
 	
 		ReturnCodeEnum returnEnum = this.restartTomcat(projectCode, profile);
 		
-		return ResponseBodyJson.custom().setAll(returnEnum, TOMCATRESTART).build().log();
+		return ResponseBodyJson.custom().setAll(returnEnum, TOMCATRESTART).build().updateLog();
 	}
 	
 	private ReturnCodeEnum restartTomcat(String projectCode, String profile) {

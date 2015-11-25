@@ -267,7 +267,7 @@ public class SvnServiceImpl extends GodzillaServiceApplication implements SvnSer
 	}
 
 	@Override
-	public ReturnCodeEnum getStatus(String projectCode, String profile) {
+	public ReturnCodeEnum getInfo(String projectCode, String profile) {
 		List<SvnBranchConfig> svnBranchConfigs = svnBranchConfigService.queryListByProjectCode(projectCode, TEST_PROFILE);
 		Project project = projectService.queryByProCode(projectCode, TEST_PROFILE);
 		
@@ -276,14 +276,16 @@ public class SvnServiceImpl extends GodzillaServiceApplication implements SvnSer
 		String SVN_USERNAME = project.getSvnUsername();
 		String SVN_PASSWORD = project.getSvnPassword();
 		
-		String commandStr =SH_SVN_CLIENT + BLACKSPACE + COM_STATUS + BLACKSPACE + TRUNK_PATH + BLACKSPACE + QUATE + BRANCHES + QUATE + BLACKSPACE + projectCode + BLACKSPACE + SVN_USERNAME + BLACKSPACE + SVN_PASSWORD + BLACKSPACE;
+		String commandStr =SH_SVN_CLIENT + BLACKSPACE + COM_INFO + BLACKSPACE + TRUNK_PATH + BLACKSPACE + QUATE + BRANCHES + QUATE + BLACKSPACE + projectCode + BLACKSPACE + SVN_USERNAME + BLACKSPACE + SVN_PASSWORD + BLACKSPACE;
 		DefaultShellCommand command = new DefaultShellCommand();
 		command.execute(commandStr, CommandEnum.INFO); //svn info
 		
 		String shellReturn = shellReturnThreadLocal.get();
-		
+		String echoMessage = echoMessageThreadLocal.get();
+		 
 		if("0".equals(shellReturn)){
-			return ReturnCodeEnum.getByReturnCode(OK_SVNSTATUS);
+			ReturnCodeEnum returnEnum = ReturnCodeEnum.getByReturnCode(OK_SVNSTATUS).setData(echoMessage);
+			return returnEnum;
 		} else {
 			return ReturnCodeEnum.getByReturnCode(NO_SVNSTATUS);
 		}
@@ -307,13 +309,12 @@ public class SvnServiceImpl extends GodzillaServiceApplication implements SvnSer
 	}
 
 	@Override
-	public ReturnCodeEnum getVersion(String trunkPath, String projectCode) {
+	public ReturnCodeEnum getVersion(String TRUNK_PATH, String projectCode) {
 		ClientConfig clientConfig = clientConfigService.queryDetail(projectCode, TEST_PROFILE) ;
 		Project project = projectService.queryByProCode(projectCode, TEST_PROFILE);
 		isEmpty(clientConfig, projectCode+"项目的clientconfig 未初始化") ;
 		
 		String BRANCHES = EMPTY_BRANCH;
-		String TRUNK_PATH = project.getRepositoryUrl();
 		String SVN_USERNAME = project.getSvnUsername();
 		String SVN_PASSWORD = project.getSvnPassword();
 		

@@ -55,9 +55,9 @@ public class SvnController extends GodzillaWebApplication {
 	@ResponseBody
 	public Object doStatus(@PathVariable String sid, @PathVariable String projectCode,@PathVariable String profile, HttpServletRequest request, HttpServletResponse response) {
 		
-		ReturnCodeEnum returnenum = svnService.getStatus(projectCode, profile);
+		ReturnCodeEnum returnenum = svnService.getInfo(projectCode, profile);
 		
-		return ResponseBodyJson.custom().setAll(returnenum, echoMessageThreadLocal.get(), SVNSTATUS).build().log();
+		return ResponseBodyJson.custom().setAll(returnenum, SVNSTATUS).build().log();
 	}
 	
 	/**

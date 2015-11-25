@@ -53,12 +53,18 @@ case $ACTION in
 	#***
 	DEPLOY)
 		deploy
+		exit_code=$?
+		echo "${exit_code}"
+		exit $exit_code
 	;;
 	#***
 	#2.显示web项目lib目录jar包列表
 	#***
 	SHOWLIB)
 		showlib
+		exit_code=$?
+		echo "${exit_code}"
+		exit $exit_code
 	;;
 	*)
 		echo "ERROR !ARGS ERROR"
