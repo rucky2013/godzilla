@@ -26,7 +26,7 @@ SVNUSERNAME=$5			#svn
 SVNPASSWORD=$6			#svn
 CONFL_URL=$7			#冲突解决分支
 
-if false; then
+if true; then
 echo "**********************参数信息***********************"
 echo "SHELL_NAME:${SHELL_NAME}"
 echo "ACTION:${ACTION}"
@@ -91,10 +91,12 @@ function common() {
 	
 	svn co $SVN_TRUNK $srcpath"/"$PROJECT_NAME $svnuser --non-interactive  >/dev/null
 	
-	###如果分支为空则退出
+	#**如果分支为空则退出
 	if [ "$SVN_BRANCHES" == "empty" ];then 
 		echo 6
 		exit 6 
+	else 
+	    echo $SVN_BRANCHES" is branches."
 	fi
 }
 #***
@@ -123,14 +125,6 @@ function commit() {
 	# 4.提交到主干代码
 	#***
 	echo "4.提交到主干代码$BEGIN_STR"
-	
-	###如果分支为空则退出
-	if [ "$SVN_BRANCHES" == "empty" ];then 
-		echo 6
-		exit 6 
-	else
-		echo "SVN_BRANCHES is not empty"
-	fi
 	
 	cd ${srcpath}"/"${PROJECT_NAME}
 	svn ci . -m "合并分支 提交人:"$USER_NAME" `date "+%Y%m%d %H:%M:%S" ` " $svnuser --non-interactive   >/dev/null

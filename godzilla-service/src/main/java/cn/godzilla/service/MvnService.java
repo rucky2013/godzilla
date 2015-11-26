@@ -51,5 +51,5 @@ public interface MvnService {
 	 * @param profile
 	 * @return
 	 */
-	public ReturnCodeEnum restartTomcat(String projectCode, String profile) ;
+	public ReturnCodeEnum restartTomcat(String projectCode, String profile, String LIBPATH) ;
 }

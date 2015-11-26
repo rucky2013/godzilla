@@ -1,19 +1,27 @@
-package cn.godzilla.rpc.api;
+package com.rpcf.api;
 
 public class RpcException extends RuntimeException {
+	
+	private String message = "";
+	
 	public RpcException () {
 		super();
 	}
 	
 	public RpcException (String message) {
-		super(message);
+		this.message = message;
 	}
 	
 	public RpcException(String message, Throwable cause){
-		super(message, cause);
+		super(cause);
+		this.message = message;
 	}
 	
 	public RpcException (Throwable cause) {
 		super(cause);
+	}
+	
+	public String getMessage() {
+		return this.message;
 	}
 }

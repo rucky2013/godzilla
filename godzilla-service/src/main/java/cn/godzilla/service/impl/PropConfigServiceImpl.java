@@ -374,36 +374,45 @@ public class PropConfigServiceImpl extends GodzillaServiceApplication implements
 	// ================
 	@Override
 	public ReturnCodeEnum propToPom(String project_code, String webPath, String profile, String parentVersion, ClientConfig clientConfig) {
-		/**
+		/*
 		 * 1.get pom.xml path
 		 */
 		String webPomPath = webPath + "/pom.xml";
-
+		List<PropConfig> propconfigs = this.getPropConfigsByProjectcodeAndProfile(project_code, profile);
 		try {
-			/**
+			/*
 			 * 2.get propconfigs from DB
 			 */
-			parentVersion = StringUtil.isEmpty(parentVersion) ? DEFAULT_VERSION_PARENTPOM : parentVersion;
-
-			/**
-			 * 4.change deploy war tomcat properties for web/pom.xml if
-			 * tomcat-need-plugin == 0 delete plugin; else replace plugin;
+			parentVersion = StringUtil.isEmpty(parentVersion)?DEFAULT_VERSION_PARENTPOM:parentVersion;
+			
+			/*
+			 * 2.5 check local web-pom.xml dev-test profile VS db ${projectCode-profile}'s profile 
 			 */
-			if (clientConfig.getTomcatNeedPlugin() != null && !"0".equals(clientConfig.getTomcatNeedPlugin())) {
+			String looseProp = XmlUtil.comparePropFromWebPomVSDb(profile, propconfigs, webPomPath);
+			if(!"".equals(looseProp)) {
+				return ReturnCodeEnum.getByReturnCode(NO_LOOSEPROP).setData(looseProp);
+			}
+			
+			/*
+			 * 3.change deploy war tomcat properties for web/pom.xml
+			 * if tomcat-need-plugin == 0
+			 *    delete plugin; 
+			 * else 
+			 * 	  replace plugin;
+			 */
+			if(clientConfig.getTomcatNeedPlugin()!=null && !"0".equals(clientConfig.getTomcatNeedPlugin())){
 				XmlUtil.coverWebPomforPlugin(project_code, clientConfig, webPomPath, webPomPath);
 			} else {
 				XmlUtil.deleteWebPomPlugin(webPomPath, webPomPath);
 			}
-
-			/**
-			 * 3.save propconfigs cover pom.xml
+			
+			/*
+			 * 4.save propconfigs cover pom.xml
 			 */
-			List<PropConfig> propconfigs = this.getPropConfigsByProjectcodeAndProfile1(project_code, profile);
-			// XmlUtil.coverParentPom(parentVersion, parentPomPath,
-			// parentPomPath);
-			// this.replaceHtml(propconfigs);
+			
+			//XmlUtil.coverParentPom(parentVersion, parentPomPath, parentPomPath);
+			//this.replaceHtml(propconfigs);
 			XmlUtil.coverWebPom(propconfigs, webPomPath, webPomPath);
-
 		} catch (Exception e) {
 			e.printStackTrace();
 			return ReturnCodeEnum.getByReturnCode(NO_CHANGEPOM);

@@ -119,10 +119,12 @@ public class SvnServiceImpl extends GodzillaServiceApplication implements SvnSer
 		// mergeStatus 0:无 1:有冲突 2:标记解决
 		if(HAS_CONFLICT.equals(project.getMergeStatus())) {
 			String CONFL_URL = this.queryConflictURLById(project.getSvnConflictId());
-			String commandStr = SH_SVN_CLIENT + BLACKSPACE + COM_RESOLVE + TRUNK_PATH + BLACKSPACE + QUATE + BRANCHES + QUATE + BLACKSPACE + projectCode + BLACKSPACE + SVN_USERNAME + BLACKSPACE + SVN_PASSWORD + BLACKSPACE + CONFL_URL;
+			String commandStr = SH_SVN_CLIENT + BLACKSPACE + COM_RESOLVE + BLACKSPACE + TRUNK_PATH + BLACKSPACE + QUATE + BRANCHES + QUATE + BLACKSPACE + projectCode + BLACKSPACE + SVN_USERNAME + BLACKSPACE + SVN_PASSWORD + BLACKSPACE + CONFL_URL;
 			DefaultShellCommand command = new DefaultShellCommand();
 			command.execute(commandStr, CommandEnum.RESOLVE);
-		} 
+		} else {
+			ReturnCodeEnum.getByReturnCode(NO_NEEDRESOLVE); 
+		}
 		
 		/**
 		#***
@@ -144,6 +146,8 @@ public class SvnServiceImpl extends GodzillaServiceApplication implements SvnSer
 				return renum1; //修改冲突标识失败
 			}
 			return ReturnCodeEnum.getByReturnCode(OK_SVNRESOLVED);
+		} else if("3".equals(shellReturn)) {
+			return ReturnCodeEnum.getByReturnCode(NO_CLIENTPARAM); 
 		} else if("4".equals(shellReturn)) {
 			return ReturnCodeEnum.getByReturnCode(NO_STILLHASCONFLICTBRANCH); 
 		} else if("6".equals(shellReturn)) {
@@ -294,7 +298,7 @@ public class SvnServiceImpl extends GodzillaServiceApplication implements SvnSer
 	private String getBranchesByBranchConfigs(String profile, List<SvnBranchConfig> svnBranchConfigs) {
 		String branches = "";
 		for(SvnBranchConfig sbc: svnBranchConfigs) {
-			branches = sbc.getBranchUrl() + ",";
+			branches += sbc.getBranchUrl() + ",";
 		}
 		if(StringUtil.isEmpty(branches)) {
 			branches = EMPTY_BRANCH;
@@ -333,13 +337,11 @@ public class SvnServiceImpl extends GodzillaServiceApplication implements SvnSer
 	}
 
 	@Override
-	public void setConflictUrl(String projectCode, String profile, Project project) {
-		String conflictId = project.getSvnConflictId();
+	public String setConflictUrl(String projectCode, String profile, String conflictId) {
 		if(StringUtil.isEmpty(conflictId)) {
-			project.setConflictUrl(""); 
-			return ;
+			return "";
 		}
 		SvnConflict svnConflict = svnConflictMapper.selectByPrimaryKey(Long.parseLong(conflictId));
-		project.setConflictUrl(svnConflict.getConflictPath()); 
+		return svnConflict.getConflictPath(); 
 	}
 }

@@ -123,7 +123,9 @@
 									<tr>
 										<td class="paddingR0">设置操作：</td>
 										<td class="bg1">
-											<span class="spanSoureCode"><a class="src_a" href="javascript:void(0);" title="源代码设置">源代码设置</a></span>
+											<#if user.isAdmin = 1>
+												<span class="spanSoureCode"><a class="src_a" href="javascript:void(0);" title="源代码设置">源代码设置</a></span>
+											</#if>
 											<span class="spanBranch"><a class="branch_a" href="javascript:void(0);" title="分之设置">分支设置</a></span>
 										</td>
 									</tr>
@@ -519,7 +521,7 @@
 					timeout = false;
                     $("#alert").css("display", "block");
 					$("#alert_title").text(data.returnmsg);
-					$("#alert_text").text(data.returnmemo);
+					$("#alert_text").text(data.returnmemo+data.data);
 	                $("#process").width(0);
 					$("#processText").text("0%");
 				}

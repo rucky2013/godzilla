@@ -14,6 +14,7 @@ import cn.godzilla.common.Constant;
 import cn.godzilla.common.response.ResponseBodyJson;
 
 import com.alibaba.fastjson.JSON;
+import com.rpcf.api.RpcException;
 
 public class BusinessExceptionFilter implements Filter, Constant{
 	
@@ -26,8 +27,11 @@ public class BusinessExceptionFilter implements Filter, Constant{
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
 		try {
 			chain.doFilter(request, response);
+		} catch(RpcException e1) {
+			//e1.printStackTrace();
+			response.getWriter().write(JSON.toJSONString(ResponseBodyJson.custom().setAll(e1, RPCEX).build()));
 		} catch(BusinessException e) {
-			e.printStackTrace();
+			//e.printStackTrace();
 			response.getWriter().write(JSON.toJSONString(ResponseBodyJson.custom().setAll(e, GODZILLAEX).build()));
 		}
 		

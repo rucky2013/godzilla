@@ -72,7 +72,8 @@ public enum ReturnCodeEnum implements Serializable {
 	NO_NEWCONFLICTFOUND("100062", "发现新冲突，重新合并分支解决冲突"),
 	NO_WRONGOLDPWD("100063", "旧密码输入错误，如忘记密码找管理员更改密码"),
 	NO_CHANGEPWD("100064", "更改密码失败"),
-	
+	NO_LOOSEPROP("100065", "数据库缺少配置项"),
+	NO_NEEDRESOLVE("100066", "没有冲突，无需解决冲突"),
 	
 	OK_SUCCESS("200000", "SUCCESS"),
 	//user模块

@@ -71,7 +71,7 @@ public class MvnServiceImpl extends GodzillaServiceApplication implements MvnSer
 		 * 1.替换pom文件 配置变量 20150908 parentVersion 改为由 mvn命令更改 percent 30%
 		 */
 		ReturnCodeEnum changePomResult = propConfigService.propToPom(projectCode, webPath, profile, parentVersion, clientconfig);
-		if (ReturnCodeEnum.getByReturnCode(NO_CHANGEPOM).equals(changePomResult)) {
+		if (ReturnCodeEnum.getByReturnCode(NO_CHANGEPOM).equals(changePomResult)||ReturnCodeEnum.getByReturnCode(NO_LOOSEPROP).equals(changePomResult)) {
 			return changePomResult;
 		}
 		processPercent.put(pencentkey, "15");
@@ -92,7 +92,9 @@ public class MvnServiceImpl extends GodzillaServiceApplication implements MvnSer
 		 * 3. 日常环境 ：httpclient 访问 ip:8080/war_name/index 判断200 tomcat是否启动成功
 		 */
 		if (TEST_PROFILE.equals(profile)) {
-			ReturnCodeEnum restartTomcatResult = restartTomcat(projectCode, profile);
+			//保存项目lib jar信息列表
+			String LIBPATH = project.getLibPath();
+			ReturnCodeEnum restartTomcatResult = restartTomcat(projectCode, profile, LIBPATH);
 			signalforstop();
 			if (ReturnCodeEnum.getByReturnCode(NO_STARTTOMCAT).equals(restartTomcatResult) || ReturnCodeEnum.getByReturnCode(NO_JAVASHELLCALL).equals(restartTomcatResult)) {
 				processPercent.put(pencentkey, "0");
@@ -186,14 +188,12 @@ public class MvnServiceImpl extends GodzillaServiceApplication implements MvnSer
 	}
 	
 
-	public ReturnCodeEnum restartTomcat(String projectCode, String profile) {
+	public ReturnCodeEnum restartTomcat(String projectCode, String profile, String LIBPATH) {
 		
 		ClientConfig clientConfig = clientConfigService.queryDetail(projectCode, profile) ;
 		String clientIp = clientConfig.getRemoteIp();
 		Project project = projectService.queryByProCode(projectCode, TEST_PROFILE);
 		
-		//保存项目lib jar信息列表
-		String LIBPATH = project.getLibPath();
 		String commandStr1 = SH_MVN_CLIENT + BLACKSPACE + COM_SHOWLIB + BLACKSPACE + LIBPATH;
 		Command shellCommand = new DefaultShellCommand();
 		shellCommand.execute(commandStr1, CommandEnum.LSJAR);

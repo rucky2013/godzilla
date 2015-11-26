@@ -36,7 +36,8 @@ public interface Constant {
 	public final String TOMCAT_HOME = "/app/tomcat";
 	public final String SH_SVN_CLIENT = "sh /home/godzilla/gzl/shell/client/godzilla_svn.sh";
 	public final String COM_COMMIT = "COMMIT";
-	public final String QUATE = "\"";
+	//public final String QUATE = "\"";
+	public final String QUATE = "";
 	public final String COM_COMMIT_RESOLVE = "COMMIT_RESOLVE";
 	public final String COM_RESOLVE = "RESOLVE";
 	public final String COM_MERGE = "MERGE";
@@ -79,6 +80,7 @@ public interface Constant {
 	public final String SHOWWARINFO = "SHOWWARINFO";
 	public final String CONFLICTRESOLVED = "CONFLICTRESOLVED";
 	public final String CHANGEPASSWD = "CHANGEPASSWD";
+	public final String RPCEX = "RPCEX";
 	
 	public final String NOTYET_VERIFY_STATUS = "0";//未审核
 	public final String OK_VERIFY_STATUS = "1";//审核通过
@@ -182,6 +184,8 @@ public interface Constant {
 	public final static String NO_NEWCONFLICTFOUND = "100062";
 	public final static String NO_WRONGOLDPWD = "100063";
 	public final static String NO_CHANGEPWD = "100064";
+	public final static String NO_LOOSEPROP = "100065";
+	public final static String NO_NEEDRESOLVE = "100066";
 	
 	public final static String OK_AJAX = "200000";
 	public final static String OK_CHECKUSER = "200001";

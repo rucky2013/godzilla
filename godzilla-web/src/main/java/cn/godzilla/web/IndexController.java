@@ -92,7 +92,7 @@ public class IndexController extends GodzillaWebApplication {
 		//刷新项目 版本
 		projectService.refreshProjectVersion(projectCode, profile);
 		Project project = projectService.queryByProCode(projectCode, TEST_PROFILE);
-		svnService.setConflictUrl(projectCode, TEST_PROFILE, project);
+		project.setConflictUrl(svnService.setConflictUrl(projectCode, TEST_PROFILE, project.getSvnConflictId()));
 		//刷新分支 版本
 		List<SvnBranchConfig> svnBranchConfigs = svnBranchConfigService.queryListByProjectCode(projectCode, TEST_PROFILE);
 		svnBranchConfigService.refreshBranchesVersion(projectCode, TEST_PROFILE, svnBranchConfigs);
@@ -120,10 +120,7 @@ public class IndexController extends GodzillaWebApplication {
 	@RequestMapping(value="/project/{sid}/{projectCode}/{profile}/download", method=RequestMethod.GET) 
 	public Object download(@PathVariable("sid") String sid, @PathVariable String projectCode, @PathVariable String profile, HttpServletResponse response) {
 		
-		ReturnCodeEnum returnEnum = controllerHelper.downLoadWar(projectCode, profile, response);
-		
-		ResponseBodyJson.custom().setAll(returnEnum, WARDOWNLOAD).build().log();
-		
+		controllerHelper.downLoadWar(projectCode, profile, response);
 		return null;
 	}
 	/**
@@ -199,7 +196,10 @@ public class IndexController extends GodzillaWebApplication {
 			} else {
 				return ReturnCodeEnum.getByReturnCode(NO_RESTARTEFFECT);
 			}
-			return mvnService.restartTomcat(projectCode, profile);
+			Project project = projectService.queryByProCode(projectCode, profile);
+			//保存项目lib jar信息列表
+			String LIBPATH = "/app/tomcat/webapps/"+project.getWarName()+"/WEB-INF/lib";
+			return mvnService.restartTomcat(projectCode, profile, LIBPATH);
 		} catch(InterruptedException e) {
 			e.printStackTrace();
 			return ReturnCodeEnum.getByReturnCode(NO_CONCURRENCEDEPLOY);

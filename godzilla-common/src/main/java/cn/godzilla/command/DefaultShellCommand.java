@@ -22,7 +22,9 @@ public class DefaultShellCommand extends AbstractShellCommand {
 			new Thread(runnable).start();
 			break;
 		case MERGE:
+		case MERGE_RESOLVE:
 		case COMMIT:
+		case RESOLVE:
 		case COMMIT_RESOLVE:
 		case CPWAR:
 		case GODZILLA:
@@ -57,7 +59,9 @@ public class DefaultShellCommand extends AbstractShellCommand {
 			svnVersionThreadLocal.set(((VersionRunnable)runnable).svnVersion);
 			break;
 		case MERGE:
+		case MERGE_RESOLVE:
 		case COMMIT:
+		case RESOLVE:
 		case COMMIT_RESOLVE:
 		case CPWAR:
 		case GODZILLA:
@@ -92,6 +96,7 @@ public class DefaultShellCommand extends AbstractShellCommand {
 					break;
 				}
 				if(line!=null) {
+					System.out.println(line);
 					doLineNotNullBusi();
 				} else {
 					doLineNullBusi();
