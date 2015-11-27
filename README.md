@@ -24,6 +24,6 @@ Godzilla是一个为开发、测试、准生产、生产环境等实现环境隔
   
 ## Documents
 
-* [User Guide](https://github.com/ZeroHelp/godzilla/tree/master/document/godzilla_userGuide.docx)
+* [User Guide](http://mauersu.github.io/doc/godzilla_userGuide.docx)
 
 ![img-source-from-https://github.com/docker/dockercraft](https://github.com/docker/dockercraft/raw/master/docs/img/contribute.png?raw=true)
