@@ -17,10 +17,10 @@ Godzilla是一个为开发、测试、准生产、生产环境等实现环境隔
 ## Screenshots
 
 * **Index - Skin (ease)**
-![skin-ease](https://github.com/ZeroHelp/godzilla/tree/master/document/img/1.png)
+![skin-ease](http://mauersu.github.io/img/1.png)
 
 * **Home - WorkSpace (snapshot)**
-![workspace-snapshot](https://github.com/ZeroHelp/godzilla/tree/master/document/img/2.png)
+![workspace-snapshot](http://mauersu.github.io/img/2.png)
   
 ## Documents
 
