@@ -156,14 +156,15 @@ public enum ReturnCodeEnum implements Serializable {
 			return "FAILURE";
 		}
 	}
-	public static ReturnCodeEnum getByReturnCode(String returnCode) {
-		if(StringUtil.isEmpty(returnCode)) return null;  //null for empty returncode
-		for(ReturnCodeEnum r:ReturnCodeEnum.values()) {
+	public static ReturnCodeEnum getByReturnCode(String Enumname) {
+		return ReturnCodeEnum.valueOf(Enumname);
+		/*if(StringUtil.isEmpty(Enumname)) return null;  //null for empty returncode
+		 * for(ReturnCodeEnum r:ReturnCodeEnum.values()) {
 			if(r.getReturnCode().equals(returnCode)){
 				return r;
 			}
 		}
-		return null;
+		return null;*/
 	}
 	
 	public ReturnCodeEnum setSystemEXMsg(String exmsg) {

@@ -92,7 +92,11 @@ public class IndexController extends GodzillaWebApplication {
 		//刷新项目 版本
 		projectService.refreshProjectVersion(projectCode, profile);
 		Project project = projectService.queryByProCode(projectCode, TEST_PROFILE);
-		project.setConflictUrl(svnService.setConflictUrl(projectCode, TEST_PROFILE, project.getSvnConflictId()));
+		
+		if("1".equals(project.getMergeStatus())||"2".equals(project.getMergeStatus())) {
+			project.setConflictUrl(svnService.setConflictUrl(projectCode, TEST_PROFILE, project.getSvnConflictId()));
+		}
+		
 		//刷新分支 版本
 		List<SvnBranchConfig> svnBranchConfigs = svnBranchConfigService.queryListByProjectCode(projectCode, TEST_PROFILE);
 		svnBranchConfigService.refreshBranchesVersion(projectCode, TEST_PROFILE, svnBranchConfigs);

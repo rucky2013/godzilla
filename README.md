@@ -1,34 +1,29 @@
-Godzilla
+# Godzilla [![Build Status](https://img.shields.io/travis/b3log/solo.svg?style=flat)](https://github.com/mauersu/godzilla) [![Coverage Status](https://img.shields.io/coveralls/b3log/b3log-solo.svg?style=flat)](https://github.com/mauersu/godzilla)  [![Apache License](http://img.shields.io/badge/license-apache2-orange.svg?style=flat)](http://www.apache.org/licenses/LICENSE-2.0) [![Download](http://img.shields.io/badge/download-<1K-blue.svg?style=flat)](https://github.com/mauersu/godzilla/releases)
 
-====================
+<img src="https://cloud.githubusercontent.com/assets/873584/6817919/72ffdb5c-d2e2-11e4-8be8-37ac1b08ff81.jpg"  width="96%" />
 
-Godzilla是一个基于svn、maven的项目配置自动化管理工具。它以最终简洁方便开发人员或测试人员管理项目为主旨，在此基础上构建起来。<br>
-Features:<br>
-- 支持svn分支合并主干，提交主干
-- 支持maven打war包与下载war包
-- 支持基于maven的部署
-- 支持pom配置项后台管理
+## Introduction
 
-## 使用说明 ##
-1. 找相关人员 注册帐号，并赋予项目权限（目前可使用项目为apollo,cupid,fso_newmanager,fso-lark,godzilla,hera,message-center,nuggets-server,venus,zeus-server，其他项目请找 管理员设置）
+Godzilla是一个为开发、测试、准生产、生产环境等实现环境隔离的分布式后台系统
 
-2. 查看客户端服务器是否以配置godzilla帐号，是否安装jdk，svn，maven，是否创建godzilla工作目录/home/godzilla/gzl（查看是否具有client、rpc、work子目录）
+> 如有问题请联系[**mauersu**](https://github.com/mauersu)，开始使用哥斯拉！
 
-3. 启动客户端: 
- 
-  <pre>
+## Features
+
+* 支持svn合并、冲突解决、提交等操作
+* 支持测试、准生产、生产环境等的基于svn主干分支为基础的maven部署与打包
+* 支持测试、准生产、生产环境等的pom配置项后台管理
+
+## Screenshots
+
+* **Index - Skin (ease)**
+![skin-ease](https://github.com/mauersu/document/img/1.png)
+
+* **Home - WorkSpace (snapshot)**
+![workspace-snapshot](https://github.com/mauersu/document/img/2.png)
   
-  ```java
-  java -jar /home/godzilla/gzl/rpc/godzilla-rpc-provider.jar  >/home/godzilla/gzl/rpc/log.txt 2>&1 &
-  ```
-  </pre>
+## Documents
 
-4. 初始化项目（注意TEST环境下zookeeper使用地址为:10.100.142.78:2181）
+* [User Guide](https://github.com/mauersu/document/godzilla_userGuide.docx)
 
-
-## 功能说明 ##
-1. 部署流程：清除work目录->检出主干代码->合并各个分支 if not found confilict->mvn deploy -Pdev
-
-2. 合并代码：清除work目录->检出主干代码->合并各个分支 if not found confilict-> success
-
-3. 提交主干：清除work目录->检出主干代码->合并各个分支 if not found confilict-> 提交主干 ->删除分支
+![img-source-from-https://github.com/docker/dockercraft](https://github.com/docker/dockercraft/raw/master/docs/img/contribute.png?raw=true)

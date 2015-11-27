@@ -3,8 +3,6 @@ package cn.godzilla.common.response;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-import com.rpcf.api.RpcException;
-
 import cn.godzilla.common.BusinessException;
 import cn.godzilla.common.Loader;
 import cn.godzilla.common.ReturnCodeEnum;
@@ -82,7 +80,7 @@ public class ResponseBodyJson implements ResponseBody {
 			return this;
 		}
 		
-		public ResponseBodyJson.Builder setAll(RpcException e, String operator) {
+		public ResponseBodyJson.Builder setAll(RuntimeException e, String operator) {
 			this.returncode = "000000";
 			this.returnmsg = "FAILURE<br />"+e.getMessage();
 			this.returnmemo = "";

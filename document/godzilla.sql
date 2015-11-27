@@ -1,16 +1,16 @@
 /*
 Navicat MySQL Data Transfer
 
-Source Server         : 10.100.142.11
-Source Server Version : 50520
-Source Host           : 10.100.142.11:3306
-Source Database       : godzilla2
+Source Server         : 10.100.141.39
+Source Server Version : 50622
+Source Host           : 10.100.141.39:3306
+Source Database       : fso_godzilla
 
 Target Server Type    : MYSQL
-Target Server Version : 50520
+Target Server Version : 50622
 File Encoding         : 65001
 
-Date: 2015-11-05 10:17:13
+Date: 2015-11-27 18:29:08
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -48,7 +48,7 @@ CREATE TABLE `function_right` (
   `real_name` varchar(50) DEFAULT NULL,
   `project_name` varchar(30) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=488 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=687 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for operate_logs
@@ -67,11 +67,12 @@ CREATE TABLE `operate_logs` (
   `operate_code` int(11) DEFAULT NULL,
   `execute_time` datetime DEFAULT NULL,
   `execute_result` int(11) DEFAULT NULL,
-  `result_info` text,
+  `result_info` varchar(1000) NOT NULL DEFAULT '',
   `deploy_log` longtext,
+  `catalina_log` longtext,
   `war_info` longtext,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2651 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=4010 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for project
@@ -103,14 +104,17 @@ CREATE TABLE `project` (
 -- ----------------------------
 DROP TABLE IF EXISTS `properties_bill`;
 CREATE TABLE `properties_bill` (
-  `id` bigint(20) NOT NULL,
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `createby` varchar(255) DEFAULT NULL,
   `project_code` varchar(255) DEFAULT NULL,
   `profile` varchar(255) DEFAULT NULL,
   `status` varchar(10) DEFAULT NULL,
   `auditor_text` varchar(500) DEFAULT NULL,
+  `auditor` varchar(100) DEFAULT NULL,
+  `update_time` datetime DEFAULT NULL,
+  `create_time` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=46 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for properties_config
@@ -118,7 +122,7 @@ CREATE TABLE `properties_bill` (
 DROP TABLE IF EXISTS `properties_config`;
 CREATE TABLE `properties_config` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `bill_id` bigint(20) DEFAULT NULL,
+  `bill_id` bigint(20) NOT NULL DEFAULT '0',
   `project_code` varchar(30) DEFAULT NULL,
   `profile` varchar(30) DEFAULT NULL,
   `pro_key` varchar(500) DEFAULT NULL,
@@ -133,7 +137,7 @@ CREATE TABLE `properties_config` (
   `auditor_text` varchar(100) DEFAULT NULL,
   `index_order` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6754 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=7226 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for svn_branch_config
@@ -150,7 +154,7 @@ CREATE TABLE `svn_branch_config` (
   `current_version` varchar(30) DEFAULT NULL,
   `status` smallint(6) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=96 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=125 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for svn_conflict
@@ -166,7 +170,7 @@ CREATE TABLE `svn_conflict` (
   `version` varchar(50) DEFAULT NULL,
   `conflict_files` longtext,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=43 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for user
@@ -187,4 +191,4 @@ CREATE TABLE `user` (
   `is_deployer` varchar(10) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `user_name_UNIQUE` (`user_name`)
-) ENGINE=InnoDB AUTO_INCREMENT=64 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=69 DEFAULT CHARSET=utf8;

@@ -84,7 +84,10 @@ public class MvnServiceImpl extends GodzillaServiceApplication implements MvnSer
 		ReturnCodeEnum mvnBuildResult = deployProject(username, webPath, projectCode, profile, IP, parentVersion, parentPomPath, super.getUser().getRealName());
 
 		if(ReturnCodeEnum.getByReturnCode(NO_MVNBUILD).equals(mvnBuildResult)||ReturnCodeEnum.getByReturnCode(NO_JAVASHELLCALL).equals(mvnBuildResult)) {
-			return mvnBuildResult;
+			//保存mvn部署日志
+			String deployLog = deployLogThreadLocal.get();
+			Long logid = operateLogService.addOperateLog(projectCode, profile, deployLog, "");
+			return mvnBuildResult.setData(logid);
 		}
 		processPercent.put(pencentkey, "85");
 		
@@ -106,10 +109,13 @@ public class MvnServiceImpl extends GodzillaServiceApplication implements MvnSer
 			return ReturnCodeEnum.getByReturnCode(OK_MVNDEPLOY).setData(restartTomcatResult.getData());
 		} else {
 			//no need to start tomcat
+			//保存项目lib jar信息列表
+			String LIBPATH = project.getLibPath();
+			ReturnCodeEnum restartTomcatResult = restartTomcat(projectCode, profile, LIBPATH);
 			signalforstop();
 			processPercent.put(pencentkey, "100");
 			waitSecondAndSetPencentZero(pencentkey);
-			return ReturnCodeEnum.getByReturnCode(OK_MVNDEPLOY);
+			return ReturnCodeEnum.getByReturnCode(OK_MVNDEPLOY).setData(restartTomcatResult.getData());
 		}
 	}
 	
@@ -194,20 +200,24 @@ public class MvnServiceImpl extends GodzillaServiceApplication implements MvnSer
 		String clientIp = clientConfig.getRemoteIp();
 		Project project = projectService.queryByProCode(projectCode, TEST_PROFILE);
 		
-		String commandStr1 = SH_MVN_CLIENT + BLACKSPACE + COM_SHOWLIB + BLACKSPACE + LIBPATH;
-		Command shellCommand = new DefaultShellCommand();
-		shellCommand.execute(commandStr1, CommandEnum.LSJAR);
-		boolean ok_shell = OK_SHELL.equals(shellReturnThreadLocal.get()) ? true : false;
-		if(!ok_shell) {
-			logger.error(">>>shell执行失败："+commandStr1);
-			return ReturnCodeEnum.getByReturnCode(NO_JAVASHELLCALL);
+		String jarlog = "";
+		if(TEST_PROFILE.equals(profile)) {
+			String commandStr1 = SH_MVN_CLIENT + BLACKSPACE + COM_SHOWLIB + BLACKSPACE + LIBPATH;
+			Command shellCommand = new DefaultShellCommand();
+			shellCommand.execute(commandStr1, CommandEnum.LSJAR);
+			boolean ok_shell = OK_SHELL.equals(shellReturnThreadLocal.get()) ? true : false;
+			if(!ok_shell) {
+				logger.error(">>>shell执行失败："+commandStr1);
+				return ReturnCodeEnum.getByReturnCode(NO_JAVASHELLCALL);
+			}
+			jarlog = jarlogThreadLocal.get();
 		}
-		String jarlog = jarlogThreadLocal.get();
+		
 		//保存mvn部署日志
 		String deployLog = deployLogThreadLocal.get();
 		Long logid = operateLogService.addOperateLog(projectCode, profile, deployLog, jarlog);
 		
-		if(!TEST_PROFILE.equals("TEST")) return ReturnCodeEnum.getByReturnCode(OK_STARTTOMCAT).setData(logid); 
+		if(!TEST_PROFILE.equals(profile)) return ReturnCodeEnum.getByReturnCode(OK_STARTTOMCAT).setData(logid); 
 		
 		//httpclient 访问  ip:8080/war_name/index.jsp   查找 是否存在 <!--<h5>godzilla</h5>--> 字符串 判断 tomcat是否启动成功
 		String warName = project.getWarName();

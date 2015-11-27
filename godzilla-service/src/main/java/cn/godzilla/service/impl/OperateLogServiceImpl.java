@@ -55,7 +55,7 @@ public class OperateLogServiceImpl extends GodzillaServiceApplication implements
 	public ResponseBodyJson logThenReturn(String projectCode, String profile, ResponseBodyJson response) {
 		String operation = response.getOperator();
 		User user = GodzillaServiceApplication.getUser();
-		GodzillaServiceApplication.operateLogService.addOperateLog(user.getUserName(), user.getRealName(), projectCode, profile, operation, response.getReturncode(), response.getReturnmsg(), response.getReturnmemo());
+		GodzillaServiceApplication.operateLogService.addOperateLog(projectCode, profile, user.getUserName(), user.getRealName(), operation, response.getReturncode(), response.getReturnmsg(), response.getReturnmemo());
 		
 		return response;
 	}
