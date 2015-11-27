@@ -1,4 +1,4 @@
-# Godzilla [![Build Status](https://img.shields.io/travis/b3log/solo.svg?style=flat)](https://github.com/mauersu/godzilla) [![Coverage Status](https://img.shields.io/coveralls/b3log/b3log-solo.svg?style=flat)](https://github.com/mauersu/godzilla)  [![Apache License](http://img.shields.io/badge/license-apache2-orange.svg?style=flat)](http://www.apache.org/licenses/LICENSE-2.0) [![Download](http://img.shields.io/badge/download-<1K-blue.svg?style=flat)](https://github.com/mauersu/godzilla/releases)
+# Godzilla [![Build Status](https://img.shields.io/travis/b3log/solo.svg?style=flat)](https://github.com/mauersu/godzilla) [![Coverage Status](https://img.shields.io/coveralls/b3log/b3log-solo.svg?style=flat)](https://github.com/mauersu/godzilla) [![Download](http://img.shields.io/badge/download-<1K-blue.svg?style=flat)](https://github.com/mauersu/godzilla/releases)
 
 <img src="https://cloud.githubusercontent.com/assets/873584/6817919/72ffdb5c-d2e2-11e4-8be8-37ac1b08ff81.jpg"  width="96%" />
 
@@ -17,13 +17,13 @@ Godzilla是一个为开发、测试、准生产、生产环境等实现环境隔
 ## Screenshots
 
 * **Index - Skin (ease)**
-![skin-ease](https://github.com/mauersu/document/img/1.png)
+![skin-ease](https://github.com/ZeroHelp/godzilla/tree/master/document/img/1.png)
 
 * **Home - WorkSpace (snapshot)**
-![workspace-snapshot](https://github.com/mauersu/document/img/2.png)
+![workspace-snapshot](https://github.com/ZeroHelp/godzilla/tree/master/document/img/2.png)
   
 ## Documents
 
-* [User Guide](https://github.com/mauersu/document/godzilla_userGuide.docx)
+* [User Guide](https://github.com/ZeroHelp/godzilla/tree/master/document/godzilla_userGuide.docx)
 
 ![img-source-from-https://github.com/docker/dockercraft](https://github.com/docker/dockercraft/raw/master/docs/img/contribute.png?raw=true)
