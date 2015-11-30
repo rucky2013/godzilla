@@ -1,6 +1,6 @@
 # Godzilla [![Build Status](https://img.shields.io/travis/b3log/solo.svg?style=flat)](https://github.com/mauersu/godzilla) [![Coverage Status](https://img.shields.io/coveralls/b3log/b3log-solo.svg?style=flat)](https://github.com/mauersu/godzilla) [![Download](http://img.shields.io/badge/download-<1K-blue.svg?style=flat)](https://github.com/mauersu/godzilla/releases)
 
-<img src="https://cloud.githubusercontent.com/assets/873584/6817919/72ffdb5c-d2e2-11e4-8be8-37ac1b08ff81.jpg"  width="96%" />
+![](https://www.google.com/logos/2012/halloween-2012-hp.jpg)
 
 ## Introduction
 
