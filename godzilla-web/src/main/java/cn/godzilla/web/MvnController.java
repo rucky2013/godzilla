@@ -49,8 +49,8 @@ public class MvnController extends GodzillaWebApplication{
 		ReturnCodeEnum deployReturn = this.doDeploy(projectCode, profile, parentVersion+parentVersionSuffix, pencentkey);
 		
 		if(deployReturn.equals(ReturnCodeEnum.getByReturnCode(OK_MVNDEPLOY))
-				||deployReturn.equals(ReturnCodeEnum.getByReturnCode(NO_RESTARTTOMCAT))
-				||deployReturn.equals(ReturnCodeEnum.getByReturnCode(NO_MVNBUILD))) {
+				||deployReturn.equals(ReturnCodeEnum.getByReturnCode(NO_MVNBUILD))
+				||deployReturn.equals(ReturnCodeEnum.getByReturnCode(NO_STARTTOMCAT))) {
 			//rpc那边生成日志，为了添加部署日志跟jar包日志
 			return ResponseBodyJson.custom().setAll(deployReturn, DEPLOY).build().updateLog();
 		} 

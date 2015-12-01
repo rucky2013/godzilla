@@ -27,7 +27,7 @@ public abstract class AbstractShellCommand extends Application implements Comman
 			process = runtime.exec(shellCommand);
 			startdoLog(type);
 			lock.lock();
-			if(!isSignaled) {
+			while (!isSignaled) {
 				done.await();
 			}
 			stopdoLog();
