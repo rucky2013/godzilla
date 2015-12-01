@@ -1,4 +1,5 @@
-# Godzilla [![Build Status](https://img.shields.io/travis/b3log/solo.svg?style=flat)](https://github.com/mauersu/godzilla) [![Coverage Status](https://img.shields.io/coveralls/b3log/b3log-solo.svg?style=flat)](https://github.com/mauersu/godzilla) [![Download](http://img.shields.io/badge/download-<1K-blue.svg?style=flat)](https://github.com/mauersu/godzilla/releases)
+# Godzilla [![Build Status](https://travis-ci.org/mauersu/godzilla.svg?branch=master)](https://travis-ci.org/mauersu/godzilla)
+[![GitHub release](https://img.shields.io/badge/release-download-orange.svg)](https://github.com/mauersu/godzilla/releases)
 
 ![](https://www.google.com/logos/2012/halloween-2012-hp.jpg)
 
