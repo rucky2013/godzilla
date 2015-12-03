@@ -23,8 +23,9 @@ public interface PropConfigService extends Constant{
 	     * @param propTest
 	     * @param propQuasiProduct
 	     * @param propProduct
+	     * @return 
 	     */
-		public void findPropByProjectCode(String projectCode, String profile, StringBuilder propTest, StringBuilder propQuasiProduct, StringBuilder propProduct);
+		public Map<String, StringBuilder> findPropByProjectCode(String projectCode, String profile, StringBuilder propTest, StringBuilder propQuasiProduct, StringBuilder propProduct);
 	
 		
 		/**

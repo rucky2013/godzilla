@@ -58,7 +58,10 @@ public class PropController extends GodzillaWebApplication {
 		StringBuilder propQuasiProduct = new StringBuilder("");
 		StringBuilder propProduct = new StringBuilder("");
 		
-		propConfigService.findPropByProjectCode(projectCode, TEST_PROFILE, propTest, propQuasiProduct, propProduct);
+		Map<String, StringBuilder> propsMap = propConfigService.findPropByProjectCode(projectCode, TEST_PROFILE, propTest, propQuasiProduct, propProduct);
+		propTest = propsMap.get("propTest");
+		propQuasiProduct = propsMap.get("propQuasiProduct");
+		propProduct = propsMap.get("propProduct");
 		
 		request.setAttribute("user", GodzillaWebApplication.getUser());
 		request.setAttribute("propTest", this.replaceHtml(propTest.toString()));

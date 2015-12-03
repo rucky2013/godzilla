@@ -37,7 +37,7 @@ public class PropConfigServiceImpl extends GodzillaServiceApplication implements
 	}
 
 	@Override
-	public void findPropByProjectCode(String projectCode, String profile, StringBuilder propTest, StringBuilder propQuasiProduct, StringBuilder propProduct) {
+	public Map<String, StringBuilder> findPropByProjectCode(String projectCode, String profile, StringBuilder propTest, StringBuilder propQuasiProduct, StringBuilder propProduct) {
 
 		Map<String, String> propTestMap = new HashMap<String, String>();
 		Map<String, String> propQuasiProductMap = new HashMap<String, String>();
@@ -50,6 +50,12 @@ public class PropConfigServiceImpl extends GodzillaServiceApplication implements
 		propTest.append(JSON.toJSONString(propTestMap));
 		propQuasiProduct.append(JSON.toJSONString(propQuasiProductMap));
 		propProduct.append(JSON.toJSONString(propProductMap));
+		
+		Map<String, StringBuilder> propMap = new HashMap<String, StringBuilder>();
+		propMap.put("propTest", propTest);
+		propMap.put("propQuasiProduct", propQuasiProduct);
+		propMap.put("propProduct", propProduct);
+		return propMap;
 	}
 
 	/**
@@ -262,7 +268,14 @@ public class PropConfigServiceImpl extends GodzillaServiceApplication implements
 		ReturnCodeEnum re2 = this.verifyPropByCreatebyAndProjectcodeAndProfile(projectCode, QUASIPRODUCT_PROFILE, createBy, status, auditor_text, billId);
 		ReturnCodeEnum re3 = this.verifyPropByCreatebyAndProjectcodeAndProfile(projectCode, PRODUCT_PROFILE, createBy, status, auditor_text, billId);
 		if (re1.equals(ReturnCodeEnum.getByReturnCode(OK_VERIFYPROP)) && re1.equals(re2) && re2.equals(re3)) {
-			return re1;
+			if(OK_VERIFY_STATUS.equals(status)) {
+				return ReturnCodeEnum.getByReturnCode(OK_VERIFYPROP_OK);
+			} else if(STOP_VERIFY_STATUS.equals(status)) {
+				return ReturnCodeEnum.getByReturnCode(OK_VERIFYPROP_NO);
+			} else {
+				//never reach here.
+				return re1;
+			} 
 		} else {
 			return ReturnCodeEnum.getByReturnCode(NO_VERIFYPROP);
 		}

@@ -108,6 +108,8 @@ public enum ReturnCodeEnum implements Serializable {
 	OK_EDITMERGESTATUS("200055", "更改项目合并状态成功"),
 	OK_SVNRESOLVED("200061", "标记解决成功"),
 	OK_CHANGEPWD("200064", "更改密码成功"),
+	OK_VERIFYPROP_OK("200067", "审核通过"),
+	OK_VERIFYPROP_NO("200068", "审核不通过"),
 	
 	;
 	
