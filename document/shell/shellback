@@ -17,3 +17,5 @@ svn merge http://svn.caiwu.corp/svn/fso-java/hera/branch/hera-gzl-1 --non-intera
 svn st|grep ^C | awk '{print $2}' |xargs svn resolved
 
 /home/godzilla/gzl/shell/client/godzilla_svn_wl.sh MERGE  http://svn.caiwu.corp/svn/fso-java/hera/trunk/hera 'http://svn.caiwu.corp/svn/fso-java/hera/branch/hera-gzl-1,http://svn.caiwu.corp/svn/fso-java/hera/branch/hera-gzl' http://localhost:8080/process-callback.do hera admin v-gaoyang@creditease.cn 888888 http://svn.caiwu.corp/svn/fso-java/hera/conflict/hera2015110341
+
+nohup java -jar godzilla-rpc-provider.jar &
