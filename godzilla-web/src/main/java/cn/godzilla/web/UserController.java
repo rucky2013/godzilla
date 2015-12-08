@@ -72,7 +72,6 @@ public class UserController extends GodzillaWebApplication {
 
 		ReturnCodeEnum loginReturn = userService.login(SERVER_USER, TEST_PROFILE, username, password, newsid);  
 		
-		request.setAttribute("sid", newsid);
 		return ResponseBodyJson.custom().setAll(loginReturn, newsid, LOGIN).build().log();
 	}
 	

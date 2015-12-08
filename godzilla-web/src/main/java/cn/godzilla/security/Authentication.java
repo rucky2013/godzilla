@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import cn.godzilla.common.BusinessException;
@@ -42,6 +43,7 @@ public class Authentication extends GodzillaWebApplication implements Filter {
 		escapeUrls.add("/process");
 		
 		context = filterConfig.getServletContext();  
+		//applicationContext = (ConfigurableApplicationContext)WebApplicationContextUtils.getWebApplicationContext(context); 
 		applicationContext = WebApplicationContextUtils.getWebApplicationContext(context); 
 		userService = (UserService)applicationContext.getBean("userService");
 		funRightService = (FunRightService)applicationContext.getBean("funRightService");

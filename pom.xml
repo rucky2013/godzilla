@@ -26,7 +26,6 @@
 		<module>godzilla-web</module>
 	</modules>
 	<properties>
-		<parent.version>1.0.0.RC1-SNAPSHOT</parent.version>
 		<JDK.version>1.7</JDK.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<spring.version>4.1.6.RELEASE</spring.version>

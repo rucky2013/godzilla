@@ -275,7 +275,7 @@ public class XmlUtil implements Constant{
 				/*if("test".equals(profile.element("id").getText())){
 					testProfile = profile;
 				}*/
-				if("dev-test".equals(domProfile.element("id").getText())){
+				if("dev-test".equals(domProfile.element("id").getText())||"dev".equals(domProfile.element("id").getText())){
 					Element domproperties = domProfile.element("properties");
 					List<Element> domproplist = domproperties.elements();
 					for(Element property: domproplist) {
