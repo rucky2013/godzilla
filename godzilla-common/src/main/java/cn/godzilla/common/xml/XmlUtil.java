@@ -281,7 +281,7 @@ public class XmlUtil implements Constant{
 					for(Element property: domproplist) {
 						String pro_Key = property.getName();
 						if(!propconfigsSet.contains(pro_Key)) {
-							looseProp += pro_Key;
+							looseProp += pro_Key + " | ";
 						}
 					}
 				}
