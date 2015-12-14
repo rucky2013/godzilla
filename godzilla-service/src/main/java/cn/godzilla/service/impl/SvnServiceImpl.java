@@ -55,7 +55,7 @@ public class SvnServiceImpl extends GodzillaServiceApplication implements SvnSer
 			return ReturnCodeEnum.getByReturnCode(NO_SVNRESOLVED);
 		} else if(OK_RESOLVED.equals(project.getMergeStatus())) {
 			String CONFL_URL = this.queryConflictURLById(project.getSvnConflictId());
-			String commandStr = SH_SVN_CLIENT + BLACKSPACE + COM_COMMIT_RESOLVE + BLACKSPACE +TRUNK_PATH+ BLACKSPACE + QUATE + BRANCHES + QUATE + BLACKSPACE + projectCode + BLACKSPACE + SVN_USERNAME + BLACKSPACE + SVN_PASSWORD + CONFL_URL;
+			String commandStr = SH_SVN_CLIENT + BLACKSPACE + COM_COMMIT_RESOLVE + BLACKSPACE +TRUNK_PATH+ BLACKSPACE + QUATE + BRANCHES + QUATE + BLACKSPACE + projectCode + BLACKSPACE + SVN_USERNAME + BLACKSPACE + SVN_PASSWORD + BLACKSPACE + CONFL_URL;
 			DefaultShellCommand command = new DefaultShellCommand();
 			command.execute(commandStr, CommandEnum.COMMIT_RESOLVE);
 		} else {
